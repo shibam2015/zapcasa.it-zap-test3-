@@ -1,0 +1,11 @@
+#AuthUserFile /home/banyanld/public_html/zapcasav2/.htpasswd
+#AuthType Basic
+#AuthName "Login Details"
+#Require valid-user
+
+RewriteEngine On
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+RewriteRule ^(.*)$ index.php?/$1 [L]
