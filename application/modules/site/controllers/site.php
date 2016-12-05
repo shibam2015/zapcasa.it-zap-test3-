@@ -75,8 +75,8 @@ class site extends CI_Controller {
 		$this->load->view('site/contact_us');
 	}
 	public function do_contact(){ 
-		//echo '<pre>';print_r($_POST);
 
+		//echo '<pre>';print_r($_REQUEST);
 		$new_data=array();
 		$new_data['category']=$this->input->post('category');
 		$new_data['name']=$this->input->post('name');
@@ -85,6 +85,8 @@ class site extends CI_Controller {
 		$new_data['subject']=$this->input->post('subject');
 		$new_data['message']=$this->input->post('message');
 		// $contact_msg_id=$this->contact_model->add_new_msg($new_data);
+		//echo '<pre>';print_r($new_data);
+		
 
 		$this->session->set_flashdata('mail_success', 
 		$this->lang->line('contact_us_mail_success'));
@@ -127,16 +129,17 @@ class site extends CI_Controller {
 		</div>';
 		$details=array();
 		$default_email = get_perticular_field_value('zc_settings','meta_value'," and meta_name='default_email'");
-		$mail_from= isset($default_email) ? $default_email : "no-reply@zapcasa.it";
-		$mail_to = 'info@zapcasa.it';
+		$mail_from= isset($default_email) ? $default_email : DEFAULT_EMAIL;
+		$mail_to = INFO_EMAIL;
 		$subject = $this->lang->line('contact_us_subject');
 		$message = $msg;
 		
 		$body = $message;
 		
-		sendemail($mail_from, $mail_to, $subject, $body, $cc='');
+		sendemail($mail_from, $mail_to, $subject, $body);
 		
 		redirect('contact_us');
+		die();
 	}
 	public function Highlight_your_advert(){
 		$data['sitepage'] = "1";
