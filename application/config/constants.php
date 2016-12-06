@@ -39,3 +39,7 @@ define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */
+
+/*Local Constant Define*/
+define('DEFAULT_EMAIL', 'no-reply@zapcasa.it');
+define('INFO_EMAIL', 'vcodertechnolab@gmail.com');//info@zapcasa.it
