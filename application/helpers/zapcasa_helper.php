@@ -248,9 +248,10 @@ function get_advertiser_footer() {
 function get_featured_property($where=''){
 	$CI =& get_instance();
 	$sql = "select pf.*,pd.update_price,pd.price,pd.city,pd.provience,pd.category_id,pd.contract_id,pd.suspention_by_user,pd.suspention_status,pd.description,pd.typology,pd.street_address,pd.street_address,pd.street_no,pd.zip,pd.update_time,pd.posting_time from zc_property_featured as pf LEFT JOIN zc_property_details as pd ON( pd.property_id = pf.property_id ) ";
-	$sql.= "JOIN zc_user as u ON (pd.property_post_by = u.user_id) where u.status='1' and pd.suspention_status!='1' and pf.status='1' and pd.feature_status='1'";	//pd.suspention_status is for admin suspension.
+	$sql .= "JOIN zc_user as u ON (pd.property_post_by = u.user_id) where u.status='1' and pd.suspention_status!='1' and pf.status='1' and pd.feature_status='1' ";    //pd.suspention_status is for admin suspension.
 	//$sql.= " ORDER BY pf.property_featured_id DESC LIMIT 12";
 	$sql.= " ORDER BY RAND() LIMIT 12";
+	#echo $sql;exit;
 	$query=$CI->db->query($sql);
 	$data = array();
 	$todayDate = strtotime( date('d-m-Y') );
@@ -273,15 +274,18 @@ function get_featured_property($where=''){
 function get_latest_property($where=''){
 	$CI =& get_instance();
 	$str = "select zc_property_details.*, zc_property_img.file_name as main_img, zc_contract_types.*, zc_typologies.typology_id, zc_typologies.name as typology_name, zc_city.*, zc_region_master.province_code from zc_property_details left join zc_property_img on zc_property_details.property_id = zc_property_img.property_id left join zc_contract_types on zc_property_details.contract_id = zc_contract_types.contract_id left join zc_typologies on zc_property_details.typology = zc_typologies.typology_id left join zc_city on zc_property_details.city = zc_city.city_id left join zc_provience on zc_property_details.provience = zc_provience.provience_id left join zc_region_master on zc_city.city_name = zc_region_master.city";
+	$str .= " JOIN zc_user as u ON (zc_property_details.property_post_by = u.user_id)  ";    //pd.suspention_status is for admin suspension.
 	$str.= " where ";
 	//$str.= "zc_property_details.status='1' and ";	//	zc_property_details.status is for status of the property .... see `zc_status_of_property` table.
 	$str.= "zc_typologies.status='active' AND ";
 	$str.= "zc_property_details.suspention_status!='1' AND ";
-	$str.= "zc_property_details.property_status ='2' ";
+	$str .= "zc_property_details.property_approval ='1' ";
+	$str .= " AND zc_property_details.property_status ='2' ";
+	$str .= " AND u.status='1'";
 	$str.= "group by zc_property_details.property_id ";
 	$str.= "order by zc_property_details.property_id desc limit 12";
-	
-	//echo "=========".$str;
+
+#	echo "=========".$str;exit;
 	$query=$CI->db->query($str);
 	$record="";
 	if($query->num_rows()>0){

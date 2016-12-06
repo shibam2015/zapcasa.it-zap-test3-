@@ -14,7 +14,7 @@ class Property_model extends CI_Model{
 					break;
 				case 'activepro':
 					$sqlQuery = "SELECT * FROM (
-						SELECT *, md5(`property_id`) AS `ref_token` 
+						SELECT *, md5(`property_id`) AS `ref_token`
 						FROM `zc_property_details` WHERE `property_status`!='0' AND property_status='2' AND suspention_status='0'
 					) 
 					AS p WHERE `ref_token` LIKE '".$search_property_code."%' ";
@@ -255,12 +255,12 @@ class Property_model extends CI_Model{
 		$config['total_rows'] = $query1->num_rows();        
 		$sqlQuery = $sqlQuery." AND property_status!='0' ORDER BY `property_id` DESC LIMIT ".$start.", ".$config['per_page'];
 		$query = $this->db->query($sqlQuery);
-		//echo "===========".$this->db->last_query();
+#		echo "===========".$this->db->last_query(); exit;
         return $result = $query->result_array();
     }
 	private function FeaturedSQL($feature_status, $sqlMore){
 		$sqlQuery = "SELECT * FROM `zc_property_details` WHERE property_id IN(";
-		$sql = "SELECT `zc_property_featured`.`start_date`, 
+		$sql = "SELECT `zc_property_featured`.`start_date`,
 				`zc_property_featured`.`number_of_days`, 
 				`zc_property_details`.`property_id`, 
 				`zc_property_details`.`feature_status` 
@@ -393,11 +393,11 @@ class Property_model extends CI_Model{
 		return $this->db->query($sql);
 	}
 	function resume_featured_entry($property_id){
-		$sql="update zc_property_details set feature_status='1' where property_id='".$property_id."'";
+		$sql = "update zc_property_details set feature_status='1',  suspention_status ='0' where property_id='" . $property_id . "'";
 		return $this->db->query($sql);
 	}
 	function suspend_featured_entry($property_id){
-		$sql="update zc_property_details set feature_status='0' where property_id='".$property_id."'";
+		$sql = "update zc_property_details set feature_status='0',  suspention_status ='1'  where property_id='" . $property_id . "'";
 		return $this->db->query($sql);
 	}
 	function get_property_feature_details($property_id){

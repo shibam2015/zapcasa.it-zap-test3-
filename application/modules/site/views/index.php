@@ -6,15 +6,16 @@
         <li><img src="<?php echo base_url();?>assets/images/alpha_10x10.png" alt="" style="background: url(<?php echo base_url();?>assets/images/banner_img1.jpg) 50% 50% no-repeat rgb(13, 11, 10);"/></li>
       <li><img src="<?php echo base_url();?>assets/images/alpha_10x10.png" alt="" style="background: url(<?php echo base_url();?>assets/images/banner_img2.jpg) 50% 50% no-repeat rgb(13, 11, 10);"/></li>
         <li><img src="<?php echo base_url();?>assets/images/alpha_10x10.png" alt="" style="background: url(<?php echo base_url();?>assets/images/banner_img3.jpg) 50% 50% no-repeat rgb(13, 11, 10);"/></li>
-      </ul>  
+	 </ul>
       <div class="main">
       	<div class="property_sect">
         	<div class="property_colum">
             	<h2><?php echo $this->lang->line('home_page_search_for_a_property');?></h2>
-              	<div class="tabBox">                    
-                    
-                      
-                      		<form name="search" id="prop_search" method="get" class="searchbox" action="<?php echo base_url();?>property/search">
+
+				<div class="tabBox">
+
+
+					<form name="search" id="prop_search" method="get" class="searchbox" action="<?php echo base_url();?>property/search">
                             	<h4><?php echo $this->lang->line('home_page_search_by');?>:</h4>
                                 <span style="height:63px;">
                                 	<label><?php echo $this->lang->line('home_page_category');?></label>
@@ -23,7 +24,7 @@
 									?>
                                     <select name="category_id" onChange="setOptions(this.value);" >
 									<?php
-										if($categories != ''){											
+									if ($categories != '') {
 											foreach($categories as $arrCat){
 												if( isset( $_COOKIE['lang'] ) && ( $_COOKIE['lang'] == "english" )) {
 													echo '<option value="'.$arrCat['category_id'].'">'.$arrCat['name'].'</option>';
@@ -124,10 +125,10 @@
                                 	<input type="submit" value="<?php echo $this->lang->line('home_page_button_search');?>" class="searchbt">
                                 </div>
                              </form>
-                           
-                       
-                      <div class="bottomshadow"></div>
-                    
+
+
+					<div class="bottomshadow"></div>
+
           		</div>
             </div>
             <div class="property_colum_adverts">
@@ -167,11 +168,11 @@
                                         	<td><input type="radio" checked="true" name="advertiser_type" value="all" class="required"></td><td><?php echo $this->lang->line('home_page_find_an_advertiser_type_all');?></td><td width="22px"></td>
                                             <td><input type="radio" name="advertiser_type" value="2" class="required"></td><td><?php echo $this->lang->line('home_page_find_an_advertiser_type_only_owners');?></td></td>
                                             <td><input type="radio" name="advertiser_type" value="3" class="required"></td><td><?php echo $this->lang->line('home_page_find_an_advertiser_type_only_agencies');?></td>
-                                        </tr>                                      
+										</tr>
                                     </table>
-                                </span>                 
-                                
-                            	<div class="bottomsect">
+                                </span>
+
+						<div class="bottomsect">
                                 	<input type="submit" value="<?php echo $this->lang->line('home_page_button_search');?>" class="searchbt">
                                 </div>
                             </form>
@@ -190,18 +191,18 @@
 						<?php
 						$user_type=get_perticular_field_value('zc_user','user_type'," and user_id='".$this->session->userdata( 'user_id' )."'");
 						if($user_type=='2' || $user_type=='3') {
-						?> 
+							?>
 						<a href="<?php echo base_url();?>property/add_property_form" class="freepost">
-							<?php echo $this->lang->line('advertise_details_post_your_property');?> 
+							<?php echo $this->lang->line('advertise_details_post_your_property'); ?>
 							<font style="color:#fff000">
 								<?php echo $this->lang->line('advertise_details_free');?>
 							</font>
 						</a>
 						<?php
 						}elseif($user_type=='1') {
-						?> 
+							?>
 						<a href="<?php echo base_url();?>property/add_property_form" class="freepost add_property">
-							<?php echo $this->lang->line('advertise_details_post_your_property');?> 
+							<?php echo $this->lang->line('advertise_details_post_your_property'); ?>
 							<font style="color:#fff000">
 								<?php echo $this->lang->line('advertise_details_free');?>
 							</font>
@@ -210,7 +211,7 @@
 						}elseif($this->session->userdata( 'user_id' )=='0'  || $this->session->userdata( 'user_id' )=='' ) {
 						?>
 						<a href="<?php echo base_url();?>users/common_reg" class="freepost">
-							<?php echo $this->lang->line('advertise_details_post_your_property');?> 
+							<?php echo $this->lang->line('advertise_details_post_your_property'); ?>
 							<font style="color:#fff000">
 								<?php echo $this->lang->line('advertise_details_free');?>
 							</font>
@@ -222,16 +223,16 @@
                 </div>
             </div>
         </div>
-      </div>     
+		</div>
 	</div>
 </div>
 <div class="taglinesect">
 	<div class="main">
     	<h3 class="tagline">
-			<?php echo $this->lang->line('home_page_real_estate_for');?> 
+			<?php echo $this->lang->line('home_page_real_estate_for'); ?>
 			<font style="font-weight:bold; color:#3687c6;">
 				<?php echo $this->lang->line('home_page_jobs');?>
-			</font> <?php echo $this->lang->line('home_page_and');?> 
+			</font> <?php echo $this->lang->line('home_page_and'); ?>
 			<font style="font-weight:bold; color:#3687c6;">
 				<?php echo $this->lang->line('home_page_housing');?>
 			</font>
@@ -251,7 +252,7 @@
 		<?php
 		//Featured Properties.
 		if(count($featured_property)>0){
-		?>    
+			?>
 		<div class="valuableprop">
 			<div class="leftcont">
 				<h1 style="text-align: left;" ><?php echo $this->lang->line('home_page_featured_properties');?></h1>
@@ -260,11 +261,11 @@
 			<div class="rightcarousel">
 				<div id="wrapper">
 					<div class="carousel">
-					<?php 
-					foreach($featured_property as $property_featured_detail ){ 
+						<?php
+						foreach ($featured_property as $property_featured_detail) {
 						$main_image=get_perticular_field_value('zc_property_img','file_name'," and property_id='".$property_featured_detail['property_id']."' and img_type='main_image'");
 						$property_name=property_name($property_featured_detail['property_id']);
-						
+
 						$contract="";
 						$prop_det_url='';
 						if($property_featured_detail['contract_id']==1) {
@@ -295,20 +296,20 @@
 						} else {
 							$parms_url = $search_title."/".$prop_det_url;
 						}
-						
+
 						if( isset( $_COOKIE['lang'] ) && ( $_COOKIE['lang'] == "english" )) {
 							$name=get_perticular_field_value('zc_contract_types','name'," and contract_id='".$property_featured_detail['contract_id']."'");
 							$typology_name=get_perticular_field_value('zc_typologies','name'," and status='active' and typology_id='".$property_featured_detail['typology']."'");
 							$city_name=get_perticular_field_value('zc_city','city_name'," and city_id='".$property_featured_detail['city']."'");
 							$province_code=get_perticular_field_value('zc_region_master','province_code'," and city='".$city_name."'");
-							
+
 							$proptitle = $name." For ".stripslashes($typology_name)." in ".$city_name.", ".$province_code;
 						} else {
 							$name_it=get_perticular_field_value('zc_contract_types','name_it'," and contract_id='".$property_featured_detail['contract_id']."'");
 							$typology_name=get_perticular_field_value('zc_typologies','name_it'," and status='active' and typology_id='".$property_featured_detail['typology']."'");
 							$city_name_it=get_perticular_field_value('zc_city','city_name_it'," and city_id='".$property_featured_detail['city']."'");
 							$province_code=get_perticular_field_value('zc_region_master','province_code'," and city_it='".$city_name_it."'");
-							
+
 							$proptitle = stripslashes($typology_name)." in ".$name_it." a ".$city_name_it.", ".$province_code;
 						}
 						?>
@@ -335,14 +336,18 @@
 										if ($per_prop < 0){
 										?>
 										<b style="color:#090; font-weight:bold; padding-left:2px;">
-											<img src="<?php echo base_url();?>assets/images/green.gif" width="8px" height="8px" style="width:8px;height:8px;display:inline;float:none;padding:0;"> 
+											<img src="<?php echo base_url();?>assets/images/green.gif" width="8px"
+												 height="8px"
+												 style="width:8px;height:8px;display:inline;float:none;padding:0;">
 											<?php echo percentage($property_featured_detail['update_price'],$property_featured_detail['price']);?> %
 										</b>
 										<?php
 										}else{
 										?>
 										<b style="color:#F00; font-weight:bold; padding-left:2px;">
-											<img src="<?php echo base_url();?>assets/images/red.gif" width="8px" height="8px" style="width:8px;height:8px;display:inline;float:none;padding:0;"> 
+											<img src="<?php echo base_url();?>assets/images/red.gif" width="8px"
+												 height="8px"
+												 style="width:8px;height:8px;display:inline;float:none;padding:0;">
 											<?php echo '+'.percentage($property_featured_detail['update_price'],$property_featured_detail['price']);?> %
 										</b>
 										<?php
@@ -359,13 +364,13 @@
 							?>
 							</p>
 						</span>
-						<?php 
+						<?php
 					}
-					?>	
+						?>
 					</div>
 					<?php
 					if( count($featured_property)>3){
-						?>  
+						?>
 						<a class="prev" href="#">
 							<img src="<?php echo base_url();?>assets/images/leftarrow.png" alt="<?php echo $this->lang->line('home_page_button_prev');?>">
 						</a>
@@ -374,7 +379,7 @@
 						</a>
 						<?php
 					}else{
-						?> 
+						?>
 						<a class="prev_">
 							<img src="<?php echo base_url();?>assets/images/leftarrow.png" alt="<?php echo $this->lang->line('home_page_button_prev');?>">
 						</a>
@@ -383,10 +388,10 @@
 						</a>
 						<?php
 					}
-					?>  
+					?>
 				</div>
 			</div>
-		</div> 
+		</div>
 		<?php
 		}
 		//Latest Properties.
@@ -404,7 +409,7 @@
 						foreach($latest_property as $lprop){
 							/*-----------for url-------*/
 							$first_segment="";
-						$category_id=$lprop['category_id'];						
+							$category_id = $lprop['category_id'];
 						if($category_id=='6' || $category_id=='7'){
 							$first_segment='Business';
 							///////////////////////////////////////////////////
@@ -440,29 +445,29 @@
 						$prop_det_url.='-'.trim($lprop['property_id']);
 						/*-------------end-----------------------*/
 						if( isset( $_COOKIE['lang'] ) && ( $_COOKIE['lang'] == "english" )) {
-							
+
 							$typology_name=get_perticular_field_value('zc_typologies','name'," and status='active' and typology_id='".$lprop['typology']."'");
-							
+
 							$proptitle = $lprop['name']." For ".stripslashes($typology_name)." in ".$lprop['city_name'].", ".$lprop['province_code'];
 						} else {
-							
+
 							$typology_name=get_perticular_field_value('zc_typologies','name_it'," and status='active' and typology_id='".$lprop['typology']."'");
-							
+
 							$proptitle = stripslashes($typology_name)." in ".$lprop['name_it']." a ".$lprop['city_name_it'].", ".$lprop['province_code'];
 						}
-						
+
 						if($lprop['main_img']){
 							$lpropImg = base_url().'assets/uploads/Property/Property'.$lprop['property_id'].'/thumb_860_482/'.$lprop['main_img'];
 						}else{
 							$lpropImg = base_url().'assets/images/no_proimg.jpg';
 						}
-						
-						?>
+
+							?>
 						<span>
 							<a href="<?php echo base_url();?><?php echo $first_segment;?>/<?php echo $prop_det_url;?>">
 								<img src="<?php echo $lpropImg; ?>" alt="<?php echo str_replace("\'","'",$proptitle); ?>">
 								<h4 style="font-size:13px;"><?php echo str_replace("\'","'",$proptitle); ?></h4>
-							</a>							
+							</a>
 							<p class="price">
 							<?php
 							if($lprop['price']!='0.00'){
@@ -491,7 +496,7 @@
 											<img src="<?php echo base_url();?>assets/images/red.gif" width="8px" height="8px" style="width:8px;height:8px;display:inline;float:none;padding:0;">
 											<?php echo '+'.percentage($lprop['update_price'],$lprop['price']);?> %
 										</b>
-										<?php			
+										<?php
 										}
 									}
 								}
@@ -506,10 +511,10 @@
 							</p>
 							<!--
 							<p class="price">
-								&euro; 
+								&euro;
 								<b style="font-weight:bold">
 									<?php //echo $lprop['update_price'];?>
-								</b> | 
+								</b> |
 								<?php //echo $lprop['surface_area'];?> m | <?php //echo $lprop['room_no'];?> Rooms
 							</p>
 							-->
@@ -538,9 +543,9 @@
 <script src="<?php echo base_url(); ?>assets/js/jquery.geocomplete.js"></script>
 <script type="text/javascript">
 if (navigator.geolocation) {
-    // Browser supports it, we're good to go!     
-} else {    
-	alert('<?php echo $this->lang->line('home_page_your_browser_not_suport_geolocation');?>');    
+	// Browser supports it, we're good to go!
+} else {
+	alert('<?php echo $this->lang->line('home_page_your_browser_not_suport_geolocation');?>');
 }
 function getMyLocation1(){
 	navigator.geolocation.getCurrentPosition(exportPosition1, errorPosition);
@@ -589,7 +594,7 @@ function ShowMyLocation(MyLatitude, MyLongitude, InputBoxID){
 	var myloc = geoplugin_city()+(geoplugin_region()!=''?', '+geoplugin_region():'')+(geoplugin_countryName()!=''?', '+geoplugin_countryName():'');
 	$('#'+txtname).val(myloc);
 } */
-$(document).ready(function(){	
+$(document).ready(function () {
 	$("#location").keyup(function(){
 		var o1 = $(this).val();
         if (o1.length > 2) {
@@ -613,7 +618,7 @@ $(document).ready(function(){
 							$("#location").css("background","#FFF");
 						}
 					}
-				});		
+				});
 			}, 500)
 		}else{
 			$("#suggesstion-box").html('');
@@ -652,7 +657,7 @@ $(document).ready(function(){
 			$("#suggesstion-box2").html('');
 			$("#suggesstion-box2").hide();
 		}
-	});	
+	});
 	var a = (function() {
 		var e = 0;
 		return function(t, s) {
@@ -660,7 +665,7 @@ $(document).ready(function(){
 			e = setTimeout(t, s)
 		}
 	})(),
-	e = 0;	
+		e = 0;
 });
 function selectCountry(val, fname, disname) {
 	$("#"+fname).val(val);
@@ -669,4 +674,4 @@ function selectCountry(val, fname, disname) {
 	$("#suggesstion-box2").css("border","#c4c4c4 0px solid");
 }
 </script>
-<?php $this->load->view("inc/footer");?>	
+<?php $this->load->view("inc/footer"); ?>

@@ -53,6 +53,7 @@ class site extends CI_Controller {
 		$data['featured_property'] = $featured;
 		$latest = get_latest_property();
 		$data['latest_property'] = $latest;
+		//echo "<pre>"; print_r($data);exit;
 		$this->load->view("site/index",$data);
 	}
 	public function cmsPages() {

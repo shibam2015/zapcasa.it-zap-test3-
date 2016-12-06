@@ -1593,7 +1593,7 @@ class users extends CI_Controller{
 				$subject =$this->lang->line('change-pwd-subject');
 				
 				$body = $msg;
-				
+
 				sendemail($mail_from, $mail_to, $subject, $body, $cc='');
 				
 				
