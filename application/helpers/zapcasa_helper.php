@@ -248,7 +248,7 @@ function get_advertiser_footer() {
 function get_featured_property($where=''){
 	$CI =& get_instance();
 	$sql = "select pf.*,pd.update_price,pd.price,pd.city,pd.provience,pd.category_id,pd.contract_id,pd.suspention_by_user,pd.suspention_status,pd.description,pd.typology,pd.street_address,pd.street_address,pd.street_no,pd.zip,pd.update_time,pd.posting_time from zc_property_featured as pf LEFT JOIN zc_property_details as pd ON( pd.property_id = pf.property_id ) ";
-	$sql .= "JOIN zc_user as u ON (pd.property_post_by = u.user_id) where u.status='1' and pd.suspention_status!='1' and pf.status='1' and pd.feature_status='1' ";    //pd.suspention_status is for admin suspension.
+	$sql .= "JOIN zc_user as u ON (pd.property_post_by = u.user_id) where u.status='1' and pd.suspention_status!='1' and pf.status='1' and pd.feature_status='1' and pd.property_approval ='1'";    //pd.suspention_status is for admin suspension.
 	//$sql.= " ORDER BY pf.property_featured_id DESC LIMIT 12";
 	$sql.= " ORDER BY RAND() LIMIT 12";
 	#echo $sql;exit;
