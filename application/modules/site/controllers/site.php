@@ -136,7 +136,7 @@ class site extends CI_Controller {
 		$message = $msg;
 		
 		$body = $message;
-		
+		#echo $mail_to;echo $body;exit;
 		sendemail($mail_from, $mail_to, $subject, $body);
 		
 		redirect('contact_us');

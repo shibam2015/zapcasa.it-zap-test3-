@@ -953,7 +953,7 @@ class User extends CI_Controller {
 		$this->users->updateUser($data, $userid);
 		
 		$default_email = get_perticular_field_value('zc_settings','meta_value'," and meta_name='default_email'");
-		$email = get_perticular_field_value('zc_user','email_id'," and user_id='".$userid."'");		
+		$email = get_perticular_field_value('zc_user', 'email_id', " and user_id='" . $userid . "'");
 		$user_full_name = get_perticular_field_value('zc_user','first_name'," and user_id='".$userid."'").' '.get_perticular_field_value('zc_user','last_name'," and user_id='".$userid."'");
 		
 		$mail_from = isset($default_email) ? $default_email : "no-reply@zapcasa.it";

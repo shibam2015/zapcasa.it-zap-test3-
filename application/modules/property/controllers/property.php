@@ -53,7 +53,7 @@ class property extends CI_Controller {
 		$this->load->view("site/index",$data);
 	}
 	public function search($catname=''){
-		//echo "======".$msg_id=$this->uri->segment('1');	
+		//echo "======".$msg_id=$this->uri->segment('1');
 		$data = array();
 		$filters = array();
 		$category_id = '0';
@@ -1518,6 +1518,7 @@ class property extends CI_Controller {
 			$data["links"] = $this->pagination->create_links();
 			///////////////////////////////////////////////////////////////
 			// echo json_encode($data["msg_totals"]);exit;
+			#echo "<br> <pre>"; print_r($data);exit;
 			$this->load->view('property/inbox',$data);
 		}
 	}
@@ -1542,7 +1543,8 @@ class property extends CI_Controller {
 			$data['check_user_from']=$this->propertym->check_user_to_status($data["send_msg_totals"][0]['user_id_from']);
 			//print_r($data["send_msg_totals"]);exit;
 			$data["links"] = $this->pagination->create_links();
-			///////////////////////////////////////////////////////////////			
+			///////////////////////////////////////////////////////////////
+			#echo "<br><pre>"; print_r($data);exit;
 			$this->load->view('property/archive',$data);
 		}
 	}

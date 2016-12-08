@@ -56,17 +56,17 @@
 </head>
 <body class="noJS">
 <script type="text/javascript">
-	var bodyTag = document.getElementsByTagName("body")[0];        
-	bodyTag.className = bodyTag.className.replace("noJS", "hasJS");        
+	var bodyTag = document.getElementsByTagName("body")[0];
+	bodyTag.className = bodyTag.className.replace("noJS", "hasJS");
 </script>
     <!-- Header part -->
     <?php
-	$this->load->view("_include/header"); 
+	$this->load->view("_include/header");
 	if($this->session->userdata('delete_inbox_message') != ''){
-		$succes_msg = $this->session->userdata('delete_inbox_message');        
-		$this->session->unset_userdata('delete_inbox_message');        
+		$succes_msg = $this->session->userdata('delete_inbox_message');
+		$this->session->unset_userdata('delete_inbox_message');
 	}else{
-		$succes_msg = '';        
+		$succes_msg = '';
 	}
 	?>
     <!-- banner part -->
@@ -76,12 +76,12 @@
         </div>
     </div>
     <!-- login pop up start  -->
-    <?php $this->load->view("_include/login_user"); ?>          
+<?php $this->load->view("_include/login_user"); ?>
     <!-- login pop up end -->
     <!-- body part -->
     <div class="main">
         <div id="breadcrumb" class="fk-lbreadbcrumb newvd">
-            <span><a href="<?php echo base_url();?>"><?php echo $this->lang->line('inbox_home');?></a></span> 
+			<span><a href="<?php echo base_url(); ?>"><?php echo $this->lang->line('inbox_home'); ?></a></span>
             > <span><?php echo $this->lang->line('inbox_header_inbox');?></span>
         </div>
         <!-- Inbox -->
@@ -126,10 +126,10 @@
                     <?php
                     	$attributes = array('class' => 'add_property_form', 'id' => 'idForm1');
                         echo form_open_multipart('property/msg_search', $attributes);
-                    ?> 
+					?>
 					<input type="text" name="search_fld" class="search-fld" placeholder="<?php echo $this->lang->line('inbox_property_search_a_message');?>"/>
 					<input type="submit" class="search_img" value="" />
-					<?php echo form_close();?>   
+						<?php echo form_close(); ?>
                     </div>
                     <div class="clear"></div>
                 </div>
@@ -153,11 +153,11 @@
 							<input type="hidden" id="selectAllToPageString" value="<?php echo $selectAllToPageString; ?>">
 							<input type="hidden" id="selectSingleToPageString" value="<?php echo $selectSingleToPageString; ?>">
                             <?php
-							
+
                                 if(!empty($msg_tot))
-                                
+
                                 {
-                                
+
                                 ?>
                             <input type="checkbox" name="checkAll" id="checkAll" onClick="checkAllProperty(this);" style="margin:13px 8px 8px 8px" >
                             <label style="margin-left:5px;"><?php echo $this->lang->line('inbox_message_select_all');?></label>
@@ -175,8 +175,8 @@
                         </tr>
 				<?php
 				if(!empty($msg_totals)){
-					$i=0;					
-					foreach($msg_totals as $msg){						
+					$i = 0;
+					foreach ($msg_totals as $msg) {
 						if($i%2==0){
 							$class='';
 							$sub_class="class='odd_row'";
@@ -207,31 +207,31 @@
 									?>
 								</span>
 							<?php }else{
-								
+
 									if($msg['subject'] == 0){
 										$noProMsgSub = get_perticular_field_value('zc_property_message_info','subject',"and subject !='0' and msg_grp_id = '".$msg['msg_grp_id']."' and msg_to_delete != ' '");
 									}else{
 										$noProMsgSub = $msg['subject'];
 									} ?>
-                                    
+
                                 <span <?php echo($unReadMsgCounter > 0?'style="font-weight:bold;cursor:pointer;"':'style="cursor:pointer;"'); ?> onClick="return click_me(<?php echo $msg['msg_id'];?>,<?php echo $msg['property_id'];?>,<?php echo $check_user_to[0]['status'];?>);">
 									<?php echo ucfirst($noProMsgSub);?>
 								</span>
                         	<?php } ?>
                                 <p style="color: rgb(164, 164, 164);">
-                                    <?php echo ucfirst(substr($msg['message'],0,50)).'...';?> 
+									<?php echo ucfirst(substr($msg['message'], 0, 50)) . '...';?>
                                 </p>
                             </td>
                             <td>
-							<?php 
+								<?php
                                 $user_name = get_field_value("zc_user","first_name, last_name",$where=" AND user_id='".$msg['user_id_from']."'");
 								$fname=$user_name['first_name']?$user_name['first_name']:'';
-								$lname=$user_name['last_name']?$user_name['last_name']:'';								
+								$lname = $user_name['last_name'] ? $user_name['last_name'] : '';
 								echo ucfirst($fname." ". $lname);
                             ?>
 							</td>
                             <td>
-							<?php 
+								<?php
 							switch(date('m',strtotime($msg['msg_date']))){
 								case '01':
 									$monthName = $this->lang->line('cal_jan');
@@ -268,7 +268,7 @@
 									break;
 								case '12':
 									$monthName = $this->lang->line('cal_dec');
-									break;			
+									break;
 							}
 							echo date('d',strtotime($msg['msg_date'])).' '.$monthName.' '.date('Y',strtotime($msg['msg_date']));
 							?>
@@ -285,21 +285,35 @@
                     </table>
                     <div class="inbox_delete_pagination_rht">
 					<!-- pagenation -->
+
 					<?php if(isset($links)){echo $links; }?>
                     </div>
-					<table id="bbb" style="display:none;">					
-					<?php if($msg_totals[0]['user_from_status'] == 0) { ?>
-						<div style="display:none;" class="search-fld" style="width:98% !important;">
-						  	<p> <?php echo $this->lang->line('inbox_this_user_is_no_longer_registered'); ?> </p>
-					 	</div>
+					<table id="bbb" style="display:none;">
+						<?php if ($msg_totals[0]['admin_approval'] == 0) { ?>
+							<div class="warrning">
+								<p> <?php echo $this->lang->line('inbox_this_property_inactive_by_admin'); ?> </p></div>
+							<!--<div style="" class="search-fld" style="width:98% !important;">
+						  	<p> <?php /*echo $this->lang->line('inbox_this_user_is_no_longer_registered'); */ ?> </p>
+					 	</div>-->
+						<?php } else if ($check_user_to[0]['status'] == 0) { ?>
+							<div class="warrning">
+								<p> <?php echo $this->lang->line('inbox_this_user_is_no_longer_registered'); ?> </p>
+							</div>
+							<!--<div style="" class="search-fld" style="width:98% !important;">
+						  	<p> <?php /*echo $this->lang->line('inbox_this_user_is_no_longer_registered'); */ ?> </p>
+					 	</div>-->
 					<?php } else if($msg_totals[0]['blocked_note'] != "" && strlen($msg_totals[0]['blocked_note']) > 0) { ?>
-						<div style="display:none;" class="search-fld" style="width:98% !important;">
-							<p> <?php echo $this->lang->line('inbox_this_user_has_been_blocked'); ?> </p>
-						</div>
+							<div class="warrning">
+								<p> <?php echo $this->lang->line('inbox_this_user_has_been_blocked'); ?> </p></div>
+							<!--<div style="" class="search-fld" style="width:98% !important;">
+							<p> <?php /*echo $this->lang->line('inbox_this_user_has_been_blocked'); */ ?> </p>
+						</div>-->
 					<?php } else if(isset($msg_totals[0]['suspention_status']) && $msg_totals[0]['suspention_status'] == 1) { ?>
-						<div style="display:none;" class="search-fld" style="width:98% !important;">
-							<p> <?php echo $this->lang->line('suspended_property_msg_by_admin_first'); ?> </p>
-						</div>
+							<div class="warrning">
+								<p> <?php echo $this->lang->line('suspended_property_msg_by_admin_first'); ?> </p></div>
+							<!--<div style="" class="search-fld" style="width:98% !important;">
+							<p> <?php /*echo $this->lang->line('suspended_property_msg_by_admin_first'); */ ?> </p>
+						</div>-->
 					<?php } else { ?>
                         <div style="display:none;" id="reply_msg">
 							<?php
@@ -309,10 +323,14 @@
 							}else{
 								$disable='readonly="true"';
 							}
-							?> 
+							?>
 							<label id="errorMessage"><?php echo $this->lang->line('inbox_this_field_is_required');?></label>
-                            <div class="search-fld" style="width:98% !important;"> 
-                                <textarea rows="3" <?php echo $disable;?> cols="15" class="required" placeholder="<?php echo $this->lang->line('contactus_fill_the_form_write_your_message');?>" name="message" id="message" style="width:100%;height:164px; resize:none;"></textarea> 
+
+							<div class="search-fld" style="width:98% !important;">
+								<textarea rows="3" <?php echo $disable; ?> cols="15" class="required"
+										  placeholder="<?php echo $this->lang->line('contactus_fill_the_form_write_your_message'); ?>"
+										  name="message" id="message"
+										  style="width:100%;height:164px; resize:none;"></textarea>
                             </div>
                             <div>&nbsp;</div>
                             <div style="float:right;">
@@ -324,7 +342,6 @@
                             <?php echo form_close(); ?>
                         </div>
                     <?php } ?>
-
 					</table>
                 </div>
             </div>
@@ -373,7 +390,7 @@
 		   var pageString = "<?php echo $selectSingleToPageString; ?>";
 		   $.ajax({
 			   type: "POST",
-			   url: "<?php echo base_url()?>property/delete_msg_per", // 
+			   url: "<?php echo base_url()?>property/delete_msg_per", //
 			   data: {msg_id:id},
 			   success: function(msg) {
 				   // alert(msg);
@@ -400,9 +417,10 @@
 	   //alert(checkedValues);
 	}
 
-	function click_me(id, prop_id, user_status) {		
+	function click_me(id, prop_id, user_status) {
 		$("#reply_msg").hide();
-		if(user_status=='1'){
+		//if(user_status=='1'){
+		if (1) {
 			var div_id = "#inbox_msg";
 			$.ajax({
 				type: "POST",
@@ -412,7 +430,7 @@
 					$(div_id).html(msg);
 					$("#msg_id").val(id);
 					$("#reply_msg").show();
-					$('.inbox_delete_pagination_rht').hide();				
+					$('.inbox_delete_pagination_rht').hide();
 				},
 				error: function() {
 					alert("<?php echo $this->lang->line('inbox_there_is_something_wrong');?>");
@@ -430,11 +448,11 @@
 	function open_reply() {
 		$("#bbb").show();
 	}
-	
-	$(".success").delay(3200).fadeOut(300);	
-	
+
+	$(".success").delay(3200).fadeOut(300);
+
 	$(document).ready(function(){setTimeout(function(){$("#successDIV").hide();},4000);});
-	
+
 	function checkAllProperty(ca) {
 	   type = "inboxes";
 	   var cboxes = document.getElementById('inbox_msg').getElementsByTagName('input');
@@ -445,7 +463,7 @@
 		   }
 	   }
 	}
-	
+
 	function checkArr(type){
 		$('#selectAllCheckBox').val('');
 		var totalchkBox = $("." + type).length;
@@ -467,8 +485,8 @@
 		});
 		document.getElementById(arrInput).value = list;
 	}
-	
-	function delete_bulk_msg() {		
+
+	function delete_bulk_msg() {
 	   var arrInputId = $("#inboxes_del_str").val();
 	   var cnt = arrInputId.split("|");
 	   if (arrInputId == '') {

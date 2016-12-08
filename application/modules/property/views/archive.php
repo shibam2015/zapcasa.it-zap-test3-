@@ -198,14 +198,15 @@
 							if($msg['property_id']!='0'){
 								?>
                                 <span <?php echo($msg['read_status'] == '0'?'style="cursor:pointer;"':'style="cursor:pointer;"'); ?> onClick="return click_me(<?php echo $msg['msg_id'];?>,<?php echo $msg['property_id'];?>,<?php echo $check_user_from[0]['status'];?>,<?php echo $check_user_to[0]['status'];?>);">
-									<?php 
+									<?php
 										if(strlen(subject_inbox($msg['property_id'])) > 11)
 										{
 											echo $this->lang->line('inbox_request_for'),":"; echo subject_inbox($msg['property_id']);
+
 										}
 										else
 										{
-											echo $this->lang->line('prop_not_avilable');
+											echo $this->lang->line('prop_not_deleted');
 										}
 									?>
 								</span>
@@ -291,12 +292,24 @@
 				}                            
 				?>
                     </table>
-                    <div class="inbox_delete_pagination_rht">
+					<div class="inbox_delete_pagination_rht">
 					<!-- pagenation -->
 					<?php if(isset($links)){echo $links; }?>
                     </div>
                     <table id="bbb" style="display:none;">
-                        <div style="display:none;" id="reply_msg" >
+						<?php if ($check_user_to[0]['status'] == 0) { ?>
+							<div class="warrning"><p> <?php echo $this->lang->line('inbox_user_blocked'); ?> </p></div>
+						<?php } else if ($send_msg_totals[0]['admin_approval'] == 0) { ?>
+							<div class="warrning">
+								<p> <?php echo $this->lang->line('inbox_this_property_inactive_by_admin'); ?> </p></div>
+						<?php } else if ($msg_totals[0]['blocked_note'] != "" && strlen($msg_totals[0]['blocked_note']) > 0) { ?>
+							<div class="warrning">
+								<p> <?php echo $this->lang->line('inbox_this_user_has_been_blocked'); ?> </p></div>
+						<?php } else if (isset($send_msg_totals[0]['suspention_status']) && $send_msg_totals[0]['suspention_status'] == 1) { ?>
+							<div class="warrning">
+								<p> <?php echo $this->lang->line('suspended_property_msg_by_admin_first'); ?> </p></div>
+						<?php } else { ?>
+							<div style="display:none;" id="reply_msg">
                             <?php
 							echo form_open_multipart('property/msg_reply', array('class' => 'add_property_form', 'id' => 'idForm'));
 							if($check_user_to[0]['status']==1){
@@ -318,6 +331,7 @@
                             </div>
                             <?php echo form_close(); ?>
                         </div>
+						<?php } ?>
                     </table>
                 </div>
             </div>
@@ -400,7 +414,8 @@
 	
 	function click_me(id, prop_id, user_from, user_to) {
 		$("#reply_msg").hide();
-		if(user_from=='1' && user_to=='1'){
+		//if(user_from=='1' && user_to=='1'){
+		if (1) {
 		   var div_id = "#inbox_msg";
 		   $.ajax({
 			   type: "POST",

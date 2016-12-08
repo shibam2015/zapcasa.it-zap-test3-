@@ -302,13 +302,13 @@ class propertym extends CI_Model {
 		if(!empty($blockedUserId) && $blockedUserId['blocked_user']!=''){
 			$blockedUserIdSQL.= " AND zc_property_details.property_post_by NOT IN (".$blockedUserId['blocked_user'].")";
 		}
-		
-		$sql = "select zc_property_details.*, zc_property_img.file_name as main_img, zc_contract_types.contract_id, zc_contract_types.name, zc_contract_types.name_it, zc_contract_types.short_code, zc_contract_types.desc, zc_typologies.typology_id, zc_typologies.name as typology_name, zc_typologies.name_it as typology_name_it, zc_city.city_id, zc_city.country_id, zc_city.city_name, zc_city.city_name_it, zc_region_master.province_code, zc_provience.provience_name, zc_provience.provience_name_it from zc_property_details left join zc_property_img on zc_property_details.property_id = zc_property_img.property_id left join zc_contract_types on zc_property_details.contract_id = zc_contract_types.contract_id left join zc_typologies on zc_property_details.typology = zc_typologies.typology_id left join zc_city on zc_property_details.city = zc_city.city_id left join zc_provience on zc_property_details.provience = zc_provience.provience_id left join zc_region_master on zc_city.city_name = zc_region_master.city where zc_property_img.img_type = 'main_image' ".$where." AND `zc_typologies`.`status`='active' AND property_approval='1' AND suspention_status='0' ".$blockedUserIdSQL." ORDER BY ".$orderby." LIMIT ".$startpoint.", ".$perpage;
+		$UserActiveSql = " JOIN zc_user as u ON (zc_property_details.property_post_by = u.user_id) ";
+		$UserActiveWhere = " AND u.status='1'  ";
+		$sql = "select zc_property_details.*, zc_property_img.file_name as main_img, zc_contract_types.contract_id, zc_contract_types.name, zc_contract_types.name_it, zc_contract_types.short_code, zc_contract_types.desc, zc_typologies.typology_id, zc_typologies.name as typology_name, zc_typologies.name_it as typology_name_it, zc_city.city_id, zc_city.country_id, zc_city.city_name, zc_city.city_name_it, zc_region_master.province_code, zc_provience.provience_name, zc_provience.provience_name_it from zc_property_details left join zc_property_img on zc_property_details.property_id = zc_property_img.property_id left join zc_contract_types on zc_property_details.contract_id = zc_contract_types.contract_id left join zc_typologies on zc_property_details.typology = zc_typologies.typology_id left join zc_city on zc_property_details.city = zc_city.city_id left join zc_provience on zc_property_details.provience = zc_provience.provience_id left join zc_region_master on zc_city.city_name = zc_region_master.city " . $UserActiveSql . " where zc_property_img.img_type = 'main_image' " . $UserActiveWhere . ' ' . $where . " AND `zc_typologies`.`status`='active' AND property_approval='1' AND suspention_status='0' " . $blockedUserIdSQL . " ORDER BY " . $orderby . " LIMIT " . $startpoint . ", " . $perpage;
 		if($filters['category_id'] == 10)
 		{
-			$sql = "select zc_property_details.*, zc_property_img.file_name as main_img, zc_contract_types.contract_id, zc_contract_types.name, zc_contract_types.name_it, zc_contract_types.short_code, zc_contract_types.desc, zc_typologies.typology_id, zc_typologies.name as typology_name, zc_typologies.name_it as typology_name_it, zc_city.city_id, zc_city.country_id, zc_city.city_name, zc_city.city_name_it, zc_region_master.province_code, zc_provience.provience_name, zc_provience.provience_name_it from zc_property_details left join zc_property_img on zc_property_details.property_id = zc_property_img.property_id left join zc_contract_types on zc_property_details.contract_id = zc_contract_types.contract_id left join zc_typologies on zc_property_details.typology = zc_typologies.typology_id left join zc_city on zc_property_details.city = zc_city.city_id left join zc_provience on zc_property_details.provience = zc_provience.provience_id left join zc_region_master on zc_city.city_name = zc_region_master.city where zc_property_details.add_to_luxury='1' AND zc_property_details.category_id IN (1,2,5,6) AND zc_property_img.img_type = 'main_image' ".$where." AND `zc_typologies`.`status`='active' AND property_approval='1' AND suspention_status='0' ".$blockedUserIdSQL." ORDER BY ".$orderby." LIMIT ".$startpoint.", ".$perpage;
+			$sql = "select zc_property_details.*, zc_property_img.file_name as main_img, zc_contract_types.contract_id, zc_contract_types.name, zc_contract_types.name_it, zc_contract_types.short_code, zc_contract_types.desc, zc_typologies.typology_id, zc_typologies.name as typology_name, zc_typologies.name_it as typology_name_it, zc_city.city_id, zc_city.country_id, zc_city.city_name, zc_city.city_name_it, zc_region_master.province_code, zc_provience.provience_name, zc_provience.provience_name_it from zc_property_details left join zc_property_img on zc_property_details.property_id = zc_property_img.property_id left join zc_contract_types on zc_property_details.contract_id = zc_contract_types.contract_id left join zc_typologies on zc_property_details.typology = zc_typologies.typology_id left join zc_city on zc_property_details.city = zc_city.city_id left join zc_provience on zc_property_details.provience = zc_provience.provience_id left join zc_region_master on zc_city.city_name = zc_region_master.city " . $UserActiveSql . " where zc_property_details.add_to_luxury='1' AND zc_property_details.category_id IN (1,2,5,6) AND zc_property_img.img_type = 'main_image' " . $UserActiveWhere . ' ' . $where . " AND `zc_typologies`.`status`='active' AND property_approval='1' AND suspention_status='0' " . $blockedUserIdSQL . " ORDER BY " . $orderby . " LIMIT " . $startpoint . ", " . $perpage;
 		}
-		//echo "=====".$sql;
 		$row = $this->db->query($sql);
 		if($row->num_rows() > 0){
 			$result = $row->result();
@@ -917,10 +917,22 @@ class propertym extends CI_Model {
 		$this->db->order_by("msg_date","desc");
 		//$this->db->order_by("msg_date","desc");
 		$this->db->limit($limit, $start);*/
-		$sql = "SELECT pm.*, (SELECT msg_date FROM zc_property_message_info as tmp WHERE (pm.user_id_to=".$uid." AND pm.msg_to_delete='0' AND tmp.property_id=pm.property_id AND tmp.msg_grp_id=pm.msg_grp_id) ORDER BY msg_date DESC LIMIT 1) as odate, (SELECT suspention_status FROM zc_property_details WHERE property_id=pm.property_id) as suspention_status FROM zc_property_message_info as pm WHERE (pm.user_id_to=".$uid." AND pm.msg_to_delete='0') GROUP BY pm.msg_grp_id ORDER BY odate DESC LIMIT ".$start.",".$limit;  // OR (pm.user_id_from=".$uid." AND pm.msg_from_delete='0')
+		$sql = "SELECT pm.*,
+					(SELECT msg_date FROM zc_property_message_info as tmp
+						WHERE
+						(pm.user_id_to=" . $uid . " AND pm.msg_to_delete='0' AND tmp.property_id=pm.property_id AND tmp.msg_grp_id=pm.msg_grp_id)
+						ORDER BY msg_date DESC LIMIT 1) as odate,
+					(SELECT suspention_status FROM zc_property_details
+						WHERE
+						property_id=pm.property_id) as suspention_status,
+					(SELECT property_approval FROM zc_property_details
+						WHERE
+						property_id=pm.property_id) as admin_approval
+
+				FROM zc_property_message_info as pm WHERE (pm.user_id_to=" . $uid . " AND pm.msg_to_delete='0') GROUP BY pm.msg_grp_id ORDER BY odate DESC LIMIT " . $start . "," . $limit;  // OR (pm.user_id_from=".$uid." AND pm.msg_from_delete='0')
 	
 		$query = $this->db->query($sql);
-		//echo "==========".$this->db->last_query();
+		#echo "==========".$this->db->last_query();
 		if ($query->num_rows() > 0) {
 			foreach ($query->result_array() as $row) {
 				$data[] = $row;
@@ -954,10 +966,22 @@ class propertym extends CI_Model {
 		$this->db->order_by("msg_date","desc");
 		$this->db->limit($limit, $start);*/
 
-		$sql = "SELECT pm.*, (SELECT msg_date FROM zc_property_message_info as tmp WHERE (pm.user_id_from=".$uid." AND pm.msg_from_delete='0' AND tmp.property_id=pm.property_id AND tmp.msg_grp_id=pm.msg_grp_id) ORDER BY msg_date DESC LIMIT 1) as odate FROM zc_property_message_info as pm WHERE (pm.user_id_from=".$uid." AND pm.msg_from_delete='0') GROUP BY pm.msg_grp_id ORDER BY odate DESC LIMIT ".$start.",".$limit;  // OR (pm.user_id_from=".$uid." AND pm.msg_from_delete='0')
+		$sql = "SELECT pm.*,
+					(SELECT msg_date FROM zc_property_message_info as tmp
+							WHERE
+							(pm.user_id_from=" . $uid . " AND pm.msg_from_delete='0' AND tmp.property_id=pm.property_id AND tmp.msg_grp_id=pm.msg_grp_id)
+							ORDER BY msg_date DESC LIMIT 1) as odate,
+						(SELECT suspention_status FROM zc_property_details
+							WHERE
+							property_id=pm.property_id) as suspention_status,
+						(SELECT property_approval FROM zc_property_details
+							WHERE
+							property_id=pm.property_id) as admin_approval
+					FROM zc_property_message_info as pm
+					WHERE (pm.user_id_from=" . $uid . " AND pm.msg_from_delete='0') GROUP BY pm.msg_grp_id ORDER BY odate DESC LIMIT " . $start . "," . $limit;  // OR (pm.user_id_from=".$uid." AND pm.msg_from_delete='0')
 
 		$query = $this->db->query($sql);
-		//echo "==========".$this->db->last_query();
+		#echo "==========".$this->db->last_query();exit;
 		if ($query->num_rows() > 0) {
 			foreach ($query->result_array() as $row) {
 				$data[] = $row;
@@ -1022,7 +1046,7 @@ class propertym extends CI_Model {
 		return false;
 	}
 	public function add_message($new_message){
-		//echo '<pre>';print_r($new_message);die;
+		#echo '<pre>';print_r($new_message);die;
 		$this->db->insert('zc_property_message_info', $new_message);
 		//echo $sql = $this->db->last_query();die;
 		 return $msg_id = $this->db->insert_id();

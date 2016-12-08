@@ -2446,7 +2446,7 @@ $lang['new_feedback_mail_to_red_id'] = 'To read it, go to My feedback page on Za
 $lang['new_feedback_mail_click_here'] = 'CLICK HERE!';
 $lang['Messages_you_are_receiving_this_email_because'] = 'You are received this email because you are registered on ZapCasa. To stop receiving these emails, log in to your ZapCasa account and disable the notifications. www.zapcasa.it';
 
-$lang['suspended_property_msg_by_admin_first'] = 'Property is suspended.' ;
+
 $lang['suspended_property_msg_by_admin_secound'] = 'We are checking if it complies with the <a href="../site/cmsPages/terms-of-use">Terms</a> of ZapCasa.<br>After checked, it could be totally resumed, partially modified or completely deleted.';
 
 $lang['add_property_parking'] = 'Parking';
@@ -2564,7 +2564,10 @@ $lang['cal_december']	= "December"; 	// Italian = "Dicembre";
 
 /* Custom added lines */
 
-$lang['prop_not_avilable']	= "property is deleted, no longer available";
-
+$lang['prop_not_deleted'] = "Property has been deleted on the Zapcasa. No longer available !";
+$lang['prop_not_block_suspend'] = "Property has been blocked or inactivated on the Zapcasa. No longer available !";
+$lang['suspended_property_msg_by_admin_first'] = 'Property has been suspended. No longer available !';
+$lang['inbox_this_property_inactive_by_admin'] = 'Property has been inactivated. No longer available !';
+$lang['inbox_user_blocked'] = 'You have been blocked or inactivated. No longer available !';
 /* Custom added lines */
 ?>
