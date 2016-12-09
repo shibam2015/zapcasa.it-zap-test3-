@@ -1480,6 +1480,7 @@ class property extends CI_Controller {
 		// $email_from=get_perticular_field_value('zc_property_message_info','email_id'," and msg_id='".$msg_id."'");
 		//$phone_number=get_perticular_field_value('zc_property_message_info','ph_number'," and msg_id='".$msg_id."'");
 		if(count($all_msgs) > 0){
+			#echo "<pre>"; print_r($all_msgs);#exit;
 			$area=get_perticular_field_value('zc_property_details','area'," and property_id='".$all_msgs[0]['property_id']."'");
 			$street_address=get_perticular_field_value('zc_property_details','street_address'," and property_id='".$all_msgs[0]['property_id']."'");
 			$street_no=get_perticular_field_value('zc_property_details','street_no'," and property_id='".$all_msgs[0]['property_id']."'");
@@ -1498,14 +1499,20 @@ class property extends CI_Controller {
 			if($zip!=''){
 				$areaStAddStNoZip.= $zip;
 			}
+			if ($areaStAddStNoZip == '') {
+				//$areaStAddStNoZip .= '-';
+			}
 			echo "<table>";
 			$i=0;
 			if($all_msgs[0]['property_id']!='0'){
 				//$subjectLine = ($lang=='it'?'Richiesta per':'Request for').": ".subject_inbox($all_msgs[0]['property_id']);	/*$this->lang->line('property_request_for').':'.*/ /* K */
-				$subjectLine = (strlen(subject_inbox($all_msgs[0]['property_id'])) > 11)?(($lang=='it'?'Richiesta per':'Request for').": ".subject_inbox($all_msgs[0]['property_id'])):$this->lang->line('prop_not_avilable');
+				/*$subjectLine = (strlen(subject_inbox($all_msgs[0]['property_id'])) > 11)?(($lang=='it'?'Richiesta per':'Request for').": ".subject_inbox($all_msgs[0]['property_id'])):$this->lang->line('prop_not_avilable');*/
+				$subjectLine = (ucfirst($all_msgs[0]['subject']) != '') ? (($lang == 'it' ? 'Richiesta per' : 'Request for') . ": " . ucfirst($all_msgs[0]['subject'])) : $this->lang->line('prop_not_avilable');
 			}else{
-				$subjectLine = ucfirst($all_msgs[0]['subject']);	/*$this->lang->line('property_subject').':'.*/
+				$subjectLine = (ucfirst($all_msgs[0]['subject']) != '') ? (($lang == 'it' ? 'Richiesta per' : 'Request for') . ": " . ucfirst($all_msgs[0]['subject'])) : $this->lang->line('prop_not_avilable');
+				//$subjectLine = ucfirst($all_msgs[0]['subject']);	/*$this->lang->line('property_subject').':'.*/
 			}
+			#echo $subjectLine;exit;
 			$j = 1;
 			foreach($all_msgs as $msgs){
 				if($i%2==0){

@@ -1108,8 +1108,8 @@ class propertym extends CI_Model {
 	public function delete_property($property_id){
 
 		$sql = "delete from zc_property_message_info where property_id='".$property_id."'";
-		$this->db->query($sql);
-		$sql="delete from zc_property_details where property_id='".$property_id."'";
+		//$this->db->query($sql);
+		//$sql="delete from zc_property_details where property_id='".$property_id."'";
 		return $this->db->query($sql);
 	}
 

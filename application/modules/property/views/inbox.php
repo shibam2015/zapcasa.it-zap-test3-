@@ -192,9 +192,10 @@
 							</td>
                             <td>
 							<?php
-                            if($msg['property_id']!='0'){
+							if ($msg['property_id'] = '0') {
 								?>
                                 <span <?php echo($unReadMsgCounter > 0?'style="font-weight:bold;cursor:pointer;"':'style="cursor:pointer;"'); ?> onClick="return click_me(<?php echo $msg['msg_id'];?>,<?php echo $msg['property_id'];?>,<?php echo $check_user_to[0]['status'];?>);">
+
 									<?php
 										if(strlen(subject_inbox($msg['property_id'])) > 11)
 										{
@@ -207,7 +208,6 @@
 									?>
 								</span>
 							<?php }else{
-
 									if($msg['subject'] == 0){
 										$noProMsgSub = get_perticular_field_value('zc_property_message_info','subject',"and subject !='0' and msg_grp_id = '".$msg['msg_grp_id']."' and msg_to_delete != ' '");
 									}else{
@@ -288,61 +288,74 @@
 
 					<?php if(isset($links)){echo $links; }?>
                     </div>
-					<table id="bbb" style="display:none;">
-						<?php if ($msg_totals[0]['admin_approval'] == 0) { ?>
-							<div class="warrning">
-								<p> <?php echo $this->lang->line('inbox_this_property_inactive_by_admin'); ?> </p></div>
-							<!--<div style="" class="search-fld" style="width:98% !important;">
+					<?php if (!empty($msg_totals)) {
+						?>
+						<table id="bbb" style="display:none;">
+							<?php if ($msg_totals[0]['admin_approval'] == '') { ?>
+								<div class="warrning">
+									<p> <?php echo $this->lang->line('inbox_this_property_deleted'); ?> </p></div>
+								<!--<div style="" class="search-fld" style="width:98% !important;">
 						  	<p> <?php /*echo $this->lang->line('inbox_this_user_is_no_longer_registered'); */ ?> </p>
 					 	</div>-->
-						<?php } else if ($check_user_to[0]['status'] == 0) { ?>
-							<div class="warrning">
-								<p> <?php echo $this->lang->line('inbox_this_user_is_no_longer_registered'); ?> </p>
-							</div>
-							<!--<div style="" class="search-fld" style="width:98% !important;">
+							<?php } else if ($msg_totals[0]['admin_approval'] == 0) { ?>
+								<div class="warrning">
+									<p> <?php echo $this->lang->line('inbox_this_property_inactive_by_admin'); ?> </p>
+								</div>
+
+							<?php } else if ($check_user_to[0]['status'] == 0) { ?>
+								<div class="warrning">
+									<p> <?php echo $this->lang->line('inbox_this_user_is_no_longer_registered'); ?> </p>
+								</div>
+								<!--<div style="" class="search-fld" style="width:98% !important;">
 						  	<p> <?php /*echo $this->lang->line('inbox_this_user_is_no_longer_registered'); */ ?> </p>
 					 	</div>-->
-					<?php } else if($msg_totals[0]['blocked_note'] != "" && strlen($msg_totals[0]['blocked_note']) > 0) { ?>
-							<div class="warrning">
-								<p> <?php echo $this->lang->line('inbox_this_user_has_been_blocked'); ?> </p></div>
-							<!--<div style="" class="search-fld" style="width:98% !important;">
+							<?php } else if ($msg_totals[0]['blocked_note'] != "" && strlen($msg_totals[0]['blocked_note']) > 0) { ?>
+								<div class="warrning">
+									<p> <?php echo $this->lang->line('inbox_this_user_has_been_blocked'); ?> </p></div>
+								<!--<div style="" class="search-fld" style="width:98% !important;">
 							<p> <?php /*echo $this->lang->line('inbox_this_user_has_been_blocked'); */ ?> </p>
 						</div>-->
-					<?php } else if(isset($msg_totals[0]['suspention_status']) && $msg_totals[0]['suspention_status'] == 1) { ?>
-							<div class="warrning">
-								<p> <?php echo $this->lang->line('suspended_property_msg_by_admin_first'); ?> </p></div>
-							<!--<div style="" class="search-fld" style="width:98% !important;">
+							<?php } else if (isset($msg_totals[0]['suspention_status']) && $msg_totals[0]['suspention_status'] == 1) { ?>
+								<div class="warrning">
+									<p> <?php echo $this->lang->line('suspended_property_msg_by_admin_first'); ?> </p>
+								</div>
+								<!--<div style="" class="search-fld" style="width:98% !important;">
 							<p> <?php /*echo $this->lang->line('suspended_property_msg_by_admin_first'); */ ?> </p>
 						</div>-->
-					<?php } else { ?>
-                        <div style="display:none;" id="reply_msg">
-							<?php
-							echo form_open_multipart('property/msg_reply', array('class' => 'add_property_form', 'id' => 'idForm'));
-							if($check_user_to[0]['status']==1){
-								$disable='';
-							}else{
-								$disable='readonly="true"';
-							}
-							?>
-							<label id="errorMessage"><?php echo $this->lang->line('inbox_this_field_is_required');?></label>
+							<?php } else { ?>
+								<div style="display:none;" id="reply_msg">
+									<?php
+									echo form_open_multipart('property/msg_reply', array('class' => 'add_property_form', 'id' => 'idForm'));
+									if ($check_user_to[0]['status'] == 1) {
+										$disable = '';
+									} else {
+										$disable = 'readonly="true"';
+									}
+									?>
+									<label
+										id="errorMessage"><?php echo $this->lang->line('inbox_this_field_is_required'); ?></label>
 
-							<div class="search-fld" style="width:98% !important;">
+									<div class="search-fld" style="width:98% !important;">
 								<textarea rows="3" <?php echo $disable; ?> cols="15" class="required"
 										  placeholder="<?php echo $this->lang->line('contactus_fill_the_form_write_your_message'); ?>"
 										  name="message" id="message"
 										  style="width:100%;height:164px; resize:none;"></textarea>
-                            </div>
-                            <div>&nbsp;</div>
-                            <div style="float:right;">
-                                <input type="hidden" name="redirect_to" value="get_message">
-								<input type="hidden" name="user_id_form" value="<?php echo $this->session->userdata( 'user_id' );?>" >
-                                <input type="hidden" id="msg_id" name="msg_id" value="" >
-                                <input type="submit" class="searchbt" value="<?php echo $this->lang->line('inbox_button_submit');?>" >
-                            </div>
-                            <?php echo form_close(); ?>
-                        </div>
-                    <?php } ?>
-					</table>
+									</div>
+									<div>&nbsp;</div>
+									<div style="float:right;">
+										<input type="hidden" name="redirect_to" value="get_message">
+										<input type="hidden" name="user_id_form"
+											   value="<?php echo $this->session->userdata('user_id'); ?>">
+										<input type="hidden" id="msg_id" name="msg_id" value="">
+										<input type="submit" class="searchbt"
+											   value="<?php echo $this->lang->line('inbox_button_submit'); ?>">
+									</div>
+									<?php echo form_close(); ?>
+								</div>
+							<?php } ?>
+						</table>
+					<?php } ?>
+
                 </div>
             </div>
 		<?php

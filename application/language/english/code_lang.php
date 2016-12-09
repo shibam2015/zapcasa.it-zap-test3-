@@ -2569,5 +2569,6 @@ $lang['prop_not_block_suspend'] = "Property has been blocked or inactivated on t
 $lang['suspended_property_msg_by_admin_first'] = 'Property has been suspended. No longer available !';
 $lang['inbox_this_property_inactive_by_admin'] = 'Property has been inactivated. No longer available !';
 $lang['inbox_user_blocked'] = 'You have been blocked or inactivated. No longer available !';
+$lang['inbox_this_property_deleted'] = 'Property has been deleted. No longer available !';
 /* Custom added lines */
 ?>
