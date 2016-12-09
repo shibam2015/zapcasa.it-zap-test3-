@@ -947,6 +947,21 @@ class propertym extends CI_Model {
 		// echo json_encode($data);exit;
 		return $data;
 	}
+
+	public function check_user_to_status($user_id = 0)
+	{
+		$data = array();
+		if ($user_id) {
+			$sql = "SELECT * FROM `zc_user` WHERE `user_id`=" . $user_id;
+			$query = $this->db->query($sql);
+			//echo $this->db->last_query();exit;
+			if ($query->num_rows() > 0) {
+				$data = $query->result_array();
+			}
+		}
+		return $data;
+	}
+
 	public function get_send_msg_detail($uid,$limit, $start){
 		/*
 		$sql="SELECT * FROM `zc_property_message_info` where user_id_to='".$uid."'";
@@ -961,7 +976,7 @@ class propertym extends CI_Model {
 		$data = array();
 		/*$this->db->where('user_id_from =',$uid);
 		$this->db->where('msg_from_delete =','0');
-		//$this->db->or_where('user_id_from =',$uid); 
+		//$this->db->or_where('user_id_from =',$uid);
 		$this->db->group_by("msg_grp_id");
 		$this->db->order_by("msg_date","desc");
 		$this->db->limit($limit, $start);*/
@@ -987,9 +1002,10 @@ class propertym extends CI_Model {
 				$data[] = $row;
 			}
 		}
-		
+
 		return $data;
 	}
+
 	public function get_saved_list($limit, $start){
 		$uid=$this->session->userdata( 'user_id' );
 		$this->db->where('saved_by_user_id =',$uid);
@@ -1003,11 +1019,12 @@ class propertym extends CI_Model {
 			}
 		}
 		return $data;
-	}	
+	}
+
 	public function get_saved_property($limit, $start){
 		$uid=$this->session->userdata( 'user_id' );
 		$sql = "SELECT sp.* FROM zc_saved_property as sp JOIN zc_property_featured as p ON sp.property_id=p.property_id JOIN zc_property_details as pd ON p.property_id = pd.property_id ";
-		$sql .= "JOIN zc_user as u ON pd.property_post_by = u.user_id WHERE sp.saved_by_user_id = ".$uid." AND p.status='0' AND u.status='0' ORDER BY sp.saved_date DESC LIMIT ".$start.",".$limit;  
+		$sql .= "JOIN zc_user as u ON pd.property_post_by = u.user_id WHERE sp.saved_by_user_id = " . $uid . " AND p.status='0' AND u.status='0' ORDER BY sp.saved_date DESC LIMIT " . $start . "," . $limit;
 
 		// $this->db->where('saved_by_user_id =',$uid);
 		// $this->db->order_by("saved_date", "desc");
@@ -1017,7 +1034,7 @@ class propertym extends CI_Model {
 		$data = array();
 
 		// echo json_encode($data);exit;
-		
+
 		if ($query->num_rows() > 0) {
 			foreach ($query->result_array() as $row) {
 				$data[] = $row;
@@ -1025,11 +1042,13 @@ class propertym extends CI_Model {
 		}
 		return $data;
 	}
+
 	public function change_read_status($msg_grp_id){
 		$uid=$this->session->userdata( 'user_id' );
 		$sql="Update zc_property_message_info set read_status='1' where user_id_to='".$uid."' and msg_grp_id='".$msg_grp_id."'";
 		return $this->db->query($sql);
 	}
+
 	public function get_property_msg($msg_grp_id){
 		$this->db->where('msg_grp_id =',$msg_grp_id);
 		//$this->db->where('msg_to_delete =',0);
@@ -1045,12 +1064,14 @@ class propertym extends CI_Model {
 		}
 		return false;
 	}
+
 	public function add_message($new_message){
 		#echo '<pre>';print_r($new_message);die;
 		$this->db->insert('zc_property_message_info', $new_message);
 		//echo $sql = $this->db->last_query();die;
 		 return $msg_id = $this->db->insert_id();
 	}
+
 	public function search_msg($search_string,$user_id_to,$limit, $start){
 		$str="";
 		if($search_string!=''){
@@ -1065,22 +1086,25 @@ class propertym extends CI_Model {
 			return $data;
 		}
 	}
+
 	public function add_new_property_csv($new_data){
 		//$error="";
-		foreach($new_data as $new_datas){			
+		foreach ($new_data as $new_datas) {
 			if(is_string($new_datas['provience']))
-				$new_datas['provience']=get_perticular_field_value('zc_provience','provience_id'," AND ".($_COOKIE['lang']=='english'?"`provience_name`":"`provience_name_it`")." = '".$new_datas['provience']."'");			
+				$new_datas['provience'] = get_perticular_field_value('zc_provience', 'provience_id', " AND " . ($_COOKIE['lang'] == 'english' ? "`provience_name`" : "`provience_name_it`") . " = '" . $new_datas['provience'] . "'");
 			if(is_string($new_datas['city']))
-				$new_datas['city']=get_perticular_field_value('zc_city','city_id'," AND ".($_COOKIE['lang']=='english'?"`city_name`":"`city_name_it`")." = '".$new_datas['city']."'");		
+				$new_datas['city'] = get_perticular_field_value('zc_city', 'city_id', " AND " . ($_COOKIE['lang'] == 'english' ? "`city_name`" : "`city_name_it`") . " = '" . $new_datas['city'] . "'");
 			$this->db->insert('zc_property_details', $new_datas);
 		}
 		return 1;
 	}
+
 	public function add_new_property($new_data){
 		//echo '<pre>';print_r($new_data);die;
 		  $this->db->insert('zc_property_details', $new_data);
 		  return $property_id = $this->db->insert_id();
 	}
+
 	public function delete_property($property_id){
 
 		$sql = "delete from zc_property_message_info where property_id='".$property_id."'";
@@ -1088,15 +1112,18 @@ class propertym extends CI_Model {
 		$sql="delete from zc_property_details where property_id='".$property_id."'";
 		return $this->db->query($sql);
 	}
+
 	public function del_prop_image($property_id){
 		$sql="delete from zc_property_img where property_id='".$property_id."'";
 		return $this->db->query($sql);
 	}
+
 	public function suspend_property($property_id){
 		$uid=$this->session->userdata('user_id');
 		$sql="update zc_property_details set suspention_status='1',`suspention_by_user`='".$uid."' where property_id='".$property_id."'";
 		return $this->db->query($sql);
-	}	
+	}
+
 	public function resume_property($property_id){
 		$uid=$this->session->userdata( 'user_id' );
 		$sql="update zc_property_details set suspention_status='0',`suspention_by_user`='".$uid."' where property_id='".$property_id."'";
@@ -1104,25 +1131,30 @@ class propertym extends CI_Model {
 		$this->db->query($sql1);
 		return $this->db->query($sql);
 	}
+
 	public function suspend_featured_property($property_id){
 		$uid=$this->session->userdata('user_id');
 		$sql="update zc_property_details set feature_status='0',`suspention_by_user`='".$uid."' where property_id='".$property_id."'";
 		return $this->db->query($sql);
 	}
+
 	public function resume_featured_property($property_id){
 		$uid=$this->session->userdata('user_id');
 		$sql="update zc_property_details set feature_status='1',`suspention_by_user`='".$uid."' where property_id='".$property_id."'";
 		$this->db->query($sql);
 		return $this->db->query($sql);
 	}
+
 	public function insert_property_picture($file_names,$property_id,$img_type,$prop_img_no){
 		$sql="insert into  zc_property_img set property_id='".$property_id."',file_name='".$file_names."',img_type='".$img_type."',prop_img_no='".$prop_img_no."'";
 		return $this->db->query($sql);
 	}
+
 	public function del_property_img($img_id){
 		$sql="delete from zc_property_img where img_id='".$img_id."'";
 		return $this->db->query($sql);
 	}
+
 	public function get_property_detail($property_id){
 		$sql="SELECT * FROM `zc_property_details` where property_id='".$property_id."'";
 		$query=$this->db->query($sql);
@@ -1134,6 +1166,7 @@ class propertym extends CI_Model {
 		}
 		return $data;
 	}
+
 	public function property_image($property_id){
 		$sql="SELECT * FROM `zc_property_img` where property_id='".$property_id."' and img_type='prop_picture'";
 		$query=$this->db->query($sql);
@@ -1144,6 +1177,7 @@ class propertym extends CI_Model {
 			return $data;
 		}
 	}
+
 	public function edit_property_bus($new_data,$property_id){
 		$query = $this->db->query("SELECT * FROM zc_property_details WHERE property_id='".$property_id."'");
 		$res = $query->result();
@@ -1152,9 +1186,10 @@ class propertym extends CI_Model {
 			$new_data['update_time'] = '';
 			$new_data['posting_time'] = date('Y-m-d');
 		}
-		$where = "property_id = '".$property_id."'";		
+		$where = "property_id = '" . $property_id . "'";
 		$str = $this->db->update('zc_property_details', $new_data, $where);
 	}
+
 	public function edit_property_res($new_data,$property_id){
 		//echo '<pre>';print_r($new_data);die;
 		$query = $this->db->query("SELECT * FROM zc_property_details WHERE property_id='".$property_id."'");
@@ -1165,8 +1200,9 @@ class propertym extends CI_Model {
 			$new_data['posting_time'] = date('Y-m-d');
 		}
 		$where = "property_id = '".$property_id."'";
-		$str = $this->db->update('zc_property_details', $new_data, $where); 
+		$str = $this->db->update('zc_property_details', $new_data, $where);
 	}
+
 	public function edit_property_rom($new_data,$property_id){
 		$query = $this->db->query("SELECT * FROM zc_property_details WHERE property_id='".$property_id."'");
 		$res = $query->result();
@@ -1178,6 +1214,7 @@ class propertym extends CI_Model {
 		$where = "property_id = '".$property_id."'";
 		$str = $this->db->update('zc_property_details', $new_data, $where);
 	}
+
 	public function edit_property_vac($new_data,$property_id){
 		$query = $this->db->query("SELECT * FROM zc_property_details WHERE property_id='".$property_id."'");
 		$res = $query->result();
@@ -1187,8 +1224,9 @@ class propertym extends CI_Model {
 			$new_data['posting_time'] = date('Y-m-d');
 		}
 		$where = "property_id = '".$property_id."'";
-		$str = $this->db->update('zc_property_details', $new_data, $where); 
+		$str = $this->db->update('zc_property_details', $new_data, $where);
 	}
+
 	public function edit_property_land($new_data,$property_id){
 		$query = $this->db->query("SELECT * FROM zc_property_details WHERE property_id='".$property_id."'");
 		$res = $query->result();
@@ -1200,10 +1238,12 @@ class propertym extends CI_Model {
 		$where = "property_id = '".$property_id."'";
 		$str = $this->db->update('zc_property_details', $new_data, $where);
 	}
+
 	public function delete_saved_property($saved_id){
 		$sql="Delete from zc_save_search where saved_id='".$saved_id."'";
 		return $this->db->query($sql);
 	}
+
 	public function get_all_prop_image($property_id){
 		$sql="SELECT * FROM `zc_property_img` where property_id='".$property_id."'";
 		$query=$this->db->query($sql);
@@ -1215,6 +1255,7 @@ class propertym extends CI_Model {
 		}
 		return $data;
 	}
+
 	public function get_similar_property($property_id) {
 		$data = array();
 		$sql="SELECT * FROM `zc_property_details` where property_id='".$property_id."'";
@@ -1236,6 +1277,7 @@ class propertym extends CI_Model {
 		}
 		return $data;
 	}
+
 	public function get_nearby_category_property() {
 		$data = array();
 		$sql="SELECT * FROM `zc_nearbyproperty_category` WHERE `status`=1";
@@ -1245,23 +1287,25 @@ class propertym extends CI_Model {
 		}
 		return $data;
 	}
+
 	public function delete_per_msg($userid,$msggroupid,$type) {
 		if($type=='from'){		//	For Inbox Items.
 			$sql_del="update zc_property_message_info set msg_from_delete='0',msg_to_delete='1' where user_id_to='".$userid."' AND msg_grp_id='".$msggroupid."'";
 		}elseif($type=='to'){	//	For Sent Items.
 			$sql_del="update zc_property_message_info SET msg_from_delete='1',msg_to_delete='0' where user_id_from='".$userid."' AND msg_grp_id='".$msggroupid."'";
 		}
-		$this->db->query($sql_del);		
+		$this->db->query($sql_del);
 	}
+
 	public function delete_per_msg_2($msgid,$type) {
 		if($type=='to'){		//	For Inbox Items.
 			$sql_del="update zc_property_message_info set msg_from_delete='0',msg_to_delete='1' where msg_id='".$msgid."'";
 		}elseif($type=='from'){	//	For Sent Items.
 			$sql_del="update zc_property_message_info SET msg_from_delete='1',msg_to_delete='0' where msg_id='".$msgid."'";
 		}
-		$this->db->query($sql_del);		
+		$this->db->query($sql_del);
 	}
-	
+
 	public function get_provience_name($province_id=0){
 		$data = array();
 		$sql="SELECT * FROM `zc_provience` WHERE `provience_id`=".$province_id;
@@ -1271,18 +1315,7 @@ class propertym extends CI_Model {
 		}
 		return $data;
 	}
-	public function check_user_to_status($user_id=0){
-		$data = array();
-		if($user_id){
-			$sql="SELECT * FROM `zc_user` WHERE `user_id`=".$user_id;
-			$query=$this->db->query($sql);
-			//echo $this->db->last_query();exit;
-			if($query->num_rows()>0){
-				$data = $query->result_array();
-			}
-		}	
-		return $data;
-	}
+
 	public function save_property($new_data){
 		$this->db->insert('zc_saved_property', $new_data);
 		return $saved_id = $this->db->insert_id();

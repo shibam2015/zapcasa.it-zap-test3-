@@ -219,7 +219,7 @@
 								</span>
                         	<?php } ?>
                                 <p style="color: rgb(164, 164, 164);">
-									<?php echo ucfirst(substr($msg['message'], 0, 50)) . '...';?>
+									<?php echo ucfirst(substr($msg['message'], 0, 50)) . '...'; ?>
                                 </p>
                             </td>
                             <td>

@@ -15,7 +15,8 @@
 				<div class="tabBox">
 
 
-					<form name="search" id="prop_search" method="get" class="searchbox" action="<?php echo base_url();?>property/search">
+					<form name="search" id="prop_search" method="get" class="searchbox"
+						  action="<?php echo base_url(); ?>property/search">
                             	<h4><?php echo $this->lang->line('home_page_search_by');?>:</h4>
                                 <span style="height:63px;">
                                 	<label><?php echo $this->lang->line('home_page_category');?></label>
@@ -129,7 +130,7 @@
 
 					<div class="bottomshadow"></div>
 
-          		</div>
+				</div>
             </div>
             <div class="property_colum_adverts">
            	   <h2><?php echo $this->lang->line('home_page_find_an_advertiser');?></h2>

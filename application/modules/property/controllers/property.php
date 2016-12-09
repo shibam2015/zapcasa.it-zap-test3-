@@ -470,11 +470,9 @@ class property extends CI_Controller {
 		
 		//echo json_encode($data);		
 	}
-	private function do_logout(){
-		$this->session->set_userdata('user_id',0);
-		$this->session->set_userdata('session_id',0);
-	}
-	public function add_property_form(){		
+
+	public function add_property_form()
+	{
 		$uid=$this->session->userdata('user_id');
 		if($uid==0 || $uid==''){
 			redirect('users/common_reg');
@@ -520,7 +518,7 @@ class property extends CI_Controller {
 						$price=$pricees;
 						$private_nagotiation='0';
 					}
-					
+
 					if($category=='LAND'){
 						$new_data['contract_id']=$this->input->post('contract');
 						$new_data['category_id']='4';
@@ -599,8 +597,8 @@ class property extends CI_Controller {
 						$new_data['price']=$price;
 						$new_data['private_nagotiation']=$private_nagotiation;
 						$new_data['youtube_url']=$this->input->post('url');
-						$new_data['typology']=$this->input->post('typology');					
-						$new_data['floor']=$this->input->post('floor');					
+						$new_data['typology'] = $this->input->post('typology');
+						$new_data['floor'] = $this->input->post('floor');
 						$new_data['bathrooms_no']=$this->input->post('bothroom_no');
 						$new_data['kitchen']=$this->input->post('kitchen');
 						$new_data['heating']=$this->input->post('heating');
@@ -686,20 +684,20 @@ class property extends CI_Controller {
 						$new_data['private_nagotiation']=$private_nagotiation;
 						$new_data['youtube_url']=$this->input->post('url');
 						$new_data['typology']=$this->input->post('typology');
-						$new_data['status']=$this->input->post('status_of_property');					
-						$new_data['kind']=$this->input->post('kind_of_property');					
-						$new_data['energyclass']=$this->input->post('energy_efficiency');					
-						$new_data['surface_area']=$this->input->post('surface_area');					
-						$new_data['room_no']=$this->input->post('room_no');					
+						$new_data['status'] = $this->input->post('status_of_property');
+						$new_data['kind'] = $this->input->post('kind_of_property');
+						$new_data['energyclass'] = $this->input->post('energy_efficiency');
+						$new_data['surface_area'] = $this->input->post('surface_area');
+						$new_data['room_no'] = $this->input->post('room_no');
 						$new_data['floor']=$this->input->post('floor');
-						$new_data['total_of_floors']=$this->input->post('tot_floor');					
+						$new_data['total_of_floors'] = $this->input->post('tot_floor');
 						$new_data['year_of_building']=$this->input->post('year_of_building');
-						$new_data['bathrooms_no']=$this->input->post('bothroom_no');					
+						$new_data['bathrooms_no'] = $this->input->post('bothroom_no');
 						$new_data['kitchen']=$this->input->post('kitchen');
 						$new_data['heating']=$this->input->post('heating');
-						$new_data['parking']=$this->input->post('parking');					
+						$new_data['parking'] = $this->input->post('parking');
 						$new_data['furnished']=$this->input->post('furnished');
-						$new_data['availability']=$this->input->post('availabilty');					
+						$new_data['availability'] = $this->input->post('availabilty');
 						$new_data['air_conditioning']=$this->input->post('air_conditioning');
 						$new_data['elevator']=$this->input->post('elevator');
 						$new_data['balcony']=$this->input->post('balcony');
@@ -713,7 +711,7 @@ class property extends CI_Controller {
 						$new_data['longitude'] = (float)$lat_lng_array->lng;
 						$property_id=$this->propertym->add_new_property($new_data);
 					}
-					
+
 					$files = $_FILES;
 					if($files['userfile']['name']!=''){
 						$this->edit_do_uploads($property_id);
@@ -747,59 +745,176 @@ class property extends CI_Controller {
 				$this->do_logout();
 				$msgdata = $this->lang->line('property_please_login_to_add_your_property');
 				$this->session->set_flashdata('error_user', $msgdata);
-				redirect('users/common_reg');				
+				redirect('users/common_reg');
 			}
 		}
 	}
-	public function resizeUploadedImage($width,$height,$for){
-		if($for == 'preliminary'){
-			$optimumWidth = 618;
-			$optimumHeight = 618;
-		}elseif($for == 'productimage800'){
-			$optimumWidth = 800;
-			$optimumHeight = 800;
-		}elseif($for == 'productimage241'){
-			$optimumWidth = 241;
-			$optimumHeight = 161;
-		}elseif($for == 'productimage170'){
-			$optimumWidth = 170;
-			$optimumHeight = 113;
-		}elseif($for == 'productimage75'){
-			$optimumWidth = 75;
-			$optimumHeight = 50;
+
+	public function edit_do_uploads($property_id)
+	{
+		//echo $slug;die;
+		$new_file = "Property" . $property_id;
+		$this->load->library('upload');
+		$structure = './assets/uploads/Property/' . $new_file;
+		if (!is_dir('assets/uploads/Property/' . $new_file)) {
+			mkdir('./assets/uploads/Property/' . $new_file, 0777, true);
+			chmod('./assets/uploads/Property/' . $new_file, 0777);
 		}
-		if($width > $height){
-			if($width > $optimumWidth){
-				$newWidth = $optimumWidth;
-			}else{
-				$newWidth = $width;
+		$files = $_FILES;
+		//echo '<pre>';print_r($files);die;
+		$cpt = count($_FILES['userfile']['name']);
+		for ($i = 0; $i < $cpt; $i++) {
+			$_FILES['userfile']['name'] = $files['userfile']['name'][$i];
+			$_FILES['userfile']['type'] = $files['userfile']['type'][$i];
+			$_FILES['userfile']['tmp_name'] = $files['userfile']['tmp_name'][$i];
+			$_FILES['userfile']['error'] = $files['userfile']['error'][$i];
+			$_FILES['userfile']['size'] = $files['userfile']['size'][$i];
+			$upload_path = 'assets/uploads/Property/' . $new_file;
+			$this->upload->initialize($this->set_upload_options($upload_path));
+			if ($_FILES['userfile']['name'] != '') {
+				$this->upload->do_upload();
+				$upload_data = $this->upload->data();
+				$file_names = $upload_data['file_name'];
+
+				$original_size = getimagesize($_FILES['userfile']['tmp_name']);
+				$ratio = $original_size[0] / $original_size[1];
+
+				/*
+				$this->setWatermark('userfile',"assets/uploads/Property/".$new_file."/".$file_names);
+				$fileExtension = pathinfo($_FILES['userfile']['name'], PATHINFO_EXTENSION);
+				$this->setWatermark('userfile',"assets/uploads/Property/".$new_file."/thumb_860_482/".$file_names);
+				$this->setWatermark('userfile',"assets/uploads/Property/".$new_file."/thumb_200_296/".$file_names);
+				$this->setWatermark('userfile',"assets/uploads/Property/".$new_file."/thumb_92_82/".$file_names);
+				$this->setWatermark('userfile',"assets/uploads/Property/".$new_file."/".$file_names);
+				*/
+
+				/*
+				 *	161x241
+				*/
+
+				if (!is_dir('assets/uploads/Property/' . $new_file . '/thumb_860_482')) {
+					mkdir('./assets/uploads/Property/' . $new_file . '/thumb_860_482', 0777, true);
+				}
+				$new_height1 = 161;
+				$new_width1 = 241;    //(int)($new_height3/$ratio)
+				$dfile1 = "assets/uploads/Property/" . $new_file . "/thumb_860_482/";
+				//$this->createImageWithVariousHeightWidth($fileExtension, $dfile1, $dfile1, $file_names, $new_width1, $new_height1);
+				//$resizeUploadedImage1 = $this->resizeUploadedImage($original_size[0],$original_size[1],'productimage241');
+				$imgData1 = array(
+					'sourcePath' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
+					'destinationPath' => "./assets/uploads/Property/" . $new_file . "/thumb_860_482/" . $file_names,
+					//'imageSize' => $resizeUploadedImage1['width'].'x'.$resizeUploadedImage1['height']
+					'imageSize' => $new_width1 . 'x' . $new_height1,
+					'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
+				);
+				CreateImageUsingImageMagicWithGravity($imgData1);
+				$this->setWatermarkImage("./assets/uploads/Property/" . $new_file . "/thumb_860_482/" . $file_names, "./assets/uploads/Property/" . $new_file . "/thumb_860_482/" . $file_names);
+				/*
+				 *	113x170
+				*/
+
+				if (!is_dir('assets/uploads/Property/' . $new_file . '/thumb_200_296')) {
+					mkdir('./assets/uploads/Property/' . $new_file . '/thumb_200_296', 0777, true);
+				}
+				$new_height2 = 113;
+				$new_width2 = 170;    //(int)($new_height1/$ratio)
+				$dfile2 = "assets/uploads/Property/" . $new_file . "/thumb_200_296/";
+				//$this->createImageWithVariousHeightWidth($fileExtension, $dfile2, $dfile2, $file_names, $new_width2, $new_height2);
+				//$resizeUploadedImage2 = $this->resizeUploadedImage($original_size[0],$original_size[1],'productimage170');
+				$imgData2 = array(
+					'sourcePath' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
+					'destinationPath' => "./assets/uploads/Property/" . $new_file . "/thumb_200_296/" . $file_names,
+					//'imageSize' => $resizeUploadedImage2['width'].'x'.$resizeUploadedImage2['height']
+					'imageSize' => $new_width2 . 'x' . $new_height2,
+					'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
+				);
+				CreateImageUsingImageMagicWithGravity($imgData2);
+				$this->setWatermarkImage("./assets/uploads/Property/" . $new_file . "/thumb_200_296/" . $file_names, "./assets/uploads/Property/" . $new_file . "/thumb_200_296/" . $file_names);
+				/*
+				 *	50x75
+				*/
+
+				if (!is_dir('assets/uploads/Property/' . $new_file . '/thumb_92_82')) {
+					mkdir('./assets/uploads/Property/' . $new_file . '/thumb_92_82', 0777, true);
+				}
+				$new_height3 = 50;
+				$new_width3 = 75;    //(int)($new_height2/$ratio)
+				$dfile3 = "assets/uploads/Property/" . $new_file . "/thumb_92_82/";
+				//$this->createImageWithVariousHeightWidth($fileExtension, $dfile3, $dfile3, $file_names, $new_width3, $new_height3);
+				//$resizeUploadedImage3 = $this->resizeUploadedImage($original_size[0],$original_size[1],'productimage75');
+				$imgData3 = array(
+					'sourcePath' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
+					'destinationPath' => "./assets/uploads/Property/" . $new_file . "/thumb_92_82/" . $file_names,
+					//'imageSize' => $resizeUploadedImage3['width'].'x'.$resizeUploadedImage3['height']
+					'imageSize' => $new_width3 . 'x' . $new_height3
+				);
+				CreateImageUsingImageMagicWithOutGravity($imgData3);
+
+				/*
+				 *	800x800
+				*/
+
+				$new_height4 = 800;
+				$new_width4 = 800;    //(int)($new_height2/$ratio)
+				$dfile4 = "assets/uploads/Property/" . $new_file . "/";
+				//$this->createImageWithVariousHeightWidth($fileExtension, $dfile4, $dfile4, $file_names, $new_width4, $new_height4);
+				//$resizeUploadedImage4 = $this->resizeUploadedImage($original_size[0],$original_size[1],'productimage800');
+				$imgData4 = array(
+					'sourcePath' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
+					'destinationPath' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
+					//'imageSize' => $resizeUploadedImage4['width'].'x'.$resizeUploadedImage4['height']
+					'imageSize' => $new_width4 . 'x' . $new_height4,
+					'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
+				);
+				CreateImageUsingImageMagicWithOutGravitybBigImage($imgData4);
+				$this->setWatermarkImage("./assets/uploads/Property/" . $new_file . "/" . $file_names, "./assets/uploads/Property/" . $new_file . "/" . $file_names);
+
+				if ($i == 0) {
+					$img_type = "main_image";
+					$prop_img_no = "0";
+				} else {
+					$img_type = "prop_picture";
+					$prop_img_no = $i;
+				}
+				$rs_update = $this->propertym->insert_property_picture($file_names, $property_id, $img_type, $prop_img_no);
 			}
-			$ratio = $width / $height;
-			$newHeight = (int)($newWidth/$ratio);
-		}elseif($width < $height){
-			if($height > $optimumHeight){
-				$newHeight = $optimumHeight;
-			}else{
-				$newHeight = $height;
-			}
-			$ratio = $height / $width;
-			$newWidth = (int)($newHeight/$ratio);
-		}elseif($width == $height){
-			if($height > $optimumHeight){
-				$newHeight = $optimumHeight;
-			}else{
-				$newHeight = $height;
-			}
-			$newWidth = (int)$newHeight;
 		}
-		return array("width" => $newWidth, "height" => $newHeight);
 	}
+
+	private function set_upload_options($upload_path)
+	{
+		$config = array();
+		$config['upload_path'] = $upload_path;
+		$config['allowed_types'] = '*';
+		$config['max_size'] = '0';
+		$config['overwrite'] = FALSE;
+		$config['encrypt_name'] = TRUE;
+		$config['set_file_ext'] = TRUE;
+		return $config;
+	}
+
+	public function setWatermarkImage($sourcePath, $destinationPath)
+	{
+		$this->load->library('image_lib');
+		$config['image_library'] = 'gd2';
+		$config['source_image'] = $sourcePath;
+		$config['new_image'] = $destinationPath;
+		$config['wm_type'] = 'overlay';
+		$config['wm_overlay_path'] = './assets/images/watermark_zap_logo.png';//the overlay image
+		$config['wm_opacity'] = 100;
+		$config['wm_vrt_alignment'] = 'bottom';
+		$config['wm_hor_alignment'] = 'left';
+		$this->image_lib->initialize($config);
+		$pic_path = $destinationPath;
+		$this->image_lib->watermark($pic_path);
+	}
+
 	public function upload_image_1($form_field_name,$property_id){
 		$new_file="Property".$property_id;
-		$structure = './assets/uploads/Property/'.$new_file;
-		if (!is_dir('assets/uploads/Property/'.$new_file)) {
-			mkdir('./assets/uploads/Property/'.$new_file, 0777, true);
-			chmod('./assets/uploads/Property/'.$new_file, 0777);
+		$structure = './assets/uploads/Property/' . $new_file;
+		if (!is_dir('assets/uploads/Property/' . $new_file)) {
+			mkdir('./assets/uploads/Property/' . $new_file, 0777, true);
+			chmod('./assets/uploads/Property/' . $new_file, 0777);
 		}
 		$config['upload_path'] = './assets/uploads/Property/'.$new_file;
 		$config['allowed_types'] = 'gif|jpg|jpeg|png|GIF|JPEG|JPG|PNG';
@@ -807,20 +922,20 @@ class property extends CI_Controller {
 		$this->load->library('upload', $config);
 		if ( ! $this->upload->do_upload($form_field_name)){
 			$errors = $this->upload->display_errors();
-		}else{			
-			$upload_data = $this->upload->data(); 
+		} else {
+			$upload_data = $this->upload->data();
 			$file_names =   $upload_data['file_name'];
 			$img_type="preliminary";
 			$prop_img_no="0";
 			$rs_update=$this->propertym->insert_property_picture($file_names,$property_id,$img_type,$prop_img_no);
-			
-			$new_file='assets/uploads/Property/Property'.$property_id.'/'.$dfile_name;
-			$file_names =   $upload_data['file_name'];
-			/****************	SET WATERMARK	***************/
-			//$this->setWatermark($form_field_name,$new_file.$file_names);			
-			/*********************		CREATE OPTIMIZED IMAGE (W+H)	*************************/
-			$original_size = getimagesize($_FILES['user_file_1']['tmp_name']);			
-			$fileExtension = pathinfo($_FILES['user_file_1']['name'], PATHINFO_EXTENSION);			
+
+			$new_file = 'assets/uploads/Property/Property' . $property_id . '/' . $dfile_name;
+			$file_names = $upload_data['file_name'];
+			/****************    SET WATERMARK    ***************/
+			//$this->setWatermark($form_field_name,$new_file.$file_names);
+			/*********************        CREATE OPTIMIZED IMAGE (W+H)    *************************/
+			$original_size = getimagesize($_FILES['user_file_1']['tmp_name']);
+			$fileExtension = pathinfo($_FILES['user_file_1']['name'], PATHINFO_EXTENSION);
 			$resizeUploadedImage = $this->resizeUploadedImage($original_size[0],$original_size[1],'preliminary');
 			//$this->createImageWithVariousHeightWidth($fileExtension, $new_file, $new_file, $file_names, $resizeUploadedImage['width'], $resizeUploadedImage['height']);
 			$imgData = array(
@@ -833,181 +948,63 @@ class property extends CI_Controller {
 			/*$this->setWatermarkImage('./assets/uploads/Property/Property'.$property_id.'/'.$dfile_name.'/'.$upload_data['file_name'],'./assets/uploads/Property/Property'.$property_id.'/'.$dfile_name.'/'.$upload_data['file_name']);*/
 		}
 	}
-	public function upload_image_update_1($form_field_name,$property_id){
-		$new_file="Property".$property_id;
-		$config['upload_path'] = './assets/uploads/Property/'.$new_file;
-		$config['allowed_types'] = 'gif|jpg|png|jpeg|GIF|JPEG|JPG|PNG';
-		$config['encrypt_name']=TRUE;
-		$config['set_file_ext']=TRUE;
-		
-		
-		$this->load->library('upload', $config);
-		if ( ! $this->upload->do_upload($form_field_name)){
-			$errors = $this->upload->display_errors();
-		}else{			
-			$img_id=$dfile_name=get_perticular_field_value('zc_property_img','img_id'," and property_id='".$property_id."' and img_type='preliminary'");
-			$this->propertym->del_property_img($img_id);
-			$dfile_name=get_perticular_field_value('zc_property_img','file_name'," and property_id='".$property_id."' and img_type='preliminary'");
-			$dfile = 'assets/uploads/Property/Property'.$property_id.'/'.$dfile_name;
-			if(is_file($dfile))
-				@unlink($dfile);
-			$new_file=$dfile;
-			$upload_data = $this->upload->data(); 
-			$file_names =   $upload_data['file_name'];
-			
-			$img_type="preliminary";
-			$prop_img_no="0";
-			$rs_update=$this->propertym->insert_property_picture($file_names,$property_id,$img_type,$prop_img_no);
-			
-			//$this->setWatermark($form_field_name,$new_file.$file_names);
-			
-			$original_size = getimagesize($_FILES['user_file_1']['tmp_name']);			
-			$fileExtension = pathinfo($_FILES['user_file_1']['name'], PATHINFO_EXTENSION);			
-			$resizeUploadedImage = $this->resizeUploadedImage($original_size[0],$original_size[1],'preliminary');
-			//$this->createImageWithVariousHeightWidth($fileExtension, $dfile, $dfile, $file_names, $resizeUploadedImage['width'], $resizeUploadedImage['height']);
-			$imgData = array(
-				'sourcePath' => './assets/uploads/Property/Property'.$property_id.'/'.$dfile_name.'/'.$upload_data['file_name'],
-				'destinationPath' => './assets/uploads/Property/Property'.$property_id.'/'.$dfile_name.'/'.$upload_data['file_name'],
-				'imageSize' => $resizeUploadedImage['width'].'x'.$resizeUploadedImage['height'],
-				'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
-			);
-			CreateImageUsingImageMagicWithOutGravitybBigImage($imgData);
-			/*$this->setWatermarkImage('./assets/uploads/Property/Property'.$property_id.'/'.$dfile_name.'/'.$upload_data['file_name'],'./assets/uploads/Property/Property'.$property_id.'/'.$dfile_name.'/'.$upload_data['file_name']);*/
+
+	public function resizeUploadedImage($width, $height, $for)
+	{
+		if ($for == 'preliminary') {
+			$optimumWidth = 618;
+			$optimumHeight = 618;
+		} elseif ($for == 'productimage800') {
+			$optimumWidth = 800;
+			$optimumHeight = 800;
+		} elseif ($for == 'productimage241') {
+			$optimumWidth = 241;
+			$optimumHeight = 161;
+		} elseif ($for == 'productimage170') {
+			$optimumWidth = 170;
+			$optimumHeight = 113;
+		} elseif ($for == 'productimage75') {
+			$optimumWidth = 75;
+			$optimumHeight = 50;
 		}
-	}	
-	public function edit_do_uploads($property_id){
-		//echo $slug;die;
-		$new_file="Property".$property_id;
-		$this->load->library('upload');
-		$structure = './assets/uploads/Property/'.$new_file;
-		if(!is_dir('assets/uploads/Property/'.$new_file)){
-			mkdir('./assets/uploads/Property/'.$new_file, 0777, true);
-			chmod('./assets/uploads/Property/'.$new_file, 0777);
-		}
-		$files = $_FILES;
-		//echo '<pre>';print_r($files);die;
-		$cpt = count($_FILES['userfile']['name']);
-		for($i=0; $i<$cpt; $i++){
-			$_FILES['userfile']['name']= $files['userfile']['name'][$i];
-			$_FILES['userfile']['type']= $files['userfile']['type'][$i];
-			$_FILES['userfile']['tmp_name']= $files['userfile']['tmp_name'][$i];
-			$_FILES['userfile']['error']= $files['userfile']['error'][$i];
-			$_FILES['userfile']['size']= $files['userfile']['size'][$i];    
-			$upload_path='assets/uploads/Property/'.$new_file;
-			$this->upload->initialize($this->set_upload_options($upload_path));
-			if($_FILES['userfile']['name']!=''){
-				$this->upload->do_upload();
-				$upload_data = $this->upload->data(); 
-				$file_names =   $upload_data['file_name'];
-				
-				$original_size = getimagesize($_FILES['userfile']['tmp_name']);
-				$ratio = $original_size[0] / $original_size[1];				
-				
-				/*
-				$this->setWatermark('userfile',"assets/uploads/Property/".$new_file."/".$file_names);				
-				$fileExtension = pathinfo($_FILES['userfile']['name'], PATHINFO_EXTENSION);				
-				$this->setWatermark('userfile',"assets/uploads/Property/".$new_file."/thumb_860_482/".$file_names);
-				$this->setWatermark('userfile',"assets/uploads/Property/".$new_file."/thumb_200_296/".$file_names);
-				$this->setWatermark('userfile',"assets/uploads/Property/".$new_file."/thumb_92_82/".$file_names);
-				$this->setWatermark('userfile',"assets/uploads/Property/".$new_file."/".$file_names);
-				*/
-				
-				/*
-				 *	161x241
-				*/
-				
-				if (!is_dir('assets/uploads/Property/'.$new_file.'/thumb_860_482')) {
-					mkdir('./assets/uploads/Property/'.$new_file.'/thumb_860_482', 0777, true);
-				}				
-				$new_height1 = 161;
-				$new_width1 = 241;	//(int)($new_height3/$ratio)
-				$dfile1 = "assets/uploads/Property/".$new_file."/thumb_860_482/";				
-				//$this->createImageWithVariousHeightWidth($fileExtension, $dfile1, $dfile1, $file_names, $new_width1, $new_height1);
-				//$resizeUploadedImage1 = $this->resizeUploadedImage($original_size[0],$original_size[1],'productimage241');
-				$imgData1 = array(
-					'sourcePath' => "./assets/uploads/Property/".$new_file."/".$file_names,
-					'destinationPath' => "./assets/uploads/Property/".$new_file."/thumb_860_482/".$file_names,
-					//'imageSize' => $resizeUploadedImage1['width'].'x'.$resizeUploadedImage1['height']
-					'imageSize' => $new_width1.'x'.$new_height1,
-					'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
-				);
-				CreateImageUsingImageMagicWithGravity($imgData1);
-				$this->setWatermarkImage("./assets/uploads/Property/".$new_file."/thumb_860_482/".$file_names,"./assets/uploads/Property/".$new_file."/thumb_860_482/".$file_names);
-				/*
-				 *	113x170
-				*/
-				
-				if (!is_dir('assets/uploads/Property/'.$new_file.'/thumb_200_296')) {
-					mkdir('./assets/uploads/Property/'.$new_file.'/thumb_200_296', 0777, true);
-				}
-				$new_height2 = 113;
-				$new_width2 = 170;	//(int)($new_height1/$ratio)
-				$dfile2 = "assets/uploads/Property/".$new_file."/thumb_200_296/";
-				//$this->createImageWithVariousHeightWidth($fileExtension, $dfile2, $dfile2, $file_names, $new_width2, $new_height2);
-				//$resizeUploadedImage2 = $this->resizeUploadedImage($original_size[0],$original_size[1],'productimage170');
-				$imgData2 = array(
-					'sourcePath' => "./assets/uploads/Property/".$new_file."/".$file_names,
-					'destinationPath' => "./assets/uploads/Property/".$new_file."/thumb_200_296/".$file_names,
-					//'imageSize' => $resizeUploadedImage2['width'].'x'.$resizeUploadedImage2['height']
-					'imageSize' => $new_width2.'x'.$new_height2,
-					'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
-				);
-				CreateImageUsingImageMagicWithGravity($imgData2);
-				$this->setWatermarkImage("./assets/uploads/Property/".$new_file."/thumb_200_296/".$file_names,"./assets/uploads/Property/".$new_file."/thumb_200_296/".$file_names);
-				/*
-				 *	50x75
-				*/
-				
-				if (!is_dir('assets/uploads/Property/'.$new_file.'/thumb_92_82')) {
-					mkdir('./assets/uploads/Property/'.$new_file.'/thumb_92_82', 0777, true);
-				}
-				$new_height3 = 50;
-				$new_width3 = 75;	//(int)($new_height2/$ratio)
-				$dfile3 = "assets/uploads/Property/".$new_file."/thumb_92_82/";
-				//$this->createImageWithVariousHeightWidth($fileExtension, $dfile3, $dfile3, $file_names, $new_width3, $new_height3);
-				//$resizeUploadedImage3 = $this->resizeUploadedImage($original_size[0],$original_size[1],'productimage75');
-				$imgData3 = array(
-					'sourcePath' => "./assets/uploads/Property/".$new_file."/".$file_names,
-					'destinationPath' => "./assets/uploads/Property/".$new_file."/thumb_92_82/".$file_names,
-					//'imageSize' => $resizeUploadedImage3['width'].'x'.$resizeUploadedImage3['height']
-					'imageSize' => $new_width3.'x'.$new_height3
-				);
-				CreateImageUsingImageMagicWithOutGravity($imgData3);
-				
-				/*
-				 *	800x800
-				*/
-				
-				$new_height4 = 800;
-				$new_width4 = 800;	//(int)($new_height2/$ratio)
-				$dfile4 = "assets/uploads/Property/".$new_file."/";
-				//$this->createImageWithVariousHeightWidth($fileExtension, $dfile4, $dfile4, $file_names, $new_width4, $new_height4);
-				//$resizeUploadedImage4 = $this->resizeUploadedImage($original_size[0],$original_size[1],'productimage800');
-				$imgData4 = array(
-					'sourcePath' => "./assets/uploads/Property/".$new_file."/".$file_names,
-					'destinationPath' => "./assets/uploads/Property/".$new_file."/".$file_names,
-					//'imageSize' => $resizeUploadedImage4['width'].'x'.$resizeUploadedImage4['height']
-					'imageSize' => $new_width4.'x'.$new_height4,
-					'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
-				);
-				CreateImageUsingImageMagicWithOutGravitybBigImage($imgData4);
-				$this->setWatermarkImage("./assets/uploads/Property/".$new_file."/".$file_names,"./assets/uploads/Property/".$new_file."/".$file_names);
-				
-				if($i==0){
-					$img_type="main_image";
-					$prop_img_no="0";
-				}else{
-					$img_type="prop_picture";
-					$prop_img_no=$i;
-				}
-				$rs_update=$this->propertym->insert_property_picture($file_names,$property_id,$img_type,$prop_img_no);
+		if ($width > $height) {
+			if ($width > $optimumWidth) {
+				$newWidth = $optimumWidth;
+			} else {
+				$newWidth = $width;
 			}
+			$ratio = $width / $height;
+			$newHeight = (int)($newWidth / $ratio);
+		} elseif ($width < $height) {
+			if ($height > $optimumHeight) {
+				$newHeight = $optimumHeight;
+			} else {
+				$newHeight = $height;
+			}
+			$ratio = $height / $width;
+			$newWidth = (int)($newHeight / $ratio);
+		} elseif ($width == $height) {
+			if ($height > $optimumHeight) {
+				$newHeight = $optimumHeight;
+			} else {
+				$newHeight = $height;
+			}
+			$newWidth = (int)$newHeight;
 		}
+		return array("width" => $newWidth, "height" => $newHeight);
 	}
-	public function setWatermark($fieldName,$picPath){		
+
+	private function do_logout()
+	{
+		$this->session->set_userdata('user_id', 0);
+		$this->session->set_userdata('session_id', 0);
+	}
+
+	public function setWatermark($fieldName, $picPath)
+	{
 		$this->load->library('image_lib');
 		$config['image_library'] = 'gd2';
-		$config['source_image'] = $_FILES[$fieldName]['tmp_name'];		
+		$config['source_image'] = $_FILES[$fieldName]['tmp_name'];
 		$config['new_image'] = $picPath;
 		$config['wm_type'] = 'overlay';
 		$config['wm_overlay_path'] = './assets/images/zap_logo.png';//the overlay image
@@ -1018,20 +1015,7 @@ class property extends CI_Controller {
 		$pic_path=$picPath;
 		$this->image_lib->watermark($pic_path);
 	}
-	public function setWatermarkImage($sourcePath,$destinationPath){		
-		$this->load->library('image_lib');
-		$config['image_library'] = 'gd2';
-		$config['source_image'] = $sourcePath;		
-		$config['new_image'] = $destinationPath;
-		$config['wm_type'] = 'overlay';
-		$config['wm_overlay_path'] = './assets/images/watermark_zap_logo.png';//the overlay image
-		$config['wm_opacity']=100;
-		$config['wm_vrt_alignment'] = 'bottom';
-		$config['wm_hor_alignment'] = 'left';
-		$this->image_lib->initialize($config);
-		$pic_path=$destinationPath;
-		$this->image_lib->watermark($pic_path);
-	}
+
 	public function createImageWithVariousHeightWidth($fileExtension, $pathSource, $pathDestination, $file, $customWidth, $customHeight){
 		$pathToImages = './'.$pathSource;
 		$pathToSmall  = './'.$pathDestination;
@@ -1190,223 +1174,59 @@ class property extends CI_Controller {
 		$original_size = getimagesize($_FILES['userfile']['tmp_name']);
 		$ratio = $original_size[0] / $original_size[1];
 	}
-	public function edit_do_uploads_update($property_id){
-		$new_file="Property".$property_id;
-		$this->load->library('upload');
-		$structure = './assets/uploads/Property/'.$new_file;
-		if (!is_dir('assets/uploads/Property/'.$new_file)) {
-			mkdir('./assets/uploads/Property/'.$new_file, 0777, true);
-			chmod('./assets/uploads/Property/'.$new_file, 0777);
-		}
-		$files = $_FILES;
-		//echo '<pre>';print_r($files);die;
-		$cpt = count($_FILES['userfile']['name']);
-		for($i=0; $i<$cpt; $i++){
-			$_FILES['userfile']['name']= $files['userfile']['name'][$i];
-			$_FILES['userfile']['type']= $files['userfile']['type'][$i];
-			$_FILES['userfile']['tmp_name']= $files['userfile']['tmp_name'][$i];
-			$_FILES['userfile']['error']= $files['userfile']['error'][$i];
-			$_FILES['userfile']['size']= $files['userfile']['size'][$i];    
-			$upload_path='assets/uploads/Property/'.$new_file;
-			$this->upload->initialize($this->set_upload_options($upload_path));
-			if($_FILES['userfile']['name']!=''){
-			
-				$this->upload->do_upload();			
-				$upload_data = $this->upload->data(); 
-				$file_names =   $upload_data['file_name'];
-				
-				$original_size = getimagesize($_FILES['userfile']['tmp_name']);
-				$ratio = $original_size[0] / $original_size[1];				
-				
-				/*
-				$this->setWatermark('userfile','assets/uploads/Property/'.$new_file.'/'.$file_names);
-				$fileExtension = pathinfo($_FILES['userfile']['name'], PATHINFO_EXTENSION);				
-				
-				$this->setWatermark('userfile',"assets/uploads/Property/".$new_file."/thumb_860_482/".$file_names);
-				$this->setWatermark('userfile',"assets/uploads/Property/".$new_file."/thumb_200_296/".$file_names);
-				$this->setWatermark('userfile',"assets/uploads/Property/".$new_file."/thumb_92_82/".$file_names);
-				$this->setWatermark('userfile',"assets/uploads/Property/".$new_file."/".$file_names);
-				*/
-				
-				/*
-				 *	161x241
-				*/
-				
-				$new_height1 = 161;
-				$new_width1 = 241;	//(int)($new_height3/$ratio)
-				$dfile1 = "assets/uploads/Property/".$new_file."/thumb_860_482/";				
-				//$this->createImageWithVariousHeightWidth($fileExtension, $dfile1, $dfile1, $file_names, $new_width1, $new_height1);
-				//$resizeUploadedImage1 = $this->resizeUploadedImage($original_size[0],$original_size[1],'productimage241');
-				$imgData1 = array(
-					'sourcePath' => "./assets/uploads/Property/".$new_file."/".$file_names,
-					'destinationPath' => "./assets/uploads/Property/".$new_file."/thumb_860_482/".$file_names,
-					//'imageSize' => $resizeUploadedImage1['width'].'x'.$resizeUploadedImage1['height']
-					'imageSize' => $new_width1.'x'.$new_height1,
-					'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
-				);
-				CreateImageUsingImageMagicWithGravity($imgData1);
-				$this->setWatermarkImage("./assets/uploads/Property/".$new_file."/thumb_860_482/".$file_names,"./assets/uploads/Property/".$new_file."/thumb_860_482/".$file_names);
-				/*
-				 *	113x170
-				*/				
-				
-				$new_height2 = 113;
-				$new_width2 = 170;	//(int)($new_height1/$ratio)
-				$dfile2 = "assets/uploads/Property/".$new_file."/thumb_200_296/";
-				//$this->createImageWithVariousHeightWidth($fileExtension, $dfile2, $dfile2, $file_names, $new_width2, $new_height2);
-				//$resizeUploadedImage2 = $this->resizeUploadedImage($original_size[0],$original_size[1],'productimage170');
-				$imgData2 = array(
-					'sourcePath' => "./assets/uploads/Property/".$new_file."/".$file_names,
-					'destinationPath' => "./assets/uploads/Property/".$new_file."/thumb_200_296/".$file_names,
-					//'imageSize' => $resizeUploadedImage2['width'].'x'.$resizeUploadedImage2['height']
-					'imageSize' => $new_width2.'x'.$new_height2,
-					'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
-				);
-				CreateImageUsingImageMagicWithGravity($imgData2);
-				$this->setWatermarkImage("./assets/uploads/Property/".$new_file."/thumb_200_296/".$file_names,"./assets/uploads/Property/".$new_file."/thumb_200_296/".$file_names);
-				/*
-				 *	50x75
-				*/				
-				
-				$new_height3 = 50;
-				$new_width3 = 75;	//(int)($new_height2/$ratio)
-				$dfile3 = "assets/uploads/Property/".$new_file."/thumb_92_82/";
-				//$this->createImageWithVariousHeightWidth($fileExtension, $dfile3, $dfile3, $file_names, $new_width3, $new_height3);
-				//$resizeUploadedImage3 = $this->resizeUploadedImage($original_size[0],$original_size[1],'productimage75');
-				$imgData3 = array(
-					'sourcePath' => "./assets/uploads/Property/".$new_file."/".$file_names,
-					'destinationPath' => "./assets/uploads/Property/".$new_file."/thumb_92_82/".$file_names,
-					//'imageSize' => $resizeUploadedImage3['width'].'x'.$resizeUploadedImage3['height']
-					'imageSize' => $new_width3.'x'.$new_height3
-				);
-				CreateImageUsingImageMagicWithOutGravity($imgData3);
-				
-				/*
-				 *	800x800
-				*/				
-				
-				$new_height4 = 800;
-				$new_width4 = 800;	//(int)($new_height2/$ratio)
-				$dfile4 = "assets/uploads/Property/".$new_file."/";
-				//$this->createImageWithVariousHeightWidth($fileExtension, $dfile4, $dfile4, $file_names, $new_width4, $new_height4);
-				//$resizeUploadedImage4 = $this->resizeUploadedImage($original_size[0],$original_size[1],'productimage800');
-				$imgData4 = array(
-					'sourcePath' => "./assets/uploads/Property/".$new_file."/".$file_names,
-					'destinationPath' => "./assets/uploads/Property/".$new_file."/".$file_names,
-					//'imageSize' => $resizeUploadedImage4['width'].'x'.$resizeUploadedImage4['height']
-					'imageSize' => $new_width4.'x'.$new_height4,
-					'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
-				);
-				CreateImageUsingImageMagicWithOutGravitybBigImage($imgData4);
-				$this->setWatermarkImage("./assets/uploads/Property/".$new_file."/".$file_names,"./assets/uploads/Property/".$new_file."/".$file_names);
-				
-				if($i==0){
-					$dfile_name=get_perticular_field_value('zc_property_img','file_name'," and property_id='".$property_id."' and img_type='main_image'");
-					$dfile='assets/uploads/Property/Property'.$property_id.'/'.$dfile_name;
-					if(is_file($dfile)){
-						@unlink($dfile);
-					}
-					$dfile1='assets/uploads/Property/Property'.$property_id.'/thumb_860_482/'.$dfile_name;
-					if(is_file($dfile1)){
-						@unlink($dfile1);
-					}
-					$dfile2='assets/uploads/Property/Property'.$property_id.'/thumb_200_296/'.$dfile_name;
-					if(is_file($dfile2)){
-						@unlink($dfile2);
-					}
-					$dfile3='assets/uploads/Property/Property'.$property_id.'/thumb_92_82/'.$dfile_name;
-					if(is_file($dfile3)){
-						@unlink($dfile3);
-					}
-					$img_id=get_perticular_field_value('zc_property_img','img_id'," and property_id='".$property_id."' and img_type='main_image'");
-					$this->propertym->del_property_img($img_id);
-					$img_type="main_image";
-					$prop_img_no="0";
-				}else{
-					$dfile_name=get_perticular_field_value('zc_property_img','file_name'," and property_id='".$property_id."' and img_type='prop_picture' and prop_img_no='".$i."'");
-					$dfile='assets/uploads/Property/Property'.$property_id.'/'.$dfile_name;
-					if(is_file($dfile)){
-						@unlink($dfile);
-					}
-					$dfile1='assets/uploads/Property/Property'.$property_id.'/thumb_860_482/'.$dfile_name;
-					if(is_file($dfile1)){
-						@unlink($dfile1);
-					}
-					$dfile2='assets/uploads/Property/Property'.$property_id.'/thumb_200_296/'.$dfile_name;
-					if(is_file($dfile2)){
-						@unlink($dfile2);
-					}
-					$dfile3='assets/uploads/Property/Property'.$property_id.'/thumb_92_82/'.$dfile_name;
-					if(is_file($dfile3)){
-						@unlink($dfile3);
-					}
-					$img_id=get_perticular_field_value('zc_property_img','img_id'," and property_id='".$property_id."' and img_type='prop_picture' and prop_img_no='".$i."'");
-					$this->propertym->del_property_img($img_id);
-					$img_type="prop_picture";
-					$prop_img_no=$i;
-				}
-				$rs_update=$this->propertym->insert_property_picture($file_names,$property_id,$img_type,$prop_img_no);
-			}
-		}
-	}
-	private function set_upload_options($upload_path){   
-		$config = array();
-		$config['upload_path'] = $upload_path;
-		$config['allowed_types'] = '*';
-		$config['max_size']      = '0';
-		$config['overwrite']     = FALSE;
-		$config['encrypt_name'] = TRUE;
-		$config['set_file_ext']=TRUE;
-		return $config;
-	}
-	public function getCategory(){			
+
+	public function getCategory()
+	{
 		$contract_id = $this->input->post('contract');
 		$cat_parent = $this->input->post('cat_parent');
-		$contract_code=$this->propertym->get_contract_short_code_by_id($contract_id);
-		$category_list=$this->propertym->get_category_list($cat_parent);
-		$category='';
-		if(!empty($category_list[0])){
-			$category .= '<option value="">'.($_COOKIE['lang']=='it'?'Seleziona la categoria':'Select a category').'</option>';
-			foreach( $category_list as $key=>$val ){
-				if($val['short_code']!="LUX"){
-					if($contract_code=="SAL"){
-						if($val['short_code']=="ROM"){
+		$contract_code = $this->propertym->get_contract_short_code_by_id($contract_id);
+		$category_list = $this->propertym->get_category_list($cat_parent);
+		$category = '';
+		if (!empty($category_list[0])) {
+			$category .= '<option value="">' . ($_COOKIE['lang'] == 'it' ? 'Seleziona la categoria' : 'Select a category') . '</option>';
+			foreach ($category_list as $key => $val) {
+				if ($val['short_code'] != "LUX") {
+					if ($contract_code == "SAL") {
+						if ($val['short_code'] == "ROM") {
 							continue;
-						}	
-						$category .= '<option value="'.$val['short_code'].'">'.($_COOKIE['lang']=='it'?$val['name_it']:$val['name']).'</option>';
-					}else{
-						$category .= '<option value="'.$val['short_code'].'">'.($_COOKIE['lang']=='it'?$val['name_it']:$val['name']).'</option>';
+						}
+						$category .= '<option value="' . $val['short_code'] . '">' . ($_COOKIE['lang'] == 'it' ? $val['name_it'] : $val['name']) . '</option>';
+					} else {
+						$category .= '<option value="' . $val['short_code'] . '">' . ($_COOKIE['lang'] == 'it' ? $val['name_it'] : $val['name']) . '</option>';
 					}
 				}
-			}	
-		}else{
-			$category .= '<option value="">'.($_COOKIE['lang']=='it'?'Seleziona la categoria':'Select a category').'</option>';
+			}
+		} else {
+			$category .= '<option value="">' . ($_COOKIE['lang'] == 'it' ? 'Seleziona la categoria' : 'Select a category') . '</option>';
 		}
 		echo $category;
 	}
-	public function getSubCategory(){
-		
+
+	public function getSubCategory()
+	{
+
 		$category_code = $this->input->post('category');
-		$select_subcat=$this->input->post('select_subcat');
-		$contract_id=$this->propertym->get_contract_id_by_short_code($category_code);
-		$sub_category_list=$this->propertym->get_category_list($contract_id);
-		$category='';
-		if(!empty($sub_category_list[0])){
-			$category .= '<option value="">'.($_COOKIE['lang']=='it'?'Seleziona la Sottocategoria':'Select a Sub category').'</option>';
-			foreach( $sub_category_list as $key=>$val ){
-				if($category_code=="SAL"){
-					$category .= '<option value="'.$val['short_code'].'">'.($_COOKIE['lang']=='it'?$val['name_it']:$val['name']).'</option>';
+		$select_subcat = $this->input->post('select_subcat');
+		$contract_id = $this->propertym->get_contract_id_by_short_code($category_code);
+		$sub_category_list = $this->propertym->get_category_list($contract_id);
+		$category = '';
+		if (!empty($sub_category_list[0])) {
+			$category .= '<option value="">' . ($_COOKIE['lang'] == 'it' ? 'Seleziona la Sottocategoria' : 'Select a Sub category') . '</option>';
+			foreach ($sub_category_list as $key => $val) {
+				if ($category_code == "SAL") {
+					$category .= '<option value="' . $val['short_code'] . '">' . ($_COOKIE['lang'] == 'it' ? $val['name_it'] : $val['name']) . '</option>';
 				}else{
-					$category .= '<option value="'.$val['short_code'].'">'.($_COOKIE['lang']=='it'?$val['name_it']:$val['name']).'</option>';
+					$category .= '<option value="' . $val['short_code'] . '">' . ($_COOKIE['lang'] == 'it' ? $val['name_it'] : $val['name']) . '</option>';
 				}
 			}
-		}else{
-			$category .= '<option value="">'.$this->lang->line('property_select_a_subcategory').'</option>';
+		} else {
+			$category .= '<option value="">' . $this->lang->line('property_select_a_subcategory') . '</option>';
 		}
 		echo $category;
 	}
+
 	public function city_search(){
-		
+
 		$province=$this->input->post('name');
 		$rs=$this->propertym->get_city_list($province,$_COOKIE['lang']);
 		//echo '<pre>';print_r($rs);die;
@@ -1416,18 +1236,21 @@ class property extends CI_Controller {
 			}
 		}
 	}
-	public function city_search_via_id(){ 
+
+	public function city_search_via_id()
+	{
 		$provinceID=$this->input->post('name');
 		$lang=$this->input->post('lang');
 		$province=get_perticular_field_value('zc_provience',($lang=='it'?"provience_name_it":"provience_name")," AND provience_id='".$provinceID."'");
 		$rs=$this->propertym->get_city_list($province,$lang);
-		if($rs){			
+		if ($rs) {
 			foreach($rs as $key=>$val){
 				$cityID=get_perticular_field_value('zc_city','city_id'," AND ".($lang=='it'?"`city_name_it`":"`city_name`")." = '".mysql_real_escape_string($val)."'");
 				echo "<option value='".$cityID."'>".str_replace("\'","'",$val)."</option>";
 			}
 		}
 	}
+
 	public function property_details(){
 		$data['title']="Property Detail";
 		$property_post_by=$this->session->userdata('user_id');
@@ -1441,20 +1264,20 @@ class property extends CI_Controller {
 		/*
 		**	Published Properties.
 		*/
-		$config["base_url"] = base_url()."property/property_details/property_list";		
+		$config["base_url"] = base_url() . "property/property_details/property_list";
 		if( $this->uri->segment(3) == "property_list" ) {
 			$page1 = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
 		} else{
 			$page1 = 0;
-		}		
+		}
 		//$config["total_rows"] = get_perticular_count('zc_property_details'," AND property_post_by=$property_post_by AND property_status='2'");
 		$data['property_list'] = $this->propertym->get_save_property_list($property_post_by,$config["per_page"], $page1);
 		$totalPublishedPropertyList = $this->propertym->get_save_property_list($property_post_by, '', '');
 		$config["total_rows"] = count($totalPublishedPropertyList);
-		$paginationA = clone($this->pagination);	
+		$paginationA = clone($this->pagination);
 		$paginationA->initialize($config);
 		$data["totalPublishedPropertyList"] = count($totalPublishedPropertyList);
-		$data["pagination_property_list"] = $paginationA->create_links();	
+		$data["pagination_property_list"] = $paginationA->create_links();
 		/*
 		**	Draft Properties.
 		*/
@@ -1463,7 +1286,7 @@ class property extends CI_Controller {
 			$page2 = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
 		} else{
 			$page2 = 0;
-		}		
+		}
 		//$config["total_rows"] = get_perticular_count('zc_property_details'," AND property_post_by=$property_post_by AND property_status='1'");
 		$data['draft_property_list']=$this->propertym->get_draft_property_list($property_post_by,$config["per_page"], $page2);
 		$totalDraftedPropertyList = $this->propertym->get_draft_property_list($property_post_by, '', '');
@@ -1480,7 +1303,7 @@ class property extends CI_Controller {
 			$page3 = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
 		} else{
 			$page3 = 0;
-		}		
+		}
 		$config["total_rows"] = get_perticular_count('zc_property_details,zc_property_featured'," AND zc_property_details.property_id=zc_property_featured.property_id AND zc_property_details.property_post_by=$property_post_by AND zc_property_details.property_status='2' and zc_property_featured.status = '1'");
 		$data['featuredCount'] = $config["total_rows"];
 		$data['getFeaturedProperty'] = $this->propertym->get_save_property_list_highlight($property_post_by,$config["per_page"], $page3);
@@ -1496,6 +1319,7 @@ class property extends CI_Controller {
 		*/
 		$this->load->view('property/property_details',$data);
 	}
+
 	public function get_message(){
 		$uid=$this->session->userdata('user_id');
 		if($uid=='' || $uid=='0'){
@@ -1511,7 +1335,7 @@ class property extends CI_Controller {
 			$config["uri_segment"] = 3;
 			$this->pagination->initialize($config);
 			$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
-			//$data["msg_totals"] = $this->Countries->fetch_countries($config["per_page"], $page);			
+			//$data["msg_totals"] = $this->Countries->fetch_countries($config["per_page"], $page);
 			$data["msg_totals"] = $this->propertym->get_msg_detail($uid,$config["per_page"], $page);
 			$data['check_user_to']=$this->propertym->check_user_to_status($uid);
 			// echo $data['check_user_to'][0]['status'];exit;
@@ -1522,6 +1346,7 @@ class property extends CI_Controller {
 			$this->load->view('property/inbox',$data);
 		}
 	}
+
 	public function get_send_message(){
 		$uid=$this->session->userdata('user_id');
 		if($uid=='' || $uid=='0'){
@@ -1548,6 +1373,7 @@ class property extends CI_Controller {
 			$this->load->view('property/archive',$data);
 		}
 	}
+
 	public function get_saved_search(){
 		if( $this->session->userdata( 'user_id' ) == 0 || $this->session->userdata( 'user_id' ) == "" ) {
 			redirect('/');
@@ -1567,7 +1393,9 @@ class property extends CI_Controller {
 		//$data['saved_lsits']=$this->propertym->get_saved_list();
 		$this->load->view('property/saved_search',$data);
 	}
-	public function get_saved_property() { 
+
+	public function get_saved_property()
+	{
 		if( $this->session->userdata( 'user_id' ) == 0 || $this->session->userdata( 'user_id' ) == "" ) {
 			redirect('/');
 		}
@@ -1588,7 +1416,9 @@ class property extends CI_Controller {
 		$this->load->view('property/saved_property',$data);
 		//echo '<pre>';print_r($data['property_lists']);die;
 	}
-	public function view_property(){ 
+
+	public function view_property()
+	{
 		$msg_id=$this->uri->segment('3');
 		$property_id=get_perticular_field_value('zc_property_message_info','property_id'," and msg_id='".$msg_id."'");
 		$prop_det_url='';
@@ -1634,9 +1464,11 @@ class property extends CI_Controller {
 		redirect('Vacations'.'/'.$prop_det_url);
 		//redirect($search_title.'/'.$prop_det_url);
 	}
+
 	public function feedback_details(){
 		echo "GEr";
 	}
+
 	public function msg_details(){
 		$msg_id=$this->input->post('msg_id');
 		$lang=$this->input->post('lang');
@@ -1652,7 +1484,7 @@ class property extends CI_Controller {
 			$street_address=get_perticular_field_value('zc_property_details','street_address'," and property_id='".$all_msgs[0]['property_id']."'");
 			$street_no=get_perticular_field_value('zc_property_details','street_no'," and property_id='".$all_msgs[0]['property_id']."'");
 			$zip=get_perticular_field_value('zc_property_details','zip'," and property_id='".$all_msgs[0]['property_id']."'");
-			
+
 			$areaStAddStNoZip = '';
 			if($area!=''){
 				$areaStAddStNoZip.= $area.' - ';
@@ -1662,7 +1494,7 @@ class property extends CI_Controller {
 			}
 			if($street_no!=''){
 				$areaStAddStNoZip.= $street_no.' - ';
-			}			
+			}
 			if($zip!=''){
 				$areaStAddStNoZip.= $zip;
 			}
@@ -1683,18 +1515,18 @@ class property extends CI_Controller {
 					$class="class='odd_row'";
 					//$sub_class="";
 				}
-				if($j == 1){
+				if ($j == 1) {
 					$inboxSubject = $subjectLine;
-					$areaStAddStNoZipHTML = "<span style='color:#000;display:block;'>".$areaStAddStNoZip."</span><br><hr><br>";
+					$areaStAddStNoZipHTML = "<span style='color:#000;display:block;'>" . $areaStAddStNoZip . "</span><br><hr><br>";
 					$j++;
-				}else{
+				} else {
 					$inboxSubject = '';
 					$areaStAddStNoZipHTML = '';
 				}
-				$user_name = get_field_value("zc_user","first_name, last_name",$where=" AND user_id='".$msgs['user_id_from']."'");
-				$from_full_name = $user_name['first_name'] ." ". $user_name['last_name'];
-				
-				switch(date('m',strtotime($msgs['msg_date']))){
+				$user_name = get_field_value("zc_user", "first_name, last_name", $where = " AND user_id='" . $msgs['user_id_from'] . "'");
+				$from_full_name = $user_name['first_name'] . " " . $user_name['last_name'];
+
+				switch (date('m', strtotime($msgs['msg_date']))) {
 					case '01':
 						$monthName = $this->lang->line('cal_jan');
 						break;
@@ -1730,110 +1562,112 @@ class property extends CI_Controller {
 						break;
 					case '12':
 						$monthName = $this->lang->line('cal_dec');
-						break;			
+						break;
 				}
-				$messageTime = date('d',strtotime($msgs['msg_date'])).' '.$monthName.' '.date('Y',strtotime($msgs['msg_date']));
-				
-				echo "<tr ".$class.">
+				$messageTime = date('d', strtotime($msgs['msg_date'])) . ' ' . $monthName . ' ' . date('Y', strtotime($msgs['msg_date']));
+
+				echo "<tr " . $class . ">
 						<td colspan='5'>
-							<span style='display:block;font-weight:bold;'>".$inboxSubject."</span>
-							".$areaStAddStNoZipHTML."
-							<span style='color:#000'>".stripslashes($msgs['message'])."</span>
+							<span style='display:block;font-weight:bold;'>" . $inboxSubject . "</span>
+							" . $areaStAddStNoZipHTML . "
+							<span style='color:#000'>" . stripslashes($msgs['message']) . "</span>
 							<br>
 							<div style='float:right;'>
-								<span style='color:#1F76D9;'>".($lang=='it'?'Da':'By')." </span>
-								".ucfirst($from_full_name)."
+								<span style='color:#1F76D9;'>" . ($lang == 'it' ? 'Da' : 'By') . " </span>
+								" . ucfirst($from_full_name) . "
 							</div>
 							<br>
 							<div style='float:right;'>
-								<span style='color:#1F76D9;'>".($lang=='it'?'In data':'On').": </span>
-								".$messageTime."
+								<span style='color:#1F76D9;'>" . ($lang == 'it' ? 'In data' : 'On') . ": </span>
+								" . $messageTime . "
 							</div>
 						</td>
 					  </tr>";
-					$i++;
+				$i++;
 			}
 			echo "</table>";
 		}
 	}
-	public function msg_reply(){
+
+	public function msg_reply()
+	{
 
 		$redirectPageName = $this->input->post('redirect_to');
 		//echo '<pre>';print_r($_POST);
-		$property_id=get_perticular_field_value('zc_property_message_info','property_id'," and msg_id='".$_POST['msg_id']."'");
-		$owner_id=get_perticular_field_value('zc_property_details','property_post_by'," and property_id='".$property_id."'");
-		$new_message=array();
+		$property_id = get_perticular_field_value('zc_property_message_info', 'property_id', " and msg_id='" . $_POST['msg_id'] . "'");
+		$owner_id = get_perticular_field_value('zc_property_details', 'property_post_by', " and property_id='" . $property_id . "'");
+		$new_message = array();
 		//$new_message['msg_grp_id']='12';
-		$new_message['msg_date']=date('Y-m-d H:i:s');
-		$new_message['subject']=get_perticular_field_value('zc_property_message_info','subject'," and msg_id='".$_POST['msg_id']."'");
+		$new_message['msg_date'] = date('Y-m-d H:i:s');
+		$new_message['subject'] = get_perticular_field_value('zc_property_message_info', 'subject', " and msg_id='" . $_POST['msg_id'] . "'");
 		//$new_message['subject']=$this->input->post('subject');
-		$new_message['property_id']=get_perticular_field_value('zc_property_message_info','property_id'," and msg_id='".$_POST['msg_id']."'");
-		$new_message['user_id_to']=get_perticular_field_value('zc_property_message_info','user_id_from'," and msg_id='".$_POST['msg_id']."'");
-		$new_message['user_name_to']=get_perticular_field_value('zc_property_message_info','user_name'," and msg_id='".$_POST['msg_id']."'");
-		$new_message['email_id_to']=get_perticular_field_value('zc_property_message_info','email_id'," and msg_id='".$_POST['msg_id']."'");
-		$new_message['user_id_from']=$_POST['user_id_form'];
-		$new_message['user_name']=get_perticular_field_value('zc_user','user_name'," and user_id='".$_POST['user_id_form']."'");
-		$new_message['ph_number']=get_perticular_field_value('zc_user','contact_ph_no'," and user_id='".$_POST['user_id_form']."'");
-		$new_message['email_id']=get_perticular_field_value('zc_user','email_id'," and user_id='".$_POST['user_id_form']."'");
-		$new_message['message']=$this->input->post('message');
-		$new_message['msg_grp_id']= get_perticular_field_value('zc_property_message_info','msg_grp_id'," and msg_id='".$_POST['msg_id']."'");
+		$new_message['property_id'] = get_perticular_field_value('zc_property_message_info', 'property_id', " and msg_id='" . $_POST['msg_id'] . "'");
+		$new_message['user_id_to'] = get_perticular_field_value('zc_property_message_info', 'user_id_from', " and msg_id='" . $_POST['msg_id'] . "'");
+		$new_message['user_name_to'] = get_perticular_field_value('zc_property_message_info', 'user_name', " and msg_id='" . $_POST['msg_id'] . "'");
+		$new_message['email_id_to'] = get_perticular_field_value('zc_property_message_info', 'email_id', " and msg_id='" . $_POST['msg_id'] . "'");
+		$new_message['user_id_from'] = $_POST['user_id_form'];
+		$new_message['user_name'] = get_perticular_field_value('zc_user', 'user_name', " and user_id='" . $_POST['user_id_form'] . "'");
+		$new_message['ph_number'] = get_perticular_field_value('zc_user', 'contact_ph_no', " and user_id='" . $_POST['user_id_form'] . "'");
+		$new_message['email_id'] = get_perticular_field_value('zc_user', 'email_id', " and user_id='" . $_POST['user_id_form'] . "'");
+		$new_message['message'] = $this->input->post('message');
+		$new_message['msg_grp_id'] = get_perticular_field_value('zc_property_message_info', 'msg_grp_id', " and msg_id='" . $_POST['msg_id'] . "'");
 		//echo '<pre>';print_r($new_message);die;
-		
+
 		$blockedUserIdSQL = "";
-		$blockedUserId = get_perticular_field_value("zc_user","user_id","AND `user_id`='".$new_message['user_id_to']."' AND `status`='0'");
-		if($blockedUserId){
-			redirect('property/'.$redirectPageName);
-		}		
-		
-		$email_owner=get_perticular_field_value('zc_user','email_id'," and user_id='".$_POST['user_id_form']."'");
-		$rs=$this->propertym->add_message($new_message);
-		if($rs){
-			$user_id=$this->session->userdata( 'user_id' );
-			$user_preference_loc = get_all_value('zc_user_preference'," and user_id='".$new_message['user_id_to']."'");
-			$email_user=get_perticular_field_value('zc_user','email_id'," and user_id='".$user_id."'");
-			if( isset( $user_preference_loc[0] ) &&( count( $user_preference_loc[0] ) > 0 )){
-				if( $user_preference_loc[0]['reply_msg'] == 1 ) {
-					$details=array();
+		$blockedUserId = get_perticular_field_value("zc_user", "user_id", "AND `user_id`='" . $new_message['user_id_to'] . "' AND `status`='0'");
+		if ($blockedUserId) {
+			redirect('property/' . $redirectPageName);
+		}
+
+		$email_owner = get_perticular_field_value('zc_user', 'email_id', " and user_id='" . $_POST['user_id_form'] . "'");
+		$rs = $this->propertym->add_message($new_message);
+		if ($rs) {
+			$user_id = $this->session->userdata('user_id');
+			$user_preference_loc = get_all_value('zc_user_preference', " and user_id='" . $new_message['user_id_to'] . "'");
+			$email_user = get_perticular_field_value('zc_user', 'email_id', " and user_id='" . $user_id . "'");
+			if (isset($user_preference_loc[0]) && (count($user_preference_loc[0]) > 0)) {
+				if ($user_preference_loc[0]['reply_msg'] == 1) {
+					$details = array();
 					/*$mail_from = $email_user;*/
 
-					$sql = "SELECT * FROM zc_user_preference WHERE user_id=".$new_message['user_id_to'];
+					$sql = "SELECT * FROM zc_user_preference WHERE user_id=" . $new_message['user_id_to'];
 					$query = $this->db->query($sql);
 					$lang = $query->result();
 					$lang = $lang[0]->language;
 
-					if(isset($lang) && ($lang == "english")){
+					if (isset($lang) && ($lang == "english")) {
 						$this->lang->load('code', 'english');
 					} else {
 						$this->lang->load('code', 'it');
 					}
 
-					$mail_from= isset($default_email) ? $default_email : "no-reply@zapcasa.it";
+					$mail_from = isset($default_email) ? $default_email : "no-reply@zapcasa.it";
 					$mail_to = $new_message['email_id_to'];
 					$subject = $this->lang->line('reply_mail_subject');
 					$link = "";
-					$subject_rpl = get_perticular_field_value('zc_property_message_info','subject'," and msg_id='".$_POST['msg_id']."'");
-					$username_rpl = get_perticular_field_value('zc_user','user_name'," and user_id='".$_POST['user_id_form']."'");
+					$subject_rpl = get_perticular_field_value('zc_property_message_info', 'subject', " and msg_id='" . $_POST['msg_id'] . "'");
+					$username_rpl = get_perticular_field_value('zc_user', 'user_name', " and user_id='" . $_POST['user_id_form'] . "'");
 					$message = '<body style="font-family:Century Gothic; color: #4c4d51; font-size:13px;">
 												<div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
 													<div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
 													<div style="border-bottom:1px solid #d1d1d1;">
-														<img src="'.base_url().'assets/images/logo.png" alt="logo"/>
+														<img src="' . base_url() . 'assets/images/logo.png" alt="logo"/>
 													</div>
 													<div style="padding:15px;">
-														<strong>'.$this->lang->line('new_mail-hi').' '.$new_message['user_name_to'].'</strong>
-														<p>'.$username_rpl.' '.$this->lang->line('new_inbox_mail_replied_to_your_message').'</p>
-														<p>'.$this->lang->line('to_read_and_reply').'. <a style="text-decoration:none;color:blue;" href="'.base_url().'property/get_message">'.$this->lang->line('click_here_mail').'</a></p>
-														<p>'.$this->lang->line('regards_mail').',<br><a href="http://www.zapcasa.it">www.zapcasa.it</a></p>
+														<strong>' . $this->lang->line('new_mail-hi') . ' ' . $new_message['user_name_to'] . '</strong>
+														<p>' . $username_rpl . ' ' . $this->lang->line('new_inbox_mail_replied_to_your_message') . '</p>
+														<p>' . $this->lang->line('to_read_and_reply') . '. <a style="text-decoration:none;color:blue;" href="' . base_url() . 'property/get_message">' . $this->lang->line('click_here_mail') . '</a></p>
+														<p>' . $this->lang->line('regards_mail') . ',<br><a href="http://www.zapcasa.it">www.zapcasa.it</a></p>
 													</div>
 													<div style="padding:15px;border-top:1px solid #ddd;">
-														<p>'.$this->lang->line('Messages_you_are_receiving_this_email_because').'</p>
+														<p>' . $this->lang->line('Messages_you_are_receiving_this_email_because') . '</p>
 													</div>
 												</div>
 											</body>';
 					$body = $message;
-					sendemail($mail_from, $mail_to, $subject, $body, $cc='');
+					sendemail($mail_from, $mail_to, $subject, $body, $cc = '');
 
-					if(isset($_COOKIE['lang']) && ($_COOKIE['lang'] == "english")){
+					if (isset($_COOKIE['lang']) && ($_COOKIE['lang'] == "english")) {
 						$this->lang->load('code', 'english');
 					} else {
 						$this->lang->load('code', 'it');
@@ -1842,60 +1676,66 @@ class property extends CI_Controller {
 			}
 			$msgdata = $this->lang->line('message_success_reply');
 			$this->session->set_flashdata('msg', $msgdata);
-			redirect('property/'.$redirectPageName);
+			redirect('property/' . $redirectPageName);
 			//echo 1;
 		}
 	}
-	public function msg_search(){
-		$uid=$this->session->userdata('user_id');
-		if($uid=='' || $uid=='0'){
+
+	public function msg_search()
+	{
+		$uid = $this->session->userdata('user_id');
+		if ($uid == '' || $uid == '0') {
 			redirect('/');
-		}else{
-			$user_id_to=$this->session->userdata( 'user_id' );
-			$search_string=$this->input->post('search_fld');
-			
+		} else {
+			$user_id_to = $this->session->userdata('user_id');
+			$search_string = $this->input->post('search_fld');
+
 			$config = array();
-			$config["base_url"] = base_url()."property/msg_search";
+			$config["base_url"] = base_url() . "property/msg_search";
 			//$config["total_rows"] = get_perticular_count('zc_property_message_info',"and msg_to_delete = '0' and user_id_to = '".$uid."' group by msg_grp_id");
-			$config["total_rows"] = get_perticular_count('zc_property_message_info',"and msg_to_delete = '0' and (`message` LIKE '%{$search_string}%' or user_name='$search_string') and user_id_to = '".$uid."'");
+			$config["total_rows"] = get_perticular_count('zc_property_message_info', "and msg_to_delete = '0' and (`message` LIKE '%{$search_string}%' or user_name='$search_string') and user_id_to = '" . $uid . "'");
 			$config["per_page"] = 10;
 			$config["uri_segment"] = 3;
 			$this->pagination->initialize($config);
 			$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
 			//$data["msg_totals"] = $this->Countries->fetch_countries($config["per_page"], $page);
-			$data['check_user_to']=$this->propertym->check_user_to_status($uid);
-			
-			
-			$data['msg_totals']= $this->propertym->search_msg($search_string,$user_id_to,$config["per_page"],$page);
+			$data['check_user_to'] = $this->propertym->check_user_to_status($uid);
+
+
+			$data['msg_totals'] = $this->propertym->search_msg($search_string, $user_id_to, $config["per_page"], $page);
 			$data["links"] = $this->pagination->create_links();
-			$this->load->view('property/inbox',$data);
+			$this->load->view('property/inbox', $data);
 		}
-	}	
-	public function thanks_add_property(){
-		$uid=$this->session->userdata( 'user_id' );
-		if($uid==0 || $uid==''){
+	}
+
+	public function thanks_add_property()
+	{
+		$uid = $this->session->userdata('user_id');
+		if ($uid == 0 || $uid == '') {
 			redirect('users/common_reg');
-		}else{
-			$user_type=get_perticular_field_value('zc_user','user_type'," and user_id='".$uid."'");
-			if($user_type!='1'){
-				if(!$this->session->flashdata('msg')){
+		} else {
+			$user_type = get_perticular_field_value('zc_user', 'user_type', " and user_id='" . $uid . "'");
+			if ($user_type != '1') {
+				if (!$this->session->flashdata('msg')) {
 					redirect('/');
 				}
-				$data['title']="Thanks";
-				$this->load->view('property/thanks_property',$data);
-			}else{
+				$data['title'] = "Thanks";
+				$this->load->view('property/thanks_property', $data);
+			} else {
 				redirect('/');
 			}
-		}		
-	}	
-	public function delete_property(){
-		$property_id=$this->uri->segment('3');
-		$rs=$this->propertym->delete_property($property_id);
-		$rs=1;
-		if($rs){
+		}
+	}
+
+	public function delete_property()
+	{
+		$property_id = $this->uri->segment('3');
+		$rs = $this->propertym->delete_property($property_id);
+		$rs = 1;
+		if ($rs) {
 			$this->propertym->del_prop_image($property_id);
-			$dfile='assets/uploads/Property/Property'.$property_id;
-			if(is_dir($dfile))
+			$dfile = 'assets/uploads/Property/Property' . $property_id;
+			if (is_dir($dfile))
 				//@rmdir($dfile);
 				deleteNonEmptyDir($dfile);
 			$msgdata = $this->lang->line('property_the_property_is_deleted_successfully');
@@ -1903,53 +1743,63 @@ class property extends CI_Controller {
 			redirect('property/property_details');
 		}
 	}
-	public function suspend_property(){
+
+	public function suspend_property()
+	{
+		$property_id = $this->uri->segment('3');
+		$rs = $this->propertym->suspend_property($property_id);
+		if ($rs) {
+			$msgdata = $this->lang->line('property_the_property_is_suspended_successfully');
+			$this->session->set_flashdata('success', $msgdata);
+			redirect('property/property_details');
+		}
+	}
+
+	public function resume_property()
+	{
 		$property_id=$this->uri->segment('3');
-		$rs=$this->propertym->suspend_property($property_id);
+		$rs = $this->propertym->resume_property($property_id);
+		if($rs){
+			$msgdata = $this->lang->line('property_the_property_is_active_successfully');
+			$this->session->set_flashdata('success', $msgdata);
+			redirect('property/property_details');
+		}
+	}
+
+	public function suspend_featured_property()
+	{
+		$property_id=$this->uri->segment('3');
+		$rs = $this->propertym->suspend_featured_property($property_id);
 		if($rs){
 			$msgdata = $this->lang->line('property_the_property_is_suspended_successfully');
 			$this->session->set_flashdata('success', $msgdata);
 			redirect('property/property_details');
 		}
-	}	
-	public function resume_property(){
+	}
+
+	public function resume_featured_property()
+	{
 		$property_id=$this->uri->segment('3');
-		$rs=$this->propertym->resume_property($property_id);
+		$rs = $this->propertym->resume_featured_property($property_id);
 		if($rs){
 			$msgdata =  $this->lang->line('property_the_property_is_active_successfully');
 			$this->session->set_flashdata('success',$msgdata);
 			redirect('property/property_details');
 		}
 	}
-	public function suspend_featured_property(){
-		$property_id=$this->uri->segment('3');
-		$rs=$this->propertym->suspend_featured_property($property_id);
-		if($rs){
-			$msgdata = $this->lang->line('property_the_property_is_suspended_successfully');
-			$this->session->set_flashdata('success', $msgdata);
-			redirect('property/property_details');
-		}
-	}
-	public function resume_featured_property(){
-		$property_id=$this->uri->segment('3');
-		$rs=$this->propertym->resume_featured_property($property_id);
-		if($rs){
-			$msgdata =  $this->lang->line('property_the_property_is_active_successfully');
-			$this->session->set_flashdata('success',$msgdata);
-			redirect('property/property_details');
-		}
-	}
-	public function del_bulk_property() {
+
+	public function del_bulk_property()
+	{
 		$dataField = $this->input->post('dataField');
-		$dataField = explode("|" , $dataField);
-		foreach($dataField as $property_id){
-			$property_id=$property_id;
-			$rs=$this->propertym->delete_property($property_id);
-			$rs=1;
-			if($rs){
+		$dataField = explode("|", $dataField);
+		foreach ($dataField as $property_id) {
+			$property_id = $property_id;
+			$rs = $this->propertym->delete_property($property_id);
+			$rs = 1;
+			if ($rs) {
 				$this->propertym->del_prop_image($property_id);
-				$dfile='assets/uploads/Property/Property'.$property_id;
-				if(is_dir($dfile))
+				$dfile = 'assets/uploads/Property/Property' . $property_id;
+				if (is_dir($dfile))
 					//@rmdir($dfile);
 					deleteNonEmptyDir($dfile);
 				$msgdata = $this->lang->line('property_the_property_is_deleted_successfully');
@@ -1958,128 +1808,134 @@ class property extends CI_Controller {
 			}
 		}
 	}
-	public function edit_property(){
-		$uid=$this->session->userdata('user_id');
-		if($uid==0 || $uid==''){
+
+	public function edit_property()
+	{
+		$uid = $this->session->userdata('user_id');
+		if ($uid == 0 || $uid == '') {
 			redirect('users/common_reg');
-		}else{
-			$user_type=get_perticular_field_value('zc_user','user_type'," and user_id='".$uid."'");
-			if($user_type!='1'){
-				$property_id=$this->uri->segment('3');
-				$data['property_details']=$this->propertym->get_property_detail($property_id);
+		} else {
+			$user_type = get_perticular_field_value('zc_user', 'user_type', " and user_id='" . $uid . "'");
+			if ($user_type != '1') {
+				$property_id = $this->uri->segment('3');
+				$data['property_details'] = $this->propertym->get_property_detail($property_id);
 				//This property is not mine.
-				if($uid != $data['property_details'][0]['property_post_by']){
+				if ($uid != $data['property_details'][0]['property_post_by']) {
 					redirect('/');
 				}
 				//This property is already featured.
-				if($data['property_details'][0]['feature_status']=='1'){
-					$getFeaturedProperty = $this->propertym->get_save_property_list_highlight($uid,'','');
-					if(count($getFeaturedProperty)){
+				if ($data['property_details'][0]['feature_status'] == '1') {
+					$getFeaturedProperty = $this->propertym->get_save_property_list_highlight($uid, '', '');
+					if (count($getFeaturedProperty)) {
 						$alreadyFeaturedPro = array();
-						foreach($getFeaturedProperty as $gFp){
+						foreach ($getFeaturedProperty as $gFp) {
 							$alreadyFeaturedPro[] = $gFp['property_id'];
 						}
-						if(in_array($property_id,$alreadyFeaturedPro)){
+						if (in_array($property_id, $alreadyFeaturedPro)) {
 							redirect('property/property_details');
 						}
 					}
 				}
 				//Property Is Suspended By Admin.
 				$data['propertySuspensionStatus'] = $data['property_details'][0]['suspention_status'];
-				
+
 				$this->config->load('site_config', TRUE);
 				$site_config = $this->config->item('site_config');
-				$data['property_images']=$this->propertym->property_image($property_id);
-				
-				$data['status_of_property']=get_all_value("zc_status_of_property","and status='1'");
-				$data['kind_of_property']=get_all_value("zc_kind_of_property","and status='1'");
-				$data['energy_efficiency_class']=get_all_value("zc_energy_efficiency_class","and status='1'");
-				
-				$data['contract_type']=$this->propertym->get_contract_type();
-				
-				$province=get_perticular_field_value('zc_provience',($_COOKIE['lang']=='english'?"provience_name":"provience_name_it")," AND provience_id='".$data['property_details'][0]['provience']."'");
+				$data['property_images'] = $this->propertym->property_image($property_id);
 
-				
-				$data['city']=$this->propertym->get_city_list($province,$_COOKIE['lang']);
-				//$data['provinces']=$this->user_model->get_state_list(); 
-				$data['provience_list']=$this->propertym->get_provience_list($_COOKIE['lang']);
-				$this->load->view('property/edit_property_form',$data);
-			}else{
+				$data['status_of_property'] = get_all_value("zc_status_of_property", "and status='1'");
+				$data['kind_of_property'] = get_all_value("zc_kind_of_property", "and status='1'");
+				$data['energy_efficiency_class'] = get_all_value("zc_energy_efficiency_class", "and status='1'");
+
+				$data['contract_type'] = $this->propertym->get_contract_type();
+
+				$province = get_perticular_field_value('zc_provience', ($_COOKIE['lang'] == 'english' ? "provience_name" : "provience_name_it"), " AND provience_id='" . $data['property_details'][0]['provience'] . "'");
+
+
+				$data['city'] = $this->propertym->get_city_list($province, $_COOKIE['lang']);
+				//$data['provinces']=$this->user_model->get_state_list();
+				$data['provience_list'] = $this->propertym->get_provience_list($_COOKIE['lang']);
+				$this->load->view('property/edit_property_form', $data);
+			} else {
 				redirect('/');
 			}
 		}
 	}
-	public function manage_location(){
-		$uid=$this->session->userdata('user_id');
-		if($uid==0 || $uid==''){
+
+	public function manage_location()
+	{
+		$uid = $this->session->userdata('user_id');
+		if ($uid == 0 || $uid == '') {
 			redirect('users/common_reg');
-		}else{
-			$user_type=get_perticular_field_value('zc_user','user_type'," and user_id='".$uid."'");
-			if($user_type!='1'){				
-				$data['locupdatetype']=$this->uri->segment('3');
-				$property_id=$this->uri->segment('4');
-				$data['property_details']=$this->propertym->get_property_detail($property_id);
+		} else {
+			$user_type = get_perticular_field_value('zc_user', 'user_type', " and user_id='" . $uid . "'");
+			if ($user_type != '1') {
+				$data['locupdatetype'] = $this->uri->segment('3');
+				$property_id = $this->uri->segment('4');
+				$data['property_details'] = $this->propertym->get_property_detail($property_id);
 				//This property is not mine.
-				if($uid != $data['property_details'][0]['property_post_by']){
+				if ($uid != $data['property_details'][0]['property_post_by']) {
 					redirect('/');
 				}
 				//This property is already featured.
-				if($data['property_details'][0]['feature_status']=='1'){
-					$getFeaturedProperty = $this->propertym->get_save_property_list_highlight($uid,'','');
-					if(count($getFeaturedProperty)){
+				if ($data['property_details'][0]['feature_status'] == '1') {
+					$getFeaturedProperty = $this->propertym->get_save_property_list_highlight($uid, '', '');
+					if (count($getFeaturedProperty)) {
 						$alreadyFeaturedPro = array();
-						foreach($getFeaturedProperty as $gFp){
+						foreach ($getFeaturedProperty as $gFp) {
 							$alreadyFeaturedPro[] = $gFp['property_id'];
 						}
-						if(in_array($property_id,$alreadyFeaturedPro)){
+						if (in_array($property_id, $alreadyFeaturedPro)) {
 							redirect('property/property_details');
 						}
 					}
 				}
 				//Property Is Suspended By Admin.
 				$data['propertySuspensionStatus'] = $data['property_details'][0]['suspention_status'];
-				
+
 				$this->config->load('site_config', TRUE);
 				$site_config = $this->config->item('site_config');
-				$data['property_images']=$this->propertym->property_image($property_id);
-				
-				$data['status_of_property']=get_all_value("zc_status_of_property","and status='1'");
-				$data['kind_of_property']=get_all_value("zc_kind_of_property","and status='1'");
-				$data['energy_efficiency_class']=get_all_value("zc_energy_efficiency_class","and status='1'");
-				
-				$data['contract_type']=$this->propertym->get_contract_type();
-				
-				$province=get_perticular_field_value('zc_provience',($_COOKIE['lang']=='english'?"provience_name":"provience_name_it")," AND provience_id='".$data['property_details'][0]['provience']."'");
+				$data['property_images'] = $this->propertym->property_image($property_id);
 
-				
-				$data['city']=$this->propertym->get_city_list($province,$_COOKIE['lang']);
-				//$data['provinces']=$this->user_model->get_state_list(); 
-				$data['provience_list']=$this->propertym->get_provience_list($_COOKIE['lang']);
-				$this->load->view('property/manage-location',$data);
-			}else{
+				$data['status_of_property'] = get_all_value("zc_status_of_property", "and status='1'");
+				$data['kind_of_property'] = get_all_value("zc_kind_of_property", "and status='1'");
+				$data['energy_efficiency_class'] = get_all_value("zc_energy_efficiency_class", "and status='1'");
+
+				$data['contract_type'] = $this->propertym->get_contract_type();
+
+				$province = get_perticular_field_value('zc_provience', ($_COOKIE['lang'] == 'english' ? "provience_name" : "provience_name_it"), " AND provience_id='" . $data['property_details'][0]['provience'] . "'");
+
+
+				$data['city'] = $this->propertym->get_city_list($province, $_COOKIE['lang']);
+				//$data['provinces']=$this->user_model->get_state_list();
+				$data['provience_list'] = $this->propertym->get_provience_list($_COOKIE['lang']);
+				$this->load->view('property/manage-location', $data);
+			} else {
 				redirect('/');
 			}
 		}
 	}
-	public function update_location(){
-		
-		$property_id=$this->input->post('locupdatefor');
-		$uid=$this->session->userdata( 'user_id' );
+
+	public function update_location()
+	{
+
+		$property_id = $this->input->post('locupdatefor');
+		$uid = $this->session->userdata('user_id');
 		if($uid==0 || $uid==''){
 			redirect('users/common_reg');
 		}else{
 			$user_type=get_perticular_field_value('zc_user','user_type'," and user_id='".$uid."'");
 			if($user_type!='1'){
-				$new_data['latitude']	= (float) $this->input->post('promaplatitude');
-				$new_data['longitude']	= (float) $this->input->post('promaplongitude');
-				$property_ids = $this->propertym->edit_property_land($new_data,$property_id);
-				
-				$msgdata = $this->lang->line('property_the_property_is_posted_successfully');				
-				
-				if($this->input->post('locupdatetype')=='update'){
+				$new_data['latitude'] = (float)$this->input->post('promaplatitude');
+				$new_data['longitude'] = (float)$this->input->post('promaplongitude');
+				$property_ids = $this->propertym->edit_property_land($new_data, $property_id);
+
+				$msgdata = $this->lang->line('property_the_property_is_posted_successfully');
+
+				if ($this->input->post('locupdatetype') == 'update') {
 					$this->session->set_flashdata('saved_msg', $msgdata);
-					redirect('property/edit_property/'.$property_id);
-				}elseif($this->input->post('locupdatetype')=='add'){
+					redirect('property/edit_property/' . $property_id);
+				} elseif ($this->input->post('locupdatetype') == 'add') {
 					$this->session->set_flashdata('msg', $msgdata);
 					redirect('property/thanks_add_property');
 				}
@@ -2090,20 +1946,22 @@ class property extends CI_Controller {
 			}
 		}
 	}
-	public function skip_manage_loc(){
-		$locupdatetype=$this->uri->segment('3');
-		$property_id=$this->uri->segment('4');
-		$uid=$this->session->userdata( 'user_id' );
+
+	public function skip_manage_loc()
+	{
+		$locupdatetype = $this->uri->segment('3');
+		$property_id = $this->uri->segment('4');
+		$uid = $this->session->userdata('user_id');
 		if($uid==0 || $uid==''){
 			redirect('users/common_reg');
 		}else{
 			$user_type=get_perticular_field_value('zc_user','user_type'," and user_id='".$uid."'");
-			if($user_type!='1'){
-				$msgdata = $this->lang->line('property_the_property_is_posted_successfully');				
-				if($locupdatetype=='update'){
+			if ($user_type != '1') {
+				$msgdata = $this->lang->line('property_the_property_is_posted_successfully');
+				if ($locupdatetype == 'update') {
 					$this->session->set_flashdata('saved_msg', $msgdata);
-					redirect('property/edit_property/'.$property_id);
-				}elseif($locupdatetype=='add'){
+					redirect('property/edit_property/' . $property_id);
+				} elseif ($locupdatetype == 'add') {
 					$this->session->set_flashdata('msg', $msgdata);
 					redirect('property/thanks_add_property');
 				}
@@ -2114,447 +1972,457 @@ class property extends CI_Controller {
 			}
 		}
 	}
-	public function getCategoryedit(){
+
+	public function getCategoryedit()
+	{
 		$lang = $this->input->post('lang');
 		$contract_id = $this->input->post('contract');
 		$cat_parent = $this->input->post('cat_parent');
-		$contract_code=$this->propertym->get_contract_short_code_by_id($contract_id);
-		$category_list=$this->propertym->get_category_list($cat_parent);
-		$select_cat=$this->input->post('select_cat');
-		if($select_cat=='PRO' || $select_cat=='BLI' || $select_cat=='BUS'){
-			$sected_cat='BUS';
+		$contract_code = $this->propertym->get_contract_short_code_by_id($contract_id);
+		$category_list = $this->propertym->get_category_list($cat_parent);
+		$select_cat = $this->input->post('select_cat');
+		if ($select_cat == 'PRO' || $select_cat == 'BLI' || $select_cat == 'BUS') {
+			$sected_cat = 'BUS';
 		}else{
-			$sected_cat=$select_cat;
+			$sected_cat = $select_cat;
 		}
-		$category='';
+		$category = '';
 		//echo "=============".$lang;
-		if(!empty($category_list[0])){
-			$category .= '<option value="">'.$this->lang->line('property_select_a_category').'</option>';
-			foreach( $category_list as $key=>$val ){
-				if($val['short_code']==$sected_cat){
-					$selection="selected='selected'";
-				}else{
-					$selection="";
+		if (!empty($category_list[0])) {
+			$category .= '<option value="">' . $this->lang->line('property_select_a_category') . '</option>';
+			foreach ($category_list as $key => $val) {
+				if ($val['short_code'] == $sected_cat) {
+					$selection = "selected='selected'";
+				} else {
+					$selection = "";
 				}
-				if($contract_code=="SAL"){
-					if($val['short_code']=="ROM"){
+				if ($contract_code == "SAL") {
+					if ($val['short_code'] == "ROM") {
 						continue;
-					}	
-					$category .= '<option value="'.$val['short_code'].'" '.$selection.'>'.($lang=='it'?$val['name_it']:$val['name']).'</option>';
-				}else{
-					$category .= '<option value="'.$val['short_code'].'" '.$selection.'>'.($lang=='it'?$val['name_it']:$val['name']).'</option>';
-				}
-			}	
-		}else{
-			$category .= '<option value="">'.$this->lang->line('property_select_a_category').'</option>';
-		}
-		echo $category;
-	}
-	public function getSubCategoryedit(){
-		$lang = $this->input->post('lang');
-		$category_code = $this->input->post('category');
-		$contract_id=$this->propertym->get_contract_id_by_short_code($category_code);
-		$sub_category_list=$this->propertym->get_category_list($contract_id);
-		$sected_subcat=$this->input->post('select_subcat');
-		$category='';
-		if(!empty($sub_category_list[0])){
-			$category .= '<option value="">'.$this->lang->line('property_select_a_subcategory').'</option>';
-			foreach( $sub_category_list as $key=>$val ){
-				if($val['short_code']==$sected_subcat){
-					$selection="selected='selected'";
-				}else{
-					$selection="";
-				}
-				if($category_code=="SAL"){
-					$category .= '<option value="'.$val['short_code'].'" '.$selection.'>'.($lang=='it'?$val['name_it']:$val['name']).'</option>';
-				}else{
-					$category .= '<option value="'.$val['short_code'].'" '.$selection.'>'.($lang=='it'?$val['name_it']:$val['name']).'</option>';
+					}
+					$category .= '<option value="' . $val['short_code'] . '" ' . $selection . '>' . ($lang == 'it' ? $val['name_it'] : $val['name']) . '</option>';
+				} else {
+					$category .= '<option value="' . $val['short_code'] . '" ' . $selection . '>' . ($lang == 'it' ? $val['name_it'] : $val['name']) . '</option>';
 				}
 			}
-		}else{
-			$category .= '<option value="">'.$this->lang->line('property_select_a_subcategory').'</option>';
+		} else {
+			$category .= '<option value="">' . $this->lang->line('property_select_a_category') . '</option>';
 		}
 		echo $category;
 	}
-	public function getTypologyedit(){
+
+	public function getSubCategoryedit()
+	{
+		$lang = $this->input->post('lang');
+		$category_code = $this->input->post('category');
+		$contract_id = $this->propertym->get_contract_id_by_short_code($category_code);
+		$sub_category_list = $this->propertym->get_category_list($contract_id);
+		$sected_subcat = $this->input->post('select_subcat');
+		$category = '';
+		if (!empty($sub_category_list[0])) {
+			$category .= '<option value="">' . $this->lang->line('property_select_a_subcategory') . '</option>';
+			foreach ($sub_category_list as $key => $val) {
+				if ($val['short_code'] == $sected_subcat) {
+					$selection = "selected='selected'";
+				} else {
+					$selection = "";
+				}
+				if ($category_code == "SAL") {
+					$category .= '<option value="' . $val['short_code'] . '" ' . $selection . '>' . ($lang == 'it' ? $val['name_it'] : $val['name']) . '</option>';
+				} else {
+					$category .= '<option value="' . $val['short_code'] . '" ' . $selection . '>' . ($lang == 'it' ? $val['name_it'] : $val['name']) . '</option>';
+				}
+			}
+		} else {
+			$category .= '<option value="">' . $this->lang->line('property_select_a_subcategory') . '</option>';
+		}
+		echo $category;
+	}
+
+	public function getTypologyedit()
+	{
 		$lang = $this->input->post('lang');
 		$category_codes = $this->input->post('category');
 		$select_typology = $this->input->post('select_typology');
-		$typology_list=$this->propertym->get_typology_list($lang);
-		
-		if($category_codes=='RES' || $category_codes=='Residenziale' || $category_codes=='Residential'){
-			$category_code="RES";
+		$typology_list = $this->propertym->get_typology_list($lang);
+
+		if ($category_codes == 'RES' || $category_codes == 'Residenziale' || $category_codes == 'Residential') {
+			$category_code = "RES";
 		}
-		if($category_codes=='Rooms' || $category_codes=='Stanze' || $category_codes=='ROM'){
-			$category_code="ROM";
+		if ($category_codes == 'Rooms' || $category_codes == 'Stanze' || $category_codes == 'ROM') {
+			$category_code = "ROM";
 		}
-		if($category_codes=='Land' || $category_codes=='LAND' || $category_codes=='Terreni'){
-			$category_code="LAND";
+		if ($category_codes == 'Land' || $category_codes == 'LAND' || $category_codes == 'Terreni') {
+			$category_code = "LAND";
 		}
-		if($category_codes=='VAC' || $category_codes=='For vacations' || $category_codes=='Vacations' || $category_codes=='Vacanze'){
-			$category_code="VAC";
+		if ($category_codes == 'VAC' || $category_codes == 'For vacations' || $category_codes == 'Vacations' || $category_codes == 'Vacanze') {
+			$category_code = "VAC";
 		}
-		if($category_codes=='PRO' || $category_codes=='Property' || $category_codes=='Property for business' || $category_codes=='Immobili commerciali'){
-			$category_code="PRO";
+		if ($category_codes == 'PRO' || $category_codes == 'Property' || $category_codes == 'Property for business' || $category_codes == 'Immobili commerciali') {
+			$category_code = "PRO";
 		}
-		if($category_codes=='BLI' || $category_codes=='Business license' || $category_codes=='Licenze commerciali'){
-			$category_code="BLI";
-		}		
-		
-		$typology_array=array();
+		if ($category_codes == 'BLI' || $category_codes == 'Business license' || $category_codes == 'Licenze commerciali') {
+			$category_code = "BLI";
+		}
+
+		$typology_array = array();
 		$typology_array = get_Adjusted_TypologyID_asArray($category_code);
-		
-		$typology='';
-		if(!empty($typology_list)){
-			if($lang=='it'){
+
+		$typology = '';
+		if (!empty($typology_list)) {
+			if ($lang == 'it') {
 				$typology .= '<option value="">Seleziona la tipologia di immobile</option>';
-			}else{
+			} else {
 				$typology .= '<option value="">Select the typology of property</option>';
 			}
-			foreach($typology_list as $key=>$val):
-				if(!in_array($key,$typology_array)){
+			foreach ($typology_list as $key => $val):
+				if (!in_array($key, $typology_array)) {
 					continue;
 				}
-				if($key==$select_typology){
+				if ($key == $select_typology) {
 					$selection="selected='selected'";
 				}else{
 					$selection="";
 				}
-				$typology .= '<option value="'.$key.'" '.$selection.'>'.$val.'</option>';
+				$typology .= '<option value="' . $key . '" ' . $selection . '>' . $val . '</option>';
 			endforeach;
 		}else{
-			if($lang=='it'){
+			if ($lang == 'it') {
 				$typology .= '<option value="">Seleziona la tipologia di immobile</option>';
-			}else{
+			} else {
 				$typology .= '<option value="">Select the typology of property</option>';
 			}
 		}
 		echo $typology;
 	}
-	public function del_img(){
-		$ids=explode('_',$this->uri->segment('3'));
-		$img_id=$ids[0];
-		$property_id=$ids[1];
-		$dfile_name=get_perticular_field_value('zc_property_img','file_name'," and img_id='".$img_id."'");
+
+	public function del_img()
+	{
+		$ids = explode('_', $this->uri->segment('3'));
+		$img_id = $ids[0];
+		$property_id = $ids[1];
+		$dfile_name = get_perticular_field_value('zc_property_img', 'file_name', " and img_id='" . $img_id . "'");
 		//Delete The Main Image.
-		$dfile='assets/uploads/Property/Property'.$property_id.'/'.$dfile_name;
-		if(is_file($dfile)){
+		$dfile = 'assets/uploads/Property/Property' . $property_id . '/' . $dfile_name;
+		if (is_file($dfile)) {
 			@unlink($dfile);
 		}
-		$dfile1='assets/uploads/Property/Property'.$property_id.'/thumb_860_482/'.$dfile_name;
-		if(is_file($dfile1)){
+		$dfile1 = 'assets/uploads/Property/Property' . $property_id . '/thumb_860_482/' . $dfile_name;
+		if (is_file($dfile1)) {
 			@unlink($dfile1);
 		}
-		$dfile2='assets/uploads/Property/Property'.$property_id.'/thumb_200_296/'.$dfile_name;
-		if(is_file($dfile2)){
+		$dfile2 = 'assets/uploads/Property/Property' . $property_id . '/thumb_200_296/' . $dfile_name;
+		if (is_file($dfile2)) {
 			@unlink($dfile2);
 		}
-		$dfile3='assets/uploads/Property/Property'.$property_id.'/thumb_92_82/'.$dfile_name;
-		if(is_file($dfile3)){
+		$dfile3 = 'assets/uploads/Property/Property' . $property_id . '/thumb_92_82/' . $dfile_name;
+		if (is_file($dfile3)) {
 			@unlink($dfile3);
 		}
-		
-		$rs=$this->propertym->del_property_img($img_id);
-		redirect('property/edit_property/'.$property_id);
+
+		$rs = $this->propertym->del_property_img($img_id);
+		redirect('property/edit_property/' . $property_id);
 	}
-	public function update_property(){ 
-		$property_id=$this->input->post('property_id');
-		$uid=$this->session->userdata( 'user_id' );
-		if($uid==0 || $uid==''){
+
+	public function update_property()
+	{
+		$property_id = $this->input->post('property_id');
+		$uid = $this->session->userdata('user_id');
+		if ($uid == 0 || $uid == '') {
 			redirect('users/common_reg');
 		}else{
-			$user_type=get_perticular_field_value('zc_user','user_type'," and user_id='".$uid."'");
-			if($user_type!='1'){
-				if($this->input->post('btnSubmit')){
+			$user_type = get_perticular_field_value('zc_user', 'user_type', " and user_id='" . $uid . "'");
+			if ($user_type != '1') {
+				if ($this->input->post('btnSubmit')) {
 					/*echo "<pre>";
 					print_r($_POST);
 					die;*/
-					$property_post_by=$this->session->userdata( 'user_id' );
-					$new_data=array();
-					if($this->input->post('btnSubmit')=='Save Draft'){
-						$new_data['property_status']='1';
-						if($this->input->post('pvt_negotiation')=='1'){
-							$price='';
-							$private_nagotiation='1';
-							$update_price='0.00';
-						}else{
-							$pricee=$this->input->post('price');
+					$property_post_by = $this->session->userdata('user_id');
+					$new_data = array();
+					if ($this->input->post('btnSubmit') == 'Save Draft') {
+						$new_data['property_status'] = '1';
+						if ($this->input->post('pvt_negotiation') == '1') {
+							$price = '';
+							$private_nagotiation = '1';
+							$update_price = '0.00';
+						} else {
+							$pricee = $this->input->post('price');
 							//echo '<br>';
-							$pricees=floatval(str_replace(',', '.', str_replace('.', '', $pricee)));
-							$price=$pricees;
-							$private_nagotiation='0';
-							$update_price='0.00';
+							$pricees = floatval(str_replace(',', '.', str_replace('.', '', $pricee)));
+							$price = $pricees;
+							$private_nagotiation = '0';
+							$update_price = '0.00';
 						}
 					}
-					if($this->input->post('btnSubmit')=='Submit'){
-						$new_data['property_status']='2';
-						$new_data['update_time']=date('Y-m-d');
-						if($this->input->post('pvt_negotiation')=='1'){
-							$price='';
-							$update_price='0.00';
-							$private_nagotiation='1';
-						}else{
-							$pricee=$this->input->post('price');
+					if ($this->input->post('btnSubmit') == 'Submit') {
+						$new_data['property_status'] = '2';
+						$new_data['update_time'] = date('Y-m-d');
+						if ($this->input->post('pvt_negotiation') == '1') {
+							$price = '';
+							$update_price = '0.00';
+							$private_nagotiation = '1';
+						} else {
+							$pricee = $this->input->post('price');
 							//echo '<br>';
-							$pricees=floatval(str_replace(',', '.', str_replace('.', '', $pricee)));
+							$pricees = floatval(str_replace(',', '.', str_replace('.', '', $pricee)));
 							//echo $pricees;die;
 							//$price=$pricees;
-							$private_nagotiation='0';
-							$up_price=get_perticular_field_value('zc_property_details','update_price'," and property_id='".$property_id."'");
-							if($up_price=='0.00'){
-								$price_org=get_perticular_field_value('zc_property_details','price'," and property_id='".$property_id."'");
-								$price=$price_org;
-								$update_price=$pricees;
-							}else{
-								$price_org=get_perticular_field_value('zc_property_details','update_price'," and property_id='".$property_id."'");
-								$price=$pricees;
-								$update_price=$price_org;
+							$private_nagotiation = '0';
+							$up_price = get_perticular_field_value('zc_property_details', 'update_price', " and property_id='" . $property_id . "'");
+							if ($up_price == '0.00') {
+								$price_org = get_perticular_field_value('zc_property_details', 'price', " and property_id='" . $property_id . "'");
+								$price = $price_org;
+								$update_price = $pricees;
+							} else {
+								$price_org = get_perticular_field_value('zc_property_details', 'update_price', " and property_id='" . $property_id . "'");
+								$price = $pricees;
+								$update_price = $price_org;
 							}
 						}
 					}
-					$uid=$this->session->userdata( 'user_id' );
-					$user_type=get_perticular_field_value('zc_user','user_type'," and user_id='".$uid."' ");
-					
-					$property_approval='1';
-					
-					$time=date('d-m-Y');
-					
-					$contract_id=get_perticular_field_value('zc_property_details','contract_id'," and property_id='".$property_id."'");
-					$category_id=get_perticular_field_value('zc_property_details','category_id'," and property_id='".$property_id."'");
-					$category_name=get_perticular_field_value('zc_categories','short_code'," and category_id='".$category_id."'");
-					if($category_name=='PRO' || $category_name=='BLI' || $category_name=='BUS'){
-						$category="BUS";
-					}else{
-						$category=$category_name;
+					$uid = $this->session->userdata('user_id');
+					$user_type = get_perticular_field_value('zc_user', 'user_type', " and user_id='" . $uid . "' ");
+
+					$property_approval = '1';
+
+					$time = date('d-m-Y');
+
+					$contract_id = get_perticular_field_value('zc_property_details', 'contract_id', " and property_id='" . $property_id . "'");
+					$category_id = get_perticular_field_value('zc_property_details', 'category_id', " and property_id='" . $property_id . "'");
+					$category_name = get_perticular_field_value('zc_categories', 'short_code', " and category_id='" . $category_id . "'");
+					if ($category_name == 'PRO' || $category_name == 'BLI' || $category_name == 'BUS') {
+						$category = "BUS";
+					} else {
+						$category = $category_name;
 					}
-						
-					$alreadyUpdatedLatitude=get_perticular_field_value('zc_property_details','latitude'," and property_id='".$property_id."'");
-					$alreadyUpdatedLongitude=get_perticular_field_value('zc_property_details','longitude'," and property_id='".$property_id."'");
-					
-					if($category=='LAND'){
-						$new_data['category_id']='4';
-						$new_data['provience']=$this->input->post('province');
-						$new_data['city']=$this->input->post('city');
-						$new_data['zip']=$this->input->post('zip');
-						$new_data['street_address']=$this->input->post('address');
-						$new_data['street_no']=$this->input->post('street_no');
-						$new_data['area']=$this->input->post('area');
-						$new_data['price']=$price;
-						$new_data['update_price']=$update_price;
-						$new_data['private_nagotiation']=$private_nagotiation;
-						$new_data['youtube_url']=$this->input->post('url');
-						$new_data['typology']=$this->input->post('typology');
-						$new_data['kind']=$this->input->post('kind_of_property');
-						$new_data['surface_area']=$this->input->post('surface_area');
-						$new_data['availability']=$this->input->post('availabilty');
-						$new_data['description']=$this->input->post('description');
-						$new_data['property_approval']=$property_approval;
-						if($alreadyUpdatedLatitude=='0' && $alreadyUpdatedLongitude=='0'){
-							$lat_lng_array=getLangLat( $this->input->post('street_address') . ','.$this->input->post( 'street_no' ) . ','. $this->input->post( 'city' ) . ',' . $this->input->post( 'provience' ) . ',' . $this->input->post( 'zip' ));
-							$new_data['latitude'] = (float) $lat_lng_array->lat;
-							$new_data['longitude'] = (float)$lat_lng_array->lng;
-						}						
-						$property_ids=$this->propertym->edit_property_land($new_data,$property_id);
-					}
-					if($category=='VAC'){
-						$new_data['category_id']='5';
-						$new_data['provience']=$this->input->post('province');
-						$new_data['city']=$this->input->post('city');
-						$new_data['zip']=$this->input->post('zip');
-						$new_data['street_address']=$this->input->post('address');
-						$new_data['street_no']=$this->input->post('street_no');
-						$new_data['area']=$this->input->post('area');
-						$new_data['price']=$price;
-						$new_data['update_price']=$update_price;
-						$new_data['private_nagotiation']=$private_nagotiation;
-						$new_data['youtube_url']=$this->input->post('url');
-						$new_data['typology']=$this->input->post('typology');
-						$new_data['status']=$this->input->post('status_of_property');
-						if($this->input->post('energy_efficiency')){
-							$new_data['energyclass']=$this->input->post('energy_efficiency');
-						}						
-						$new_data['surface_area']=$this->input->post('surface_area');
-						$new_data['room_no']=$this->input->post('room_no');
-						$new_data['floor']=$this->input->post('floor');
-						$new_data['total_of_floors']=$this->input->post('tot_floor');
-						$new_data['year_of_building']=$this->input->post('year_of_building');
-						$new_data['beds_no']=$this->input->post('bed_no');
-						$new_data['bathrooms_no']=$this->input->post('bothroom_no');
-						$new_data['kitchen']=$this->input->post('kitchen');
-						$new_data['heating']=$this->input->post('heating');
-						$new_data['parking']=$this->input->post('parking');
-						$new_data['furnished']=$this->input->post('furnished');
-						$new_data['availability']=$this->input->post('availabilty');
-						$new_data['pets']=$this->input->post('pets');
-						$new_data['air_conditioning']=$this->input->post('air_conditioning');
-						$new_data['elevator']=$this->input->post('elevator');
-						$new_data['balcony']=$this->input->post('balcony');
-						$new_data['terrace']=$this->input->post('terrace');
-						$new_data['garden']=$this->input->post('terrace');
-						$new_data['add_to_luxury']=$this->input->post('add_to_luxury');
-						$new_data['description']=$this->input->post('description');
-						$new_data['property_approval']=$property_approval;
-						if($alreadyUpdatedLatitude=='0' && $alreadyUpdatedLongitude=='0'){
-							$lat_lng_array=getLangLat( $this->input->post('street_address') . ','.$this->input->post( 'street_no' ) . ','. $this->input->post( 'city' ) . ',' . $this->input->post( 'provience' ) . ',' . $this->input->post( 'zip' ));
-							$new_data['latitude'] = (float) $lat_lng_array->lat;
+
+					$alreadyUpdatedLatitude = get_perticular_field_value('zc_property_details', 'latitude', " and property_id='" . $property_id . "'");
+					$alreadyUpdatedLongitude = get_perticular_field_value('zc_property_details', 'longitude', " and property_id='" . $property_id . "'");
+
+					if ($category == 'LAND') {
+						$new_data['category_id'] = '4';
+						$new_data['provience'] = $this->input->post('province');
+						$new_data['city'] = $this->input->post('city');
+						$new_data['zip'] = $this->input->post('zip');
+						$new_data['street_address'] = $this->input->post('address');
+						$new_data['street_no'] = $this->input->post('street_no');
+						$new_data['area'] = $this->input->post('area');
+						$new_data['price'] = $price;
+						$new_data['update_price'] = $update_price;
+						$new_data['private_nagotiation'] = $private_nagotiation;
+						$new_data['youtube_url'] = $this->input->post('url');
+						$new_data['typology'] = $this->input->post('typology');
+						$new_data['kind'] = $this->input->post('kind_of_property');
+						$new_data['surface_area'] = $this->input->post('surface_area');
+						$new_data['availability'] = $this->input->post('availabilty');
+						$new_data['description'] = $this->input->post('description');
+						$new_data['property_approval'] = $property_approval;
+						if ($alreadyUpdatedLatitude == '0' && $alreadyUpdatedLongitude == '0') {
+							$lat_lng_array = getLangLat($this->input->post('street_address') . ',' . $this->input->post('street_no') . ',' . $this->input->post('city') . ',' . $this->input->post('provience') . ',' . $this->input->post('zip'));
+							$new_data['latitude'] = (float)$lat_lng_array->lat;
 							$new_data['longitude'] = (float)$lat_lng_array->lng;
 						}
-						$property_ids=$this->propertym->edit_property_vac($new_data,$property_id);
+						$property_ids = $this->propertym->edit_property_land($new_data, $property_id);
 					}
-					if($category=='ROM'){
-						$new_data['category_id']='3';
-						$new_data['provience']=$this->input->post('province');
-						$new_data['city']=$this->input->post('city');
-						$new_data['zip']=$this->input->post('zip');
-						$new_data['street_address']=$this->input->post('address');
-						$new_data['street_no']=$this->input->post('street_no');
-						$new_data['area']=$this->input->post('area');
-						$new_data['price']=$price;
-						$new_data['update_price']=$update_price;
-						$new_data['private_nagotiation']=$private_nagotiation;
-						$new_data['youtube_url']=$this->input->post('url');
-						$new_data['typology']=$this->input->post('typology');					
-						$new_data['floor']=$this->input->post('floor');					
-						$new_data['bathrooms_no']=$this->input->post('bothroom_no');
-						$new_data['kitchen']=$this->input->post('kitchen');
-						$new_data['heating']=$this->input->post('heating');
-						$new_data['parking']=$this->input->post('parking');
-						$new_data['roommates']=$this->input->post('roommates');
-						$new_data['occupation']=$this->input->post('occupation');
-						$new_data['furnished']=$this->input->post('furnished');
-						$new_data['availability']=$this->input->post('availabilty');
-						$new_data['smokers']=$this->input->post('smokers');
-						$new_data['pets']=$this->input->post('pets');
-						$new_data['air_conditioning']=$this->input->post('air_conditioning');
-						$new_data['elevator']=$this->input->post('elevator');
-						$new_data['balcony']=$this->input->post('balcony');
-						$new_data['terrace']=$this->input->post('terrace');
-						$new_data['garden']=$this->input->post('terrace');
-						$new_data['add_to_luxury']=$this->input->post('add_to_luxury');
-						$new_data['description']=$this->input->post('description');
-						$new_data['property_approval']=$property_approval;
-						if($alreadyUpdatedLatitude=='0' && $alreadyUpdatedLongitude=='0'){
-							$lat_lng_array=getLangLat( $this->input->post('street_address') . ','.$this->input->post( 'street_no' ) . ','. $this->input->post( 'city' ) . ',' . $this->input->post( 'provience' ) . ',' . $this->input->post( 'zip' ));
-							$new_data['latitude'] = (float) $lat_lng_array->lat;
+					if ($category == 'VAC') {
+						$new_data['category_id'] = '5';
+						$new_data['provience'] = $this->input->post('province');
+						$new_data['city'] = $this->input->post('city');
+						$new_data['zip'] = $this->input->post('zip');
+						$new_data['street_address'] = $this->input->post('address');
+						$new_data['street_no'] = $this->input->post('street_no');
+						$new_data['area'] = $this->input->post('area');
+						$new_data['price'] = $price;
+						$new_data['update_price'] = $update_price;
+						$new_data['private_nagotiation'] = $private_nagotiation;
+						$new_data['youtube_url'] = $this->input->post('url');
+						$new_data['typology'] = $this->input->post('typology');
+						$new_data['status'] = $this->input->post('status_of_property');
+						if ($this->input->post('energy_efficiency')) {
+							$new_data['energyclass'] = $this->input->post('energy_efficiency');
+						}
+						$new_data['surface_area'] = $this->input->post('surface_area');
+						$new_data['room_no'] = $this->input->post('room_no');
+						$new_data['floor'] = $this->input->post('floor');
+						$new_data['total_of_floors'] = $this->input->post('tot_floor');
+						$new_data['year_of_building'] = $this->input->post('year_of_building');
+						$new_data['beds_no'] = $this->input->post('bed_no');
+						$new_data['bathrooms_no'] = $this->input->post('bothroom_no');
+						$new_data['kitchen'] = $this->input->post('kitchen');
+						$new_data['heating'] = $this->input->post('heating');
+						$new_data['parking'] = $this->input->post('parking');
+						$new_data['furnished'] = $this->input->post('furnished');
+						$new_data['availability'] = $this->input->post('availabilty');
+						$new_data['pets'] = $this->input->post('pets');
+						$new_data['air_conditioning'] = $this->input->post('air_conditioning');
+						$new_data['elevator'] = $this->input->post('elevator');
+						$new_data['balcony'] = $this->input->post('balcony');
+						$new_data['terrace'] = $this->input->post('terrace');
+						$new_data['garden'] = $this->input->post('terrace');
+						$new_data['add_to_luxury'] = $this->input->post('add_to_luxury');
+						$new_data['description'] = $this->input->post('description');
+						$new_data['property_approval'] = $property_approval;
+						if ($alreadyUpdatedLatitude == '0' && $alreadyUpdatedLongitude == '0') {
+							$lat_lng_array = getLangLat($this->input->post('street_address') . ',' . $this->input->post('street_no') . ',' . $this->input->post('city') . ',' . $this->input->post('provience') . ',' . $this->input->post('zip'));
+							$new_data['latitude'] = (float)$lat_lng_array->lat;
 							$new_data['longitude'] = (float)$lat_lng_array->lng;
-						}						
-						$property_ids=$this->propertym->edit_property_rom($new_data,$property_id);
+						}
+						$property_ids = $this->propertym->edit_property_vac($new_data, $property_id);
 					}
-					if($category=='RES'){
-						$new_data['category_id']='1';
-						$new_data['provience']=$this->input->post('province');
-						$new_data['city']=$this->input->post('city');
-						$new_data['zip']=$this->input->post('zip');
-						$new_data['street_address']=$this->input->post('address');
-						$new_data['street_no']=$this->input->post('street_no');
-						$new_data['area']=$this->input->post('area');
-						$new_data['price']=$price;
-						$new_data['update_price']=$update_price;
-						$new_data['private_nagotiation']=$private_nagotiation;
-						$new_data['youtube_url']=$this->input->post('url');
-						$new_data['typology']=$this->input->post('typology');
-						$new_data['status']=$this->input->post('status_of_property');
-						$new_data['kind']=$this->input->post('kind_of_property');
-						$new_data['energyclass']=$this->input->post('energy_efficiency');
-						$new_data['surface_area']=$this->input->post('surface_area');
-						$new_data['room_no']=$this->input->post('room_no');
-						$new_data['floor']=$this->input->post('floor');
-						$new_data['total_of_floors']=$this->input->post('tot_floor');
-						$new_data['year_of_building']=$this->input->post('year_of_building');
-						$new_data['bathrooms_no']=$this->input->post('bothroom_no');
-						$new_data['kitchen']=$this->input->post('kitchen');
-						$new_data['heating']=$this->input->post('heating');
-						$new_data['parking']=$this->input->post('parking');
-						$new_data['furnished']=$this->input->post('furnished');
-						$new_data['availability']=$this->input->post('availabilty');
-						$new_data['air_conditioning']=$this->input->post('air_conditioning');
-						$new_data['elevator']=$this->input->post('elevator');
-						$new_data['balcony']=$this->input->post('balcony');
-						$new_data['terrace']=$this->input->post('terrace');
-						$new_data['garden']=$this->input->post('terrace');
-						$new_data['add_to_luxury']=$this->input->post('add_to_luxury');
-						$new_data['description']=$this->input->post('description');
-						$new_data['property_approval']=$property_approval;
-						if($alreadyUpdatedLatitude=='0' && $alreadyUpdatedLongitude=='0'){
-							$lat_lng_array=getLangLat( $this->input->post('street_address') . ','.$this->input->post( 'street_no' ) . ','. $this->input->post( 'city' ) . ',' . $this->input->post( 'provience' ) . ',' . $this->input->post( 'zip' ));
-							$new_data['latitude'] = (float) $lat_lng_array->lat;
+					if ($category == 'ROM') {
+						$new_data['category_id'] = '3';
+						$new_data['provience'] = $this->input->post('province');
+						$new_data['city'] = $this->input->post('city');
+						$new_data['zip'] = $this->input->post('zip');
+						$new_data['street_address'] = $this->input->post('address');
+						$new_data['street_no'] = $this->input->post('street_no');
+						$new_data['area'] = $this->input->post('area');
+						$new_data['price'] = $price;
+						$new_data['update_price'] = $update_price;
+						$new_data['private_nagotiation'] = $private_nagotiation;
+						$new_data['youtube_url'] = $this->input->post('url');
+						$new_data['typology'] = $this->input->post('typology');
+						$new_data['floor'] = $this->input->post('floor');
+						$new_data['bathrooms_no'] = $this->input->post('bothroom_no');
+						$new_data['kitchen'] = $this->input->post('kitchen');
+						$new_data['heating'] = $this->input->post('heating');
+						$new_data['parking'] = $this->input->post('parking');
+						$new_data['roommates'] = $this->input->post('roommates');
+						$new_data['occupation'] = $this->input->post('occupation');
+						$new_data['furnished'] = $this->input->post('furnished');
+						$new_data['availability'] = $this->input->post('availabilty');
+						$new_data['smokers'] = $this->input->post('smokers');
+						$new_data['pets'] = $this->input->post('pets');
+						$new_data['air_conditioning'] = $this->input->post('air_conditioning');
+						$new_data['elevator'] = $this->input->post('elevator');
+						$new_data['balcony'] = $this->input->post('balcony');
+						$new_data['terrace'] = $this->input->post('terrace');
+						$new_data['garden'] = $this->input->post('terrace');
+						$new_data['add_to_luxury'] = $this->input->post('add_to_luxury');
+						$new_data['description'] = $this->input->post('description');
+						$new_data['property_approval'] = $property_approval;
+						if ($alreadyUpdatedLatitude == '0' && $alreadyUpdatedLongitude == '0') {
+							$lat_lng_array = getLangLat($this->input->post('street_address') . ',' . $this->input->post('street_no') . ',' . $this->input->post('city') . ',' . $this->input->post('provience') . ',' . $this->input->post('zip'));
+							$new_data['latitude'] = (float)$lat_lng_array->lat;
 							$new_data['longitude'] = (float)$lat_lng_array->lng;
-						}						
-						$property_ids=$this->propertym->edit_property_res($new_data,$property_id);
+						}
+						$property_ids = $this->propertym->edit_property_rom($new_data, $property_id);
 					}
-					if($category=='BUS'){
-						$sub_cat=$this->input->post('sub_category');
+					if ($category == 'RES') {
+						$new_data['category_id'] = '1';
+						$new_data['provience'] = $this->input->post('province');
+						$new_data['city'] = $this->input->post('city');
+						$new_data['zip'] = $this->input->post('zip');
+						$new_data['street_address'] = $this->input->post('address');
+						$new_data['street_no'] = $this->input->post('street_no');
+						$new_data['area'] = $this->input->post('area');
+						$new_data['price'] = $price;
+						$new_data['update_price'] = $update_price;
+						$new_data['private_nagotiation'] = $private_nagotiation;
+						$new_data['youtube_url'] = $this->input->post('url');
+						$new_data['typology'] = $this->input->post('typology');
+						$new_data['status'] = $this->input->post('status_of_property');
+						$new_data['kind'] = $this->input->post('kind_of_property');
+						$new_data['energyclass'] = $this->input->post('energy_efficiency');
+						$new_data['surface_area'] = $this->input->post('surface_area');
+						$new_data['room_no'] = $this->input->post('room_no');
+						$new_data['floor'] = $this->input->post('floor');
+						$new_data['total_of_floors'] = $this->input->post('tot_floor');
+						$new_data['year_of_building'] = $this->input->post('year_of_building');
+						$new_data['bathrooms_no'] = $this->input->post('bothroom_no');
+						$new_data['kitchen'] = $this->input->post('kitchen');
+						$new_data['heating'] = $this->input->post('heating');
+						$new_data['parking'] = $this->input->post('parking');
+						$new_data['furnished'] = $this->input->post('furnished');
+						$new_data['availability'] = $this->input->post('availabilty');
+						$new_data['air_conditioning'] = $this->input->post('air_conditioning');
+						$new_data['elevator'] = $this->input->post('elevator');
+						$new_data['balcony'] = $this->input->post('balcony');
+						$new_data['terrace'] = $this->input->post('terrace');
+						$new_data['garden'] = $this->input->post('terrace');
+						$new_data['add_to_luxury'] = $this->input->post('add_to_luxury');
+						$new_data['description'] = $this->input->post('description');
+						$new_data['property_approval'] = $property_approval;
+						if ($alreadyUpdatedLatitude == '0' && $alreadyUpdatedLongitude == '0') {
+							$lat_lng_array = getLangLat($this->input->post('street_address') . ',' . $this->input->post('street_no') . ',' . $this->input->post('city') . ',' . $this->input->post('provience') . ',' . $this->input->post('zip'));
+							$new_data['latitude'] = (float)$lat_lng_array->lat;
+							$new_data['longitude'] = (float)$lat_lng_array->lng;
+						}
+						$property_ids = $this->propertym->edit_property_res($new_data, $property_id);
+					}
+					if ($category == 'BUS') {
+						$sub_cat = $this->input->post('sub_category');
 						{
-							if($sub_cat=='PRO'){
-								$sub_cat_id='6';
+							if ($sub_cat == 'PRO') {
+								$sub_cat_id = '6';
 							}
-							if($sub_cat=='BLI'){
-								$sub_cat_id='7';
+							if ($sub_cat == 'BLI') {
+								$sub_cat_id = '7';
 							}
 						}
-						$new_data['category_id']=$sub_cat_id;
-						$new_data['provience']=$this->input->post('province');
-						$new_data['city']=$this->input->post('city');
-						$new_data['zip']=$this->input->post('zip');
-						$new_data['street_address']=$this->input->post('address');
-						$new_data['street_no']=$this->input->post('street_no');
-						$new_data['area']=$this->input->post('area');
-						$new_data['price']=$price;
-						$new_data['update_price']=$update_price;
-						$new_data['private_nagotiation']=$private_nagotiation;
-						$new_data['youtube_url']=$this->input->post('url');
-						$new_data['typology']=$this->input->post('typology');
-						$new_data['status']=$this->input->post('status_of_property');					
-						$new_data['kind']=$this->input->post('kind_of_property');					
-						$new_data['energyclass']=$this->input->post('energy_efficiency');
-						$new_data['surface_area']=$this->input->post('surface_area');					
-						$new_data['room_no']=$this->input->post('room_no');					
-						$new_data['floor']=$this->input->post('floor');
-						$new_data['total_of_floors']=$this->input->post('tot_floor');					
-						$new_data['year_of_building']=$this->input->post('year_of_building');
-						$new_data['bathrooms_no']=$this->input->post('bothroom_no');					
-						$new_data['kitchen']=$this->input->post('kitchen');
-						$new_data['heating']=$this->input->post('heating');
-						$new_data['parking']=$this->input->post('parking');					
-						$new_data['furnished']=$this->input->post('furnished');
-						$new_data['availability']=$this->input->post('availabilty');					
-						$new_data['air_conditioning']=$this->input->post('air_conditioning');
-						$new_data['elevator']=$this->input->post('elevator');
-						$new_data['balcony']=$this->input->post('balcony');
-						$new_data['terrace']=$this->input->post('terrace');
-						$new_data['garden']=$this->input->post('terrace');
-						$new_data['add_to_luxury']=$this->input->post('add_to_luxury');
-						$new_data['description']=$this->input->post('description');
-						$new_data['property_approval']=$property_approval;
-						if($alreadyUpdatedLatitude=='0' && $alreadyUpdatedLongitude=='0'){
-							$lat_lng_array=getLangLat( $this->input->post('street_address') . ','.$this->input->post( 'street_no' ) . ','. $this->input->post( 'city' ) . ',' . $this->input->post( 'provience' ) . ',' . $this->input->post( 'zip' ));
-							$new_data['latitude'] = (float) $lat_lng_array->lat;
+						$new_data['category_id'] = $sub_cat_id;
+						$new_data['provience'] = $this->input->post('province');
+						$new_data['city'] = $this->input->post('city');
+						$new_data['zip'] = $this->input->post('zip');
+						$new_data['street_address'] = $this->input->post('address');
+						$new_data['street_no'] = $this->input->post('street_no');
+						$new_data['area'] = $this->input->post('area');
+						$new_data['price'] = $price;
+						$new_data['update_price'] = $update_price;
+						$new_data['private_nagotiation'] = $private_nagotiation;
+						$new_data['youtube_url'] = $this->input->post('url');
+						$new_data['typology'] = $this->input->post('typology');
+						$new_data['status'] = $this->input->post('status_of_property');
+						$new_data['kind'] = $this->input->post('kind_of_property');
+						$new_data['energyclass'] = $this->input->post('energy_efficiency');
+						$new_data['surface_area'] = $this->input->post('surface_area');
+						$new_data['room_no'] = $this->input->post('room_no');
+						$new_data['floor'] = $this->input->post('floor');
+						$new_data['total_of_floors'] = $this->input->post('tot_floor');
+						$new_data['year_of_building'] = $this->input->post('year_of_building');
+						$new_data['bathrooms_no'] = $this->input->post('bothroom_no');
+						$new_data['kitchen'] = $this->input->post('kitchen');
+						$new_data['heating'] = $this->input->post('heating');
+						$new_data['parking'] = $this->input->post('parking');
+						$new_data['furnished'] = $this->input->post('furnished');
+						$new_data['availability'] = $this->input->post('availabilty');
+						$new_data['air_conditioning'] = $this->input->post('air_conditioning');
+						$new_data['elevator'] = $this->input->post('elevator');
+						$new_data['balcony'] = $this->input->post('balcony');
+						$new_data['terrace'] = $this->input->post('terrace');
+						$new_data['garden'] = $this->input->post('terrace');
+						$new_data['add_to_luxury'] = $this->input->post('add_to_luxury');
+						$new_data['description'] = $this->input->post('description');
+						$new_data['property_approval'] = $property_approval;
+						if ($alreadyUpdatedLatitude == '0' && $alreadyUpdatedLongitude == '0') {
+							$lat_lng_array = getLangLat($this->input->post('street_address') . ',' . $this->input->post('street_no') . ',' . $this->input->post('city') . ',' . $this->input->post('provience') . ',' . $this->input->post('zip'));
+							$new_data['latitude'] = (float)$lat_lng_array->lat;
 							$new_data['longitude'] = (float)$lat_lng_array->lng;
-						}						
-						$property_ids=$this->propertym->edit_property_bus($new_data,$property_id);
+						}
+						$property_ids = $this->propertym->edit_property_bus($new_data, $property_id);
 					}
 					$this->edit_do_uploads_update($property_id);
-					$this->upload_image_update_1('user_file_1',$property_id);
-					if($this->input->post('btnSubmit')=='Save Draft'){
+					$this->upload_image_update_1('user_file_1', $property_id);
+					if ($this->input->post('btnSubmit') == 'Save Draft') {
 						$msgdata = $this->lang->line('property_the_property_is_saved_successfully');
 						$this->session->set_flashdata('draft_msg', $msgdata);
-					}else{
+					} else {
 						$msgdata = $this->lang->line('property_the_property_is_posted_successfully');
 						$this->session->set_flashdata('saved_msg', $msgdata);
-						redirect('property/manage_location/update/'.$property_id);
+						redirect('property/manage_location/update/' . $property_id);
 					}
-					redirect('property/edit_property/'.$property_id);
+					redirect('property/edit_property/' . $property_id);
 				}
 				$this->config->load('site_config', TRUE);
 				$site_config = $this->config->item('site_config');
-				$data['status_of_property']=$site_config['status_of_property'];
-				$data['kind_of_property']=$site_config['kind_of_property'];
-				$data['energy_efficiency_class']=$site_config['energy_efficiency_class'];
-				$data['contract_type']=$this->propertym->get_contract_type();
+				$data['status_of_property'] = $site_config['status_of_property'];
+				$data['kind_of_property'] = $site_config['kind_of_property'];
+				$data['energy_efficiency_class'] = $site_config['energy_efficiency_class'];
+				$data['contract_type'] = $this->propertym->get_contract_type();
 				//$data['city_list']=$this->property_model->get_city_list();
-				//$data['provinces']=$this->user_model->get_state_list(); 
-				$data['provience_list']=$this->propertym->get_provience_list();
-				$this->load->view('property/add_property_form',$data);
+				//$data['provinces']=$this->user_model->get_state_list();
+				$data['provience_list'] = $this->propertym->get_provience_list();
+				$this->load->view('property/add_property_form', $data);
 			}else{
 				$msgdata = $this->lang->line('property_please_login_to_add_your_property');
 				$this->session->set_flashdata('error_user', $msgdata);
@@ -2562,6 +2430,212 @@ class property extends CI_Controller {
 			}
 		}
 	}
+
+	public function edit_do_uploads_update($property_id)
+	{
+		$new_file = "Property" . $property_id;
+		$this->load->library('upload');
+		$structure = './assets/uploads/Property/' . $new_file;
+		if (!is_dir('assets/uploads/Property/' . $new_file)) {
+			mkdir('./assets/uploads/Property/' . $new_file, 0777, true);
+			chmod('./assets/uploads/Property/' . $new_file, 0777);
+		}
+		$files = $_FILES;
+		//echo '<pre>';print_r($files);die;
+		$cpt = count($_FILES['userfile']['name']);
+		for ($i = 0; $i < $cpt; $i++) {
+			$_FILES['userfile']['name'] = $files['userfile']['name'][$i];
+			$_FILES['userfile']['type'] = $files['userfile']['type'][$i];
+			$_FILES['userfile']['tmp_name'] = $files['userfile']['tmp_name'][$i];
+			$_FILES['userfile']['error'] = $files['userfile']['error'][$i];
+			$_FILES['userfile']['size'] = $files['userfile']['size'][$i];
+			$upload_path = 'assets/uploads/Property/' . $new_file;
+			$this->upload->initialize($this->set_upload_options($upload_path));
+			if ($_FILES['userfile']['name'] != '') {
+
+				$this->upload->do_upload();
+				$upload_data = $this->upload->data();
+				$file_names = $upload_data['file_name'];
+
+				$original_size = getimagesize($_FILES['userfile']['tmp_name']);
+				$ratio = $original_size[0] / $original_size[1];
+
+				/*
+				$this->setWatermark('userfile','assets/uploads/Property/'.$new_file.'/'.$file_names);
+				$fileExtension = pathinfo($_FILES['userfile']['name'], PATHINFO_EXTENSION);
+
+				$this->setWatermark('userfile',"assets/uploads/Property/".$new_file."/thumb_860_482/".$file_names);
+				$this->setWatermark('userfile',"assets/uploads/Property/".$new_file."/thumb_200_296/".$file_names);
+				$this->setWatermark('userfile',"assets/uploads/Property/".$new_file."/thumb_92_82/".$file_names);
+				$this->setWatermark('userfile',"assets/uploads/Property/".$new_file."/".$file_names);
+				*/
+
+				/*
+				 *	161x241
+				*/
+
+				$new_height1 = 161;
+				$new_width1 = 241;    //(int)($new_height3/$ratio)
+				$dfile1 = "assets/uploads/Property/" . $new_file . "/thumb_860_482/";
+				//$this->createImageWithVariousHeightWidth($fileExtension, $dfile1, $dfile1, $file_names, $new_width1, $new_height1);
+				//$resizeUploadedImage1 = $this->resizeUploadedImage($original_size[0],$original_size[1],'productimage241');
+				$imgData1 = array(
+					'sourcePath' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
+					'destinationPath' => "./assets/uploads/Property/" . $new_file . "/thumb_860_482/" . $file_names,
+					//'imageSize' => $resizeUploadedImage1['width'].'x'.$resizeUploadedImage1['height']
+					'imageSize' => $new_width1 . 'x' . $new_height1,
+					'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
+				);
+				CreateImageUsingImageMagicWithGravity($imgData1);
+				$this->setWatermarkImage("./assets/uploads/Property/" . $new_file . "/thumb_860_482/" . $file_names, "./assets/uploads/Property/" . $new_file . "/thumb_860_482/" . $file_names);
+				/*
+				 *	113x170
+				*/
+
+				$new_height2 = 113;
+				$new_width2 = 170;    //(int)($new_height1/$ratio)
+				$dfile2 = "assets/uploads/Property/" . $new_file . "/thumb_200_296/";
+				//$this->createImageWithVariousHeightWidth($fileExtension, $dfile2, $dfile2, $file_names, $new_width2, $new_height2);
+				//$resizeUploadedImage2 = $this->resizeUploadedImage($original_size[0],$original_size[1],'productimage170');
+				$imgData2 = array(
+					'sourcePath' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
+					'destinationPath' => "./assets/uploads/Property/" . $new_file . "/thumb_200_296/" . $file_names,
+					//'imageSize' => $resizeUploadedImage2['width'].'x'.$resizeUploadedImage2['height']
+					'imageSize' => $new_width2 . 'x' . $new_height2,
+					'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
+				);
+				CreateImageUsingImageMagicWithGravity($imgData2);
+				$this->setWatermarkImage("./assets/uploads/Property/" . $new_file . "/thumb_200_296/" . $file_names, "./assets/uploads/Property/" . $new_file . "/thumb_200_296/" . $file_names);
+				/*
+				 *	50x75
+				*/
+
+				$new_height3 = 50;
+				$new_width3 = 75;    //(int)($new_height2/$ratio)
+				$dfile3 = "assets/uploads/Property/" . $new_file . "/thumb_92_82/";
+				//$this->createImageWithVariousHeightWidth($fileExtension, $dfile3, $dfile3, $file_names, $new_width3, $new_height3);
+				//$resizeUploadedImage3 = $this->resizeUploadedImage($original_size[0],$original_size[1],'productimage75');
+				$imgData3 = array(
+					'sourcePath' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
+					'destinationPath' => "./assets/uploads/Property/" . $new_file . "/thumb_92_82/" . $file_names,
+					//'imageSize' => $resizeUploadedImage3['width'].'x'.$resizeUploadedImage3['height']
+					'imageSize' => $new_width3 . 'x' . $new_height3
+				);
+				CreateImageUsingImageMagicWithOutGravity($imgData3);
+
+				/*
+				 *	800x800
+				*/
+
+				$new_height4 = 800;
+				$new_width4 = 800;    //(int)($new_height2/$ratio)
+				$dfile4 = "assets/uploads/Property/" . $new_file . "/";
+				//$this->createImageWithVariousHeightWidth($fileExtension, $dfile4, $dfile4, $file_names, $new_width4, $new_height4);
+				//$resizeUploadedImage4 = $this->resizeUploadedImage($original_size[0],$original_size[1],'productimage800');
+				$imgData4 = array(
+					'sourcePath' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
+					'destinationPath' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
+					//'imageSize' => $resizeUploadedImage4['width'].'x'.$resizeUploadedImage4['height']
+					'imageSize' => $new_width4 . 'x' . $new_height4,
+					'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
+				);
+				CreateImageUsingImageMagicWithOutGravitybBigImage($imgData4);
+				$this->setWatermarkImage("./assets/uploads/Property/" . $new_file . "/" . $file_names, "./assets/uploads/Property/" . $new_file . "/" . $file_names);
+
+				if ($i == 0) {
+					$dfile_name = get_perticular_field_value('zc_property_img', 'file_name', " and property_id='" . $property_id . "' and img_type='main_image'");
+					$dfile = 'assets/uploads/Property/Property' . $property_id . '/' . $dfile_name;
+					if (is_file($dfile)) {
+						@unlink($dfile);
+					}
+					$dfile1 = 'assets/uploads/Property/Property' . $property_id . '/thumb_860_482/' . $dfile_name;
+					if (is_file($dfile1)) {
+						@unlink($dfile1);
+					}
+					$dfile2 = 'assets/uploads/Property/Property' . $property_id . '/thumb_200_296/' . $dfile_name;
+					if (is_file($dfile2)) {
+						@unlink($dfile2);
+					}
+					$dfile3 = 'assets/uploads/Property/Property' . $property_id . '/thumb_92_82/' . $dfile_name;
+					if (is_file($dfile3)) {
+						@unlink($dfile3);
+					}
+					$img_id = get_perticular_field_value('zc_property_img', 'img_id', " and property_id='" . $property_id . "' and img_type='main_image'");
+					$this->propertym->del_property_img($img_id);
+					$img_type = "main_image";
+					$prop_img_no = "0";
+				} else {
+					$dfile_name = get_perticular_field_value('zc_property_img', 'file_name', " and property_id='" . $property_id . "' and img_type='prop_picture' and prop_img_no='" . $i . "'");
+					$dfile = 'assets/uploads/Property/Property' . $property_id . '/' . $dfile_name;
+					if (is_file($dfile)) {
+						@unlink($dfile);
+					}
+					$dfile1 = 'assets/uploads/Property/Property' . $property_id . '/thumb_860_482/' . $dfile_name;
+					if (is_file($dfile1)) {
+						@unlink($dfile1);
+					}
+					$dfile2 = 'assets/uploads/Property/Property' . $property_id . '/thumb_200_296/' . $dfile_name;
+					if (is_file($dfile2)) {
+						@unlink($dfile2);
+					}
+					$dfile3 = 'assets/uploads/Property/Property' . $property_id . '/thumb_92_82/' . $dfile_name;
+					if (is_file($dfile3)) {
+						@unlink($dfile3);
+					}
+					$img_id = get_perticular_field_value('zc_property_img', 'img_id', " and property_id='" . $property_id . "' and img_type='prop_picture' and prop_img_no='" . $i . "'");
+					$this->propertym->del_property_img($img_id);
+					$img_type = "prop_picture";
+					$prop_img_no = $i;
+				}
+				$rs_update = $this->propertym->insert_property_picture($file_names, $property_id, $img_type, $prop_img_no);
+			}
+		}
+	}
+
+	public function upload_image_update_1($form_field_name, $property_id)
+	{
+		$new_file = "Property" . $property_id;
+		$config['upload_path'] = './assets/uploads/Property/' . $new_file;
+		$config['allowed_types'] = 'gif|jpg|png|jpeg|GIF|JPEG|JPG|PNG';
+		$config['encrypt_name'] = TRUE;
+		$config['set_file_ext'] = TRUE;
+
+
+		$this->load->library('upload', $config);
+		if (!$this->upload->do_upload($form_field_name)) {
+			$errors = $this->upload->display_errors();
+		} else {
+			$img_id = $dfile_name = get_perticular_field_value('zc_property_img', 'img_id', " and property_id='" . $property_id . "' and img_type='preliminary'");
+			$this->propertym->del_property_img($img_id);
+			$dfile_name = get_perticular_field_value('zc_property_img', 'file_name', " and property_id='" . $property_id . "' and img_type='preliminary'");
+			$dfile = 'assets/uploads/Property/Property' . $property_id . '/' . $dfile_name;
+			if (is_file($dfile))
+				@unlink($dfile);
+			$new_file = $dfile;
+			$upload_data = $this->upload->data();
+			$file_names = $upload_data['file_name'];
+
+			$img_type = "preliminary";
+			$prop_img_no = "0";
+			$rs_update = $this->propertym->insert_property_picture($file_names, $property_id, $img_type, $prop_img_no);
+
+			//$this->setWatermark($form_field_name,$new_file.$file_names);
+
+			$original_size = getimagesize($_FILES['user_file_1']['tmp_name']);
+			$fileExtension = pathinfo($_FILES['user_file_1']['name'], PATHINFO_EXTENSION);
+			$resizeUploadedImage = $this->resizeUploadedImage($original_size[0], $original_size[1], 'preliminary');
+			//$this->createImageWithVariousHeightWidth($fileExtension, $dfile, $dfile, $file_names, $resizeUploadedImage['width'], $resizeUploadedImage['height']);
+			$imgData = array(
+				'sourcePath' => './assets/uploads/Property/Property' . $property_id . '/' . $dfile_name . '/' . $upload_data['file_name'],
+				'destinationPath' => './assets/uploads/Property/Property' . $property_id . '/' . $dfile_name . '/' . $upload_data['file_name'],
+				'imageSize' => $resizeUploadedImage['width'] . 'x' . $resizeUploadedImage['height'],
+				'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
+			);
+			CreateImageUsingImageMagicWithOutGravitybBigImage($imgData);
+			/*$this->setWatermarkImage('./assets/uploads/Property/Property'.$property_id.'/'.$dfile_name.'/'.$upload_data['file_name'],'./assets/uploads/Property/Property'.$property_id.'/'.$dfile_name.'/'.$upload_data['file_name']);*/
+		}
+	}
+
 	public function delete_saved_search(){
 		$saved_id=$this->input->post('saved_id');
 		$rs=$this->propertym->delete_saved_property($saved_id);
@@ -3180,25 +3254,52 @@ class property extends CI_Controller {
 		}
 		$this->load->view('property/property_search',$data);
 	}
-	public function csv_to_array($filename='', $delimiter=','){
-		if(!file_exists($filename) || !is_readable($filename))
-			return FALSE;
-		$header = NULL;
-		$data = array();
-		if (($handle = fopen($filename, 'r')) !== FALSE){
-		while (($row = fgetcsv($handle, 1000, $delimiter)) !== FALSE){
-			if(!$header)
-				$header = $row;
-			else
-				$data[] = array_combine($header, $row);
+
+	public function add_property_csv()
+	{
+		$uid = $this->session->userdata('user_id');
+		if ($uid == 0 || $uid == '') {
+			redirect('users/common_reg');
+		} else {
+			$user_type = get_perticular_field_value('zc_user', 'user_type', " and user_id='" . $uid . "'");
+			if ($user_type == '1') {
+				redirect('/');
 			}
-			fclose($handle);
+			if ($this->input->post('submit')) {
+				$this->upload_pdf('userfile');
+			} else {
+				$data['title'] = "add_property";
+				$data['contract_type'] = $this->propertym->get_contract_type();
+				$this->config->load('site_config', TRUE);
+				$site_config = $this->config->item('site_config');
+				$this->load->view('property/add_property_csv', $data);
+			}
 		}
-		return $data;
 	}
+
+	public function upload_pdf($form_field_name)
+	{
+		//$this->load->library('csvimport');
+		//echo '<pre>';print_r($_FILES);die;
+		$config['upload_path'] = './assets/uploads/property_tmp_csv';
+		$config['allowed_types'] = 'text/plain|text/csv|csv';
+		$config['encrypt_name'] = TRUE;
+		$this->load->library('upload', $config);
+		if (!$this->upload->do_upload($form_field_name)) {
+			$errors = $this->upload->display_errors();
+			$errors = $this->lang->line('upload_csv_file_text');
+			$this->session->set_flashdata('msg', $errors);
+			redirect('property/add_property_csv');
+		} else {
+			$upload_data = $this->upload->data();
+			$file_names = $upload_data['file_name'];
+			$this->add_property_csv_upload($file_names);
+		}
+	}
+
 	public function add_property_csv_upload($file_names){
 		$new_data=array();
-		$file = "./assets/uploads/property_tmp_csv/".$file_names; 
+		$file = "./assets/uploads/property_tmp_csv/" . $file_names;
 		$records=$this->csv_to_array($file);
 		if(!empty($records)){
 			$i=0;
@@ -3215,19 +3316,19 @@ class property extends CI_Controller {
 					}
 					if (array_key_exists('PROVIENCE', $record)) {
 						$new_data[$i]['provience']=$record['PROVIENCE'];
-					}		
+					}
 					if (array_key_exists('CITY', $record)) {
 						$new_data[$i]['city']=$record['CITY'];
-					}	
+					}
 					if (array_key_exists('ZIPCODE', $record)) {
 						$new_data[$i]['zip']=$record['ZIPCODE'];
-					}	
+					}
 					if (array_key_exists('ADDRESS', $record)) {
 						$new_data[$i]['street_address']=$record['ADDRESS'];
-					}	
+					}
 					if (array_key_exists('STREETNO', $record)) {
 						$new_data[$i]['street_no']=$record['STREETNO'];
-					}	
+					}
 					if (array_key_exists('AREA', $record)) {
 						$new_data[$i]['area']=$record['AREA'];
 					}
@@ -3261,44 +3362,25 @@ class property extends CI_Controller {
 			redirect('property/add_property_csv');
 		}
 	}
-	public function upload_pdf($form_field_name){
-		//$this->load->library('csvimport');
-		//echo '<pre>';print_r($_FILES);die;
-		$config['upload_path'] = './assets/uploads/property_tmp_csv';
-		$config['allowed_types'] = 'text/plain|text/csv|csv';
-		$config['encrypt_name']=TRUE;
-		$this->load->library('upload', $config);
-		if ( ! $this->upload->do_upload($form_field_name)){
-			$errors = $this->upload->display_errors();
-			$errors = $this->lang->line('upload_csv_file_text');
-			$this->session->set_flashdata('msg', $errors);
-			redirect('property/add_property_csv');
-		}else{
-			$upload_data = $this->upload->data(); 
-			$file_names =   $upload_data['file_name'];
-			$this->add_property_csv_upload($file_names);
-		}
-	}
-	public function add_property_csv(){
-		$uid=$this->session->userdata( 'user_id' );
-		if($uid==0 || $uid==''){
-			redirect('users/common_reg');
-		}else{
-			$user_type=get_perticular_field_value('zc_user','user_type'," and user_id='".$uid."'");
-			if($user_type=='1'){
-				redirect('/');
+
+	public function csv_to_array($filename = '', $delimiter = ',')
+	{
+		if (!file_exists($filename) || !is_readable($filename))
+			return FALSE;
+		$header = NULL;
+		$data = array();
+		if (($handle = fopen($filename, 'r')) !== FALSE) {
+			while (($row = fgetcsv($handle, 1000, $delimiter)) !== FALSE) {
+				if (!$header)
+					$header = $row;
+				else
+					$data[] = array_combine($header, $row);
 			}
-			if($this->input->post('submit')){
-				$this->upload_pdf('userfile');
-			}else{
-				$data['title']="add_property";
-				$data['contract_type']=$this->propertym->get_contract_type();
-				$this->config->load('site_config', TRUE);
-				$site_config = $this->config->item('site_config');
-				$this->load->view('property/add_property_csv',$data);
-			}
+			fclose($handle);
 		}
+		return $data;
 	}
+
 	public function delete_saved_property(){
 		$saved_id=$this->input->post('saved_id');
 		$rs=$this->propertym->delete_saved_propertys($saved_id);

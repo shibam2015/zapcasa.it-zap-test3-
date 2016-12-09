@@ -440,17 +440,13 @@ class User extends CI_Controller {
 			}
 		}
 	}
-	private function generate_password_string($access_token, $raw_password){
-		$divider = '_';
-	    $raw_string = $access_token.$divider.$raw_password;
-	    $encrypted_password = md5($raw_string);	    
-	    return $encrypted_password;
-    }
-	public function add_owner(){
-		$new_user=array();
-		$access_token=access_token();
-		$new_user['user_type'] ='2';
-		$new_user['user_name'] =$this->input->post('user_name');
+
+	public function add_owner()
+	{
+		$new_user = array();
+		$access_token = access_token();
+		$new_user['user_type'] = '2';
+		$new_user['user_name'] = $this->input->post('user_name');
 		$new_user['first_name'] = $this->input->post('first_name');
 		$new_user['last_name'] = $this->input->post('last_name');
 		$new_user['social_secuirity_number'] = $this->input->post('social_secuirity_number');
@@ -463,18 +459,18 @@ class User extends CI_Controller {
 		$new_user['phone_1'] = $this->input->post('phone_1');
 		$new_user['phone_2'] = $this->input->post('phone_2');
 		$new_user['email_id'] = $this->input->post('email_id');
-		$new_user['password'] = $this->generate_password_string($access_token,$this->input->post('password'));
+		$new_user['password'] = $this->generate_password_string($access_token, $this->input->post('password'));
 		$new_user['gender'] = $this->input->post('gender');
-		$new_user['access_token'] 	= $access_token ;
+		$new_user['access_token'] = $access_token;
 		$new_user['agree_terms'] = $this->input->post('agree_terms');
 		$new_user['receive_mail'] = $this->input->post('receive_mail');
 		$new_user['posting_property_limit'] = $this->input->post('posting_property_limit');
-		
-		$rs=$this->users->insertUser($new_user);
-		
-		$new_data=array();
-		$new_data['user_id']=$rs;
-		if($this->input->post('language_nm')=='english'){
+
+		$rs = $this->users->insertUser($new_user);
+
+		$new_data = array();
+		$new_data['user_id'] = $rs;
+		if ($this->input->post('language_nm') == 'english') {
 			$mailSubject = 'Activate your ZapCasa account';
 			$mailThanksHi = 'Hi';
 			$mailThanks_text_1 = 'You are receiving this email because you have requested to register on ZapCasa.';
@@ -482,9 +478,9 @@ class User extends CI_Controller {
 			$mailThanks_text_2 = 'If you did not to apply for registration then do nothing, your email will be automatically deleted within 72 hours';
 			$mailThanks_text_3 = 'To activate your ZapCasa account, please click on the following link or copy and paste it into your browser';
 			$mailThanks_text_4 = 'Regards';
-			
-			$new_data['language']='en';
-		}elseif($this->input->post('language_nm')=='it'){
+
+			$new_data['language'] = 'en';
+		} elseif ($this->input->post('language_nm') == 'it') {
 			$mailSubject = 'Attiva il tuo account ZapCasa';
 			$mailThanksHi = 'Ciao';
 			$mailThanks_text_1 = 'ricevi questa email perché hai richiesto di registrarti su ZapCasa.';
@@ -492,33 +488,33 @@ class User extends CI_Controller {
 			$mailThanks_text_2 = 'Se pensi di aver ricevuto questo messaggio per errore e non sei stato tu a richiedere la registrazione non fare niente, La tua email sarà cancellata automaticamente entro 72 ore.';
 			$mailThanks_text_3 = 'Per attivare il tuo account ZapCasa, clicca sul seguente link o copialo nel tuo browser';
 			$mailThanks_text_4 = 'Saluti';
-			
-			$new_data['language']='it';
+
+			$new_data['language'] = 'it';
 		}
-		$this->db->insert('zc_user_preference',$new_data);
-		
-		$email=get_perticular_field_value('zc_user','email_id'," and user_id='".$rs."'");
-		$user_name=get_perticular_field_value('zc_user','first_name'," and user_id='".$rs."'").' '.get_perticular_field_value('zc_user','last_name'," and user_id='".$rs."'");
-		$passwrd=get_perticular_field_value('zc_user','password'," and user_id='".$rs."'");
-		$link=base_url().'users/acctivation/'.$rs.'/'.$passwrd;
-		$details=array();
-		$default_email = get_perticular_field_value('zc_settings','meta_value'," and meta_name='default_email'");
-		$mail_from= isset($default_email) ? $default_email : "no-reply@zapcasa.it";
-		$mail_to= $email;
+		$this->db->insert('zc_user_preference', $new_data);
+
+		$email = get_perticular_field_value('zc_user', 'email_id', " and user_id='" . $rs . "'");
+		$user_name = get_perticular_field_value('zc_user', 'first_name', " and user_id='" . $rs . "'") . ' ' . get_perticular_field_value('zc_user', 'last_name', " and user_id='" . $rs . "'");
+		$passwrd = get_perticular_field_value('zc_user', 'password', " and user_id='" . $rs . "'");
+		$link = base_url() . 'users/acctivation/' . $rs . '/' . $passwrd;
+		$details = array();
+		$default_email = get_perticular_field_value('zc_settings', 'meta_value', " and meta_name='default_email'");
+		$mail_from = isset($default_email) ? $default_email : "no-reply@zapcasa.it";
+		$mail_to = $email;
 		$subject = $mailSubject;
-		$msg='<body style="font-family:Century Gothic; color: #4c4d51; font-size:13px;">
+		$msg = '<body style="font-family:Century Gothic; color: #4c4d51; font-size:13px;">
 						<div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
 								<div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
 							<div style="border-bottom:1px solid #d1d1d1;">
-								<img src="'.base_url().'assets/images/logo.png" alt="ZapCasa"/>
+								<img src="' . base_url() . 'assets/images/logo.png" alt="ZapCasa"/>
 							</div>
 							<div style="padding:15px;">
-								<strong>'.$mailThanksHi.' '.$user_name.'</strong>
-								<p>'.$mailThanks_text_1.'</p>
-								<p><strong>'.$mailThanks_note.'</strong> '.$mailThanks_text_2.' </p>
-								<p> '.$mailThanks_text_3.': </p>
-								<p><a href="'.$link.'"><strong>'.$link.'</strong></a></p><br>
-								<p>'.$mailThanks_text_4.',<br><a href="http://www.zapcasa.it">www.zapcasa.it</a></p>
+								<strong>' . $mailThanksHi . ' ' . $user_name . '</strong>
+								<p>' . $mailThanks_text_1 . '</p>
+								<p><strong>' . $mailThanks_note . '</strong> ' . $mailThanks_text_2 . ' </p>
+								<p> ' . $mailThanks_text_3 . ': </p>
+								<p><a href="' . $link . '"><strong>' . $link . '</strong></a></p><br>
+								<p>' . $mailThanks_text_4 . ',<br><a href="http://www.zapcasa.it">www.zapcasa.it</a></p>
 							</div>
 						</div>
 
@@ -526,16 +522,97 @@ class User extends CI_Controller {
 		//$details['message']= $msg;
 		$body = $msg;
 
-		sendemail($mail_from, $mail_to, $subject, $body, $cc='');
-		
-		$this->upload_image_1('user_file_1',$rs);
-		$this->upload_image_2('user_file_2',$rs);
-		
-		
+		sendemail($mail_from, $mail_to, $subject, $body, $cc = '');
+
+		$this->upload_image_1('user_file_1', $rs);
+		$this->upload_image_2('user_file_2', $rs);
+
+
 		$msg = "Profile added successfully";
 		$this->session->set_flashdata('success', $msg);
 		redirect('/user/owner/all');
 	}
+
+	private function generate_password_string($access_token, $raw_password)
+	{
+		$divider = '_';
+		$raw_string = $access_token . $divider . $raw_password;
+		$encrypted_password = md5($raw_string);
+		return $encrypted_password;
+	}
+
+	public function upload_image_1($form_field_name, $uid)
+	{
+		//echo '<pre>';print_r($_FILES);die;
+		$config['upload_path'] = '../assets/uploads/';
+		$config['allowed_types'] = 'gif|jpg|jpeg|png|GIF|JPG|JPEG|PNG';
+		$config['encrypt_name'] = TRUE;
+		$config['set_file_ext'] = TRUE;
+		$this->load->library('upload', $config);
+		if (!$this->upload->do_upload($form_field_name)) {
+			$errors = $this->upload->display_errors();
+		} else {
+			//$uid=$this->session->userdata( 'user_id' );
+			$dfile_name = get_perticular_field_value('zc_user', 'file_1', " and user_id='" . $uid . "'");
+			$dfile = '../assets/uploads/' . $dfile_name;
+			if (is_file($dfile))
+				@unlink($dfile);
+			$dfile_thmb = 'assets/uploads/thumb_92_82/' . $dfile_name;
+			if (is_file($dfile_thmb))
+				@unlink($dfile_thmb);
+			$upload_data = $this->upload->data();
+			$file_names = $upload_data['file_name'];
+			$rs_update = $this->users->update_profile_1($file_names, $uid);
+			$config = array(
+				'source_image' => $upload_data['full_path'], //path to the uploaded image
+				'new_image' => "../assets/uploads/thumb_92_82/" . $file_names, //path to
+				'maintain_ratio' => true,
+				'width' => 128,
+				'height' => 128
+			);
+			$this->image_lib->initialize($config);
+			$this->image_lib->resize();
+		}
+	}
+
+	public function upload_image_2($form_field_name, $uid)
+	{
+		$config['upload_path'] = '../assets/uploads/';
+		$config['allowed_types'] = 'gif|jpg|jpeg|png|GIF|JPG|JPEG|PNG';
+		$config['encrypt_name'] = TRUE;
+		$this->load->library('upload', $config);
+
+		if (!$this->upload->do_upload($form_field_name)) {
+			$errors = $this->upload->display_errors();
+		} else {
+			////////////////delete image first////////////////////
+			$uid = $this->session->userdata('user_id');
+			$dfile_name = get_perticular_field_value('zc_user', 'file_2', " and user_id='" . $uid . "'");
+			$dfile = '../assets/uploads/' . $dfile_name;
+			if (is_file($dfile))
+				@unlink($dfile);
+			$dfile_thmb = '../assets/uploads/thumb_92_82/' . $dfile_name;
+			if (is_file($dfile_thmb))
+				@unlink($dfile_thmb);
+
+
+			/////////////delete image end//////////////////////////
+			$upload_data = $this->upload->data();
+			$file_names = $upload_data['file_name'];
+			$rs_update = $this->users->update_profile_2($file_names, $uid);
+			$config = array(
+				'source_image' => $upload_data['full_path'], //path to the uploaded image
+				'new_image' => "../assets/uploads/thumb_92_82/" . $file_names, //path to
+				'maintain_ratio' => true,
+				'width' => 430,
+				'height' => 300
+			);
+
+			$this->image_lib->initialize($config);
+			$this->image_lib->resize();
+		}
+	}
+
 	public function add_company(){
 		$new_user=array();
 		$access_token=access_token();
@@ -562,19 +639,20 @@ class User extends CI_Controller {
 		$new_user['agree_terms'] = $this->input->post('agree_terms');
 		$new_user['receive_mail'] = $this->input->post('receive_mail');
 		$new_user['posting_property_limit'] = $this->input->post('posting_property_limit');
-		
+
 		$rs=$this->users->insertUser($new_user);
-		
+
 		$new_data['user_id']=$rs;
 		if($this->input->post('language_nm')!=''){
 			$new_data['language']='en';
 		}
 		$this->db->insert('zc_user_preference',$new_data);
-		
+
 		$msg = "Profile added successfully";
 		$this->session->set_flashdata('success', $msg);
 		redirect('/user/agency/all');
 	}
+
 	public function add_general_user(){
 		$new_user=array();
 		$access_token=access_token();
@@ -588,14 +666,14 @@ class User extends CI_Controller {
 		$new_user['city'] = $this->input->post('city');
 		$new_user['contact_ph_no'] = $this->input->post('ph_no');
 		$new_user['email_id'] = $this->input->post('email_id');
-		$new_user['password'] = $this->generate_password_string($access_token,$this->input->post('password'));		
+		$new_user['password'] = $this->generate_password_string($access_token, $this->input->post('password'));
 		$new_user['access_token'] 	= $access_token ;
 		$new_user['agree_terms'] = $this->input->post('agree_terms');
 		$new_user['receive_mail'] = $this->input->post('receive_mail');
 		$new_user['posting_property_limit'] = $this->input->post('posting_property_limit');
-		
+
 		$rs=$this->users->insertUser($new_user);
-		
+
 		$new_data=array();
 		$new_data['user_id']=$rs;
 		$new_data['language']='en';
@@ -607,7 +685,7 @@ class User extends CI_Controller {
 			$mailThanks_text_2 = 'If you did not to apply for registration then do nothing, your email will be automatically deleted within 72 hours';
 			$mailThanks_text_3 = 'To activate your ZapCasa account, please click on the following link or copy and paste it into your browser';
 			$mailThanks_text_4 = 'Regards';
-			
+
 			$new_data['language']='en';
 		}elseif($this->input->post('language_nm')=='it'){
 			$mailSubject = 'Attiva il tuo account ZapCasa';
@@ -617,12 +695,12 @@ class User extends CI_Controller {
 			$mailThanks_text_2 = 'Se pensi di aver ricevuto questo messaggio per errore e non sei stato tu a richiedere la registrazione non fare niente, La tua email sarà cancellata automaticamente entro 72 ore.';
 			$mailThanks_text_3 = 'Per attivare il tuo account ZapCasa, clicca sul seguente link o copialo nel tuo browser';
 			$mailThanks_text_4 = 'Saluti';
-			
+
 			$new_data['language']='it';
 		}
 		$this->db->insert('zc_user_preference',$new_data);
-		
-		
+
+
 		$email=get_perticular_field_value('zc_user','email_id'," and user_id='".$rs."'");
 		$user_name=get_perticular_field_value('zc_user','first_name'," and user_id='".$rs."'").' '.get_perticular_field_value('zc_user','last_name'," and user_id='".$rs."'");
 		$passwrd=get_perticular_field_value('zc_user','password'," and user_id='".$rs."'");
@@ -631,7 +709,7 @@ class User extends CI_Controller {
 		$mail_from = isset($default_email) ? $default_email : "no-reply@zapcasa.it";
 		$mail_to = $email;
 		$subject = $mailSubject;
-		$msg='<body style="font-family:Century Gothic; color: #4c4d51; font-size:13px;">			
+		$msg = '<body style="font-family:Century Gothic; color: #4c4d51; font-size:13px;">
 			<div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
 				<div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
 				<div style="border-bottom:1px solid #d1d1d1;">
@@ -645,16 +723,17 @@ class User extends CI_Controller {
 					<p><a href="'.$link.'"><strong> '.$link.'</strong></a></p><br>
 					<p>'.$mailThanks_text_4.',<br><a href="http://www.zapcasa.it">www.zapcasa.it</a></p>
 				</div>
-			</div>							
+			</div>
 			</body>';
 		$body=$msg;
 		sendemail($mail_from, $mail_to, $subject, $body, $cc='');
-		
-		
+
+
 		$msg = "Profile added successfully";
 		$this->session->set_flashdata('success', $msg);
 		redirect('/user/individual/all');
 	}
+
 	public function update_general_user(){
 		$user_id=$this->uri->segment('3');
 		$page=$this->uri->segment('4');
@@ -666,6 +745,7 @@ class User extends CI_Controller {
 			redirect('user/edit_profile/'.$user_id);
 		}
 	}
+
 	public function update_owner(){
 		$user_id=$this->uri->segment('3');
 		//echo '<pre>';print_r($_POST);die;
@@ -682,6 +762,7 @@ class User extends CI_Controller {
 			redirect('user/edit_profile/'.$user_id);
 		}
 	}
+
 	public function update_company(){
 		$user_id=$this->uri->segment('3');
 		//echo '<pre>';print_r($_POST);die;
@@ -694,18 +775,20 @@ class User extends CI_Controller {
 			redirect('user/edit_profile/'.$user_id);
 		}
 	}
-	public function user_search(){
-		$search_input=$this->input->get('search_input');
+
+	public function user_search()
+	{
+		$search_input = $this->input->get('search_input');
 		$type = $this->uri->segment('3');
 		$activetype = $this->uri->segment('4');
-		
-		$config['base_url'] = base_url().$this->controller. '/user_search/'. $type . '/' . $activetype .'/';
+
+		$config['base_url'] = base_url() . $this->controller . '/user_search/' . $type . '/' . $activetype . '/';
 		$config['per_page'] = 20;
 		$config['uri_segment'] = 5;
-		$config['first_url'] = base_url().$this->controller. '/user_search/all?search_input='.$search_input;
-		
-		
-		switch($activetype){
+		$config['first_url'] = base_url() . $this->controller . '/user_search/all?search_input=' . $search_input;
+
+
+		switch ($activetype) {
 			case 'all':
 				$whereClause = "user_type != '4'";
 				break;
@@ -719,98 +802,31 @@ class User extends CI_Controller {
 				$whereClause = "user_type != '4' AND verified='0'";
 				break;
 		}
-		
-		
-		$data['users']=$this->users->get_user_det($config, $this->uri->segment($config['uri_segment'], 0),$whereClause,$search_input);
+
+
+		$data['users'] = $this->users->get_user_det($config, $this->uri->segment($config['uri_segment'], 0), $whereClause, $search_input);
 		$this->pagination->initialize($config);
-		
-		$this->pagination->suffix = '?search_input='.$search_input;
-		
+
+		$this->pagination->suffix = '?search_input=' . $search_input;
+
 		$data['pagination'] = $this->pagination->create_links();
-		
+
 		$data['type'] = $type;
 		$data['activetype'] = $activetype;
 		$data['search_input'] = $search_input;
-		
+
 		$sqlMore = $this->users->get_user_search_id($search_input);
-		
-		$data['allFilterUser'] = get_perticular_count('zc_user',"AND user_type!='4'".$sqlMore);
-		$data['enbldFilterUser'] = get_perticular_count('zc_user',"AND user_type!='4' AND verified='1' AND status='1'".$sqlMore);
-		$data['dsbldFilterUser'] = get_perticular_count('zc_user',"AND user_type!='4' AND verified='1' AND status!='1'".$sqlMore);
-		$data['inactFilterUser'] = get_perticular_count('zc_user',"AND user_type!='4' AND verified!='1'".$sqlMore);
-		
+
+		$data['allFilterUser'] = get_perticular_count('zc_user', "AND user_type!='4'" . $sqlMore);
+		$data['enbldFilterUser'] = get_perticular_count('zc_user', "AND user_type!='4' AND verified='1' AND status='1'" . $sqlMore);
+		$data['dsbldFilterUser'] = get_perticular_count('zc_user', "AND user_type!='4' AND verified='1' AND status!='1'" . $sqlMore);
+		$data['inactFilterUser'] = get_perticular_count('zc_user', "AND user_type!='4' AND verified!='1'" . $sqlMore);
+
 		$data['page_header_title'] = 'Search Users';
-		
+
 		$this->load->view('user_search', $data);
 	}
-	public function upload_image_1($form_field_name,$uid){
-		//echo '<pre>';print_r($_FILES);die;
-		$config['upload_path'] = '../assets/uploads/';
-		$config['allowed_types'] = 'gif|jpg|jpeg|png|GIF|JPG|JPEG|PNG';
-		$config['encrypt_name']=TRUE;
-		$config['set_file_ext']=TRUE;
-		$this->load->library('upload', $config);	
-		if ( ! $this->upload->do_upload($form_field_name)) {
-			$errors = $this->upload->display_errors();
-		} else {
-			//$uid=$this->session->userdata( 'user_id' );
-			$dfile_name=get_perticular_field_value('zc_user','file_1'," and user_id='".$uid."'");
-			$dfile='../assets/uploads/'.$dfile_name;
-			 if(is_file($dfile))
-			 @unlink($dfile);
-			$dfile_thmb='assets/uploads/thumb_92_82/'.$dfile_name;
-			 if(is_file($dfile_thmb))
-			 @unlink($dfile_thmb);	
-			$upload_data = $this->upload->data(); 
-			$file_names =   $upload_data['file_name'];
-			$rs_update=$this->users->update_profile_1($file_names,$uid);
-			 $config = array(
-			'source_image'      => $upload_data['full_path'], //path to the uploaded image
-			'new_image'         => "../assets/uploads/thumb_92_82/".$file_names, //path to
-			'maintain_ratio'    => true,
-			'width'             => 128,
-			'height'            => 128
-			);
-			$this->image_lib->initialize($config);
-			$this->image_lib->resize();
-		}
-	}
-	public function upload_image_2($form_field_name,$uid) {
-		$config['upload_path'] = '../assets/uploads/';
-		$config['allowed_types'] = 'gif|jpg|jpeg|png|GIF|JPG|JPEG|PNG';
-		$config['encrypt_name']=TRUE;
-		$this->load->library('upload', $config);
 
-		if ( ! $this->upload->do_upload($form_field_name)) {
-			$errors = $this->upload->display_errors();       
-		} else{
-			////////////////delete image first////////////////////
-			$uid=$this->session->userdata( 'user_id' );
-			$dfile_name=get_perticular_field_value('zc_user','file_2'," and user_id='".$uid."'");
-			$dfile='../assets/uploads/'.$dfile_name;
-			 if(is_file($dfile))
-			 @unlink($dfile);
-			$dfile_thmb='../assets/uploads/thumb_92_82/'.$dfile_name;
-			 if(is_file($dfile_thmb))
-			 @unlink($dfile_thmb);
-			
-			
-			/////////////delete image end//////////////////////////
-			$upload_data = $this->upload->data(); 
-			$file_names =   $upload_data['file_name'];
-			$rs_update=$this->users->update_profile_2($file_names,$uid);
-			 $config = array(
-			'source_image'      => $upload_data['full_path'], //path to the uploaded image
-			'new_image'         => "../assets/uploads/thumb_92_82/".$file_names, //path to
-			'maintain_ratio'    => true,
-			'width'             => 430,
-			'height'            => 300
-			);
-			
-			$this->image_lib->initialize($config);
-			$this->image_lib->resize();   
-		}
-	}	
 	public function view_message() {
 			$user_id=$this->uri->segment('3');
 			$this->load->library('pagination');
@@ -992,7 +1008,7 @@ class User extends CI_Controller {
 			</div>
 			</body>';
 		}
-		
+
 		$body=$msg;
 		sendemail($mail_from, $mail_to, $subject, $body, $cc='');
 		
