@@ -23,7 +23,7 @@ class users extends CI_Controller{
 		}
 
 
-		$this->load->library('image_lib');
+		$this->load->library('image_lib');		
 		$this->load->model("users/usersm");
 		//authenticate();
 		/* if($this->session->userdata('user_id')){
@@ -47,7 +47,7 @@ class users extends CI_Controller{
 	public function index()
 	{
 		$data = array();
-		$data['users'] = $this->usersm->getUsers();
+		$data['users'] = $this->usersm->getUsers();	
 		//echo "<pre>";print_r($data);exit;
 		$this->load->view("users/index",$data);
 	}
@@ -88,7 +88,7 @@ class users extends CI_Controller{
 			'img_height' => 80,
 			'font_size' => 30,
 			'font_path' => FCPATH . 'captcha/fonts/ADLER___.TTF',
-			'expiration' => 7200
+			'expiration' => 7200 
 		);
 		$cap = create_captcha($vals);
 		$data['captcha'] = array(
@@ -151,7 +151,7 @@ class users extends CI_Controller{
 					'img_height' => 80,
 					'font_size' => 30,
 					'font_path' => FCPATH . 'captcha/fonts/ADLER___.TTF',
-					'expiration' => 7200
+					'expiration' => 7200 
 				);
 				$cap = create_captcha($vals);
 				$data['captcha'] = array(
@@ -190,7 +190,7 @@ class users extends CI_Controller{
 						'img_height' => 80,
 						'font_size' => 30,
 						'font_path' => FCPATH . 'captcha/fonts/ADLER___.TTF',
-						'expiration' => 7200
+						'expiration' => 7200 
 					);
 					$cap = create_captcha($vals);
 					$data['captcha'] = array(
@@ -242,7 +242,7 @@ class users extends CI_Controller{
 			'img_width' => '280',
 			'img_height' => 80,
 			'expiration' => 7200
-			); */
+			); */                                
 			$vals = array(
 				'img_path' => './captcha/',
 				'img_url' => $captcha_lib,
@@ -250,7 +250,7 @@ class users extends CI_Controller{
 				'img_height' => 80,
 				'font_size' => 30,
 				'font_path' => FCPATH . 'captcha/fonts/ADLER___.TTF',
-				'expiration' => 7200
+				'expiration' => 7200 
 			);
 			$cap = create_captcha($vals);
 			$data['captcha'] = array(
@@ -1489,7 +1489,7 @@ class users extends CI_Controller{
 				foreach($rs as $key=>$val){
 					echo '<option value="'.$val.'">'.str_replace("\'","'",$val).'</option>';
 				}
-			}
+			}			
 		}
 	}
 	public function my_preference(){
@@ -1566,7 +1566,7 @@ class users extends CI_Controller{
 			{
 				$this->session->set_flashdata('error', "Old password does not match!");
 				redirect('users/change_password');exit;
-			}
+			}			
 			else if($this->input->post('password') != $this->input->post('pass2'))
 			{
 				$this->session->set_flashdata('error', "Passwords does not match!");
@@ -1582,7 +1582,7 @@ class users extends CI_Controller{
 		}else{
 			$this->load->view('users/change_password',$data);
 		}
-	}
+	}	
 	public function forget_password(){
 		$uid=$this->session->userdata( 'user_id' );
 		if( $uid != 0 ) {
@@ -1590,7 +1590,7 @@ class users extends CI_Controller{
 		}
 		//echo $pwd=get_random_password();
 		$this->load->view('users/forgot_password');
-	}
+	}	
 	public function change_pwd(){
 		$email = $this->input->post('email');
 		$user_id=get_perticular_field_value('zc_user','user_id'," and email_id='".$email."'");
@@ -1610,7 +1610,7 @@ class users extends CI_Controller{
 					$user_name=get_perticular_field_value('zc_user','company_name'," and user_id='".$user_id."'");
 				}else{
 					$user_name=get_perticular_field_value('zc_user','first_name'," and user_id='".$user_id."'").' '.get_perticular_field_value('zc_user','last_name'," and user_id='".$user_id."'");
-				}
+				}			
 				$msg='<body style="font-family:Century Gothic; color: #4c4d51; font-size:13px;">
 						<div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
 							<div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
@@ -1640,7 +1640,7 @@ class users extends CI_Controller{
 
 				$this->session->set_flashdata('success', '1');
 				redirect('users/forget_password');
-			}
+			}			
 		}else{
 			$this->session->set_flashdata('error', '1');
 			redirect('users/forget_password');
@@ -1845,54 +1845,53 @@ class users extends CI_Controller{
 
 	//===========================================================================
 	public function facebookLogin()
-	{
-		//print "<pre>";
-		//print_r($_REQUEST);
-		//die;
-
-		if (isset($_REQUEST['email']))
 		{
-			$email = $_REQUEST['email'];
-			$fb_id = $_REQUEST['fb_id'];
-			$birthday = $_REQUEST['birthday'];
-			$gender = ucfirst(strtolower($_REQUEST['gender']));
-			$first_name = $_REQUEST['first_name'];
-			$last_name = $_REQUEST['last_name'];
-			$pass = $_REQUEST['fb_id'];
-			$access_token = access_token();
-			$password = $this->generate_password_string($access_token, $pass);
+			//print "<pre>";
+			//print_r($_REQUEST);
+			//die;
 
-			$chk_email = $this->usersm->pop_search("select * from zc_user where email_id = '" . $email . "'");
-
-			if (count($chk_email) > 0 && $chk_email != '' && !is_null($chk_email))
+			if (isset($_REQUEST['email']))
 			{
-				$this->session->set_userdata('user_id', $chk_email[0]['user_id']);
-				//redirect(base_url().'user/my_account');
-				echo 1;
-			} else {
-				$qry = "insert into zc_user set email_id = '" . $email . "', first_name = '" . $first_name . "', last_name = '" . $last_name . "', password = '" . $password . "'";
-				$rs = $this->usersm->insert_update($qry);
+				$email = $_REQUEST['email'];
+				$fb_id = $_REQUEST['fb_id'];
+				$birthday = $_REQUEST['birthday'];
+				$gender = ucfirst(strtolower($_REQUEST['gender']));
+				$first_name = $_REQUEST['first_name'];
+				$last_name = $_REQUEST['last_name'];
+				$pass = $_REQUEST['fb_id'];
+				$access_token = access_token();
+				$password = $this->generate_password_string($access_token, $pass);
 
-				if ($rs > 0)
+				$chk_email = $this->usersm->pop_search("select * from zc_user where email_id = '" . $email . "'");
+
+				if (count($chk_email) > 0 && $chk_email != '' && !is_null($chk_email))
 				{
-					$qry = "insert into zc_user_preference set user_id = '" . $rs . "'";
-					$rs1 = $this->usersm->insert_update($qry);
-				}
+					$this->session->set_userdata('user_id', $chk_email[0]['user_id']);
+					//redirect(base_url().'user/my_account');
+					echo 1;
+				} else {
+					$qry = "insert into zc_user set email_id = '" . $email . "', first_name = '" . $first_name . "', last_name = '" . $last_name . "', password = '" . $password . "'";
+					$rs = $this->usersm->insert_update($qry);
 
-				$this->session->set_userdata('user_id', $rs);
+					if ($rs > 0) {
+						$qry = "insert into zc_user_preference set user_id = '" . $rs . "'";
+						$rs1 = $this->usersm->insert_update($qry);
+					}
 
-				$user_id = $rs;
-				$email_user = get_perticular_field_value('zc_user', 'email_id', " and user_id='" . $user_id . "'");
-				$first_name = get_perticular_field_value('zc_user', 'first_name', " and user_id='" . $user_id . "'");
-				$last_name = get_perticular_field_value('zc_user', 'last_name', " and user_id='" . $user_id . "'");
+					$this->session->set_userdata('user_id', $rs);
 
-				$details = array();
-				$details['from'] = "no-reply@zapcasa.it";
-				$details['to'] = /*$*/
-					$email;
-				$details['subject'] = $this->lang->line('social_login_mail_subject');
-				$link = '';
-				$details['message'] = '<body style="font-family:Century Gothic; color: #4c4d51; font-size:13px;">
+					$user_id = $rs;
+					$email_user = get_perticular_field_value('zc_user', 'email_id', " and user_id='" . $user_id . "'");
+					$first_name = get_perticular_field_value('zc_user', 'first_name', " and user_id='" . $user_id . "'");
+					$last_name = get_perticular_field_value('zc_user', 'last_name', " and user_id='" . $user_id . "'");
+
+					$details = array();
+					$details['from'] = "no-reply@zapcasa.it";
+					$details['to'] = /*$*/
+						$email;
+					$details['subject'] = $this->lang->line('social_login_mail_subject');
+					$link = '';
+					$details['message'] = '<body style="font-family:Century Gothic; color: #4c4d51; font-size:13px;">
 							 <div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
 							  <div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
 								 <div style="border-bottom:1px solid #d1d1d1;">
@@ -1902,32 +1901,32 @@ class users extends CI_Controller{
 								  <strong>'.$this->lang->line('new_mail-hi').' '.$first_name." ".$last_name.'</strong>
 									 <p>'.$this->lang->line('social_login_mail_content').': </p>
 									 <p>'.$pass.'</p>
-
+									
 									 <p><br>www.zapcasa.it</p>
 								 </div>
 							 </div>
-
+								  
 							 </body>';
 
-				//if( send_mail($details) )
-				//{
-				echo 1;
-				//}
+					//if( send_mail($details) )
+					//{
+					echo 1;
+					//}
+				}
+
+			} else {
+				$email = '';
+				$fb_id = '';
+				$birthday = '';
+				$gender = '';
+				$first_name = '';
+				$last_name = '';
+				//redirect('/');
+				echo 2;
 			}
 
-		} else {
-			$email = '';
-			$fb_id = '';
-			$birthday = '';
-			$gender = '';
-			$first_name = '';
-			$last_name = '';
-			//redirect('/');
-			echo 2;
+
 		}
-
-
-	}
 	//===========================================================================
 	//===========================================================================
 	public function google()
@@ -1948,7 +1947,7 @@ class users extends CI_Controller{
 		$gClient->setRedirectUri($google_redirect_url);
 		$gClient->setDeveloperKey($google_developer_key);
 
-		$google_oauthV2 = new Google_Oauth2Service($gClient);
+		$google_oauthV2 = new Google_Oauth2Service($gClient);	
 		$code = '';
 		if(isset($_REQUEST['code']))
 		{
@@ -1956,47 +1955,47 @@ class users extends CI_Controller{
 		}
 		$gClient->authenticate($code);
 		$token = $gClient->getAccessToken();
-		if ($gClient->getAccessToken()) {
-			$user = $google_oauthV2->userinfo->get();
-
-			$id_google = $user['id'];
-			$email = $user['email'];
-			$first_name = $user['given_name'];
-			$last_name = $user['family_name'];
-			$username_array = explode('@', $email);
-			$username = $username_array[0];
-			$pass = $user['id'];
-
-
-			$access_token = access_token();
-			$password = $this->generate_password_string($access_token, $pass);
-
-
-			$chk_email = $this->user_model->pop_search("select * from zc_user where email_id = '" . $email . "'");
-
-			if (count($chk_email) > 0)
+		if ($gClient->getAccessToken())
 			{
-				$user_id = $chk_email[0]['user_id'];
-				$this->session->set_userdata('user_id', $user_id);
+				$user = $google_oauthV2->userinfo->get();
+
+				$id_google = $user['id'];
+				$email = $user['email'];
+				$first_name = $user['given_name'];
+				$last_name = $user['family_name'];
+				$username_array = explode('@', $email);
+				$username = $username_array[0];
+				$pass = $user['id'];
 
 
-			} else {
-				$qry = "insert into zc_user set email_id = '" . $email . "', first_name = '" . $first_name . "', last_name = '" . $last_name . "', password = '" . $password . "'";
-				$rs = $this->user_model->insert_update($qry);
-				$this->session->set_userdata('user_id', $rs);
+				$access_token = access_token();
+				$password = $this->generate_password_string($access_token, $pass);
 
 
-				$user_id = $rs;
-				$email_user = get_perticular_field_value('zc_user', 'email_id', " and user_id='" . $user_id . "'");
-				$first_name = get_perticular_field_value('zc_user', 'first_name', " and user_id='" . $user_id . "'");
-				$last_name = get_perticular_field_value('zc_user', 'last_name', " and user_id='" . $user_id . "'");
+				$chk_email = $this->user_model->pop_search("select * from zc_user where email_id = '" . $email . "'");
 
-				$details = array();
-				$details['from'] = "no-reply@zapcasa.it";
-				$details['to'] = $email;//"soumalya.arb@gmail.com";
-				$details['subject'] = $this->lang->line('social_login_mail_subject');
-				$link = '';
-				$details['message'] = '<body style="font-family:Century Gothic; color: #4c4d51; font-size:13px;">
+				if (count($chk_email) > 0) {
+					$user_id = $chk_email[0]['user_id'];
+					$this->session->set_userdata('user_id', $user_id);
+
+
+				} else {
+					$qry = "insert into zc_user set email_id = '" . $email . "', first_name = '" . $first_name . "', last_name = '" . $last_name . "', password = '" . $password . "'";
+					$rs = $this->user_model->insert_update($qry);
+					$this->session->set_userdata('user_id', $rs);
+
+
+					$user_id = $rs;
+					$email_user = get_perticular_field_value('zc_user', 'email_id', " and user_id='" . $user_id . "'");
+					$first_name = get_perticular_field_value('zc_user', 'first_name', " and user_id='" . $user_id . "'");
+					$last_name = get_perticular_field_value('zc_user', 'last_name', " and user_id='" . $user_id . "'");
+
+					$details = array();
+					$details['from'] = "no-reply@zapcasa.it";
+					$details['to'] = $email;//"soumalya.arb@gmail.com";
+					$details['subject'] = $this->lang->line('social_login_mail_subject');
+					$link = '';
+					$details['message'] = '<body style="font-family:Century Gothic; color: #4c4d51; font-size:13px;">
 							 <div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
 							  <div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
 								 <div style="border-bottom:1px solid #d1d1d1;">
@@ -2006,21 +2005,21 @@ class users extends CI_Controller{
 								  <strong>'.$this->lang->line('new_mail-hi').' '.$first_name." ".$last_name.'</strong>
 									 <p>'.$this->lang->line('social_login_mail_content').':</p>
 									 <p>'.$pass.'</p>
-
+									
 									 <p><br>www.zapcasa.it</p>
 								 </div>
 							 </div>
-
+								  
 							 </body>';
 
-				//if( send_mail($details) )
-				//{
-				redirect(base_url() . 'user/my_account');
-				//}
+					//if( send_mail($details) )
+					//{
+					redirect(base_url() . 'user/my_account');
+					//}
 
-			}
+				}
 
-		} else {
+			} else {
 			$id_google = "";
 			$email = "";
 			$first_name = "";
@@ -2029,7 +2028,7 @@ class users extends CI_Controller{
 			$username = "";
 
 			redirect(base_url() . 'user/comon_signup');
-		}
+			}
 
 
 	}

@@ -917,10 +917,22 @@ class propertym extends CI_Model {
 		$this->db->order_by("msg_date","desc");
 		//$this->db->order_by("msg_date","desc");
 		$this->db->limit($limit, $start);*/
-		$sql = "SELECT pm.*, (SELECT msg_date FROM zc_property_message_info as tmp WHERE (pm.user_id_to=".$uid." AND pm.msg_to_delete='0' AND tmp.property_id=pm.property_id AND tmp.msg_grp_id=pm.msg_grp_id) ORDER BY msg_date DESC LIMIT 1) as odate, (SELECT suspention_status FROM zc_property_details WHERE property_id=pm.property_id) as suspention_status FROM zc_property_message_info as pm WHERE (pm.user_id_to=".$uid." AND pm.msg_to_delete='0') GROUP BY pm.msg_grp_id ORDER BY odate DESC LIMIT ".$start.",".$limit;  // OR (pm.user_id_from=".$uid." AND pm.msg_from_delete='0')
+		$sql = "SELECT pm.*,
+					(SELECT msg_date FROM zc_property_message_info as tmp
+						WHERE
+						(pm.user_id_to=" . $uid . " AND pm.msg_to_delete='0' AND tmp.property_id=pm.property_id AND tmp.msg_grp_id=pm.msg_grp_id)
+						ORDER BY msg_date DESC LIMIT 1) as odate,
+					(SELECT suspention_status FROM zc_property_details
+						WHERE
+						property_id=pm.property_id) as suspention_status,
+					(SELECT property_approval FROM zc_property_details
+						WHERE
+						property_id=pm.property_id) as admin_approval
+
+				FROM zc_property_message_info as pm WHERE (pm.user_id_to=" . $uid . " AND pm.msg_to_delete='0') GROUP BY pm.msg_grp_id ORDER BY odate DESC LIMIT " . $start . "," . $limit;  // OR (pm.user_id_from=".$uid." AND pm.msg_from_delete='0')
 	
 		$query = $this->db->query($sql);
-		//echo "==========".$this->db->last_query();
+		#echo "==========".$this->db->last_query();
 		if ($query->num_rows() > 0) {
 			foreach ($query->result_array() as $row) {
 				$data[] = $row;
@@ -969,10 +981,22 @@ class propertym extends CI_Model {
 		$this->db->order_by("msg_date","desc");
 		$this->db->limit($limit, $start);*/
 
-		$sql = "SELECT pm.*, (SELECT msg_date FROM zc_property_message_info as tmp WHERE (pm.user_id_from=".$uid." AND pm.msg_from_delete='0' AND tmp.property_id=pm.property_id AND tmp.msg_grp_id=pm.msg_grp_id) ORDER BY msg_date DESC LIMIT 1) as odate FROM zc_property_message_info as pm WHERE (pm.user_id_from=".$uid." AND pm.msg_from_delete='0') GROUP BY pm.msg_grp_id ORDER BY odate DESC LIMIT ".$start.",".$limit;  // OR (pm.user_id_from=".$uid." AND pm.msg_from_delete='0')
+		$sql = "SELECT pm.*,
+					(SELECT msg_date FROM zc_property_message_info as tmp
+							WHERE
+							(pm.user_id_from=" . $uid . " AND pm.msg_from_delete='0' AND tmp.property_id=pm.property_id AND tmp.msg_grp_id=pm.msg_grp_id)
+							ORDER BY msg_date DESC LIMIT 1) as odate,
+						(SELECT suspention_status FROM zc_property_details
+							WHERE
+							property_id=pm.property_id) as suspention_status,
+						(SELECT property_approval FROM zc_property_details
+							WHERE
+							property_id=pm.property_id) as admin_approval
+					FROM zc_property_message_info as pm
+					WHERE (pm.user_id_from=" . $uid . " AND pm.msg_from_delete='0') GROUP BY pm.msg_grp_id ORDER BY odate DESC LIMIT " . $start . "," . $limit;  // OR (pm.user_id_from=".$uid." AND pm.msg_from_delete='0')
 
 		$query = $this->db->query($sql);
-		//echo "==========".$this->db->last_query();
+		#echo "==========".$this->db->last_query();exit;
 		if ($query->num_rows() > 0) {
 			foreach ($query->result_array() as $row) {
 				$data[] = $row;
@@ -1042,7 +1066,7 @@ class propertym extends CI_Model {
 	}
 
 	public function add_message($new_message){
-		//echo '<pre>';print_r($new_message);die;
+		#echo '<pre>';print_r($new_message);die;
 		$this->db->insert('zc_property_message_info', $new_message);
 		//echo $sql = $this->db->last_query();die;
 		 return $msg_id = $this->db->insert_id();

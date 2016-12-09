@@ -969,7 +969,7 @@ class User extends CI_Controller {
 		$this->users->updateUser($data, $userid);
 		
 		$default_email = get_perticular_field_value('zc_settings','meta_value'," and meta_name='default_email'");
-		$email = get_perticular_field_value('zc_user','email_id'," and user_id='".$userid."'");		
+		$email = get_perticular_field_value('zc_user', 'email_id', " and user_id='" . $userid . "'");
 		$user_full_name = get_perticular_field_value('zc_user','first_name'," and user_id='".$userid."'").' '.get_perticular_field_value('zc_user','last_name'," and user_id='".$userid."'");
 		
 		$mail_from = isset($default_email) ? $default_email : "no-reply@zapcasa.it";
@@ -1001,17 +1001,15 @@ class User extends CI_Controller {
 				</div>
 				<div style="padding:15px;">
 					<strong>Hi '.$user_full_name.'</strong>,<br>
-					<p>This is an automatic notification to inform you that your ZapCasa account has been blocked by Administrator.</p>
-					<p>For further information please Contact on <a href="http://www.zapcasa.it">www.zapcasa.it</a>Administrator.</p><br>
+					<p>This is an automatic notification to inform you that your ZapCasa account has been blocked.</p>
+					<p>For further information please login on <a href="http://www.zapcasa.it">www.zapcasa.it</a>.</p><br>
 					<p>Regards,<br><a href="http://www.zapcasa.it">www.zapcasa.it</a></p>
 				</div>
 			</div>
 			</body>';
 		}
-		//<p>For further information please login on <a href="http://www.zapcasa.it">www.zapcasa.it</a>.</p><br>
+
 		$body=$msg;
-		echo $body;
-		exit;
 		sendemail($mail_from, $mail_to, $subject, $body, $cc='');
 		
 		$this->session->set_flashdata('success', 'Blocked note has been added & status has been updated');

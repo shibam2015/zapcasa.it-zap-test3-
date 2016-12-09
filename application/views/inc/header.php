@@ -429,9 +429,9 @@ $(document).ready(function(){
 					$(location).attr('href',url);
 					//location.reload();
 				}else if(result==1){
-					var url = "<?php echo base_url().'users/my_account';?>";
-					$(location).attr('href', url);
-					//location.reload();
+					//var url = "<?php echo base_url().'users/my_account';?>";
+					//$(location).attr('href',url);
+					location.reload();
 				}else{
 					$("#error").html("<span style='color:red'><?php echo $this->lang->line('login_invalid_username');?></span>");
 				}
