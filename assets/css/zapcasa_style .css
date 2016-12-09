@@ -900,7 +900,8 @@ section .latestadd {
 padding:10px position:absolute;
 	bottom: 130px;
 }
-/*#prev:hover {left:29px;}*/			
+
+/*#prev:hover {left:29px;}*/
 .next {
 	background: #000;
 	padding: 10px;
@@ -908,7 +909,8 @@ padding:10px position:absolute;
 	bottom: 130px;
 	left: 715px;
 }
-/*#next:hover {right:29px;}*/	
+
+/*#next:hover {right:29px;}*/
 
 .carousel2 span {
 	display: block;
@@ -964,7 +966,8 @@ padding:10px position:absolute;
 padding:10px position:absolute;
 	bottom: 130px;
 }
-/*#prev:hover {left:29px;}*/			
+
+/*#prev:hover {left:29px;}*/
 .next2 {
 	background: #000;
 	padding: 10px;
@@ -2067,7 +2070,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffa84c', end
 }
 .map-cont1{
 	float: right;
-	
+
 	position: relative;
 	height: 460px;
 	width: 100%;
@@ -3424,7 +3427,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e70000', end
 /* add biswa*/
 .advertiser_details .prop_panel {
 	width: 100%;
-	
+
 }
 .advertiser_details .prop_panel h2 {
 	color: #5188c1;
@@ -3504,7 +3507,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e70000', end
 	color:inherit;
 }
 .no_record_search{
-	height:640px;    
+	height: 640px;
     text-align:center;
    font-weight: bold;
     line-height:600px;
@@ -3543,16 +3546,16 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e70000', end
   position:absolute;
   float: right;
   /*background: #eee;*/
- /* border-bottom: 1px solid #fff;*/   
+	/* border-bottom: 1px solid #fff;*/
 }
 
 .filter_id li {
-  float: left;          
+	float: left;
 }
 
 .filter_id #login {
   border-right: 1px solid #ddd;
-  /*box-shadow: 1px 0 0 #fff; */ 
+	/*box-shadow: 1px 0 0 #fff; */
 }
 
 .filter_id #login-trigger,#login-trigger2,#login-trigger3,#login-trigger4,#login-trigger5,
@@ -3590,19 +3593,19 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e70000', end
   position: absolute;
   top: 24px;
   right: 0;
-  z-index: 999;    
+	z-index: 999;
   background: #fff;
-  background-image: linear-gradient(top, #fff, #eee);  
+	background-image: linear-gradient(top, #fff, #eee);
   padding: 15px;
   box-shadow: 0 2px 2px -1px rgba(0,0,0,.9);
   border-radius: 3px 0 3px 3px;
   border-top:1px solid #eee;
-  width: 250px; 
+	width: 250px;
 }
 
 /*.filter_id li #login-content #login-content2{
   right: 0;
-  width: 250px;  
+  width: 250px;
 }*/
 
 /*--------------------*/
@@ -3640,14 +3643,14 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e70000', end
   margin: 10px 0 0 0;
 }
 
-#login #submit {    
+#login #submit {
   background-color: #d14545;
   background-image: linear-gradient(top, #e97171, #d14545);
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   border-radius: 3px;
   text-shadow: 0 1px 0 rgba(0,0,0,.5);
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.3) inset;    
+	box-shadow: 0 0 1px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.3) inset;
   border: 1px solid #7e1515;
   float: left;
   height: 30px;
@@ -3659,14 +3662,14 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e70000', end
 }
 
 #login #submit:hover,
-#login #submit:focus {    
+#login #submit:focus {
   background-color: #e97171;
   background-image: linear-gradient(top, #d14545, #e97171);
-} 
+}
 
-#login #submit:active {   
+#login #submit:active {
   outline: none;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) inset;   
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) inset;
 }
 
 #login #submit::-moz-focus-inner {
@@ -3790,7 +3793,7 @@ div.close1 {
 }
 
 .errorpop {
-    border: solid 2px #FF0000 !important;  
+	border: solid 2px #FF0000 !important;
 }
 
 .inbox_area{
@@ -3884,7 +3887,7 @@ div.close1 {
 .msg_del{
 	float:right;
 }
-	
+
 .property_details .right_panel .advertiser_form .field a.contact_agent {
 	background: url(../images/searchbt_bg.png) repeat-x;
 	border-radius: 4px;
@@ -3904,7 +3907,7 @@ div.close1 {
 .property_details .right_panel .advertiser_form .field a.contact_agent:hover {
 	background: url(../images/searchbt_bg_hover.png) repeat-x;
 	height: 35px;
-}	
+}
 /*extra*/
 #backgroundPopup2 {
 	z-index: 999;
@@ -4097,7 +4100,10 @@ div.close3 {
 
 
 #save{
- 	border:1px solid #dedee0; border-radius:4px; -webkit-border-radius:4px; -moz-border-radius:4px;				   
+	border: 1px solid #dedee0;
+	border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
  	padding:3px 10px; color:#406fbf; display:inline-block; padding-left:23px;
 	background: #f1eff0;
 	background-image: url("../images/heart_icon.png"); /* fallback */
@@ -4110,13 +4116,16 @@ div.close3 {
 	background-repeat:no-repeat;
 	background-position:5px 5px;
    /* background: #fefefe ; *//* Old browsers */
-	
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fefefe', endColorstr='#f1eff0', GradientType=0 ); /* IE6-9 */
+
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fefefe', endColorstr='#f1eff0', GradientType=0 ); /* IE6-9 */
 	 font-weight: bold;
-	
-	}
+
+}
 	#general_button_mail{
- 	border:1px solid #dedee0; border-radius:4px; -webkit-border-radius:4px; -moz-border-radius:4px;				   
+		border: 1px solid #dedee0;
+		border-radius: 4px;
+		-webkit-border-radius: 4px;
+		-moz-border-radius: 4px;
  	padding:3px 10px; color:#406fbf; display:inline-block; padding-left:12px;
 	background: #f1eff0;
 
@@ -4124,26 +4133,29 @@ div.close3 {
 	background-position:5px 5px;
 	font-weight: bold;
    /* background: #fefefe ; *//* Old browsers */
-	
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fefefe', endColorstr='#f1eff0', GradientType=0 ); /* IE6-9 */
-	
+
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fefefe', endColorstr='#f1eff0', GradientType=0 ); /* IE6-9 */
+
 	}
 
 #general_button_print{
- 	border:1px solid #dedee0; border-radius:4px; -webkit-border-radius:4px; -moz-border-radius:4px;				   
+	border: 1px solid #dedee0;
+	border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
  	padding:3px 10px; color:#406fbf; display:inline-block; padding-left:12px;
 	background: #f1eff0;
-	
+
 	background-repeat:no-repeat;
 	background-position:5px 5px;
    /* background: #fefefe ; *//* Old browsers */
    font-weight: bold;
-	
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fefefe', endColorstr='#f1eff0', GradientType=0 ); /* IE6-9 */
-	
-	}
-	
-	#email_form input[type="submit"] {
+
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fefefe', endColorstr='#f1eff0', GradientType=0 ); /* IE6-9 */
+
+}
+
+#email_form input[type="submit"] {
 	background: url(../images/searchbt_bg.png) repeat-x;
 	border-radius: 4px;
 	-moz-border-radius: 4px;
