@@ -1469,7 +1469,7 @@ $lang['email_alert_register'] = "REGISTER";
 $lang['change_password_your_password_must_be_atleast'] = "Your password must be at least 8 characters long and one capital letter, one number and one symbol like";
 $lang['change_password_please_provide_a_password'] = "Your password must be at least 8 characters long";
 $lang['change_password_please_enter_the_same_password_as_above'] = "Please enter the same password as above";
-$lang['change_password_please_enter_your_actual_password'] = "Please enter your actual password";
+$lang['change_password_please_enter_your_actual_password'] = "Please enter your current password";
 $lang['change_password_you_enter_a_wrong_password'] = "You enter a wrong password";
 
 
@@ -1962,7 +1962,7 @@ $lang['details_property_image_save'] = "Save";
 $lang['details_property_image_email'] = "Email";
 $lang['details_property_image_print'] = "Print";
 $lang['details_property_sending_email'] = "Sending Email.";
-$lang['details_property_recipents_emails'] = "Recipent's Emails</span> <span style='font-weight:notmal;'>(Comma separated)";
+$lang['details_property_recipents_emails'] = "Recipent's Emails</span> <span style='font-weight:normal;'>(Comma separated)";
 $lang['details_property_recipents_emails_field'] = "foo@example.com,&nbsp;bar@example.com";
 $lang['details_property_your_email'] = "Your Email";
 $lang['details_property_your_email_field'] = "Place your email id here";
