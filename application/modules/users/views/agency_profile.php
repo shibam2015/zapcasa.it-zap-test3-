@@ -5,8 +5,9 @@ div.error{ float: left; color: red; padding-right: .5em;  }
 label.error { float: left; color: red; padding-right: .5em;font-size:13px; }
 </style>
 <script type="text/javascript">
-$(document).ready(function(){    		
-	$('#nav li').hover(function(){
+$(document).ready(function(){
+    $(
+        '#nav li').hover(function () {
 		$('ul', this).slideDown(200);
 		$(this).children('a:first').addClass("hov");
 	}, function() {

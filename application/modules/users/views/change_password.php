@@ -16,11 +16,23 @@ $(document).ready(function() {
 	$.validator.addMethod("alphabetsnspace", function(value, element) {
          return this.optional(element) || /((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%?"^!-]).{8,20})/.test(value);
 });
-	$("#register").validate({
+    $("#register1").validate({
     rules: {
         oldpassword: {
             required: true,
-           equalTo: ""  // It should be equal to the current password
+            //equalTo: 'callback_change_password'  // It should be equal to the current password
+            /*remote:
+             {
+             url: "users/change_password",
+             type: "post"
+             // data:
+             // {
+             //  oldpassword: function()
+             //  {
+             //      return $("#oldpassword").val();
+             // }
+             // }
+             }*/
         },
         password: {
             required: true,
@@ -38,7 +50,7 @@ $(document).ready(function() {
     messages: {
        oldpassword: {
             required: "<?php echo $this->lang->line('change_password_please_enter_your_actual_password');?>",
-            equalTo: "<?php echo $this->lang->line('change_password_you_enter_a_wrong_password');?>"
+           remote: "<?php echo $this->lang->line('change_password_you_enter_a_wrong_password');?>"
         },
        password: {
             required: "<?php echo $this->lang->line('change_password_please_provide_a_password');?>",
@@ -110,9 +122,6 @@ bodyTag.className = bodyTag.className.replace("noJS", "hasJS");
         <div class="error" id="errorDIV" ><?php echo $this->session->flashdata('error'); ?></div>
     <?php } ?>
 </div> 
-        
-        
-        
        	<?php
 		$new_arr=$this->session->all_userdata();
 		//echo '<pre>';print_r($new_arr)

@@ -1564,9 +1564,9 @@ class users extends CI_Controller{
 
 			if($oldpass != $pwd)
 			{
-				$this->session->set_flashdata('error', "Old password does not match!");
-				redirect('users/change_password');exit;
-			}			
+				$this->session->set_flashdata('error', "Invalid current password, please try again!");
+				redirect('users/change_password');
+			}
 			else if($this->input->post('password') != $this->input->post('pass2'))
 			{
 				$this->session->set_flashdata('error', "Passwords does not match!");
