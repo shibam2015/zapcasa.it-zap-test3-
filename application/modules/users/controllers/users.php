@@ -839,7 +839,8 @@ class users extends CI_Controller{
 			}
 			if($this->input->post('social_secuirity_number') != '')
 			{
-				$data['new_arr'] = $this->input->post();
+				//$data['new_arr'] = $this->input->post();
+				$data['new_arr'] = $this->session->all_userdata();
 				$data['edit_mode'] = 1;
 			}
 			$this->load->view('users/owner_edit',$data);
@@ -1248,7 +1249,8 @@ class users extends CI_Controller{
 
 			if($this->input->post('email') != '')
 			{
-				$data['new_arr'] = $this->input->post();
+				//$data['new_arr'] = $this->input->post();
+				$data['new_arr'] = $this->session->all_userdata();
 				$data['edit_mode'] = 1;
 			}
 
