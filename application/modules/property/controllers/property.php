@@ -1504,7 +1504,7 @@ class property extends CI_Controller {
 			}
 			echo "<table>";
 			$i=0;
-			if($all_msgs[0]['property_id']!='0'){
+			if ($all_msgs[0]['properMy_Feedbackty_id'] != '0') {
 				//$subjectLine = ($lang=='it'?'Richiesta per':'Request for').": ".subject_inbox($all_msgs[0]['property_id']);	/*$this->lang->line('property_request_for').':'.*/ /* K */
 				/*$subjectLine = (strlen(subject_inbox($all_msgs[0]['property_id'])) > 11)?(($lang=='it'?'Richiesta per':'Request for').": ".subject_inbox($all_msgs[0]['property_id'])):$this->lang->line('prop_not_avilable');*/
 				$subjectLine = (ucfirst($all_msgs[0]['subject']) != '') ? (($lang == 'it' ? 'Richiesta per' : 'Request for') . ": " . ucfirst($all_msgs[0]['subject'])) : $this->lang->line('prop_not_avilable');

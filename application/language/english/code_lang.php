@@ -1466,11 +1466,11 @@ $lang['email_alert_register'] = "REGISTER";
 
 /* ---------------- change password -------------------- */
 
-$lang['change_password_your_password_must_be_atleast'] = "Your password must be at least 8 characters long and one capital letter, one number and one symbol like";
+$lang['change_password_your_password_must_be_atleast'] = "Your password must be at least 8 characters long, one capital letter and one lowercase letter, one number and one symbol like";
 $lang['change_password_please_provide_a_password'] = "Your password must be at least 8 characters long";
 $lang['change_password_please_enter_the_same_password_as_above'] = "Please enter the same password as above";
 $lang['change_password_please_enter_your_actual_password'] = "Please enter your current password";
-$lang['change_password_you_enter_a_wrong_password'] = "You enter a wrong password";
+
 
 
 $lang['change_password_real_estate_for'] = "Real Estate for ";
@@ -2570,5 +2570,8 @@ $lang['suspended_property_msg_by_admin_first'] = 'Property has been suspended. N
 $lang['inbox_this_property_inactive_by_admin'] = 'Property has been inactivated. No longer available !';
 $lang['inbox_user_blocked'] = 'You have been blocked or inactivated. No longer available !';
 $lang['inbox_this_property_deleted'] = 'Property has been deleted. No longer available !';
+
+$lang['change_password_you_enter_a_wrong_password'] = "Invalid current password, please try again!";
+$lang['change_password_new_password_must_be_different'] = "You can't choose your old password as new password. Please choose different one.";
 /* Custom added lines */
 ?>

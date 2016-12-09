@@ -15,6 +15,7 @@ $(document).ready(function() {
 	});
 	$.validator.addMethod("alphabetsnspace", function(value, element) {
          return this.optional(element) || /((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%?"^!-]).{8,20})/.test(value);
+        //return this.optional(element) || /((?=.*\d)(?=.*[A-Z])(?=.*[@#$%?"^!-]).{8,20})/.test(value);
 });
     $("#register1").validate({
     rules: {
@@ -33,7 +34,16 @@ $(document).ready(function() {
         password: {
             required: true,
 			alphabetsnspace: true,
-            minlength: 8
+            minlength: 8,
+            remote: {
+                url: "check_same_password_process",
+                type: "post",
+                data: {
+                    oldpassword: function () {
+                        return $("#oldpass").val();
+                    }
+                }
+            }
         },
         pass2: {
             required: true,
@@ -51,7 +61,8 @@ $(document).ready(function() {
        password: {
             required: "<?php echo $this->lang->line('change_password_please_provide_a_password');?>",
 			alphabetsnspace: "<?php echo $this->lang->line('change_password_your_password_must_be_atleast');?> !  ? $ % ^ & ",
-            minlength: "<?php echo $this->lang->line('change_password_your_password_must_be_atleast_8_character_long');?>"
+           minlength: "<?php echo $this->lang->line('change_password_your_password_must_be_atleast_8_character_long');?>",
+           remote: "<?php echo $this->lang->line('change_password_new_password_must_be_different');?>"
         },
         pass2: {
             required: "<?php echo $this->lang->line('change_password_please_provide_a_password');?>",

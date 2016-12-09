@@ -96,7 +96,9 @@ class advertiser extends CI_Controller {
 		//echo "<pre>"; print_r($data);exit;
 		$this->load->view("advertiser/search",$data);
 	}
-	public function get_feedback() {		
+
+	public function get_feedback()
+	{
 		$uid=$this->session->userdata( 'user_id' );
 		if($uid=='' || $uid=='0' ) {
 			redirect('/');

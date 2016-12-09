@@ -2052,5 +2052,21 @@ class users extends CI_Controller{
 
 
 	}
+
+	public function check_same_password_process()
+	{
+		$data['title'] = "change_password";
+		//$uid = $this->session->userdata('user_id');
+		/*$access_token = get_perticular_field_value('zc_user', 'access_token', " and user_id='" . $uid . "'");
+		$oldpass = get_perticular_field_value('zc_user', 'password', " and user_id='" . $uid . "'");
+		$pwd = $this->generate_password_string($access_token, $this->input->post('oldpassword'));*/
+		if ($this->input->post('oldpassword') == $this->input->post('password')) {
+			echo json_encode(FALSE);
+		} else {
+			echo json_encode(TRUE);
+		}
+
+
+	}
 }
 ?>
