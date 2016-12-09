@@ -530,8 +530,8 @@ class advertiserm extends CI_Model {
 	}
 	/////////////////get feedback////////////////////////////////////////
 	function get_feedback($limit=0, $start=0) {
-		$feedback_to_id=$this->session->userdata('user_id');			
-		$sql="select * from zc_feedback where feedback_to_id='".$feedback_to_id ."' and feedback_status='1' ORDER BY `feedback_date` ASC LIMIT $start ,$limit";
+		$feedback_to_id=$this->session->userdata('user_id');
+		$sql = "select * from zc_feedback where feedback_to_id='" . $feedback_to_id . "' and feedback_status='1' ORDER BY `feedback_date` desc LIMIT $start ,$limit";
 		$query=$this->db->query($sql);
 		$data = array();	
 		if($query->num_rows()>0){
