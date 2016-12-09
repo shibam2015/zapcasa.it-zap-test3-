@@ -20,19 +20,15 @@ $(document).ready(function() {
     rules: {
         oldpassword: {
             required: true,
-            //equalTo: 'callback_change_password'  // It should be equal to the current password
-            /*remote:
-             {
-             url: "users/change_password",
-             type: "post"
-             // data:
-             // {
-             //  oldpassword: function()
-             //  {
-             //      return $("#oldpassword").val();
-             // }
-             // }
-             }*/
+            remote: {
+                url: "change_password_process",
+                type: "post",
+                data: {
+                    oldpassword: function () {
+                        return $("#oldpass").val();
+                    }
+                }
+            }
         },
         password: {
             required: true,
