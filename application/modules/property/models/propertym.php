@@ -898,7 +898,9 @@ class propertym extends CI_Model {
 		}
 		return $data;
 	}
-	public function get_msg_detail($uid,$limit, $start){
+
+	public function get_msg_detail($uid, $limit, $start, $Where = '')
+	{
 		/*
 		$sql="SELECT * FROM `zc_property_message_info` where user_id_to='".$uid."'";
 		$query=$this->db->query($sql);
@@ -929,7 +931,7 @@ class propertym extends CI_Model {
 						WHERE
 						property_id=pm.property_id) as admin_approval
 
-				FROM zc_property_message_info as pm WHERE (pm.user_id_to=" . $uid . " AND pm.msg_to_delete='0') GROUP BY pm.msg_grp_id ORDER BY odate DESC LIMIT " . $start . "," . $limit;  // OR (pm.user_id_from=".$uid." AND pm.msg_from_delete='0')
+				FROM zc_property_message_info as pm WHERE (pm.user_id_to=" . $uid . " AND pm.msg_to_delete='0') " . $Where . " GROUP BY pm.msg_grp_id ORDER BY odate DESC LIMIT " . $start . "," . $limit;  // OR (pm.user_id_from=".$uid." AND pm.msg_from_delete='0')
 	
 		$query = $this->db->query($sql);
 		#echo "==========".$this->db->last_query();

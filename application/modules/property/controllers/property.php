@@ -1470,12 +1470,28 @@ class property extends CI_Controller {
 	}
 
 	public function msg_details(){
+		$uid = $this->session->userdata('user_id');
+		if ($uid == '' || $uid == '0') {
+			redirect('/');
+		}
 		$msg_id=$this->input->post('msg_id');
 		$lang=$this->input->post('lang');
 		$msg_grp_id=get_perticular_field_value('zc_property_message_info','msg_grp_id'," and msg_id='".$msg_id."'");
 		$ch=$this->propertym->change_read_status($msg_grp_id);
 		//$rs=$this->propertym->get_individual_msg($msg_id);
 		$all_msgs=$this->propertym->get_property_msg($msg_grp_id);
+		#echo "<pre> ===>"; print_r($all_msgs);exit;
+
+		$config["per_page"] = 10;
+		$page = 0;
+		#$all_msgs=$this->propertym->get_property_msg($msg_grp_id);
+		$WHERE = " AND property_id = " . $all_msgs[0]['property_id'];
+		$data["msg_totals"] = $this->propertym->get_msg_detail($uid, $config["per_page"], $page, $WHERE);
+		$data['check_user_to'] = $this->propertym->check_user_to_status($uid);
+		#echo "<pre> ===>"; print_r($all_msgs);
+		#echo "<pre> ===>"; print_r($data);exit;
+		$HTML = '';
+		$Status = 1;
 		//$msg_detail=get_perticular_field_value('zc_property_message_info','message'," and msg_id='".$msg_id."'");
 		// $email_from=get_perticular_field_value('zc_property_message_info','email_id'," and msg_id='".$msg_id."'");
 		//$phone_number=get_perticular_field_value('zc_property_message_info','ph_number'," and msg_id='".$msg_id."'");
@@ -1502,7 +1518,7 @@ class property extends CI_Controller {
 			if ($areaStAddStNoZip == '') {
 				//$areaStAddStNoZip .= '-';
 			}
-			echo "<table>";
+			$HTML .= "<table>";
 			$i=0;
 			if ($all_msgs[0]['properMy_Feedbackty_id'] != '0') {
 				//$subjectLine = ($lang=='it'?'Richiesta per':'Request for').": ".subject_inbox($all_msgs[0]['property_id']);	/*$this->lang->line('property_request_for').':'.*/ /* K */
@@ -1573,7 +1589,7 @@ class property extends CI_Controller {
 				}
 				$messageTime = date('d', strtotime($msgs['msg_date'])) . ' ' . $monthName . ' ' . date('Y', strtotime($msgs['msg_date']));
 
-				echo "<tr " . $class . ">
+				$HTML .= "<tr " . $class . ">
 						<td colspan='5'>
 							<span style='display:block;font-weight:bold;'>" . $inboxSubject . "</span>
 							" . $areaStAddStNoZipHTML . "
@@ -1592,8 +1608,27 @@ class property extends CI_Controller {
 					  </tr>";
 				$i++;
 			}
-			echo "</table>";
+			$HTML .= "</table>";
+			if ($data["msg_totals"][0]['admin_approval'] == '') {
+				$Status = 0;
+				$HTML .= '<div class="warrning"> <p> ' . $this->lang->line('inbox_this_property_deleted') . '</p></div>';
+			} else if ($data["msg_totals"][0]['admin_approval'] == 0) {
+				$Status = 0;
+				$HTML .= '<div class="warrning"> <p> ' . $this->lang->line('inbox_this_property_inactive_by_admin') . '</p></div>';
+			} else if ($data['check_user_to'][0]['status'] == 0) {
+				$Status = 0;
+				$HTML .= '<div class="warrning"> <p> ' . $this->lang->line('inbox_this_user_is_no_longer_registered') . '</p></div>';
+			} else if ($data["msg_totals"][0]['blocked_note'] != "" && strlen($data["msg_totals"][0]['blocked_note']) > 0) {
+				$Status = 0;
+				$HTML .= '<div class="warrning"> <p> ' . $this->lang->line('inbox_this_user_has_been_blocked') . '</p></div>';
+			} else if (isset($data["msg_totals"][0]['suspention_status']) && $data["msg_totals"][0]['suspention_status'] == 1) {
+				$Status = 0;
+				$HTML .= '<div class="warrning"> <p> ' . $this->lang->line('suspended_property_msg_by_admin_first') . '</p></div>';
+			}
 		}
+		$ResData = array("Output" => $HTML, "Status" => $Status);
+		echo json_encode($ResData);
+		exit;
 	}
 
 	public function msg_reply()
