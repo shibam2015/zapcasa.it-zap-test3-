@@ -1469,7 +1469,7 @@ $lang['change_password_your_password_must_be_atleast'] = "La password deve conte
 $lang['change_password_please_provide_a_password'] = "Inserisci una password di almeno 8 caratteri";
 $lang['change_password_please_enter_the_same_password_as_above'] = "Inserisci la stessa password come sopra";
 $lang['change_password_please_enter_your_actual_password'] = "Inserisci la tua password";
-$lang['change_password_you_enter_a_wrong_password'] = "Password errata";
+#$lang['change_password_you_enter_a_wrong_password'] = "Password errata";
 
 $lang['change_password_real_estate_for'] = "Immobili per ";
 $lang['change_password_jobs'] = "Lavoro";

@@ -206,7 +206,10 @@
 										}
 										else
 										{
-											echo $this->lang->line('prop_not_deleted');
+
+											echo $this->lang->line('inbox_request_for'), ":";
+											echo subject_inbox($msg['property_id']);
+											//echo $this->lang->line('prop_not_deleted');
 										}
 									?>
 								</span>
