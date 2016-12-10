@@ -295,18 +295,18 @@
 					<?php if(isset($links)){echo $links; }?>
                     </div>
                     <table id="bbb" style="display:none;">
-						<?php if ($check_user_to[0]['status'] == 0) { ?>
-							<div class="warrning"><p> <?php echo $this->lang->line('inbox_user_blocked'); ?> </p></div>
-						<?php } else if ($send_msg_totals[0]['admin_approval'] == 0) { ?>
+						<?php /*if ($check_user_to[0]['status'] == 0) { */ ?><!--
+							<div class="warrning"><p> <?php /*echo $this->lang->line('inbox_user_blocked'); */ ?> </p></div>
+						<?php /*} else if ($send_msg_totals[0]['admin_approval'] == 0) { */ ?>
 							<div class="warrning">
-								<p> <?php echo $this->lang->line('inbox_this_property_inactive_by_admin'); ?> </p></div>
-						<?php } else if ($msg_totals[0]['blocked_note'] != "" && strlen($msg_totals[0]['blocked_note']) > 0) { ?>
+								<p> <?php /*echo $this->lang->line('inbox_this_property_inactive_by_admin'); */ ?> </p></div>
+						<?php /*} else if ($msg_totals[0]['blocked_note'] != "" && strlen($msg_totals[0]['blocked_note']) > 0) { */ ?>
 							<div class="warrning">
-								<p> <?php echo $this->lang->line('inbox_this_user_has_been_blocked'); ?> </p></div>
-						<?php } else if (isset($send_msg_totals[0]['suspention_status']) && $send_msg_totals[0]['suspention_status'] == 1) { ?>
+								<p> <?php /*echo $this->lang->line('inbox_this_user_has_been_blocked'); */ ?> </p></div>
+						<?php /*} else if (isset($send_msg_totals[0]['suspention_status']) && $send_msg_totals[0]['suspention_status'] == 1) { */ ?>
 							<div class="warrning">
-								<p> <?php echo $this->lang->line('suspended_property_msg_by_admin_first'); ?> </p></div>
-						<?php } else { ?>
+								<p> <?php /*echo $this->lang->line('suspended_property_msg_by_admin_first'); */ ?> </p></div>
+						--><?php /*} else { */ ?>
 							<div style="display:none;" id="reply_msg">
                             <?php
 							echo form_open_multipart('property/msg_reply', array('class' => 'add_property_form', 'id' => 'idForm'));
@@ -333,7 +333,7 @@
                             </div>
                             <?php echo form_close(); ?>
                         </div>
-						<?php } ?>
+						<?php #} ?>
                     </table>
                 </div>
             </div>
@@ -424,9 +424,13 @@
 			   url: "<?php echo base_url()?>property/msg_details", //
 			   data: {msg_id: id, lang: '<?php echo $_COOKIE['lang']; ?>'}, // <---
 			   success: function(msg) {
-				   $(div_id).html(msg);
+				   var dataObj = JSON.parse(msg);
+				   $(div_id).html(dataObj.Output);
 				   $("#msg_id").val(id);
-				   $("#reply_msg").show();
+				   if (dataObj.Status == 1) {
+					   $("#reply_msg").show();
+				   }
+
 				   $('.inbox_delete_pagination_rht').hide();
 			   },
 			   error: function() {

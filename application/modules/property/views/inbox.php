@@ -288,41 +288,32 @@
 
 					<?php if(isset($links)){echo $links; }?>
                     </div>
-					<?php if (!empty($msg_totals)) {
-						?>
+					<?php #if (!empty($msg_totals)) {
+					?>
 						<table id="bbb" style="display:none;">
-							<?php if ($msg_totals[0]['admin_approval'] == '') { ?>
+							<?php /*if ($msg['admin_approval'] == '') { */ ?><!--
 								<div class="warrning">
-									<p> <?php echo $this->lang->line('inbox_this_property_deleted'); ?> </p></div>
-								<!--<div style="" class="search-fld" style="width:98% !important;">
-						  	<p> <?php /*echo $this->lang->line('inbox_this_user_is_no_longer_registered'); */ ?> </p>
-					 	</div>-->
-							<?php } else if ($msg_totals[0]['admin_approval'] == 0) { ?>
+									<p> <?php /*echo $this->lang->line('inbox_this_property_deleted'); */ ?> </p></div>
+							<?php /*} else if ($msg['admin_approval'] == 0) { */ ?>
 								<div class="warrning">
-									<p> <?php echo $this->lang->line('inbox_this_property_inactive_by_admin'); ?> </p>
+									<p> <?php /*echo $this->lang->line('inbox_this_property_inactive_by_admin'); */ ?> </p>
 								</div>
 
-							<?php } else if ($check_user_to[0]['status'] == 0) { ?>
+							<?php /*} else if ($check_user_to[0]['status'] == 0) { */ ?>
 								<div class="warrning">
-									<p> <?php echo $this->lang->line('inbox_this_user_is_no_longer_registered'); ?> </p>
+									<p> <?php /*echo $this->lang->line('inbox_this_user_is_no_longer_registered'); */ ?> </p>
 								</div>
-								<!--<div style="" class="search-fld" style="width:98% !important;">
-						  	<p> <?php /*echo $this->lang->line('inbox_this_user_is_no_longer_registered'); */ ?> </p>
-					 	</div>-->
-							<?php } else if ($msg_totals[0]['blocked_note'] != "" && strlen($msg_totals[0]['blocked_note']) > 0) { ?>
+
+							<?php /*} else if ($msg['blocked_note'] != "" && strlen($msg['blocked_note']) > 0) { */ ?>
 								<div class="warrning">
-									<p> <?php echo $this->lang->line('inbox_this_user_has_been_blocked'); ?> </p></div>
-								<!--<div style="" class="search-fld" style="width:98% !important;">
-							<p> <?php /*echo $this->lang->line('inbox_this_user_has_been_blocked'); */ ?> </p>
-						</div>-->
-							<?php } else if (isset($msg_totals[0]['suspention_status']) && $msg_totals[0]['suspention_status'] == 1) { ?>
+									<p> <?php /*echo $this->lang->line('inbox_this_user_has_been_blocked'); */ ?> </p></div>
+
+							<?php /*} else if (isset($msg['suspention_status']) && $msg['suspention_status'] == 1) { */ ?>
 								<div class="warrning">
-									<p> <?php echo $this->lang->line('suspended_property_msg_by_admin_first'); ?> </p>
+									<p> <?php /*echo $this->lang->line('suspended_property_msg_by_admin_first'); */ ?> </p>
 								</div>
-								<!--<div style="" class="search-fld" style="width:98% !important;">
-							<p> <?php /*echo $this->lang->line('suspended_property_msg_by_admin_first'); */ ?> </p>
-						</div>-->
-							<?php } else { ?>
+
+							--><?php /*} else { */ ?>
 								<div style="display:none;" id="reply_msg">
 									<?php
 									echo form_open_multipart('property/msg_reply', array('class' => 'add_property_form', 'id' => 'idForm'));
@@ -352,9 +343,9 @@
 									</div>
 									<?php echo form_close(); ?>
 								</div>
-							<?php } ?>
+							<?php #} ?>
 						</table>
-					<?php } ?>
+					<?php #} else{ echo "<h1> --- Hello ----------- </h1>";}?>
 
                 </div>
             </div>
@@ -440,9 +431,12 @@
 				url: "<?php echo base_url()?>property/msg_details",
 				data: { msg_id: id, lang: '<?php echo $_COOKIE['lang']; ?>' },
 				success: function(msg) {
-					$(div_id).html(msg);
+					var dataObj = JSON.parse(msg);
+					$(div_id).html(dataObj.Output);
 					$("#msg_id").val(id);
-					$("#reply_msg").show();
+					if (dataObj.Status == 1) {
+						$("#reply_msg").show();
+					}
 					$('.inbox_delete_pagination_rht').hide();
 				},
 				error: function() {
