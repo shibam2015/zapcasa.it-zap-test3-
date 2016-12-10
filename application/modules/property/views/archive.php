@@ -194,39 +194,34 @@
 								<input type="checkbox" name="check_box[]" id="check_box[]" class="inboxes" onClick="checkArr('inboxes');" value="<?php echo $msg['msg_id'];?>">
 							</td>
                             <td>
-							<?php
-							if($msg['property_id']!='0'){
-								?>
-                                <span <?php echo($msg['read_status'] == '0'?'style="cursor:pointer;"':'style="cursor:pointer;"'); ?> onClick="return click_me(<?php echo $msg['msg_id'];?>,<?php echo $msg['property_id'];?>,<?php echo $check_user_from[0]['status'];?>,<?php echo $check_user_to[0]['status'];?>);">
+								<?php
+								if ($msg['property_id'] = '0') {
+									?>
+									<span <?php echo($unReadMsgCounter > 0 ? 'style="font-weight:bold;cursor:pointer;"' : 'style="cursor:pointer;"'); ?>
+										onClick="return click_me(<?php echo $msg['msg_id']; ?>,<?php echo $msg['property_id']; ?>,<?php echo $check_user_to[0]['status']; ?>);">
+
 									<?php
-										if(strlen(subject_inbox($msg['property_id'])) > 11)
-										{
-											echo $this->lang->line('inbox_request_for'),":"; echo subject_inbox($msg['property_id']);
-
-										}
-										else
-										{
-
-											echo $this->lang->line('inbox_request_for'), ":";
-											echo subject_inbox($msg['property_id']);
-											//echo $this->lang->line('prop_not_deleted');
-										}
+									if (strlen(subject_inbox($msg['property_id'])) > 11) {
+										echo $this->lang->line('inbox_request_for'), ":";
+										echo subject_inbox($msg['property_id']);
+									} else {
+										echo $this->lang->line('prop_not_deleted');
+									}
 									?>
 								</span>
-                                <?php
-							}else{
-								if($msg['subject'] == 0){
-									$noProMsgSub = get_perticular_field_value('zc_property_message_info','subject',"and subject !='0' and msg_grp_id = '".$msg['msg_grp_id']."' and msg_to_delete != ' '");
-								}else{
-									$noProMsgSub = $msg['subject'];
-								}
-								?>
-                                <span <?php echo($msg['read_status'] == '0'?'style="cursor:pointer;"':'style="cursor:pointer;"'); ?> onClick="return click_me(<?php echo $msg['msg_id'];?>,<?php echo $msg['property_id'];?>,<?php echo $check_user_from[0]['status'];?>,<?php echo $check_user_to[0]['status'];?>);">
+								<?php } else {
+									if ($msg['subject'] == 0) {
+										$noProMsgSub = get_perticular_field_value('zc_property_message_info', 'subject', "and subject !='0' and msg_grp_id = '" . $msg['msg_grp_id'] . "' and msg_to_delete != ' '");
+									} else {
+										$noProMsgSub = $msg['subject'];
+									} ?>
+
+									<span <?php echo($unReadMsgCounter > 0 ? 'style="font-weight:bold;cursor:pointer;"' : 'style="cursor:pointer;"'); ?>
+										onClick="return click_me(<?php echo $msg['msg_id'];?>,<?php echo $msg['property_id'];?>,<?php echo $check_user_to[0]['status'];?>);">
 									<?php echo ucfirst($noProMsgSub);?>
 								</span>
-                                <?php
-							}
-							?>
+								<?php } ?>
+
                                 <p style="color: rgb(164, 164, 164);">
                                     <?php echo ucfirst(substr($msg['message'],0,50)).'...';?> 
                                 </p>
