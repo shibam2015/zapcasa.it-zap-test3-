@@ -2835,7 +2835,7 @@ class property extends CI_Controller {
 	}
 	public function saved_search_prop(){
 		$property_name=$this->input->post('property_name');
-		$segment_name=$this->input->post('segment_name');	
+		$segment_name = $this->input->post('segment_name');
 		$save_search_flag = $this->input->post('save_search_flag');
 
 		$new_data=array();
@@ -2892,7 +2892,7 @@ class property extends CI_Controller {
 				$category='0';
 			}
 		}
-		
+
 		$new_data['saved_property_name']	= $property_name;
 		$new_data['saved_by_user_id']		= $this->session->userdata('user_id');
 		$new_data['location']				= isset($new_saved_search['location'])?$new_saved_search['location']:0;
@@ -2930,13 +2930,13 @@ class property extends CI_Controller {
 				
 		if($this->input->post('save_search_id')!= "" && $this->input->post('save_search_id') > 0){
 			$save_search_id=$this->input->post('save_search_id');
-			
+
 			$new_data['saved_property_name']	= $property_name;
 			$new_data['saved_by_user_id']		= $this->session->userdata('user_id');
 			$new_data['location']				= ($this->input->post('location') != '')?$this->input->post('location'):0;
 			$new_data['category']				= ($this->input->post('category_id') != '')?$this->input->post('category_id'):0;
-			$new_data['contract_id']			= ($this->input->post('contract_type') != '')?$this->input->post('contract_type'):"all";
-			$new_data['property_post_by_type']	= ($this->input->post('posted_by') != '')?implode(",", $this->input->post('posted_by')):"";
+			$new_data['contract_id'] = ($this->input->post('contract_type') != '') ? $this->input->post('contract_type') : "";
+			//$new_data['property_post_by_type']	= ($this->input->post('posted_by') != '')?implode(",", $this->input->post('posted_by')):"";
 			$new_data['status']					= ($this->input->post('status') != '')?$this->input->post('status'):"1";
 			$new_data['min_price']				= ($this->input->post('min_price') != '')?$this->input->post('min_price'):0;
 			$new_data['max_price']				= ($this->input->post('max_price') != '')?$this->input->post('max_price'):0;
@@ -2966,9 +2966,9 @@ class property extends CI_Controller {
 			$new_data['saved_date']				= date('Y-m-d H:i:s');
 			$new_data['property_category']		= ($this->input->post('property_category') != '')?$this->input->post('property_category'):'';
 		}
-		
-		
-		// $search_filter=$this->session->userdata('new_search');
+
+
+		$search_filter = $this->session->userdata('new_search');
 		//echo '<pre>';print_r($new_saved_search);
 		
 		$rs=$this->propertym->saved_search($new_data,$save_search_id,$save_search_flag);

@@ -424,7 +424,10 @@ function list_of_savesearch() {
 								<tbody>
 									<tr>
 										<td>
-											<span><input type="radio" id="contract" name="contract_type" value="all" <?php if( $for_all_val == 'all' ) { echo "checked"; } ?> /></span> 
+											<span><input type="radio" id="contract" name="contract_type"
+														 value="all" <?php if ($for_all_val == 'all') {
+													echo "checked";
+												} ?> /></span>
 											<span><img src="<?php echo base_url();?>assets/images/orenge_mark.png" alt="" /></span>
 											<span><img src="<?php echo base_url();?>assets/images/blue_mark.png" alt="" /></span>
 											<span> <?php echo $this->lang->line('search_header_all_contract_type');?></span>
@@ -435,7 +438,10 @@ function list_of_savesearch() {
 								<tbody>
 									<tr>
 										<td>
-											<span><input type="radio" id="contract" name="contract_type" value="2" <?php if( $for_sale_val != 0 ) { echo "checked"; } ?>/></span> 
+											<span><input type="radio" id="contract" name="contract_type"
+														 value="2" <?php if ($for_sale_val != 0) {
+													echo "checked";
+												} ?>/></span>
 											<span><img src="<?php echo base_url();?>assets/images/orenge_mark.png" alt="" /></span>
 											<span> <?php echo $this->lang->line('search_header_for_sale');?></span>
 										</td>
@@ -455,7 +461,10 @@ function list_of_savesearch() {
 								<tbody <?php echo $style;?>>
 									<tr>
 										<td>
-											<span><input type="radio" id="contract" name="contract_type" value="1" onclick="return check_param();" <?php echo $check;?> <?php if( $for_rent_val != 0 ) { echo "checked"; } ?>/></span> 
+											<span><input type="radio" id="contract" name="contract_type" value="1"
+														 onclick="return check_param();" <?php echo $check; ?> <?php if ($for_rent_val != 0) {
+													echo "checked";
+												} ?>/></span>
 											<span><img src="<?php echo base_url();?>assets/images/blue_mark.png" alt="" /></span>
 											<span><?php echo $this->lang->line('search_header_for_rent');?></span>
 										</td>
@@ -465,7 +474,10 @@ function list_of_savesearch() {
 								<tbody>
 									<tr>
 										<td>
-											<span><input type="radio" name="posted_by" value="all" <?php if( $by_all_val == 'all' ) { echo "checked"; } ?> /></span> 
+											<span><input type="radio" name="posted_by"
+														 value="all" <?php if ($by_all_val == 'all') {
+													echo "checked";
+												} ?> /></span>
 											<span><?php echo $this->lang->line('search_header_by_all_advertisers');?></span>
 										</td>
 										<td class="basic_imount">( <?php echo $by_agency + $by_owner; ?> )</td>
@@ -474,7 +486,10 @@ function list_of_savesearch() {
 								<tbody>
 									<tr>
 										<td>
-											<span><input type="radio" name="posted_by" value="3" <?php if( $by_agency_val != 0 ) { echo "checked"; } ?> /></span> 
+											<span><input type="radio" name="posted_by"
+														 value="3" <?php if ($by_agency_val != 0) {
+													echo "checked";
+												} ?> /></span>
 											<span><?php echo $this->lang->line('search_header_by_agency');?></span>
 										</td>
 										<td class="basic_imount">( <?php echo $by_agency; ?> )</td>

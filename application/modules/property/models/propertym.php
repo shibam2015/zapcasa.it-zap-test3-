@@ -923,7 +923,7 @@ class propertym extends CI_Model {
 					(SELECT msg_date FROM zc_property_message_info as tmp
 						WHERE
 						(pm.user_id_to=" . $uid . " AND pm.msg_to_delete='0' AND tmp.property_id=pm.property_id AND tmp.msg_grp_id=pm.msg_grp_id)
-						ORDER BY msg_date DESC LIMIT 1) as odate,
+						ORDER BY msg_date,msg_id DESC LIMIT 1) as odate,
 					(SELECT suspention_status FROM zc_property_details
 						WHERE
 						property_id=pm.property_id) as suspention_status,
@@ -1054,7 +1054,7 @@ class propertym extends CI_Model {
 	public function get_property_msg($msg_grp_id){
 		$this->db->where('msg_grp_id =',$msg_grp_id);
 		//$this->db->where('msg_to_delete =',0);
-		$this->db->order_by("msg_date", "asc");
+		$this->db->order_by("msg_date", "desc");
 		//$this->db->limit($limit, $start);
 		$query = $this->db->get("zc_property_message_info");
 		//echo "===========".$this->db->last_query();
@@ -1330,16 +1330,20 @@ class propertym extends CI_Model {
 	public function saved_search($new_data,$save_search_id = 0,$save_search_flag = 'new_save_search' ){
 		//echo '<pre>';print_r($new_data);echo $save_search_flag; die;
 		if( $save_search_id == 0 ) {
+			//echo"11111";
 			$this->db->insert('zc_save_search', $new_data);
 			return $saved_id = $this->db->insert_id();
 		} else if( $save_search_flag == "new_save_search" ) {
+			//echo"2222";
 			$this->db->insert('zc_save_search', $new_data);
 			return $saved_id = $this->db->insert_id();
 		} else if( $save_search_flag == "update_save_search" ) {
+			//echo"3333";
 			$this->db->where('saved_id', $save_search_id);
 			$this->db->update('zc_save_search', $new_data);
 			return 1;
 		}else {
+			//echo"44444";
 			$this->db->where('saved_id', $save_search_id);
 			$this->db->update('zc_save_search', $new_data);
 			return 1;
