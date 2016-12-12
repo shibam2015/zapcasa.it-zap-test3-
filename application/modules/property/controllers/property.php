@@ -761,7 +761,7 @@ class property extends CI_Controller {
 			chmod('./assets/uploads/Property/' . $new_file, 0777);
 		}
 		$files = $_FILES;
-		//echo '<pre>';print_r($files);die;
+		//echo '<pre>';print_r($files);
 		$cpt = count($_FILES['userfile']['name']);
 		for ($i = 0; $i < $cpt; $i++) {
 			$_FILES['userfile']['name'] = $files['userfile']['name'][$i];
@@ -769,7 +769,8 @@ class property extends CI_Controller {
 			$_FILES['userfile']['tmp_name'] = $files['userfile']['tmp_name'][$i];
 			$_FILES['userfile']['error'] = $files['userfile']['error'][$i];
 			$_FILES['userfile']['size'] = $files['userfile']['size'][$i];
-			$upload_path = 'assets/uploads/Property/' . $new_file;
+			$upload_path = 'assets/uploads/Property/' . $new_file . "/thumb_860_482/";
+			//echo '<pre>';print_r($upload_path);die;
 			$this->upload->initialize($this->set_upload_options($upload_path));
 			if ($_FILES['userfile']['name'] != '') {
 				$this->upload->do_upload();
@@ -801,7 +802,7 @@ class property extends CI_Controller {
 				//$this->createImageWithVariousHeightWidth($fileExtension, $dfile1, $dfile1, $file_names, $new_width1, $new_height1);
 				//$resizeUploadedImage1 = $this->resizeUploadedImage($original_size[0],$original_size[1],'productimage241');
 				$imgData1 = array(
-					'sourcePath' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
+					'sourcePath' => "./assets/uploads/Property/" . $new_file . "/thumb_860_482/" . $file_names,
 					'destinationPath' => "./assets/uploads/Property/" . $new_file . "/thumb_860_482/" . $file_names,
 					//'imageSize' => $resizeUploadedImage1['width'].'x'.$resizeUploadedImage1['height']
 					'imageSize' => $new_width1 . 'x' . $new_height1,
@@ -916,10 +917,12 @@ class property extends CI_Controller {
 			mkdir('./assets/uploads/Property/' . $new_file, 0777, true);
 			chmod('./assets/uploads/Property/' . $new_file, 0777);
 		}
+
 		$config['upload_path'] = './assets/uploads/Property/'.$new_file;
 		$config['allowed_types'] = 'gif|jpg|jpeg|png|GIF|JPEG|JPG|PNG';
 		$config['encrypt_name']=TRUE;
 		$this->load->library('upload', $config);
+		//echo '<pre>';print_r($config);die;
 		if ( ! $this->upload->do_upload($form_field_name)){
 			$errors = $this->upload->display_errors();
 		} else {
@@ -2491,8 +2494,11 @@ class property extends CI_Controller {
 			$_FILES['userfile']['tmp_name'] = $files['userfile']['tmp_name'][$i];
 			$_FILES['userfile']['error'] = $files['userfile']['error'][$i];
 			$_FILES['userfile']['size'] = $files['userfile']['size'][$i];
-			$upload_path = 'assets/uploads/Property/' . $new_file;
+			$upload_path = 'assets/uploads/Property/' . $new_file . "/thumb_860_482/";
+
 			$this->upload->initialize($this->set_upload_options($upload_path));
+			//echo '<pre>';print_r($upload_path);
+
 			if ($_FILES['userfile']['name'] != '') {
 
 				$this->upload->do_upload();
@@ -2522,12 +2528,13 @@ class property extends CI_Controller {
 				//$this->createImageWithVariousHeightWidth($fileExtension, $dfile1, $dfile1, $file_names, $new_width1, $new_height1);
 				//$resizeUploadedImage1 = $this->resizeUploadedImage($original_size[0],$original_size[1],'productimage241');
 				$imgData1 = array(
-					'sourcePath' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
+					'sourcePath' => "./assets/uploads/Property/" . $new_file . "/thumb_860_482/" . $file_names,
 					'destinationPath' => "./assets/uploads/Property/" . $new_file . "/thumb_860_482/" . $file_names,
 					//'imageSize' => $resizeUploadedImage1['width'].'x'.$resizeUploadedImage1['height']
 					'imageSize' => $new_width1 . 'x' . $new_height1,
 					'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
 				);
+				//echo '<pre>';print_r($imgData1);die;
 				CreateImageUsingImageMagicWithGravity($imgData1);
 				$this->setWatermarkImage("./assets/uploads/Property/" . $new_file . "/thumb_860_482/" . $file_names, "./assets/uploads/Property/" . $new_file . "/thumb_860_482/" . $file_names);
 				/*
