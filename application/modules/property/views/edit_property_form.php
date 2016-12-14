@@ -373,7 +373,9 @@ $(document).ready(function() {
 							$main_image=get_perticular_field_value('zc_property_img','file_name'," and property_id='".$property_details[0]['property_id']."' and img_type='main_image'");
 							if($main_image!=''){
 							?>
-                            <img id="img_1" src="<?php echo base_url();?>assets/uploads/Property/Property<?php echo $property_details[0]['property_id'];?>/<?php echo $main_image;?>" alt="" width="142" height="140" />					
+                                <img id="img_1"
+                                     src="<?php echo base_url();?>assets/uploads/Property/Property<?php echo $property_details[0]['property_id'];?>/thumb_860_482/<?php echo $main_image;?>"
+                                     alt="" width="142" height="140"/>
                             <div class="my_style_browse_btn">
 								<input type='file' id="imgInp1" name="userfile[]">
 							</div>
