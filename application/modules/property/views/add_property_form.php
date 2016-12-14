@@ -29,13 +29,13 @@ $(document).ready(function() {
 			return this.optional(element) || /^(?:\d+|\d{1,3}(?:\.\d{3})+)(?:,\d+)?$/.test(value) || /^(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d+)?$/.test(value);
 		}
 	});
-});    
+});
 </script>
 </head>
 <body class="noJS">
     <script type="text/javascript">
-        var bodyTag = document.getElementsByTagName("body")[0];        
-        bodyTag.className = bodyTag.className.replace("noJS", "hasJS");        
+        var bodyTag = document.getElementsByTagName("body")[0];
+        bodyTag.className = bodyTag.className.replace("noJS", "hasJS");
     </script>
     <!------ Header part -------------->
     <!--header-->
@@ -47,13 +47,15 @@ $(document).ready(function() {
         </div>
     </div>
     <!----- login pop up start  ---------------------->
-    <?php $this->load->view("_include/login_user"); ?>          
+    <?php $this->load->view("_include/login_user"); ?>
     <!----- login pop up end ---------------------->
     <!------ body part -------------->
     <!------ body part -------------->
     <div class="main">
         <div id="breadcrumb" class="fk-lbreadbcrumb newvd">
-            <span><a href="<?php echo base_url();?>"><?php echo $this->lang->line('advertise_details_home');?></a></span> > 
+            <span><a
+                    href="<?php echo base_url(); ?>"><?php echo $this->lang->line('advertise_details_home'); ?></a></span>
+            >
             <span><?php echo $this->lang->line('add_property_form_add_property');?></span>
         </div>
         <ul class="listing-tabs">
@@ -63,7 +65,7 @@ $(document).ready(function() {
 			<li class="delete-tab"><a href="#">Delete account</a></li>-->
         </ul>
         <?php
-		$attributes = array('class' => 'add_property_form', 'id' => 'register');            
+        $attributes = array('class' => 'add_property_form', 'id' => 'register');
 		echo form_open_multipart('property/add_property_form', $attributes);
 		$uid=$this->session->userdata( 'user_id' );
 		$user_type=get_perticular_field_value('zc_user','user_type'," and user_id='".$uid."'");
@@ -113,7 +115,7 @@ $(document).ready(function() {
                                 <?php foreach($contract_type as $keyContract=>$valContract): ?>
                                 <option value="<?php echo $keyContract; ?>"><?php echo $valContract; ?></option>
                                 <?php endforeach; ?>
-                            </select>                            
+                            </select>
                         </div>
                         <div class="cat_select" name="category_id" id="category_id" >
                             <label style="display:block;">
@@ -123,7 +125,7 @@ $(document).ready(function() {
                             <label class="category_error" style="display:none;font-weight:normal"></label>
 							<select name="category" id="category" onChange="get_sub_category(this.value);typology_adjustment(this.value);display_things(this.value);" class="required"  >
                                 <option value=""><?php echo $this->lang->line('add_property_form_select_a_category');?></option>
-                            </select>                            
+                            </select>
                         </div>
                         <div class="cat_select" style="display:none;" id="sub_category_area" >
                             <label style="display:block;">
@@ -133,7 +135,7 @@ $(document).ready(function() {
                             <label class="sub_category_error" style="display:none;font-weight:normal"></label>
                             <select name="sub_category" id="sub_category" onChange="typology_adjustment(this.value);" class="required">
                                 <option value="0"><?php echo $this->lang->line('add_property_form_select_a_sub_category');?></option>
-                            </select>                            
+                            </select>
                         </div>
                     </div>
                     <div class="heading"><strong><?php echo $this->lang->line('add_property_form_where_is_the_property');?></strong></div>
@@ -163,7 +165,7 @@ $(document).ready(function() {
 							</label>
 							<label class="error" for="city" generated="true" style="display:none;font-weight:normal"></label>
                             <select name="city" id="city"  class="required">
-                                <?php 
+                                <?php
 								if(set_value('city')==''){
 								?>
                                 <option value="">
@@ -179,7 +181,7 @@ $(document).ready(function() {
 									}
 								}
 								?>
-                            </select>                            
+                            </select>
                         </div>
                         <div class="cat_select">
                             <label style="display:block;">
@@ -212,7 +214,12 @@ $(document).ready(function() {
 								<font style="color:#f33038;">*</font><?php echo $this->lang->line('add_property_price');?>
 							</label>
 							<label id="special_err_price" class="error" for="input_price" generated="true" style="display:none;font-weight:normal"></label>
-                            <input type="text" name="price" placeholder="<?php echo $this->lang->line('add_property_price_field');?>" id="input_price" onKeyPress="return unchecked_radio();" style="width:350px !important;" value="0,00" class="required number groupOfCurrencyBox">
+                            <!--<label class="error" for="input_price" generated="true" style="display:none;font-weight:normal"></label>-->
+                            <input type="text" name="input_price"
+                                   placeholder="<?php echo $this->lang->line('add_property_price_field'); ?>"
+                                   id="input_price" onKeyPress="return unchecked_radio();"
+                                   style="width:350px !important;" value="0,00"
+                                   class="required number groupOfCurrencyBox1">
                         </div>
                         <div class="radio_text" style="padding:0;line-height:40px;">
                             <span> <?php echo $this->lang->line('add_property_ok');?> </span>
@@ -301,7 +308,9 @@ $(document).ready(function() {
                             <label id="special_err" class="error" for="imgInp1" generated="true" style="display:none;width:100%;margin:5px 0"></label>
                         </div>
                         <div class="property_picture" >
-                            <img id="img_1" src="<?php echo base_url();?>assets/images/<?php echo $this->lang->line('add_property_no_proimg_filename');?>" alt="" width="142" height="140" />				
+                            <img id="img_1"
+                                 src="<?php echo base_url(); ?>assets/images/<?php echo $this->lang->line('add_property_no_proimg_filename'); ?>"
+                                 alt="" width="142" height="140"/>
                             <div class="my_style_browse_btn"> <input type='file' id="imgInp1"  name="userfile[]" class="required" /></div>
                             <div class="cross_btn" style="display:none;"></div>
                         </div>
@@ -471,7 +480,8 @@ $(document).ready(function() {
 								</label>
 								<label class="error" for="availabilty" generated="true" style="display:none;font-weight:normal;width:100%;"></label>
                                 <p>
-									<input type="radio" name="availabilty" id="avail_sp" class="required" value='0'> <?php echo $this->lang->line('add_property_form_availability_vacent');?>  
+                                    <input type="radio" name="availabilty" id="avail_sp" class="required"
+                                           value='0'> <?php echo $this->lang->line('add_property_form_availability_vacent'); ?>
                                     <input type="radio" name="availabilty" id="avail_sp" class="required" value='1'> <?php echo $this->lang->line('add_property_form_availability_occupated');?>
                                 </p>
                             </div>
@@ -482,7 +492,8 @@ $(document).ready(function() {
 								<label class="error" for="smokers" generated="true" style="display:none;font-weight:normal;width:100%;"></label>
                                 <p>
 									<input type="radio" name="smokers" id="smokers_space"class="required" value="0"> <?php echo $this->lang->line('add_property_form_smokers_allowed');?>
-                                    <input type="radio" name="smokers" id="smokers_space" class="required" value="1"> <?php echo $this->lang->line('add_property_form_smokers_not_allowed');?>  
+                                    <input type="radio" name="smokers" id="smokers_space" class="required"
+                                           value="1"> <?php echo $this->lang->line('add_property_form_smokers_not_allowed'); ?>
                                 </p>
                             </div>
                             <div class="cat_select" id="pets">
@@ -492,7 +503,8 @@ $(document).ready(function() {
 								<label class="error" for="pets" generated="true" style="display:none;font-weight:normal;width:100%;"></label>
                                 <p>
 									<input type="radio" name="pets" id="pet_val" class="required" value="0"> <?php echo $this->lang->line('add_property_form_pets_allowed');?>
-                                    <input type="radio" name="pets" id="pet_val" class="required" value="1"> <?php echo $this->lang->line('add_property_form_pets_not_allowed');?>  
+                                    <input type="radio" name="pets" id="pet_val" class="required"
+                                           value="1"> <?php echo $this->lang->line('add_property_form_pets_not_allowed'); ?>
                                 </p>
                             </div>
                         </div>
@@ -532,12 +544,16 @@ $(document).ready(function() {
 					</div>
                     <div class="row8">
                         <textarea rows="4" cols="40" id="field" name="description" onKeyUp="countChar(this)" class="required"></textarea>
-                        <div  style="float:left;">(<span id="charNum">1000</span> <?php echo $this->lang->line('add_property_form_characters_left');?>)</div>                        
+
+                        <div style="float:left;">(<span
+                                id="charNum">1000</span> <?php echo $this->lang->line('add_property_form_characters_left'); ?>
+                            )
+                        </div>
                     </div>
                 </div>
                 <div class="clear"></div>
                 <?php
-				$uid=$this->session->userdata( 'user_id' );                    
+                $uid = $this->session->userdata('user_id');
 				$user_type=get_perticular_field_value('zc_user','user_type'," and user_id='".$uid."'");
 				$posting_property_limit=get_perticular_field_value('zc_user','posting_property_limit'," and user_id='".$uid."'");
 				if($posting_property_limit=='0'){
@@ -548,9 +564,9 @@ $(document).ready(function() {
 						$posting_limit=get_perticular_field_value('zc_settings','meta_value'," and settings_id='4'");
 					}
 				}else{
-					$posting_limit=$posting_property_limit;                    
+                    $posting_limit = $posting_property_limit;
 				}
-				$total_prop_post=get_perticular_count('zc_property_details'," and property_post_by='".$uid."' and property_status='2'");                    
+                $total_prop_post = get_perticular_count('zc_property_details', " and property_post_by='" . $uid . "' and property_status='2'");
 				$remain=$posting_limit-$total_prop_post;
 				if($remain<=0){
 				?>
@@ -576,7 +592,7 @@ $(document).ready(function() {
                 </div>
                 <?php
 				}
-                    
+
 				?>
 				<input type="hidden" name="btnSubmit" value="<?php echo $this->lang->line('add_property_form_button_submit');?>">
                 <div class="clear"></div>
@@ -600,7 +616,7 @@ $(document).ready(function() {
                             <div>
                                 <span style="width:100%">
                                 <img src="<?php echo base_url();?>assets/images/Loader.gif" alt="" style="padding-left: 47%">
-                                </span> 
+                                </span>
                                 <div class="clear"></div>
                             </div>
                             <p><br></p>
@@ -672,7 +688,7 @@ $(document).ready(function() {
                 $("#avail_sp").removeClass('required');
                 $("#smokers_space").removeClass('required');
                 $("#pet_val").removeClass('required');
-            }            
+            }
 
         	if (str == "ROM") {
         		document.getElementById("surface_area").style.display = "none";
@@ -829,7 +845,7 @@ $(document).ready(function() {
         		$("#add_occupation").removeClass('required');
         		$("#smokers_space").removeClass('required');
         		/////////add removed ends///////////////////////
-               
+
         	}
         	if (str == "RES" || str == "BUS") {
         		document.getElementById("surface_area").style.display = "block";
@@ -874,7 +890,7 @@ $(document).ready(function() {
         		$("#pet_val").removeClass('required');
         		$("#smokers_space").removeClass('required');
         		/////////add removed ends///////////////////////
-        	}            
+            }
 
         }
         function get_sub_category(str) {
@@ -1091,13 +1107,13 @@ $(document).ready(function() {
 				frmSubmit(submitBtnVal);
         	}, 5000);
 		}
-        /*	
+        /*
         $('#save_draft').click(function(){
         		$("#register").validate({
            ignore: ".ignore"
         })
         		//document.getElementById("register").submit();
-        });*/         
+         });*/
 		$(document).ready(function(){
 			$('#save_draft').click(function(draftClicked){
 				var contract = $('#contract').val();
@@ -1130,15 +1146,25 @@ $(document).ready(function() {
 				loaderCall('Save Draft');
 				draftClicked.preventDefault();
 				//document.getElementById("register").submit();
-			});			
+            });
 			$("#register").validate({
 				rules: {
 					zip: {digits: true},
-					url: {youtube: "#url"}
+                    url: {youtube: "#url"},
+                    input_price: {
+                        required: true,
+                        number: true,
+                        min: 1
+                    }
 				},
 				messages: {
 					zip: {digits: "<?php echo $this->lang->line('add_property_form_please_provide_a_digits_only');?>"},
-					url: {alphabetsnspace: "<?php echo $this->lang->line('add_property_form_please_enter_valid_url');?>",}
+                    url: {alphabetsnspace: "<?php echo $this->lang->line('add_property_form_please_enter_valid_url');?>"},
+                    input_price: {
+                        required: "<?php echo $this->lang->line('inbox_this_field_is_required');?>",
+                        number: "<?php echo $this->lang->line('add_property_form_please_provide_a_digits_only');?>",
+                        min: "<?php echo $this->lang->line('add_property_form_price_min');?>"
+                    }
 				},submitHandler: function (form){
 					$("#regboxId").hide();
 					$("#form_submit_loading_area").show();

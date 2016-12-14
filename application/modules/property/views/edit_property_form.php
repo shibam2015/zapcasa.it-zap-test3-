@@ -279,7 +279,11 @@ $(document).ready(function() {
                                 // echo $price;exit;
                                 ?>
                             <!-- <input type="text" name="price" placeholder="<?php //echo $this->lang->line('edit_property_price_field');?>)" id="input_price" onKeyPress="return unchecked_radio();" style="width:350px !important;" min="1" class="required number groupOfCurrencyBox" value="<?php //echo $price;?>"> -->
-                            <input type="text" name="price" placeholder="<?php echo $this->lang->line('add_property_price_field');?>" id="input_price" onKeyPress="return unchecked_radio();" style="width:350px !important;" value="<?php echo $price;?>" class="required number groupOfCurrencyBox">
+                            <input type="text" name="input_price"
+                                   placeholder="<?php echo $this->lang->line('add_property_price_field'); ?>"
+                                   id="input_price" onKeyPress="return unchecked_radio();"
+                                   style="width:350px !important;" value="<?php echo $price; ?>"
+                                   class="required number groupOfCurrencyBox">
                         </div>
                         <div class="radio_text" style="padding:0;line-height:40px;">
                             <span> <?php echo $this->lang->line('edit_property_ok');?> </span>
@@ -1376,12 +1380,22 @@ $(document).ready(function() {
 			$("#register").validate({
 				rules: {
 					zip: {digits: true},
-					url: {youtube: "#url"}
+                    url: {youtube: "#url"},
+                    input_price: {
+                        required: true,
+                        number: true,
+                        min: 1
+                    }
 				},
 				messages: {
 					zip: {digits: "<?php echo $this->lang->line('edit_property_form_please_provide_a_digits_only'); ?>"},
 					url: {alphabetsnspace: "<?php echo $this->lang->line('edit_property_form_please_enter_valid_url'); ?>",}
-				},submitHandler: function (form){
+                    input_price: {
+                        required: "<?php echo $this->lang->line('inbox_this_field_is_required');?>",
+                        number: "<?php echo $this->lang->line('add_property_form_please_provide_a_digits_only');?>",
+                        min: "<?php echo $this->lang->line('add_property_form_price_min');?>"
+                    },
+                    submitHandler: function (form) {
 					$("#regboxId").hide();
 					$("#form_submit_loading_area").show();
 					setTimeout(function(){

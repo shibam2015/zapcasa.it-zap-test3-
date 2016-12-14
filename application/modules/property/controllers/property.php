@@ -513,7 +513,7 @@ class property extends CI_Controller {
 						$price='';
 						$private_nagotiation='1';
 					}else{
-						$pricee=$this->input->post('price');
+						$pricee = $this->input->post('input_price');
 						//echo '<br>';
 						$pricees=floatval(str_replace(',', '.', str_replace('.', '', $pricee)));
 						$price=$pricees;
@@ -814,7 +814,7 @@ class property extends CI_Controller {
 					'width' => 161,
 					'height' => 241,
 					//'imageSize' => $new_width1 . 'x' . $new_height1,
-					'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
+					//'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
 				);
 				$this->image_lib->initialize($config);
 				$this->image_lib->resize();
@@ -839,14 +839,28 @@ class property extends CI_Controller {
 				$dfile2 = "assets/uploads/Property/" . $new_file . "/thumb_200_296/";
 				//$this->createImageWithVariousHeightWidth($fileExtension, $dfile2, $dfile2, $file_names, $new_width2, $new_height2);
 				//$resizeUploadedImage2 = $this->resizeUploadedImage($original_size[0],$original_size[1],'productimage170');
-				$imgData2 = array(
+				$upload_data = $this->upload->data();
+				$file_names = $upload_data['file_name'];
+				//$rs_update = $this->usersm->update_profile_1($file_names, $uid);
+				$config = array(
+					'source_image' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
+					'new_image' => "./assets/uploads/Property/" . $new_file . "/thumb_200_296/" . $file_names,
+					'maintain_ratio' => true,
+					'width' => 113,
+					'height' => 170,
+					//'imageSize' => $new_width1 . 'x' . $new_height1,
+					//'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
+				);
+				$this->image_lib->initialize($config);
+				$this->image_lib->resize();
+				/*$imgData2 = array(
 					'sourcePath' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
 					'destinationPath' => "./assets/uploads/Property/" . $new_file . "/thumb_200_296/" . $file_names,
 					//'imageSize' => $resizeUploadedImage2['width'].'x'.$resizeUploadedImage2['height']
 					'imageSize' => $new_width2 . 'x' . $new_height2,
 					'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
 				);
-				CreateImageUsingImageMagicWithGravity($imgData2);
+				CreateImageUsingImageMagicWithGravity($imgData2);*/
 				$this->setWatermarkImage("./assets/uploads/Property/" . $new_file . "/thumb_200_296/" . $file_names, "./assets/uploads/Property/" . $new_file . "/thumb_200_296/" . $file_names);
 				/*
 				 *	50x75
@@ -860,13 +874,27 @@ class property extends CI_Controller {
 				//$dfile3 = "assets/uploads/Property/" . $new_file . "/thumb_92_82/";
 				//$this->createImageWithVariousHeightWidth($fileExtension, $dfile3, $dfile3, $file_names, $new_width3, $new_height3);
 				//$resizeUploadedImage3 = $this->resizeUploadedImage($original_size[0],$original_size[1],'productimage75');
-				$imgData3 = array(
+				$upload_data = $this->upload->data();
+				$file_names = $upload_data['file_name'];
+				//$rs_update = $this->usersm->update_profile_1($file_names, $uid);
+				$config = array(
+					'source_image' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
+					'new_image' => "./assets/uploads/Property/" . $new_file . "/thumb_92_82/" . $file_names,
+					'maintain_ratio' => true,
+					'width' => 92,
+					'height' => 82,
+					//'imageSize' => $new_width1 . 'x' . $new_height1,
+					//'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
+				);
+				$this->image_lib->initialize($config);
+				$this->image_lib->resize();
+				/*$imgData3 = array(
 					'sourcePath' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
 					'destinationPath' => "./assets/uploads/Property/" . $new_file . "/thumb_92_82/" . $file_names,
 					//'imageSize' => $resizeUploadedImage3['width'].'x'.$resizeUploadedImage3['height']
 					'imageSize' => $new_width3 . 'x' . $new_height3
 				);
-				CreateImageUsingImageMagicWithOutGravity($imgData3);
+				CreateImageUsingImageMagicWithOutGravity($imgData3);*/
 
 				/*
 				 *	800x800
@@ -2208,7 +2236,7 @@ class property extends CI_Controller {
 							$private_nagotiation = '1';
 							$update_price = '0.00';
 						} else {
-							$pricee = $this->input->post('price');
+							$pricee = $this->input->post('input_price');
 							//echo '<br>';
 							$pricees = floatval(str_replace(',', '.', str_replace('.', '', $pricee)));
 							$price = $pricees;

@@ -2573,5 +2573,6 @@ $lang['inbox_this_property_deleted'] = 'Property has been deleted. No longer ava
 
 $lang['change_password_you_enter_a_wrong_password'] = "Invalid current password, please try again!";
 $lang['change_password_new_password_must_be_different'] = "You can't choose your old password as new password. Please choose different one.";
+$lang[add_property_form_price_min] = "Please Enter a Mininum one Value ";
 /* Custom added lines */
 ?>
