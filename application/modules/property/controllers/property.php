@@ -15,6 +15,7 @@ class property extends CI_Controller {
         parent::__construct();
 		$this->load->library('session');
 		$this->load->helper('cookie');
+		$this->load->library('image_lib');
 		if(isset($_COOKIE['lang']) && ($_COOKIE['lang'] == "english")){
 			$this->lang->load('code', 'english');
 		} else {
@@ -556,6 +557,7 @@ class property extends CI_Controller {
 						$new_data['youtube_url']=$this->input->post('url');
 						$new_data['typology']=$this->input->post('typology');
 						$new_data['status']=$this->input->post('status_of_property');
+						$new_data['kind'] = $this->input->post('kind_of_property');
 						if($this->input->post('energy_efficiency')){
 							$new_data['energyclass'] = $this->input->post('energy_efficiency');
 						}
@@ -802,15 +804,28 @@ class property extends CI_Controller {
 				//$dfile1 = "assets/uploads/Property/" . $new_file . "/thumb_860_482/";
 				//$this->createImageWithVariousHeightWidth($fileExtension, $dfile1, $dfile1, $file_names, $new_width1, $new_height1);
 				//$resizeUploadedImage1 = $this->resizeUploadedImage($original_size[0],$original_size[1],'productimage241');
-
-				$imgData1 = array(
-					'sourcePath' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
-					'destinationPath' => "./assets/uploads/Property/" . $new_file . "/thumb_860_482/" . $file_names,
-					//'imageSize' => $resizeUploadedImage1['width'].'x'.$resizeUploadedImage1['height']
-					'imageSize' => $new_width1 . 'x' . $new_height1,
+				$upload_data = $this->upload->data();
+				$file_names = $upload_data['file_name'];
+				//$rs_update = $this->usersm->update_profile_1($file_names, $uid);
+				$config = array(
+					'source_image' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
+					'new_image' => "./assets/uploads/Property/" . $new_file . "/thumb_860_482/" . $file_names,
+					'maintain_ratio' => true,
+					'width' => 161,
+					'height' => 241,
+					//'imageSize' => $new_width1 . 'x' . $new_height1,
 					'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
 				);
-				CreateImageUsingImageMagicWithGravity($imgData1);
+				$this->image_lib->initialize($config);
+				$this->image_lib->resize();
+				//$imgData1 = array(
+				//	'sourcePath' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
+				//	'destinationPath' => "./assets/uploads/Property/" . $new_file . "/thumb_860_482/" . $file_names,
+				//	//'imageSize' => $resizeUploadedImage1['width'].'x'.$resizeUploadedImage1['height']
+				//	'imageSize' => $new_width1 . 'x' . $new_height1,
+				//	'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
+				//);
+				//CreateImageUsingImageMagicWithGravity($imgData1);
 				$this->setWatermarkImage("./assets/uploads/Property/" . $new_file . "/thumb_860_482/" . $file_names, "./assets/uploads/Property/" . $new_file . "/thumb_860_482/" . $file_names);
 				/*
 				 *	113x170
@@ -2285,6 +2300,7 @@ class property extends CI_Controller {
 						$new_data['youtube_url'] = $this->input->post('url');
 						$new_data['typology'] = $this->input->post('typology');
 						$new_data['status'] = $this->input->post('status_of_property');
+						$new_data['kind'] = $this->input->post('kind_of_property');
 						if ($this->input->post('energy_efficiency')) {
 							$new_data['energyclass'] = $this->input->post('energy_efficiency');
 						}

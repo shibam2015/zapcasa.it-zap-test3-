@@ -1704,6 +1704,9 @@ class users extends CI_Controller{
 			if (is_file($dfile_thmb))
 				@unlink($dfile_thmb);
 			/////////////delete image end//////////////////////////
+			if (!is_dir('assets/uploads/thumb_92_82')) {
+				mkdir('./assets/uploads/thumb_92_82', 0777, true);
+			}
 			$upload_data = $this->upload->data();
 			$file_names = $upload_data['file_name'];
 			$rs_update = $this->usersm->update_profile_1($file_names, $uid);
@@ -1738,6 +1741,9 @@ class users extends CI_Controller{
 			if (is_file($dfile_thmb))
 				@unlink($dfile_thmb);
 			/////////////delete image end//////////////////////////
+			if (!is_dir('assets/uploads/thumb_92_82')) {
+				mkdir('./assets/uploads/thumb_92_82', 0777, true);
+			}
 			$upload_data = $this->upload->data();
 			$file_names = $upload_data['file_name'];
 			$rs_update = $this->usersm->update_profile_2($file_names, $uid);

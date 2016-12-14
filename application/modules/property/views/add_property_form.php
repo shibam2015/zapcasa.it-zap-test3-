@@ -794,21 +794,23 @@ $(document).ready(function() {
         		document.getElementById("pets").style.display = "block";
         		document.getElementById("add_feature").style.display = "block";
         		document.getElementById("prop_status").style.display = "block";
-        		var contract_id = $("#contract").val();
+                document.getElementById("property_kind").style.display = "block";
+                document.getElementById("Energy_class").style.display = "block";
+                /*var contract_id = $("#contract").val();
         		if (contract_id == 1) {
-        			document.getElementById("property_kind").style.display = "none";
+                 document.getElementById("property_kind").style.display = "block";
         			//$("#kind_of_property").removeClass('required');
         		} else {
         			document.getElementById("property_kind").style.display = "block";
         			//$("#kind_of_property").addClass('required');
         		}
         		if (contract_id == 1) {
-        			document.getElementById("Energy_class").style.display = "none";
+                 document.getElementById("Energy_class").style.display = "block";
         			$("#energy_efficiency").removeClass('required');
         		} else {
         			document.getElementById("Energy_class").style.display = "block";
         			$("#energy_efficiency").addClass('required');
-        		}
+                 }*/
         		////add required class////////////
         		$("#typology").addClass('required');
         		$("#status_of_property").addClass('required');
