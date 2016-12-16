@@ -1389,21 +1389,22 @@ $(document).ready(function() {
 				},
 				messages: {
 					zip: {digits: "<?php echo $this->lang->line('edit_property_form_please_provide_a_digits_only'); ?>"},
-					url: {alphabetsnspace: "<?php echo $this->lang->line('edit_property_form_please_enter_valid_url'); ?>",}
+					url: {alphabetsnspace: "<?php echo $this->lang->line('edit_property_form_please_enter_valid_url'); ?>"},
                     input_price: {
                         required: "<?php echo $this->lang->line('inbox_this_field_is_required');?>",
                         number: "<?php echo $this->lang->line('add_property_form_please_provide_a_digits_only');?>",
                         min: "<?php echo $this->lang->line('add_property_form_price_min');?>"
                     },
                     submitHandler: function (form) {
-					$("#regboxId").hide();
-					$("#form_submit_loading_area").show();
-					setTimeout(function(){
-						$('#register input[name="btnSubmit"]').val('Submit');
-						document.getElementById("register").submit();
-					}, 5000);
-					return false;
-				}
+    					$("#regboxId").hide();
+    					$("#form_submit_loading_area").show();
+    					setTimeout(function(){
+    						$('#register input[name="btnSubmit"]').val('Submit');
+    						document.getElementById("register").submit();
+    					}, 5000);
+    					return false;
+    				}
+                }
 			});			
 		});
 		$(function() {

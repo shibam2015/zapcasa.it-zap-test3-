@@ -931,7 +931,7 @@ class propertym extends CI_Model {
 						WHERE
 						property_id=pm.property_id) as admin_approval
 
-				FROM zc_property_message_info as pm WHERE (pm.user_id_to=" . $uid . " AND pm.msg_to_delete='0') " . $Where . " GROUP BY pm.msg_grp_id ORDER BY odate DESC LIMIT " . $start . "," . $limit;  // OR (pm.user_id_from=".$uid." AND pm.msg_from_delete='0')
+				FROM (select * from zc_property_message_info where 1=1 and msg_to_delete = '0' and user_id_to = '" . $uid . "' order by msg_date desc) as pm WHERE (pm.user_id_to=" . $uid . " AND pm.msg_to_delete='0') " . $Where . " GROUP BY pm.msg_grp_id ORDER BY odate DESC LIMIT " . $start . "," . $limit;  // OR (pm.user_id_from=".$uid." AND pm.msg_from_delete='0')
 	
 		$query = $this->db->query($sql);
 		#echo "==========".$this->db->last_query();
