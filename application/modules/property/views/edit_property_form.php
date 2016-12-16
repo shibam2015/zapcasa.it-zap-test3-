@@ -274,7 +274,8 @@ $(document).ready(function() {
                                 }
                                 else
                                 {*/
-                                $price=number_format($property_details[0]['price'], 2, ',', '.');
+                                //$price=number_format($property_details[0]['price'], 2, ',', '.');
+                                $price=$property_details[0]['price'];
                                 /*}*/
                                 // echo $price;exit;
                                 ?>
@@ -283,7 +284,7 @@ $(document).ready(function() {
                                    placeholder="<?php echo $this->lang->line('add_property_price_field'); ?>"
                                    id="input_price" onKeyPress="return unchecked_radio();"
                                    style="width:350px !important;" value="<?php echo $price; ?>"
-                                   class="required number groupOfCurrencyBox">
+                                   class="required number ">
                         </div>
                         <div class="radio_text" style="padding:0;line-height:40px;">
                             <span> <?php echo $this->lang->line('edit_property_ok');?> </span>
