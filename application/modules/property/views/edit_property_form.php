@@ -369,7 +369,7 @@ $(document).ready(function() {
 								<?php echo $this->lang->line('edit_property_form_main_image');?>
 								<font color="color:#f33038;">*</font>
 							</label>
-                            <label id="special_err" class="error" for="imgInp1" generated="true" style="display:none;font-weight:normal;"></label>
+                            <label id="special_err" class="error" for="imgInp1" generated="true" style="display:none;width:100%;margin:5px 0"></label>
                         </div>
                         <!--main image-->
                         <div class="property_picture">
@@ -389,7 +389,7 @@ $(document).ready(function() {
 							?>
                             <img id="img_1" src="<?php echo base_url();?>assets/images/<?php echo $this->lang->line('edit_property_no_proimg_filename');?>" alt="" width="142" height="140" />					
                             <div class="my_style_browse_btn">
-								<input type='file' id="imgInp1" name="userfile[]">
+								<input type='file' id="imgInp1" name="userfile[]" class="required">
 							</div>
                             <div class="cross_btn" style="display:none;"></div>
                             <?php
