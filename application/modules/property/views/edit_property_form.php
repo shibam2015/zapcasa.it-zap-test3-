@@ -274,17 +274,16 @@ $(document).ready(function() {
                                 }
                                 else
                                 {*/
-                                //$price=number_format($property_details[0]['price'], 2, ',', '.');
-                                $price=$property_details[0]['price'];
+                                $price=number_format($property_details[0]['price'], 2, ',', '.');
+                                //$price=$property_details[0]['price'];
                                 /*}*/
                                 // echo $price;exit;
                                 ?>
-                            <!-- <input type="text" name="price" placeholder="<?php //echo $this->lang->line('edit_property_price_field');?>)" id="input_price" onKeyPress="return unchecked_radio();" style="width:350px !important;" min="1" class="required number groupOfCurrencyBox" value="<?php //echo $price;?>"> -->
                             <input type="text" name="input_price"
                                    placeholder="<?php echo $this->lang->line('add_property_price_field'); ?>"
                                    id="input_price" onKeyPress="return unchecked_radio();"
                                    style="width:350px !important;" value="<?php echo $price; ?>"
-                                   class="required number ">
+                                   class="required number groupOfCurrencyBox">
                         </div>
                         <div class="radio_text" style="padding:0;line-height:40px;">
                             <span> <?php echo $this->lang->line('edit_property_ok');?> </span>
@@ -1353,6 +1352,9 @@ $(document).ready(function() {
         	}, 5000);
 		}
 		$(document).ready(function(){
+            jQuery.validator.addMethod("input_price", function(value, element) {
+              return this.optional( element ) || value != '0,00';
+            }, '<?php echo $this->lang->line('add_property_form_price_min');?>');
 			$('#save_draft').click(function(draftClicked){
 				var contract = $('#contract').val();
 				var category_id = $('#category').val();
@@ -1384,8 +1386,7 @@ $(document).ready(function() {
                     url: {youtube: "#url"},
                     input_price: {
                         required: true,
-                        number: true,
-                        min: 1
+                        input_price: true
                     }
 				},
 				messages: {

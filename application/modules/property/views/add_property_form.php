@@ -219,7 +219,7 @@ $(document).ready(function() {
                                    placeholder="<?php echo $this->lang->line('add_property_price_field'); ?>"
                                    id="input_price" onKeyPress="return unchecked_radio();"
                                    style="width:350px !important;" value="0,00"
-                                   class="required number groupOfCurrencyBox1">
+                                   class="required number groupOfCurrencyBox">
                         </div>
                         <div class="radio_text" style="padding:0;line-height:40px;">
                             <span> <?php echo $this->lang->line('add_property_ok');?> </span>
@@ -1115,6 +1115,9 @@ $(document).ready(function() {
         		//document.getElementById("register").submit();
          });*/
 		$(document).ready(function(){
+            jQuery.validator.addMethod("input_price", function(value, element) {
+              return this.optional( element ) || value != '0,00';
+            }, '<?php echo $this->lang->line('add_property_form_price_min');?>');
 			$('#save_draft').click(function(draftClicked){
 				var contract = $('#contract').val();
 				var category_id = $('#category').val();
@@ -1153,8 +1156,7 @@ $(document).ready(function() {
                     url: {youtube: "#url"},
                     input_price: {
                         required: true,
-                        number: true,
-                        min: 1
+                        input_price: true,
                     }
 				},
 				messages: {
@@ -1163,7 +1165,7 @@ $(document).ready(function() {
                     input_price: {
                         required: "<?php echo $this->lang->line('inbox_this_field_is_required');?>",
                         number: "<?php echo $this->lang->line('add_property_form_please_provide_a_digits_only');?>",
-                        min: "<?php echo $this->lang->line('add_property_form_price_min');?>"
+                        //input_price: ""
                     }
 				},submitHandler: function (form){
 					$("#regboxId").hide();
