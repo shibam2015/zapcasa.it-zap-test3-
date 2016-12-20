@@ -784,49 +784,25 @@ class property extends CI_Controller {
 				$ratio = $original_size[0] / $original_size[1];
 
 				/*
-				$this->setWatermark('userfile',"assets/uploads/Property/".$new_file."/".$file_names);
-				$fileExtension = pathinfo($_FILES['userfile']['name'], PATHINFO_EXTENSION);
-				$this->setWatermark('userfile',"assets/uploads/Property/".$new_file."/thumb_860_482/".$file_names);
-				$this->setWatermark('userfile',"assets/uploads/Property/".$new_file."/thumb_200_296/".$file_names);
-				$this->setWatermark('userfile',"assets/uploads/Property/".$new_file."/thumb_92_82/".$file_names);
-				$this->setWatermark('userfile',"assets/uploads/Property/".$new_file."/".$file_names);
-				*/
-
-				/*
 				 *	161x241
 				*/
 
 				if (!is_dir('assets/uploads/Property/' . $new_file . '/thumb_860_482')) {
 					mkdir('./assets/uploads/Property/' . $new_file . '/thumb_860_482', 0777, true);
 				}
-				$new_height1 = 161;
-				$new_width1 = 241;    //(int)($new_height3/$ratio)
-				//$dfile1 = "assets/uploads/Property/" . $new_file . "/thumb_860_482/";
-				//$this->createImageWithVariousHeightWidth($fileExtension, $dfile1, $dfile1, $file_names, $new_width1, $new_height1);
-				//$resizeUploadedImage1 = $this->resizeUploadedImage($original_size[0],$original_size[1],'productimage241');
-				$upload_data = $this->upload->data();
-				$file_names = $upload_data['file_name'];
-				//$rs_update = $this->usersm->update_profile_1($file_names, $uid);
+				
 				$config = array(
 					'source_image' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
 					'new_image' => "./assets/uploads/Property/" . $new_file . "/thumb_860_482/" . $file_names,
 					'maintain_ratio' => true,
 					'width' => 161,
 					'height' => 241,
-					//'imageSize' => $new_width1 . 'x' . $new_height1,
-					//'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
 				);
 				$this->image_lib->initialize($config);
 				$this->image_lib->resize();
-				//$imgData1 = array(
-				//	'sourcePath' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
-				//	'destinationPath' => "./assets/uploads/Property/" . $new_file . "/thumb_860_482/" . $file_names,
-				//	//'imageSize' => $resizeUploadedImage1['width'].'x'.$resizeUploadedImage1['height']
-				//	'imageSize' => $new_width1 . 'x' . $new_height1,
-				//	'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
-				//);
-				//CreateImageUsingImageMagicWithGravity($imgData1);
+
 				$this->setWatermarkImage("./assets/uploads/Property/" . $new_file . "/thumb_860_482/" . $file_names, "./assets/uploads/Property/" . $new_file . "/thumb_860_482/" . $file_names);
+				
 				/*
 				 *	113x170
 				*/
@@ -834,34 +810,18 @@ class property extends CI_Controller {
 				if (!is_dir('assets/uploads/Property/' . $new_file . '/thumb_200_296')) {
 					mkdir('./assets/uploads/Property/' . $new_file . '/thumb_200_296', 0777, true);
 				}
-				$new_height2 = 113;
-				$new_width2 = 170;    //(int)($new_height1/$ratio)
-				$dfile2 = "assets/uploads/Property/" . $new_file . "/thumb_200_296/";
-				//$this->createImageWithVariousHeightWidth($fileExtension, $dfile2, $dfile2, $file_names, $new_width2, $new_height2);
-				//$resizeUploadedImage2 = $this->resizeUploadedImage($original_size[0],$original_size[1],'productimage170');
-				$upload_data = $this->upload->data();
-				$file_names = $upload_data['file_name'];
-				//$rs_update = $this->usersm->update_profile_1($file_names, $uid);
+				
 				$config = array(
 					'source_image' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
 					'new_image' => "./assets/uploads/Property/" . $new_file . "/thumb_200_296/" . $file_names,
 					'maintain_ratio' => true,
 					'width' => 113,
 					'height' => 170,
-					//'imageSize' => $new_width1 . 'x' . $new_height1,
-					//'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
 				);
 				$this->image_lib->initialize($config);
 				$this->image_lib->resize();
-				/*$imgData2 = array(
-					'sourcePath' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
-					'destinationPath' => "./assets/uploads/Property/" . $new_file . "/thumb_200_296/" . $file_names,
-					//'imageSize' => $resizeUploadedImage2['width'].'x'.$resizeUploadedImage2['height']
-					'imageSize' => $new_width2 . 'x' . $new_height2,
-					'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
-				);
-				CreateImageUsingImageMagicWithGravity($imgData2);*/
 				$this->setWatermarkImage("./assets/uploads/Property/" . $new_file . "/thumb_200_296/" . $file_names, "./assets/uploads/Property/" . $new_file . "/thumb_200_296/" . $file_names);
+				
 				/*
 				 *	50x75
 				*/
@@ -869,50 +829,30 @@ class property extends CI_Controller {
 				if (!is_dir('assets/uploads/Property/' . $new_file . '/thumb_92_82')) {
 					mkdir('./assets/uploads/Property/' . $new_file . '/thumb_92_82', 0777, true);
 				}
-				$new_height3 = 50;
-				$new_width3 = 75;    //(int)($new_height2/$ratio)
-				//$dfile3 = "assets/uploads/Property/" . $new_file . "/thumb_92_82/";
-				//$this->createImageWithVariousHeightWidth($fileExtension, $dfile3, $dfile3, $file_names, $new_width3, $new_height3);
-				//$resizeUploadedImage3 = $this->resizeUploadedImage($original_size[0],$original_size[1],'productimage75');
-				$upload_data = $this->upload->data();
-				$file_names = $upload_data['file_name'];
-				//$rs_update = $this->usersm->update_profile_1($file_names, $uid);
+				
 				$config = array(
 					'source_image' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
 					'new_image' => "./assets/uploads/Property/" . $new_file . "/thumb_92_82/" . $file_names,
 					'maintain_ratio' => true,
 					'width' => 92,
 					'height' => 82,
-					//'imageSize' => $new_width1 . 'x' . $new_height1,
-					//'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
 				);
 				$this->image_lib->initialize($config);
 				$this->image_lib->resize();
-				/*$imgData3 = array(
-					'sourcePath' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
-					'destinationPath' => "./assets/uploads/Property/" . $new_file . "/thumb_92_82/" . $file_names,
-					//'imageSize' => $resizeUploadedImage3['width'].'x'.$resizeUploadedImage3['height']
-					'imageSize' => $new_width3 . 'x' . $new_height3
-				);
-				CreateImageUsingImageMagicWithOutGravity($imgData3);*/
-
+				
 				/*
 				 *	800x800
 				*/
 
-				$new_height4 = 800;
-				$new_width4 = 800;    //(int)($new_height2/$ratio)
-				//$dfile4 = "assets/uploads/Property/" . $new_file . "/";
-				//$this->createImageWithVariousHeightWidth($fileExtension, $dfile4, $dfile4, $file_names, $new_width4, $new_height4);
-				//$resizeUploadedImage4 = $this->resizeUploadedImage($original_size[0],$original_size[1],'productimage800');
-				$imgData4 = array(
-					'sourcePath' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
-					'destinationPath' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
-					//'imageSize' => $resizeUploadedImage4['width'].'x'.$resizeUploadedImage4['height']
-					'imageSize' => $new_width4 . 'x' . $new_height4,
-					'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
+				$config = array(
+					'source_image' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
+					'new_image' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
+					'maintain_ratio' => true,
+					'width' => 800,
+					'height' => 800,
 				);
-				CreateImageUsingImageMagicWithOutGravitybBigImage($imgData4);
+				$this->image_lib->initialize($config);
+				$this->image_lib->resize();
 				$this->setWatermarkImage("./assets/uploads/Property/" . $new_file . "/" . $file_names, "./assets/uploads/Property/" . $new_file . "/" . $file_names);
 
 				if ($i == 0) {
@@ -985,15 +925,18 @@ class property extends CI_Controller {
 			$original_size = getimagesize($_FILES['user_file_1']['tmp_name']);
 			$fileExtension = pathinfo($_FILES['user_file_1']['name'], PATHINFO_EXTENSION);
 			$resizeUploadedImage = $this->resizeUploadedImage($original_size[0],$original_size[1],'preliminary');
-			//$this->createImageWithVariousHeightWidth($fileExtension, $new_file, $new_file, $file_names, $resizeUploadedImage['width'], $resizeUploadedImage['height']);
-			$imgData = array(
-				'sourcePath' => './assets/uploads/Property/Property'.$property_id.'/'.$dfile_name.'/'.$upload_data['file_name'],
-				'destinationPath' => './assets/uploads/Property/Property'.$property_id.'/'.$dfile_name.'/'.$upload_data['file_name'],
-				'imageSize' => $resizeUploadedImage['width'].'x'.$resizeUploadedImage['height'],
-				'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
+			
+			$config = array(
+				'source_image' => './assets/uploads/Property/Property'.$property_id.'/'.$dfile_name.'/'.$upload_data['file_name'],
+				'new_image' => './assets/uploads/Property/Property'.$property_id.'/'.$dfile_name.'/'.$upload_data['file_name'],
+				'maintain_ratio' => true,
+				'width' => $resizeUploadedImage['width'],
+				'height' => $resizeUploadedImage['height'],
 			);
-			CreateImageUsingImageMagicWithOutGravitybBigImage($imgData);
-			/*$this->setWatermarkImage('./assets/uploads/Property/Property'.$property_id.'/'.$dfile_name.'/'.$upload_data['file_name'],'./assets/uploads/Property/Property'.$property_id.'/'.$dfile_name.'/'.$upload_data['file_name']);*/
+			$this->image_lib->initialize($config);
+			$this->image_lib->resize();
+			//CreateImageUsingImageMagicWithOutGravitybBigImage($imgData);
+			
 		}
 	}
 
@@ -2532,7 +2475,6 @@ class property extends CI_Controller {
 			chmod('./assets/uploads/Property/' . $new_file, 0777);
 		}
 		$files = $_FILES;
-		//echo '<pre>';print_r($files);die;
 		$cpt = count($_FILES['userfile']['name']);
 		for ($i = 0; $i < $cpt; $i++) {
 			$_FILES['userfile']['name'] = $files['userfile']['name'][$i];
@@ -2556,10 +2498,8 @@ class property extends CI_Controller {
 			$this->upload->initialize($this->set_upload_options($upload_path));
 			//echo '<pre>';print_r($upload_path);
 
-			if ($_FILES['userfile']['name'][$i] != '') {
+			if ($_FILES['userfile']['name'] != '') {
 
-				//echo '<pre>';print_r($upload_path);
-				//die();
 				$this->upload->do_upload();
 				$upload_data = $this->upload->data();
 				$file_names = $upload_data['file_name'];
@@ -2568,90 +2508,61 @@ class property extends CI_Controller {
 				$ratio = $original_size[0] / $original_size[1];
 
 				/*
-				$this->setWatermark('userfile','assets/uploads/Property/'.$new_file.'/'.$file_names);
-				$fileExtension = pathinfo($_FILES['userfile']['name'], PATHINFO_EXTENSION);
-
-				$this->setWatermark('userfile',"assets/uploads/Property/".$new_file."/thumb_860_482/".$file_names);
-				$this->setWatermark('userfile',"assets/uploads/Property/".$new_file."/thumb_200_296/".$file_names);
-				$this->setWatermark('userfile',"assets/uploads/Property/".$new_file."/thumb_92_82/".$file_names);
-				$this->setWatermark('userfile',"assets/uploads/Property/".$new_file."/".$file_names);
-				*/
-
-				/*
 				 *	161x241
 				*/
-
-				$new_height1 = 161;
-				$new_width1 = 241;    //(int)($new_height3/$ratio)
-				$dfile1 = "assets/uploads/Property/" . $new_file;
-				//$this->createImageWithVariousHeightWidth($fileExtension, $dfile1, $dfile1, $file_names, $new_width1, $new_height1);
-				//$resizeUploadedImage1 = $this->resizeUploadedImage($original_size[0],$original_size[1],'productimage241');
-				$imgData1 = array(
-					'sourcePath' => "./assets/uploads/Property/" . $new_file ."/". $file_names,
-					'destinationPath' => "./assets/uploads/Property/" . $new_file . "/thumb_860_482/" . $file_names,
-					//'imageSize' => $resizeUploadedImage1['width'].'x'.$resizeUploadedImage1['height']
-					'imageSize' => $new_width1 . 'x' . $new_height1,
-					'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
+				$upload_data = $this->upload->data();
+				$file_names = $upload_data['file_name'];
+				//$rs_update = $this->usersm->update_profile_1($file_names, $uid);
+				$config = array(
+					'source_image' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
+					'new_image' => "./assets/uploads/Property/" . $new_file . "/thumb_860_482/" . $file_names,
+					'maintain_ratio' => true,
+					'width' => 161,
+					'height' => 241
 				);
-				//echo '<pre>';print_r($imgData1);
-				CreateImageUsingImageMagicWithGravity($imgData1);
+				$this->image_lib->initialize($config);
+				$this->image_lib->resize();
+
 				$this->setWatermarkImage("./assets/uploads/Property/" . $new_file . "/thumb_860_482/" . $file_names, "./assets/uploads/Property/" . $new_file . "/thumb_860_482/" . $file_names);
 				/*
 				 *	113x170
 				*/
 
-				$new_height2 = 113;
-				$new_width2 = 170;    //(int)($new_height1/$ratio)
-				$dfile2 = "assets/uploads/Property/" . $new_file . "/thumb_200_296/";
-				
-				//$this->createImageWithVariousHeightWidth($fileExtension, $dfile2, $dfile2, $file_names, $new_width2, $new_height2);
-				//$resizeUploadedImage2 = $this->resizeUploadedImage($original_size[0],$original_size[1],'productimage170');
-				$imgData2 = array(
-					'sourcePath' => "./assets/uploads/Property/" . $new_file ."/". $file_names,
-					'destinationPath' => "./assets/uploads/Property/" . $new_file . "/thumb_200_296/" . $file_names,
-					//'imageSize' => $resizeUploadedImage2['width'].'x'.$resizeUploadedImage2['height']
-					'imageSize' => $new_width2 . 'x' . $new_height2,
-					'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
+				$config = array(
+					'source_image' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
+					'new_image' => "./assets/uploads/Property/" . $new_file . "/thumb_200_296/" . $file_names,
+					'maintain_ratio' => true,
+					'width' => 170,
+					'height' => 113
 				);
-				
-				CreateImageUsingImageMagicWithGravity($imgData2);
+				$this->image_lib->initialize($config);
+				$this->image_lib->resize();
 				$this->setWatermarkImage("./assets/uploads/Property/" . $new_file . "/thumb_200_296/" . $file_names, "./assets/uploads/Property/" . $new_file . "/thumb_200_296/" . $file_names);
 				/*
 				 *	50x75
 				*/
 
-				$new_height3 = 50;
-				$new_width3 = 75;    //(int)($new_height2/$ratio)
-				$dfile3 = "assets/uploads/Property/" . $new_file . "/thumb_92_82/";
-				
-				//$this->createImageWithVariousHeightWidth($fileExtension, $dfile3, $dfile3, $file_names, $new_width3, $new_height3);
-				//$resizeUploadedImage3 = $this->resizeUploadedImage($original_size[0],$original_size[1],'productimage75');
-				$imgData3 = array(
-					'sourcePath' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
-					'destinationPath' => "./assets/uploads/Property/" . $new_file . "/thumb_92_82/" . $file_names,
-					//'imageSize' => $resizeUploadedImage3['width'].'x'.$resizeUploadedImage3['height']
-					'imageSize' => $new_width3 . 'x' . $new_height3
+				$config = array(
+					'source_image' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
+					'new_image' => "./assets/uploads/Property/" . $new_file . "/thumb_92_82/" . $file_names,
+					'maintain_ratio' => true,
+					'width' => 92,
+					'height' => 82
 				);
-				//echo '<pre>';print_r($imgData3);die;
-				CreateImageUsingImageMagicWithOutGravity($imgData3);
-
+				$this->image_lib->initialize($config);
+				$this->image_lib->resize();
 				/*
 				 *	800x800
 				*/
-
-				$new_height4 = 800;
-				$new_width4 = 800;    //(int)($new_height2/$ratio)
-				$dfile4 = "assets/uploads/Property/" . $new_file . "/";
-				//$this->createImageWithVariousHeightWidth($fileExtension, $dfile4, $dfile4, $file_names, $new_width4, $new_height4);
-				//$resizeUploadedImage4 = $this->resizeUploadedImage($original_size[0],$original_size[1],'productimage800');
-				$imgData4 = array(
-					'sourcePath' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
-					'destinationPath' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
-					//'imageSize' => $resizeUploadedImage4['width'].'x'.$resizeUploadedImage4['height']
-					'imageSize' => $new_width4 . 'x' . $new_height4,
-					'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
+				$config = array(
+					'source_image' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
+					'new_image' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
+					'maintain_ratio' => true,
+					'width' => 800,
+					'height' => 800,
 				);
-				CreateImageUsingImageMagicWithOutGravitybBigImage($imgData4);
+				$this->image_lib->initialize($config);
+				$this->image_lib->resize();
 				$this->setWatermarkImage("./assets/uploads/Property/" . $new_file . "/" . $file_names, "./assets/uploads/Property/" . $new_file . "/" . $file_names);
 
 				if ($i == 0) {
@@ -2718,9 +2629,11 @@ class property extends CI_Controller {
 			$errors = $this->upload->display_errors();
 		} else {
 			$img_id = $dfile_name = get_perticular_field_value('zc_property_img', 'img_id', " and property_id='" . $property_id . "' and img_type='preliminary'");
-			$this->propertym->del_property_img($img_id);
 			$dfile_name = get_perticular_field_value('zc_property_img', 'file_name', " and property_id='" . $property_id . "' and img_type='preliminary'");
+			$this->propertym->del_property_img($img_id);
 			$dfile = 'assets/uploads/Property/Property' . $property_id . '/' . $dfile_name;
+
+
 			if (is_file($dfile))
 				@unlink($dfile);
 			$new_file = $dfile;
@@ -2736,14 +2649,19 @@ class property extends CI_Controller {
 			$original_size = getimagesize($_FILES['user_file_1']['tmp_name']);
 			$fileExtension = pathinfo($_FILES['user_file_1']['name'], PATHINFO_EXTENSION);
 			$resizeUploadedImage = $this->resizeUploadedImage($original_size[0], $original_size[1], 'preliminary');
+
 			//$this->createImageWithVariousHeightWidth($fileExtension, $dfile, $dfile, $file_names, $resizeUploadedImage['width'], $resizeUploadedImage['height']);
-			$imgData = array(
-				'sourcePath' => './assets/uploads/Property/Property' . $property_id . '/' . $dfile_name . '/' . $upload_data['file_name'],
-				'destinationPath' => './assets/uploads/Property/Property' . $property_id . '/' . $dfile_name . '/' . $upload_data['file_name'],
-				'imageSize' => $resizeUploadedImage['width'] . 'x' . $resizeUploadedImage['height'],
-				'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
+			unset($config);
+			$config = array(
+				'source_image' => './assets/uploads/Property/Property'.$property_id.'/'.$upload_data['file_name'],
+				'new_image' => './assets/uploads/Property/Property'.$property_ids.'/'.$upload_data['file_name'],
+				'maintain_ratio' => true,
+				'width' => $resizeUploadedImage['width'],
+				'height' => $resizeUploadedImage['height'],
 			);
-			CreateImageUsingImageMagicWithOutGravitybBigImage($imgData);
+			$this->image_lib->initialize($config);
+			$this->image_lib->resize();
+			//CreateImageUsingImageMagicWithOutGravitybBigImage($imgData);
 			/*$this->setWatermarkImage('./assets/uploads/Property/Property'.$property_id.'/'.$dfile_name.'/'.$upload_data['file_name'],'./assets/uploads/Property/Property'.$property_id.'/'.$dfile_name.'/'.$upload_data['file_name']);*/
 		}
 	}

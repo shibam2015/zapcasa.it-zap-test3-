@@ -30,7 +30,7 @@
 
                         <div class="col-sm-2 col-xs-4" data-tag="1d">
 
-                        <a class="fancybox" href="<?php echo $this->config->item('img_path');?>assets/uploads/Property/Property<?php echo $property_imgs['property_id']; ?>/<?php echo $property_imgs['file_name']; ?>"><img src="<?php echo $this->config->item('img_path');?>assets/uploads/Property/Property<?php echo $property_imgs['property_id']; ?>/<?php echo $property_imgs['file_name']; ?>"></a>
+                        <a class="fancybox" href="<?php echo $this->config->item('img_path');?>assets/uploads/Property/Property<?php echo $property_imgs['property_id']; ?>/thumb_860_482/<?php echo $property_imgs['file_name']; ?>"><img src="<?php echo $this->config->item('img_path');?>assets/uploads/Property/Property<?php echo $property_imgs['property_id']; ?>/<?php echo $property_imgs['file_name']; ?>"></a>
 
    						 </div>
 

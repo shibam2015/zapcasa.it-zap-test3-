@@ -26,22 +26,22 @@ function CreateImageUsingImageMagicWithGravity($data)
 	$watermarkLogoPath = $data['watermarkLogoPath'];
 	$imageSize = $data['imageSize'];
 	//echo '<pre>';print_r($data);
-	/* exec ("convert -strip ".$sourcePath." -flatten /
+	 exec ("convert -strip ".$sourcePath." -flatten /
         -resize ".$imageSize."^ -gravity Center -crop ".$imageSize."+0+0 +repage /
         -gravity SouthWest -draw 'image Over 0,0 100,43 'zap_logo.png'' /
-        -background white -alpha remove -quality 80% ".$destinationPath);*/
+        -background white -alpha remove -quality 80% ".$destinationPath);
 
-	return copy($sourcePath, $destinationPath);
+	// return copy($sourcePath, $destinationPath);
 
 }
 function CreateImageUsingImageMagicWithOutGravity($data){
 	$sourcePath = $data['sourcePath'];
 	$destinationPath = $data['destinationPath'];
 	$imageSize = $data['imageSize'];
-	/*exec ("convert -strip ".$sourcePath." -flatten /
+	exec ("convert -strip ".$sourcePath." -flatten /
 			-resize ".$imageSize."^ -gravity Center -crop ".$imageSize."+0+0 +repage /
-			-background white -alpha remove -quality 80% ".$destinationPath);*/
-	return copy($sourcePath, $destinationPath);
+			-background white -alpha remove -quality 80% ".$destinationPath);
+	// return copy($sourcePath, $destinationPath);
 }
 
 // USE THIS FOR BIG IMAGE AND FOR PLANIMETRY
@@ -50,10 +50,10 @@ function CreateImageUsingImageMagicWithOutGravitybBigImage($data){
 	$sourcePath = $data['sourcePath'];
 	$destinationPath = $data['destinationPath'];
 	$imageSize = $data['imageSize'];
-	/*exec ("/usr/local/bin/convert -strip ".$sourcePath." -flatten \
+	exec ("/usr/local/bin/convert -strip ".$sourcePath." -flatten \
 			-resize ".$imageSize." \
-			-background white -alpha remove -quality 80% ".$destinationPath);*/
-	return copy($sourcePath, $destinationPath);
+			-background white -alpha remove -quality 80% ".$destinationPath);
+	// return copy($sourcePath, $destinationPath);
 }
 
 /*

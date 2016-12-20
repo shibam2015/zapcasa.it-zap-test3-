@@ -1269,7 +1269,8 @@ class propertym extends CI_Model {
 			}
 		}
 		if( count($rs) > 0 ) {
-			$sql_search_similar="select * from zc_property_details where contract_id='".$rs[0]['contract_id']."' and typology='".$rs[0]['typology']."' and city='".$rs[0]['city']."' and provience='".$rs[0]['provience']."' and property_id!='".$property_id."' AND property_status='2' ORDER BY price DESC LIMIT 0 , 5 ";
+			//$sql_search_similar="select * from zc_property_details where contract_id='".$rs[0]['contract_id']."' and typology='".$rs[0]['typology']."' and city='".$rs[0]['city']."' and provience='".$rs[0]['provience']."' and property_id!='".$property_id."' AND property_status='2' ORDER BY price DESC LIMIT 0 , 5 ";
+			$sql_search_similar="select a.* from zc_property_details a LEFT JOIN zc_user b on a.property_post_by = b.user_id where b.status = '1' and a.contract_id='".$rs[0]['contract_id']."' and a.typology='".$rs[0]['typology']."' and a.city='".$rs[0]['city']."' and a.provience='".$rs[0]['provience']."' and a.property_id!='".$property_id."' AND a.property_status='2' ORDER BY a.price DESC LIMIT 0 , 5 ";
 			$query_search=$this->db->query($sql_search_similar);
 			if($query_search->num_rows()>0){
 				foreach($query_search->result_array() as $row){

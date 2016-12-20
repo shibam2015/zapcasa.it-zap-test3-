@@ -15,5 +15,13 @@ $hook['display_override'][] = array(
 	'filename' => 'compress.php',
 	'filepath' => 'hooks'
 	);
+
+$hook['post_controller_constructor'] = array(
+                                'class'    => 'Logincheck',
+                                'function' => 'isLogin',
+                                'filename' => 'logincheck.php',
+                                'filepath' => 'hooks'
+                                );
 /* End of file hooks.php */
 /* Location: ./application/config/hooks.php */
+
