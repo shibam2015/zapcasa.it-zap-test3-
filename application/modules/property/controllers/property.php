@@ -2654,7 +2654,7 @@ class property extends CI_Controller {
 			unset($config);
 			$config = array(
 				'source_image' => './assets/uploads/Property/Property'.$property_id.'/'.$upload_data['file_name'],
-				'new_image' => './assets/uploads/Property/Property'.$property_ids.'/'.$upload_data['file_name'],
+				'new_image' => './assets/uploads/Property/Property'.$property_id.'/'.$upload_data['file_name'],
 				'maintain_ratio' => true,
 				'width' => $resizeUploadedImage['width'],
 				'height' => $resizeUploadedImage['height'],
