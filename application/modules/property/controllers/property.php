@@ -1476,8 +1476,8 @@ class property extends CI_Controller {
 		$config["per_page"] = 10;
 		$page = 0;
 		#$all_msgs=$this->propertym->get_property_msg($msg_grp_id);
-		$WHERE = " AND property_id = " . $all_msgs[0]['property_id'];
-		$data["msg_totals"] = $this->propertym->get_msg_detail($uid, $config["per_page"], $page, $WHERE);
+		$WHERE = " AND (pm.user_id_to=". $uid ." OR pm.user_id_from=". $uid .") AND pm.msg_to_delete='0' AND property_id = " . $all_msgs[0]['property_id'];
+		$data["msg_totals"] = $this->propertym->get_msg_detail1($uid, $config["per_page"], $page, $WHERE);
 		$data['check_user_to'] = $this->propertym->check_user_to_status($uid);
 		#echo "<pre> ===>"; print_r($all_msgs);
 		#echo "<pre> ===>"; print_r($data);exit;
