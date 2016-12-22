@@ -32,24 +32,26 @@
 					<i class="entypo-pencil"></i>Edit Property
 				</a>
 				<?php
-				if($property_details[0]['property_status']=='2'){
-					$activeStatus = 'Published&nbsp;&nbsp;&nbsp;';
-					$btn_class = "";
-					$css_class = "entypo-flash";
-					$statusURL = 'data-toggle="modal" data-target="#proSusModal" href="javascript:void(0);"';
-				}                    
 				if($property_details[0]['property_status']=='1'){
-					$activeStatus ='Drafted&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-					$btn_class = "inactive";
-					$css_class = "entypo-pause";
-					$statusURL = 'href="javascript:void(0);"';
-				}
-				if($property_details[0]['suspention_status']=='1'){
-					$activeStatus = 'Inactive';
-					$btn_class = "suspended";
-					$css_class = "entypo-pause";
-					$statusURL = 'href="'.base_url()."property/pro_view_st_change/".$property_details[0]['property_id'].'"';
-				}
+				$activeStatus ='Drafted&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+				$btn_class = "inactive";
+				$css_class = "entypo-pause";
+				$statusURL = 'href="javascript:void(0);"';
+			}
+			if($property_details[0]['property_status']=='2' && $property_details[0]['property_approval'] == '1'){
+				$activeStatus = 'Published&nbsp;&nbsp;&nbsp;';
+				$btn_class = "";
+				$css_class = "entypo-flash";
+				//$statusURL = base_url()."property/status_change/".$property_details[0]['property_id'].$pageLink;
+				$statusURL = 'data-toggle="modal" href="javascript:void()" data-target="#proSusModal"';
+			}                    
+			
+			if($property_details[0]['property_status']=='2' && $property_details[0]['property_approval']=='0'){
+				$activeStatus = 'Inactive';
+				$btn_class = "suspended";
+				$css_class = "entypo-pause";
+				$statusURL = 'href="'.base_url()."property/status_change/".$property_details[0]['property_id'].'"';
+			}
 				?>
 				<a <?php echo $statusURL;?> class="btn btn-success <?php echo $btn_class; ?> btn-sm btn-icon btn-xs">
 					<i class="<?php echo $css_class; ?>"></i><?php echo $activeStatus; ?>

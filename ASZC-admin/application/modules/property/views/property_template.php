@@ -257,6 +257,9 @@
 <?php $this->load->view('inc/footer.php'); ?>
 <?php echo $popups; ?>
 <script type="text/javascript">
+$('[id^="proSusModal"]').on('shown.bs.modal', function() {
+  $(window).scrollTop(0);
+})
 $('.BlockedProFrm').submit(function(eFrm){
 	if($(this).find('textarea[name="blocked_note"]').val()==''){
 		$(this).find('.blcknt').append('<span class="lblReq">This field is required.</span>');
