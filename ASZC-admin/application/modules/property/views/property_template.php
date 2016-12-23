@@ -141,6 +141,13 @@
 						<h5><?php echo stripslashes($proptitle); ?></h5>
 						<h6><?php echo stripslashes($propSecTitle); ?></h6>
 						<p><?php echo stripslashes(substr($property_detail['description'],0,90)); ?></p>
+						<?php
+							if($property_detail['suspention_status'] == '1') {
+						?>
+						<p style="color:red">Property suspended by advertiser</p>
+						<?php
+							}
+						?>
 					</div>
 				</td>
 				<td><?php echo $propertyRefCode; ?></td>

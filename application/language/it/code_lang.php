@@ -2570,7 +2570,7 @@ $lang['cal_december']	= "Dicembre";
 /* Custom added lines */
 
 $lang['prop_not_avilable']	= "proprietà viene eliminata, non è più disponibile";
-
+$lang['add_property_form_price_min'] = "Inserisci un un valore minimo";
 /* Custom added lines */
 
 ?>

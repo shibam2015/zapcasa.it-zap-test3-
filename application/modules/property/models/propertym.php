@@ -1001,23 +1001,8 @@ class propertym extends CI_Model {
 	}
 
 	public function get_send_msg_detail($uid,$limit, $start){
-		/*
-		$sql="SELECT * FROM `zc_property_message_info` where user_id_to='".$uid."'";
-		$query=$this->db->query($sql);
-		if($query->num_rows()>0){
-			foreach($query->result_array() as $row){
-				$data[]=$row;
-			}
-			return $data;
-		}
-		*/
+		
 		$data = array();
-		/*$this->db->where('user_id_from =',$uid);
-		$this->db->where('msg_from_delete =','0');
-		//$this->db->or_where('user_id_from =',$uid);
-		$this->db->group_by("msg_grp_id");
-		$this->db->order_by("msg_date","desc");
-		$this->db->limit($limit, $start);*/
 
 		$sql = "SELECT pm.*,
 					(SELECT msg_date FROM zc_property_message_info as tmp
@@ -1030,7 +1015,7 @@ class propertym extends CI_Model {
 						(SELECT property_approval FROM zc_property_details
 							WHERE
 							property_id=pm.property_id) as admin_approval
-					FROM zc_property_message_info as pm
+					FROM (select * from zc_property_message_info order by msg_date desc) as pm
 					WHERE (pm.user_id_from=" . $uid . " AND pm.msg_from_delete='0') GROUP BY pm.msg_grp_id ORDER BY odate DESC LIMIT " . $start . "," . $limit;  // OR (pm.user_id_from=".$uid." AND pm.msg_from_delete='0')
 
 		$query = $this->db->query($sql);
@@ -1090,7 +1075,7 @@ class propertym extends CI_Model {
 	public function get_property_msg($msg_grp_id){
 		$this->db->where('msg_grp_id =',$msg_grp_id);
 		//$this->db->where('msg_to_delete =',0);
-		$this->db->order_by("msg_date", "desc");
+		$this->db->order_by("msg_date", "asc");
 		//$this->db->limit($limit, $start);
 		$query = $this->db->get("zc_property_message_info");
 		//echo "===========".$this->db->last_query();
