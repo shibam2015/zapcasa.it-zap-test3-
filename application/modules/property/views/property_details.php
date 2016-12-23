@@ -996,11 +996,9 @@ $(document).ready(function() {
 												?>
 												<br><strong style="font-weight:bold;"><?php echo $this->lang->line('property_details_Highlights');?>:</strong>
 												<?php
-													if ($todayDate > $featuredDate) {
 												echo $this->lang->line('property_details_highlights_day')." ".$hightlightedDay." ".$this->lang->line('property_details_highlights_of')." ".$property_lists_featured['number_of_days'];
-													} else {
-														echo "Starts From " . date('d', strtotime($property_lists_featured['start_date'])) . ' ' . $monthName . ' ' . date('Y', strtotime($property_lists_featured['start_date']));;
-													}
+
+
 												}
 												?>
 											</div>
