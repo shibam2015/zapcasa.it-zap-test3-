@@ -260,8 +260,8 @@ class property extends CI_Controller {
 			redirect('errors/error_404.php');
 		}
 		
-		//Advertiser Has Suspended The Property.
-		if($data[0]['suspention_status']==1){
+		//Advertiser Has Suspended The Property or admin have inactive property.
+		if($data[0]['suspention_status']==1 || $data[0]['property_approval']==0){
 			redirect('errors/error_404.php');
 		}
 		$data['contract']=$segments['0'];
@@ -794,9 +794,8 @@ class property extends CI_Controller {
 				$config = array(
 					'source_image' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
 					'new_image' => "./assets/uploads/Property/" . $new_file . "/thumb_860_482/" . $file_names,
-					'maintain_ratio' => true,
-					'width' => 161,
-					'height' => 241,
+					'width' => 241,
+					'height' => 161,
 				);
 				$this->image_lib->initialize($config);
 				$this->image_lib->resize();
@@ -814,9 +813,8 @@ class property extends CI_Controller {
 				$config = array(
 					'source_image' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
 					'new_image' => "./assets/uploads/Property/" . $new_file . "/thumb_200_296/" . $file_names,
-					'maintain_ratio' => true,
-					'width' => 113,
-					'height' => 170,
+					'width' => 170,
+					'height' => 113,
 				);
 				$this->image_lib->initialize($config);
 				$this->image_lib->resize();
@@ -833,7 +831,6 @@ class property extends CI_Controller {
 				$config = array(
 					'source_image' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
 					'new_image' => "./assets/uploads/Property/" . $new_file . "/thumb_92_82/" . $file_names,
-					'maintain_ratio' => true,
 					'width' => 92,
 					'height' => 82,
 				);
@@ -847,7 +844,6 @@ class property extends CI_Controller {
 				$config = array(
 					'source_image' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
 					'new_image' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
-					'maintain_ratio' => true,
 					'width' => 800,
 					'height' => 800,
 				);
@@ -2518,9 +2514,8 @@ class property extends CI_Controller {
 				$config = array(
 					'source_image' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
 					'new_image' => "./assets/uploads/Property/" . $new_file . "/thumb_860_482/" . $file_names,
-					'maintain_ratio' => true,
-					'width' => 161,
-					'height' => 241
+					'width' => 241,
+					'height' => 161
 				);
 				$this->image_lib->initialize($config);
 				$this->image_lib->resize();
@@ -2533,9 +2528,8 @@ class property extends CI_Controller {
 				$config = array(
 					'source_image' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
 					'new_image' => "./assets/uploads/Property/" . $new_file . "/thumb_200_296/" . $file_names,
-					'maintain_ratio' => true,
-					'width' => 170,
-					'height' => 113
+					'width' => 113,
+					'height' => 170
 				);
 				$this->image_lib->initialize($config);
 				$this->image_lib->resize();
@@ -2547,7 +2541,6 @@ class property extends CI_Controller {
 				$config = array(
 					'source_image' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
 					'new_image' => "./assets/uploads/Property/" . $new_file . "/thumb_92_82/" . $file_names,
-					'maintain_ratio' => true,
 					'width' => 92,
 					'height' => 82
 				);
@@ -2559,7 +2552,6 @@ class property extends CI_Controller {
 				$config = array(
 					'source_image' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
 					'new_image' => "./assets/uploads/Property/" . $new_file . "/" . $file_names,
-					'maintain_ratio' => true,
 					'width' => 800,
 					'height' => 800,
 				);

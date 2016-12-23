@@ -84,7 +84,7 @@ class Property extends CI_Controller {
 		$data['pagination'] = $this->pagination->create_links();
 				
 		$data['allFilterProperty'] = get_perticular_count('zc_property_details',"AND property_status!='0'".$sqlMore);
-		$data['activeFilterProperty'] = get_perticular_count('zc_property_details',"AND property_status!='0' AND property_status='2' AND suspention_status='0'".$sqlMore);
+		$data['activeFilterProperty'] = get_perticular_count('zc_property_details',"AND property_status='2' AND property_approval='1'".$sqlMore);
 		$data['inActiveFilterProperty'] = get_perticular_count('zc_property_details',"AND property_status!='0' AND property_approval='0'".$sqlMore);
 		$data['featuredFilterProperty'] = $this->property_model->featuredFilterProperty('1',$sqlMore);
 		$data['suspendedFilterProperty'] = $this->property_model->featuredFilterProperty('0',$sqlMore);
@@ -468,7 +468,6 @@ class Property extends CI_Controller {
 				$config = array(
 					'source_image' => "../assets/uploads/Property/" . $new_file . "/" . $file_names,
 					'new_image' => "../assets/uploads/Property/" . $new_file . "/thumb_860_482/" . $file_names,
-					'maintain_ratio' => true,
 					'width' => 161,
 					'height' => 241
 				);
@@ -483,7 +482,6 @@ class Property extends CI_Controller {
 				$config = array(
 					'source_image' => "../assets/uploads/Property/" . $new_file . "/" . $file_names,
 					'new_image' => "../assets/uploads/Property/" . $new_file . "/thumb_200_296/" . $file_names,
-					'maintain_ratio' => true,
 					'width' => 170,
 					'height' => 113
 				);
@@ -497,7 +495,6 @@ class Property extends CI_Controller {
 				$config = array(
 					'source_image' => "../assets/uploads/Property/" . $new_file . "/" . $file_names,
 					'new_image' => "../assets/uploads/Property/" . $new_file . "/thumb_92_82/" . $file_names,
-					'maintain_ratio' => true,
 					'width' => 92,
 					'height' => 82
 				);
@@ -509,7 +506,6 @@ class Property extends CI_Controller {
 				$config = array(
 					'source_image' => "../assets/uploads/Property/" . $new_file . "/" . $file_names,
 					'new_image' => "../assets/uploads/Property/" . $new_file . "/" . $file_names,
-					'maintain_ratio' => true,
 					'width' => 800,
 					'height' => 800,
 				);

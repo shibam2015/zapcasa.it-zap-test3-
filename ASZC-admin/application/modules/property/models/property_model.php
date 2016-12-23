@@ -1,7 +1,7 @@
 <?php
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Property_model extends CI_Model{
-	public function get_all_property(&$config, $start, $search_property_code, $type, $activetype, $sqlMore){		
+	public function get_all_property(&$config, $start, $search_property_code, $type, $activetype, $sqlMore){
 		$search_property_code = substr($search_property_code,1);
 		if($search_property_code){
 			switch($activetype){
@@ -15,7 +15,7 @@ class Property_model extends CI_Model{
 				case 'activepro':
 					$sqlQuery = "SELECT * FROM (
 						SELECT *, md5(`property_id`) AS `ref_token`
-						FROM `zc_property_details` WHERE `property_status`!='0' AND property_status='2' AND suspention_status='0'
+						FROM `zc_property_details` WHERE property_status='2' AND property_approval='1'
 					) 
 					AS p WHERE `ref_token` LIKE '".$search_property_code."%' ";
 					break;
@@ -42,7 +42,7 @@ class Property_model extends CI_Model{
 							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE `property_status`!='0' AND `property_post_by_type`='2'".$sqlMore;
 							break;
 						case 'activepro':
-							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE `property_status`!='0' AND `property_post_by_type`='2' AND property_status='2' AND suspention_status='0'".$sqlMore;
+							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE `property_status`!='0' AND `property_post_by_type`='2' AND property_status='2'AND property_approval='1'".$sqlMore;
 							break;
 						case 'inactivepro':
 							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE `property_status`!='0' AND `property_post_by_type`='2' AND property_approval='0'".$sqlMore;
@@ -61,7 +61,7 @@ class Property_model extends CI_Model{
 							$sqlQuery = "SELECT * FROM `zc_property_details`".$sqlMore." WHERE 1";
 							break;
 						case 'activepro':
-							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE property_status!='0' AND property_status='2' AND suspention_status='0'".$sqlMore;
+							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE property_status!='0' AND property_status='2' AND property_approval='1'".$sqlMore;
 							break;
 						case 'inactivepro':
 							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE property_status!='0' AND property_approval='0'".$sqlMore;
@@ -80,7 +80,7 @@ class Property_model extends CI_Model{
 							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE `property_status`!='0' AND `property_post_by_type`='2'".$sqlMore;
 							break;
 						case 'activepro':
-							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE `property_status`!='0' AND `property_post_by_type`='2' AND property_status='2' AND suspention_status='0'".$sqlMore;
+							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE `property_status`!='0' AND `property_post_by_type`='2' AND property_status='2' AND property_approval='1'".$sqlMore;
 							break;
 						case 'inactivepro':
 							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE `property_status`!='0' AND `property_post_by_type`='2' AND property_approval='0'".$sqlMore;
@@ -99,7 +99,7 @@ class Property_model extends CI_Model{
 							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE `property_status`!='0' AND `property_post_by_type`='3'".$sqlMore;
 							break;
 						case 'activepro':
-							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE `property_status`!='0' AND `property_post_by_type`='3' AND property_status='2' AND suspention_status='0'".$sqlMore;
+							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE `property_status`!='0' AND `property_post_by_type`='3' AND property_status='2' AND property_approval='1'".$sqlMore;
 							break;
 						case 'inactivepro':
 							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE `property_status`!='0' AND `property_post_by_type`='3' AND property_approval='0'".$sqlMore;
@@ -122,7 +122,7 @@ class Property_model extends CI_Model{
 										)".$sqlMore;
 							break;
 						case 'activepro':
-							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE `property_status`!='0' AND property_status='2' AND suspention_status='0'".$sqlMore;
+							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE `property_status`!='0' AND property_status='2' AND property_approval='1'".$sqlMore;
 							break;
 						case 'inactivepro':
 							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE property_status!='0' AND property_approval='0'".$sqlMore;
@@ -145,7 +145,7 @@ class Property_model extends CI_Model{
 										)".$sqlMore;
 							break;
 						case 'activepro':
-							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE `property_status`!='0' AND property_status='2' AND suspention_status='0'".$sqlMore;
+							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE `property_status`!='0' AND property_status='2' AND property_approval='1'".$sqlMore;
 							break;
 						case 'inactivepro':
 							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE property_status!='0' AND property_approval='0'".$sqlMore;
@@ -168,7 +168,7 @@ class Property_model extends CI_Model{
 										)".$sqlMore;
 							break;
 						case 'activepro':
-							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE `property_status`!='0' AND property_status='2' AND suspention_status='0'".$sqlMore;
+							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE `property_status`!='0' AND property_status='2' AND property_approval='1'".$sqlMore;
 							break;
 						case 'inactivepro':
 							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE property_status!='0' AND property_approval='0'".$sqlMore;
@@ -191,7 +191,7 @@ class Property_model extends CI_Model{
 										)".$sqlMore;
 							break;
 						case 'activepro':
-							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE `property_status`!='0' AND property_status='2' AND suspention_status='0'".$sqlMore;
+							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE `property_status`!='0' AND property_status='2' AND property_approval='1'".$sqlMore;
 							break;
 						case 'inactivepro':
 							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE property_status!='0' AND property_approval='0'".$sqlMore;
@@ -214,7 +214,7 @@ class Property_model extends CI_Model{
 										)".$sqlMore;
 							break;
 						case 'activepro':
-							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE `property_status`!='0' AND property_status='2' AND suspention_status='0'".$sqlMore;
+							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE `property_status`!='0' AND property_status='2' AND property_approval='1'".$sqlMore;
 							break;
 						case 'inactivepro':
 							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE property_status!='0' AND property_approval='0'".$sqlMore;
@@ -233,7 +233,7 @@ class Property_model extends CI_Model{
 							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE 1 = 1".$sqlMore;
 							break;
 						case 'activepro':
-							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE `property_status`!='0' AND property_status='2' AND suspention_status='0'".$sqlMore;
+							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE `property_status`!='0' AND property_status='2' AND property_approval='1'".$sqlMore;
 							break;
 						case 'inactivepro':
 							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE property_status!='0' AND property_approval='0'".$sqlMore;
