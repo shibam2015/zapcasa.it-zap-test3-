@@ -468,7 +468,6 @@ class Property extends CI_Controller {
 				$config = array(
 					'source_image' => "../assets/uploads/Property/" . $new_file . "/" . $file_names,
 					'new_image' => "../assets/uploads/Property/" . $new_file . "/thumb_860_482/" . $file_names,
-					'maintain_ratio' => true,
 					'width' => 161,
 					'height' => 241
 				);
@@ -483,7 +482,6 @@ class Property extends CI_Controller {
 				$config = array(
 					'source_image' => "../assets/uploads/Property/" . $new_file . "/" . $file_names,
 					'new_image' => "../assets/uploads/Property/" . $new_file . "/thumb_200_296/" . $file_names,
-					'maintain_ratio' => true,
 					'width' => 170,
 					'height' => 113
 				);
@@ -497,7 +495,6 @@ class Property extends CI_Controller {
 				$config = array(
 					'source_image' => "../assets/uploads/Property/" . $new_file . "/" . $file_names,
 					'new_image' => "../assets/uploads/Property/" . $new_file . "/thumb_92_82/" . $file_names,
-					'maintain_ratio' => true,
 					'width' => 92,
 					'height' => 82
 				);
@@ -509,7 +506,6 @@ class Property extends CI_Controller {
 				$config = array(
 					'source_image' => "../assets/uploads/Property/" . $new_file . "/" . $file_names,
 					'new_image' => "../assets/uploads/Property/" . $new_file . "/" . $file_names,
-					'maintain_ratio' => true,
 					'width' => 800,
 					'height' => 800,
 				);
