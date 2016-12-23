@@ -2172,8 +2172,10 @@ class property extends CI_Controller {
 					die;*/
 					$property_post_by = $this->session->userdata('user_id');
 					$new_data = array();
+
 					if ($this->input->post('btnSubmit') == 'Save Draft') {
 						$new_data['property_status'] = '1';
+						$new_data['update_time'] = date('Y-m-d');
 						if ($this->input->post('pvt_negotiation') == '1') {
 							$price = '';
 							$private_nagotiation = '1';

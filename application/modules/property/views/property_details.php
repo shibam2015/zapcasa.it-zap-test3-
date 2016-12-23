@@ -255,7 +255,7 @@ $(document).ready(function() {
 												if($suspended_user_type != 4 || $property_lists['suspention_status'] == 0){
 													$desc = nl2br($property_lists['description']);
 													if(strlen($desc) > 100){
-														echo substr($desc,0,100)." ...";
+														echo substr($desc, 0, 50) . " ...";
 													} else {
 														echo $desc;	
 													}
@@ -360,7 +360,7 @@ $(document).ready(function() {
 												?>
 												<?php
 												if($property_lists['update_time']!='0000-00-00'){
-													?><br>													
+													?><br>
 													<?php
 													switch(date('m',strtotime($property_lists['update_time']))){
 														case '01':
@@ -540,7 +540,7 @@ $(document).ready(function() {
 													<?php 
 													$desc = nl2br($draft_property_lists['description']);	
 													if(strlen($desc) > 100){
-														echo substr($desc,0,100)." ...";
+														echo substr($desc, 0, 50) . " ...";
 													}else{
 														echo $desc;	
 													}
@@ -634,6 +634,51 @@ $(document).ready(function() {
 														break;
 												}
 												echo '<strong style="font-weight:bold;">'.$this->lang->line('property_details_in_draft').':'.'</strong> '.date('d',strtotime($draft_property_lists['posting_time'])).' '.$monthName.' '.date('Y',strtotime($draft_property_lists['posting_time']));
+												?>
+												<?php
+												if ($property_lists['update_time'] != '0000-00-00') {
+													?><br>
+													<?php
+													switch (date('m', strtotime($property_lists['update_time']))) {
+														case '01':
+															$monthName = $this->lang->line('cal_jan');
+															break;
+														case '02':
+															$monthName = $this->lang->line('cal_feb');
+															break;
+														case '03':
+															$monthName = $this->lang->line('cal_mar');
+															break;
+														case '04':
+															$monthName = $this->lang->line('cal_apr');
+															break;
+														case '05':
+															$monthName = $this->lang->line('cal_may');
+															break;
+														case '06':
+															$monthName = $this->lang->line('cal_jun');
+															break;
+														case '07':
+															$monthName = $this->lang->line('cal_jul');
+															break;
+														case '08':
+															$monthName = $this->lang->line('cal_aug');
+															break;
+														case '09':
+															$monthName = $this->lang->line('cal_sep');
+															break;
+														case '10':
+															$monthName = $this->lang->line('cal_oct');
+															break;
+														case '11':
+															$monthName = $this->lang->line('cal_nov');
+															break;
+														case '12':
+															$monthName = $this->lang->line('cal_dec');
+															break;
+													}
+													echo '<strong style="font-weight:bold;">' . $this->lang->line('property_details_info_update') . ':</strong> ' . date('d', strtotime($property_lists['update_time'])) . ' ' . $monthName . ' ' . date('Y', strtotime($property_lists['update_time']));
+												}
 												?>
 											</div>
 											<div style="display:table-cell;vertical-align:middle;text-align:right;padding-right:5px;">
@@ -835,7 +880,7 @@ $(document).ready(function() {
 												if( $suspended_user_type != 4 || $property_lists_featured['suspention_status'] == 0) {
 													$desc =  $property_lists_featured['description'];
 													if(strlen($desc) > 100){
-														echo substr($desc,0,100)." ...";
+														echo substr($desc, 0, 50) . " ...";
 													} else {
 														echo $desc;	
 													}
@@ -903,6 +948,7 @@ $(document).ready(function() {
 											$todayDate = time();
 											$featuredDate = strtotime($property_lists_featured['start_date']);
 											$diff = $todayDate - $featuredDate;
+
 											$hightlightedDay = floor($diff/(24*60*60))+1;
 											?> 
 											<div style="display:table-cell;vertical-align:middle;padding-left:5px;">												
@@ -950,7 +996,11 @@ $(document).ready(function() {
 												?>
 												<br><strong style="font-weight:bold;"><?php echo $this->lang->line('property_details_Highlights');?>:</strong>
 												<?php
+													if ($todayDate > $featuredDate) {
 												echo $this->lang->line('property_details_highlights_day')." ".$hightlightedDay." ".$this->lang->line('property_details_highlights_of')." ".$property_lists_featured['number_of_days'];
+													} else {
+														echo "Starts From " . date('d', strtotime($property_lists_featured['start_date'])) . ' ' . $monthName . ' ' . date('Y', strtotime($property_lists_featured['start_date']));;
+													}
 												}
 												?>
 											</div>

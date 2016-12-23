@@ -1189,114 +1189,142 @@ $(document).ready(function() {
 			}
 		}
 		$("#imgInp1").change(function(){
-			var ext = this.value.match(/\.(.+)$/)[1];
-			var ext = ext.toLowerCase();
-			switch (ext) {
-				case 'jpg':
-				case 'jpeg':
-				case 'png':
-				case 'gif':
+            var name = $(this).val();
+            var ext = name.substr((name.lastIndexOf('.') + 1));
+            var ext = ext.toLowerCase();
+            switch (ext) {
+                case 'jpg':
+                case 'jpeg':
+                case 'JPEG':
+                case 'PNG':
+                case 'GIF':
+                case 'png':
+                case 'gif':
 					readURL(this,1);
 					break;
 				default:
-					alert('<?php echo $this->lang->line('edit_property_form_file_upload_restriction');?>');
+                    alert('<?php echo "".$this->lang->line('add_property_form_file_upload_restriction');?>');
 					this.value = '';
 			}
 			//img_id++;
 		});
         $("#imgInp2").change(function(){
 			//img_id++;
-			var ext = this.value.match(/\.(.+)$/)[1];
-			var ext = ext.toLowerCase();
-			switch (ext) {
-				case 'jpg':
-				case 'jpeg':
-				case 'png':
-				case 'gif':
+            var name = $(this).val();
+            var ext = name.substr((name.lastIndexOf('.') + 1));
+            var ext = ext.toLowerCase();
+            switch (ext) {
+                case 'jpg':
+                case 'jpeg':
+                case 'JPEG':
+                case 'PNG':
+                case 'GIF':
+                case 'png':
+                case 'gif':
 					readURL(this,2);
 					break;
 				default:
-					alert('<?php echo $this->lang->line('edit_property_form_file_upload_restriction');?>');
+                    alert('<?php echo "".$this->lang->line('add_property_form_file_upload_restriction');?>');
 					this.value = '';
 			}
 		});
         $("#imgInp3").change(function(){
 			//img_id++;
-			var ext = this.value.match(/\.(.+)$/)[1];
-			var ext = ext.toLowerCase();
-			switch (ext) {
-				case 'jpg':
-				case 'jpeg':
-				case 'png':
-				case 'gif':
+            var name = $(this).val();
+            var ext = name.substr((name.lastIndexOf('.') + 1));
+            var ext = ext.toLowerCase();
+            switch (ext) {
+                case 'jpg':
+                case 'jpeg':
+                case 'JPEG':
+                case 'PNG':
+                case 'GIF':
+                case 'png':
+                case 'gif':
 					readURL(this,3);
 					break;
 				default:
-					alert('<?php echo $this->lang->line('edit_property_form_file_upload_restriction');?>');
+                    alert('<?php echo "".$this->lang->line('add_property_form_file_upload_restriction');?>');
 					this.value = '';
 			}
 		});
         $("#imgInp4").change(function(){
 			//img_id++;
-			var ext = this.value.match(/\.(.+)$/)[1];
-			var ext = ext.toLowerCase();
-			switch (ext) {
-				case 'jpg':
-				case 'jpeg':
-				case 'png':
-				case 'gif':
+            var name = $(this).val();
+            var ext = name.substr((name.lastIndexOf('.') + 1));
+            var ext = ext.toLowerCase();
+            switch (ext) {
+                case 'jpg':
+                case 'jpeg':
+                case 'JPEG':
+                case 'PNG':
+                case 'GIF':
+                case 'png':
+                case 'gif':
 					readURL(this,4);
 					break;
 				default:
-					alert('<?php echo $this->lang->line('edit_property_form_file_upload_restriction');?>');
+                    alert('<?php echo "".$this->lang->line('add_property_form_file_upload_restriction');?>');
 					this.value = '';
 			}
 		});
         $("#imgInp5").change(function(){
 			//img_id++;
-			var ext = this.value.match(/\.(.+)$/)[1];
-			var ext = ext.toLowerCase();
-			switch (ext) {
-				case 'jpg':
-				case 'jpeg':
-				case 'png':
-				case 'gif':
+            var name = $(this).val();
+            var ext = name.substr((name.lastIndexOf('.') + 1));
+            var ext = ext.toLowerCase();
+            switch (ext) {
+                case 'jpg':
+                case 'jpeg':
+                case 'JPEG':
+                case 'PNG':
+                case 'GIF':
+                case 'png':
+                case 'gif':
 					readURL(this,5);
 					break;
 				default:
-					alert('<?php echo $this->lang->line('edit_property_form_file_upload_restriction');?>');
+                    alert('<?php echo "".$this->lang->line('add_property_form_file_upload_restriction');?>');
 					this.value = '';
 			}
 		});
         $("#imgInp6").change(function(){
 			//img_id++;
-			var ext = this.value.match(/\.(.+)$/)[1];
-			var ext = ext.toLowerCase();
-			switch (ext) {
-				case 'jpg':
-				case 'jpeg':
-				case 'png':
-				case 'gif':
+            var name = $(this).val();
+            var ext = name.substr((name.lastIndexOf('.') + 1));
+            var ext = ext.toLowerCase();
+            switch (ext) {
+                case 'jpg':
+                case 'jpeg':
+                case 'JPEG':
+                case 'PNG':
+                case 'GIF':
+                case 'png':
+                case 'gif':
 					readURL(this,6);
 					break;
 				default:
-					alert('<?php echo $this->lang->line('edit_property_form_file_upload_restriction');?>');
+                    alert('<?php echo "".$this->lang->line('add_property_form_file_upload_restriction');?>');
 					this.value = '';
 			}
 		});
         $("#imgInp7").change(function(){
-			var ext = this.value.match(/\.(.+)$/)[1];
-			var ext = ext.toLowerCase();
-			switch (ext) {
-				case 'jpg':
-				case 'jpeg':
-				case 'png':
-				case 'gif':
+            var name = $(this).val();
+            var ext = name.substr((name.lastIndexOf('.') + 1));
+            var ext = ext.toLowerCase();
+            switch (ext) {
+                case 'jpg':
+                case 'jpeg':
+                case 'JPEG':
+                case 'PNG':
+                case 'GIF':
+                case 'png':
+                case 'gif':
 					readURL(this,7);
 					//$("#remove").show();
 					break;
 				default:
-					alert('<?php echo $this->lang->line('edit_property_form_file_upload_restriction');?>');
+                    alert('<?php echo "".$this->lang->line('add_property_form_file_upload_restriction');?>');
 					this.value = '';
 			}
 		});
