@@ -150,6 +150,7 @@ $(document).ready(function(){
 			</a>
 
 			<?php
+			$pageLink = "";
 			$featuredLink = '<a href="'.base_url()."property/make_featured/".$property_details[0]['property_id'].'" class="btn btn-blue btn-sm btn-icon btn-xs">
 								<i class="entypo-back-in-time"></i>Feature&nbsp;&nbsp;
 							 </a>';

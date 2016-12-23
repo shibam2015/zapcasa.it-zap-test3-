@@ -30,7 +30,11 @@ class Property_model extends CI_Model{
 					$sqlQuery = $this->FeaturedSQL('1', $sqlMore);
 					break;
 				case 'suspended':
-					$sqlQuery = $this->FeaturedSQL('0', $sqlMore);
+					$sqlQuery = "SELECT * FROM (
+						SELECT *, md5(`property_id`) AS `ref_token` 
+						FROM `zc_property_details` WHERE `property_status`!='0' AND suspention_status = '1'
+					) 
+					AS p WHERE `ref_token` LIKE '".$search_property_code."%' ";
 					break;
 			}
 			
@@ -51,7 +55,7 @@ class Property_model extends CI_Model{
 							$sqlQuery = $this->FeaturedSQL('1', $sqlMore);
 							break;
 						case 'suspended':
-							$sqlQuery = $this->FeaturedSQL('0', $sqlMore);
+							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE `property_status`!='0' AND suspention_status = '1' AND `property_post_by_type`='2'".$sqlMore;
 							break;
 					}
 					break;
@@ -70,7 +74,7 @@ class Property_model extends CI_Model{
 							$sqlQuery = $this->FeaturedSQL('1', $sqlMore);
 							break;
 						case 'suspended':
-							$sqlQuery = $this->FeaturedSQL('0', $sqlMore);
+							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE property_status!='0' AND suspention_status = '1'".$sqlMore;
 							break;
 					}
 					break;
@@ -89,7 +93,7 @@ class Property_model extends CI_Model{
 							$sqlQuery = $this->FeaturedSQL('1', $sqlMore);
 							break;
 						case 'suspended':
-							$sqlQuery = $this->FeaturedSQL('0', $sqlMore);
+							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE `property_status`!='0' AND `property_post_by_type`='2' AND suspention_status = '1'".$sqlMore;
 							break;
 					}
 					break;
@@ -108,7 +112,7 @@ class Property_model extends CI_Model{
 							$sqlQuery = $this->FeaturedSQL('1', $sqlMore);
 							break;
 						case 'suspended':
-							$sqlQuery = $this->FeaturedSQL('0', $sqlMore);
+							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE `property_status`!='0' AND `property_post_by_type`='3' AND suspention_status = '1'".$sqlMore;
 							break;
 					}
 					break;
@@ -131,7 +135,7 @@ class Property_model extends CI_Model{
 							$sqlQuery = $this->FeaturedSQL('1', $sqlMore);
 							break;
 						case 'suspended':
-							$sqlQuery = $this->FeaturedSQL('0', $sqlMore);
+							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE `property_status`!='0' AND suspention_status = '1'".$sqlMore;
 							break;
 					}
 					break;
@@ -154,7 +158,7 @@ class Property_model extends CI_Model{
 							$sqlQuery = $this->FeaturedSQL('1', $sqlMore);
 							break;
 						case 'suspended':
-							$sqlQuery = $this->FeaturedSQL('0', $sqlMore);
+							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE `property_status`!='0' AND suspention_status = '1'".$sqlMore;
 							break;
 					}
 					break;
@@ -177,7 +181,7 @@ class Property_model extends CI_Model{
 							$sqlQuery = $this->FeaturedSQL('1', $sqlMore);
 							break;
 						case 'suspended':
-							$sqlQuery = $this->FeaturedSQL('0', $sqlMore);
+							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE `property_status`!='0' AND suspention_status = '1'".$sqlMore;
 							break;
 					}
 					break;
@@ -200,7 +204,7 @@ class Property_model extends CI_Model{
 							$sqlQuery = $this->FeaturedSQL('1', $sqlMore);
 							break;
 						case 'suspended':
-							$sqlQuery = $this->FeaturedSQL('0', $sqlMore);
+							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE `property_status`!='0' AND suspention_status = '1'".$sqlMore;
 							break;
 					}
 					break;
@@ -223,7 +227,7 @@ class Property_model extends CI_Model{
 							$sqlQuery = $this->FeaturedSQL('1', $sqlMore);
 							break;
 						case 'suspended':
-							$sqlQuery = $this->FeaturedSQL('0', $sqlMore);
+							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE `property_status`!='0' AND suspention_status = '1'".$sqlMore;
 							break;
 					}
 					break;
@@ -242,7 +246,7 @@ class Property_model extends CI_Model{
 							$sqlQuery = $this->FeaturedSQL('1', $sqlMore);
 							break;
 						case 'suspended':
-							$sqlQuery = $this->FeaturedSQL('0', $sqlMore);
+							$sqlQuery = "SELECT * FROM `zc_property_details` WHERE `property_status`!='0' AND suspention_status = '1'".$sqlMore;
 							break;
 					}
 					break;

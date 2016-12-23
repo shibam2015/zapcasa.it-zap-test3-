@@ -87,7 +87,7 @@ class Property extends CI_Controller {
 		$data['activeFilterProperty'] = get_perticular_count('zc_property_details',"AND property_status='2' AND property_approval='1'".$sqlMore);
 		$data['inActiveFilterProperty'] = get_perticular_count('zc_property_details',"AND property_status!='0' AND property_approval='0'".$sqlMore);
 		$data['featuredFilterProperty'] = $this->property_model->featuredFilterProperty('1',$sqlMore);
-		$data['suspendedFilterProperty'] = $this->property_model->featuredFilterProperty('0',$sqlMore);
+		$data['suspendedFilterProperty'] = get_perticular_count('zc_property_details',"AND property_status!='0' AND suspention_status='1'".$sqlMore);
 		
 		//echo '<pre>';print_r($data['pagination']);die;
 		$this->load->view('property_template', $data);	
