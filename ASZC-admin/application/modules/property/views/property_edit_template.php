@@ -205,6 +205,18 @@ $(document).ready(function(){
 		<?php echo $this->session->flashdata('success');?>
 	</div>
 	<hr>
+	<?php
+		if($property_details[0]['property_approval'] == '0'){
+	?>
+	<div class="panel panel-primary">
+		<div class="panel-body">
+			<p> <label><b>Bloked Note: </b>&nbsp;</label><?=$property_details[0]['blocked_note']?></p>
+		</div>
+	</div>
+	<hr>
+	<?php
+		}
+	?>
     <div class="panel panel-primary">
         <div class="panel-body">
             <?php
