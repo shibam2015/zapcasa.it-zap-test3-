@@ -6,7 +6,11 @@ div.error{ float: left; color: red; padding-right: .5em;}
 label.error{float: left; color: red; padding-right: .5em;}
 #ssn{text-transform:uppercase}
 .image-options .edit{position:relative;}
-.image-options .edit input {cursor: pointer;height: 24px;opacity: 0;position: absolute;top: 0;width: 23px;left: -50px;}
+.image-options .edit input {cursor: pointer;height: 24px;opacity: 0;position: absolute;top: 0;width: 23px;}
+.image-options .edit input::-webkit-file-upload-button{
+        height:24px;
+        width:24px;
+  }
 .form-groups-bordered .form-group {border-bottom: 1px solid #ebebeb;margin-bottom: 0;padding-bottom: 15px;padding-top: 15px;}
 .form-horizontal .control-label {font-weight: bold;}
 .noperspective{perspective:none;}
