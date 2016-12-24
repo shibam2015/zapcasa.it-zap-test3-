@@ -950,11 +950,25 @@ class propertym extends CI_Model {
 		return $data;
 	}
 
+	public function check_user_to_status($user_id = 0)
+	{
+		$data = array();
+		if ($user_id) {
+			$sql = "SELECT * FROM `zc_user` WHERE `user_id`=" . $user_id;
+			$query = $this->db->query($sql);
+			//echo $this->db->last_query();exit;
+			if ($query->num_rows() > 0) {
+				$data = $query->result_array();
+			}
+		}
+		return $data;
+	}
+
 	public function get_msg_detail1($uid, $limit, $start, $Where = '')
 	{
-		
+
 		$data = array();
-		
+
 		$sql = "SELECT pm.*,
 					(SELECT msg_date FROM zc_property_message_info as tmp
 						WHERE
@@ -968,7 +982,7 @@ class propertym extends CI_Model {
 						property_id=pm.property_id) as admin_approval
 
 				FROM (select * from zc_property_message_info order by msg_date desc) as pm WHERE 1 " . $Where . " GROUP BY pm.msg_grp_id ORDER BY odate DESC LIMIT " . $start . "," . $limit;  // OR (pm.user_id_from=".$uid." AND pm.msg_from_delete='0')
-	
+
 		$query = $this->db->query($sql);
 		#echo "==========".$this->db->last_query();
 		if ($query->num_rows() > 0) {
@@ -983,20 +997,6 @@ class propertym extends CI_Model {
 			$data[$i]['blocked_note'] = $tmp[0]['blocked_note'];
 		}
 		// echo json_encode($data);exit;
-		return $data;
-	}
-
-	public function check_user_to_status($user_id = 0)
-	{
-		$data = array();
-		if ($user_id) {
-			$sql = "SELECT * FROM `zc_user` WHERE `user_id`=" . $user_id;
-			$query = $this->db->query($sql);
-			//echo $this->db->last_query();exit;
-			if ($query->num_rows() > 0) {
-				$data = $query->result_array();
-			}
-		}
 		return $data;
 	}
 
@@ -1206,7 +1206,8 @@ class propertym extends CI_Model {
 		$res = $query->result();
 		if($res[0]->property_status == 1)
 		{
-			$new_data['update_time'] = '';
+			$new_data['update_time'] = date('Y-m-d');
+			//$new_data['update_time'] = '';
 			$new_data['posting_time'] = date('Y-m-d');
 		}
 		$where = "property_id = '" . $property_id . "'";
@@ -1217,9 +1218,10 @@ class propertym extends CI_Model {
 		//echo '<pre>';print_r($new_data);die;
 		$query = $this->db->query("SELECT * FROM zc_property_details WHERE property_id='".$property_id."'");
 		$res = $query->result();
+
 		if($res[0]->property_status == 1)
 		{
-			$new_data['update_time'] = '';
+			$new_data['update_time'] = date('Y-m-d');
 			$new_data['posting_time'] = date('Y-m-d');
 		}
 		$where = "property_id = '".$property_id."'";
@@ -1231,7 +1233,8 @@ class propertym extends CI_Model {
 		$res = $query->result();
 		if($res[0]->property_status == 1)
 		{
-			$new_data['update_time'] = '';
+			$new_data['update_time'] = date('Y-m-d');
+			//$new_data['update_time'] = '';
 			$new_data['posting_time'] = date('Y-m-d');
 		}
 		$where = "property_id = '".$property_id."'";
@@ -1243,7 +1246,8 @@ class propertym extends CI_Model {
 		$res = $query->result();
 		if($res[0]->property_status == 1)
 		{
-			$new_data['update_time'] = '';
+			$new_data['update_time'] = date('Y-m-d');
+			//$new_data['update_time'] = '';
 			$new_data['posting_time'] = date('Y-m-d');
 		}
 		$where = "property_id = '".$property_id."'";
@@ -1255,9 +1259,11 @@ class propertym extends CI_Model {
 		$res = $query->result();
 		if($res[0]->property_status == 1)
 		{
-			$new_data['update_time'] = '';
+			$new_data['update_time'] = date('Y-m-d');
+			//$property_time = $this->input->post('posting_time');
 			$new_data['posting_time'] = date('Y-m-d');
 		}
+
 		$where = "property_id = '".$property_id."'";
 		$str = $this->db->update('zc_property_details', $new_data, $where);
 	}

@@ -489,11 +489,16 @@ class property extends CI_Controller {
 					$new_data=array();
 					if($this->input->post('btnSubmit')=='Save Draft'){
 						$new_data['property_status']='1';
+						//$time=date('Y-m-d');
+						//$new_data['update_time'] =date('Y-m-d');
+
 					}else{
 						/*if($user_type=='2'){
 							$new_data['property_status']='0';
 						}else{*/
 						$new_data['property_status']='2';
+
+
 						/*}*/
 					}
 					$new_data['property_post_by'] =$property_post_by;
@@ -501,10 +506,11 @@ class property extends CI_Controller {
 					$time=date('Y-m-d');
 					$new_data['posting_time'] =$time;
 					$category=$this->input->post('category');
+
 					$uid=$this->session->userdata( 'user_id' );
 					$user_type=get_perticular_field_value('zc_user','user_type'," and user_id='".$uid."' ");
 					//if($user_type=='2'){
-						//$property_approval='0';
+					//$property_approval='0';
 					//}
 					//if($user_type=='3'){
 					$property_approval='1';
@@ -541,6 +547,7 @@ class property extends CI_Controller {
 						$lat_lng_array=getLangLat( $this->input->post('street_address') . ','.$this->input->post( 'street_no' ) . ','. $this->input->post( 'city' ) . ',' . $this->input->post( 'provience' ) . ',' . $this->input->post( 'zip' ));
 						$new_data['latitude'] = (float) $lat_lng_array->lat;
 						$new_data['longitude'] = (float)$lat_lng_array->lng;
+
 						$property_id=$this->propertym->add_new_property($new_data);
 					}
 					if($category=='VAC'){
@@ -2157,6 +2164,7 @@ class property extends CI_Controller {
 	{
 		$property_id = $this->input->post('property_id');
 		$uid = $this->session->userdata('user_id');
+
 		if ($uid == 0 || $uid == '') {
 			redirect('users/common_reg');
 		}else{
@@ -2171,7 +2179,9 @@ class property extends CI_Controller {
 
 					if ($this->input->post('btnSubmit') == 'Save Draft') {
 						$new_data['property_status'] = '1';
-						$new_data['update_time'] = date('Y-m-d');
+						//$time = date('d-m-Y');
+						$new_data['posting_time'] = date('d-m-Y');
+
 						if ($this->input->post('pvt_negotiation') == '1') {
 							$price = '';
 							$private_nagotiation = '1';
@@ -2187,6 +2197,7 @@ class property extends CI_Controller {
 					}
 					if ($this->input->post('btnSubmit') == 'Submit') {
 						$new_data['property_status'] = '2';
+						//$time = date('d-m-Y');
 						$new_data['update_time'] = date('Y-m-d');
 						if ($this->input->post('pvt_negotiation') == '1') {
 							$price = '';
@@ -2211,12 +2222,15 @@ class property extends CI_Controller {
 							}
 						}
 					}
+					//$time=date('Y-m-d');
+					//$new_data['update_time'] = $time;
 					$uid = $this->session->userdata('user_id');
 					$user_type = get_perticular_field_value('zc_user', 'user_type', " and user_id='" . $uid . "' ");
 
 					$property_approval = '1';
 
-					$time = date('d-m-Y');
+					//$time=date('Y-m-d');
+					//$new_data['update_time'] =$time;
 
 					$contract_id = get_perticular_field_value('zc_property_details', 'contract_id', " and property_id='" . $property_id . "'");
 					$category_id = get_perticular_field_value('zc_property_details', 'category_id', " and property_id='" . $property_id . "'");
