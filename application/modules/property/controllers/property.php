@@ -1766,19 +1766,65 @@ class property extends CI_Controller {
 	public function delete_property()
 	{
 		$property_id = $this->uri->segment('3');
-		$rs = $this->propertym->delete_property($property_id);
-		$rs = 1;
-		if ($rs) {
-			$this->propertym->del_prop_image($property_id);
-			$dfile = 'assets/uploads/Property/Property' . $property_id;
-			if (is_dir($dfile))
-				//@rmdir($dfile);
-				deleteNonEmptyDir($dfile);
-			$msgdata = $this->lang->line('property_the_property_is_deleted_successfully');
-			$this->session->set_flashdata('success', $msgdata);
-			redirect('property/property_details');
+		$data = $this->propertym->get_property_detail($property_id);
+		/*echo "<pre>";
+		print_r($data);
+		die;*/
+		if ($data[0]['property_status'] == '2') {
+			$rs = $this->propertym->delete_property($property_id);
+			$rs = 1;
+			if ($rs) {
+				$this->propertym->del_prop_image($property_id);
+				$dfile = 'assets/uploads/Property/Property' . $property_id;
+				if (is_dir($dfile))
+					//@rmdir($dfile);
+					deleteNonEmptyDir($dfile);
+				//$data['property_details'] = $this->propertym->get_property_detail($property_id);
+
+
+				$msgdata = $this->lang->line('property_the_property_is_deleted_successfully');
+				$this->session->set_flashdata('success', $msgdata);
+				redirect('property/property_details');
+			}
+
+		} elseif ($data[0]['property_status'] == '1') {
+			$rs = $this->propertym->delete_property($property_id);
+			$rs = 1;
+			if ($rs) {
+				$this->propertym->del_prop_image($property_id);
+				$dfile = 'assets/uploads/Property/Property' . $property_id;
+				if (is_dir($dfile))
+					//@rmdir($dfile);
+					deleteNonEmptyDir($dfile);
+				//$data['property_details'] = $this->propertym->get_property_detail($property_id);
+
+
+				$msgdata = $this->lang->line('property_the_property_is_deleted_successfully');
+				$this->session->set_flashdata('success', $msgdata);
+				redirect('property/property_details/draft_property_list');
+
+			}
+		} elseif ($data[0]['feature_status'] == '1') {
+			$rs = $this->propertym->delete_property($property_id);
+			$rs = 1;
+			if ($rs) {
+				$this->propertym->del_prop_image($property_id);
+				$dfile = 'assets/uploads/Property/Property' . $property_id;
+				if (is_dir($dfile))
+					//@rmdir($dfile);
+					deleteNonEmptyDir($dfile);
+				//$data['property_details'] = $this->propertym->get_property_detail($property_id);
+
+
+				$msgdata = $this->lang->line('property_the_property_is_deleted_successfully');
+				$this->session->set_flashdata('success', $msgdata);
+				redirect('property/property_details/highlight_property_list');
+
+			}
 		}
-	}
+
+		}
+
 
 	public function suspend_property()
 	{
