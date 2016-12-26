@@ -1813,10 +1813,12 @@ class property extends CI_Controller {
 				if (is_dir($dfile))
 					//@rmdir($dfile);
 					deleteNonEmptyDir($dfile);
+				//$data['property_details'] = $this->propertym->get_property_detail($property_id);
+
+
 				$msgdata = $this->lang->line('property_the_property_is_deleted_successfully');
 				$this->session->set_flashdata('success', $msgdata);
 				redirect('property/property_details/highlight_property_list');
-
 
 			}
 		}
@@ -1873,20 +1875,23 @@ class property extends CI_Controller {
 		$dataField = $this->input->post('dataField');
 		$dataField = explode("|", $dataField);
 		foreach ($dataField as $property_id) {
-			$property_id = $property_id;
-			$rs = $this->propertym->delete_property($property_id);
-			$rs = 1;
-			if ($rs) {
-				$this->propertym->del_prop_image($property_id);
-				$dfile = 'assets/uploads/Property/Property' . $property_id;
-				if (is_dir($dfile))
-					//@rmdir($dfile);
-					deleteNonEmptyDir($dfile);
-				$msgdata = $this->lang->line('property_the_property_is_deleted_successfully');
-				$this->session->set_flashdata('success', $msgdata);
-				redirect('property/property_details');
+			if ($property_id != '') {
+				//$property_id = $property_id;
+				$rs = $this->propertym->delete_property($property_id);
+				$rs = 1;
+				if ($rs) {
+					$this->propertym->del_prop_image($property_id);
+					$dfile = 'assets/uploads/Property/Property' . $property_id;
+					if (is_dir($dfile))
+						//@rmdir($dfile);
+						deleteNonEmptyDir($dfile);
+					$msgdata = $this->lang->line('property_the_property_is_deleted_successfully');
+					$this->session->set_flashdata('success', $msgdata);
+
+				}
 			}
 		}
+		redirect('property/property_details');
 	}
 
 	public function edit_property()

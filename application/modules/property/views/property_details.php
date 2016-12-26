@@ -1147,13 +1147,13 @@ $(document).ready(function() {
         }
 		
         function delete_bulk_msg(type) {
-        	var arrInputId = 0;	
+        	var arrInputId = 0;
         	var urlCustom = "";
-        		if(type=="property"){
-        			var arrInputId = $("#property_del_str").val();
+        		if(type=="draft"){
+        			var arrInputId = $("#draft_del_str").val();
         			var urlCustom = "<?php echo base_url()?>property/del_bulk_property";
         		}else{
-        			var arrInputId = $("#draft_del_str").val();
+        			var arrInputId = $("#property_del_str").val();
         			var urlCustom = "<?php echo base_url()?>property/del_bulk_property";
         		}
         	 if(arrInputId == ""){
@@ -1163,7 +1163,7 @@ $(document).ready(function() {
         			 $.ajax({
         				 type: "POST",
         				 url: urlCustom, 
-        				 data: {dataField: arrInputId }, 
+        				 data: {dataField: arrInputId },
         				 success: function(msg){
         					document.getElementById("property_del_str").value = "";
         					document.getElementById("draft_del_str").value = "";
