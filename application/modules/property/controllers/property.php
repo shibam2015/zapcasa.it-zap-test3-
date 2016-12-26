@@ -1804,7 +1804,8 @@ class property extends CI_Controller {
 				redirect('property/property_details/draft_property_list');
 
 			}
-		} elseif ($data[0]['feature_status'] == '1') {
+		}
+		{
 			$rs = $this->propertym->delete_property($property_id);
 			$rs = 1;
 			if ($rs) {
@@ -1824,7 +1825,6 @@ class property extends CI_Controller {
 		}
 
 		}
-
 
 	public function suspend_property()
 	{
