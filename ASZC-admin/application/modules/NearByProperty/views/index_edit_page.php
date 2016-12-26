@@ -210,7 +210,7 @@
 						echo base_url() . '>assets/images/no_proimg.jpg';
 					} else {
 						echo $propImg = base_url() . 'assets/uploads/NearByProperty/' . $result[0]->property_details_id . '/' . $result[0]->url;
-					} ?>" alt="" width="142" height="140"/>
+					} ?>" alt="" width="" height=""/>
 
 		        	<div class="my_style_browse_btn"> <input type='file' id="property_image"  name="property_image" /></div>
 

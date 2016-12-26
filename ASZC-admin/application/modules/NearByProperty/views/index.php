@@ -64,7 +64,7 @@
             <td><?php echo $results['name'];?></td>
             <td><?php echo $results['opt_name']; ?></td>
             <td><?php echo $catnm['category_name']; ?></td>
-            <td><img id="img_1" src="<?php echo $propImg; ?>" alt="" width="142" height="140"></td>
+            <td><img id="img_1" src="<?php echo $propImg; ?>" alt="" width="" height=""></td>
             <td>
                 <?php
 				$propertyAdd = '';
