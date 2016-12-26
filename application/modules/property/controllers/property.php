@@ -260,7 +260,7 @@ class property extends CI_Controller {
 			redirect('errors/error_404.php');
 		}
 
-		if(isset($proHolderDetails[0]['verified'] == '0') {
+		if(isset($proHolderDetails[0]['verified']) && isset($proHolderDetails[0]['verified']) == '0') {
 			redirect('errors/error_404.php');	
 		}
 		
