@@ -402,3 +402,4 @@ function validate_nearby_property_form(){
 
 <?php $this->load->view('inc/footer.php'); ?>
 
+</div>
