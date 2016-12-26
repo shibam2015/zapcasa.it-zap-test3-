@@ -36,7 +36,8 @@ class Common_model extends CI_Model{
 	}
 	public function dashboardLatestUsers(){
 		$data = array();
-		$sql="SELECT u.* FROM `zc_user` as u JOIN `zc_property_details` as p ON u.`user_id` = p.`property_post_by` WHERE (u.`user_type`='2' || u.`user_type`='3') AND u.`status`='1' GROUP BY u.`user_id` ORDER BY u.`user_id` DESC LIMIT 0,10";
+		//$sql="SELECT u.* FROM `zc_user` as u JOIN `zc_property_details` as p ON u.`user_id` = p.`property_post_by` WHERE (u.`user_type`='2' || u.`user_type`='3') AND u.`status`='1' GROUP BY u.`user_id` ORDER BY u.`user_id` DESC LIMIT 0,10";
+		$sql="SELECT * FROM `zc_user` WHERE (`user_type`='2' || `user_type`='3') AND `status`='1' ORDER BY `user_id` DESC LIMIT 0,10";
 		$query=$this->db->query($sql);
 		if($query->num_rows()>0){
 			$data = $query->result_array();
@@ -44,8 +45,8 @@ class Common_model extends CI_Model{
 		return $data;
 	}
 	public function dashboardLatestUsersTotal(){
-		// $sql="SELECT * FROM `zc_user` WHERE (`user_type`='2' || `user_type`='3') AND `status`='1' ORDER BY `user_id` DESC";
-		$sql="SELECT u.* FROM `zc_user` as u JOIN `zc_property_details` as p ON u.`user_id` = p.`property_post_by` WHERE (u.`user_type`='2' || u.`user_type`='3') AND u.`status`='1' GROUP BY u.`user_id`";
+		 $sql="SELECT * FROM `zc_user` WHERE (`user_type`='2' || `user_type`='3') AND `status`='1' ORDER BY `user_id` DESC";
+		//$sql="SELECT u.* FROM `zc_user` as u JOIN `zc_property_details` as p ON u.`user_id` = p.`property_post_by` WHERE (u.`user_type`='2' || u.`user_type`='3') AND u.`status`='1' GROUP BY u.`user_id`";
 		$query=$this->db->query($sql);
 		return $query->num_rows();
 	}
