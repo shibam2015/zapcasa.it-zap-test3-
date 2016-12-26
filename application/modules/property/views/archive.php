@@ -195,7 +195,7 @@
 							</td>
                             <td>
 								<?php
-								if ($msg['property_id'] = '0') {
+								if ($msg['property_id'] != '0') {
 									?>
 									<span <?php echo($unReadMsgCounter > 0 ? 'style="font-weight:bold;cursor:pointer;"' : 'style="cursor:pointer;"'); ?>
 										onClick="return click_me(<?php echo $msg['msg_id']; ?>,<?php echo $msg['property_id']; ?>,<?php echo $check_user_to[0]['status']; ?>);">
@@ -205,7 +205,7 @@
 										echo $this->lang->line('inbox_request_for'), ":";
 										echo subject_inbox($msg['property_id']);
 									} else {
-										echo $this->lang->line('prop_not_deleted');
+										echo $this->lang->line('prop_not_avilable');
 									}
 									?>
 								</span>

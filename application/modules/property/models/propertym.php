@@ -1320,9 +1320,9 @@ class propertym extends CI_Model {
 
 	public function delete_per_msg($userid,$msggroupid,$type) {
 		if($type=='from'){		//	For Inbox Items.
-			$sql_del="update zc_property_message_info set msg_from_delete='0',msg_to_delete='1' where user_id_to='".$userid."' AND msg_grp_id='".$msggroupid."'";
+			$sql_del="update zc_property_message_info set msg_to_delete='1' where user_id_to='".$userid."' AND msg_grp_id='".$msggroupid."'";
 		}elseif($type=='to'){	//	For Sent Items.
-			$sql_del="update zc_property_message_info SET msg_from_delete='1',msg_to_delete='0' where user_id_from='".$userid."' AND msg_grp_id='".$msggroupid."'";
+			$sql_del="update zc_property_message_info SET msg_from_delete='1' where user_id_from='".$userid."' AND msg_grp_id='".$msggroupid."'";
 		}
 		$this->db->query($sql_del);
 	}
