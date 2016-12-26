@@ -1820,6 +1820,7 @@ class property extends CI_Controller {
 				$this->session->set_flashdata('success', $msgdata);
 				redirect('property/property_details/highlight_property_list');
 
+
 			}
 		}
 
