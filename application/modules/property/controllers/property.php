@@ -1813,9 +1813,6 @@ class property extends CI_Controller {
 				if (is_dir($dfile))
 					//@rmdir($dfile);
 					deleteNonEmptyDir($dfile);
-				//$data['property_details'] = $this->propertym->get_property_detail($property_id);
-
-
 				$msgdata = $this->lang->line('property_the_property_is_deleted_successfully');
 				$this->session->set_flashdata('success', $msgdata);
 				redirect('property/property_details/highlight_property_list');
