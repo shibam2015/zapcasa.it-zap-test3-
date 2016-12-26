@@ -128,7 +128,8 @@ var page="proDetails";
 				<h4 style="font-weight:bold;color:#000000;font-family:'CenturyGothicRegular';font-size:12px;">
 					<?php
 					echo $this->lang->line('ref_code').': ';
-					$Typo=get_perticular_field_value('zc_typologies','name'," and status='active' and typology_id='".$property_details[0]['typology']."'");
+					//$Typo=get_perticular_field_value('zc_typologies','name'," and status='active' and typology_id='".$property_details[0]['typology']."'");
+					$Typo=get_perticular_field_value('zc_contract_types','name'," and contract_id='".$property_details[0]['contract_id']."'");
 					echo CreateNewRefToken($property_details[0]['property_id'],$Typo);
 					?>
 				</h4>
