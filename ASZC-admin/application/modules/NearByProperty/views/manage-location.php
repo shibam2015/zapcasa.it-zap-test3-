@@ -60,7 +60,7 @@ $(document).ready(function() {
 </h3>
 
 <hr />
-		        <?php	
+	<?php
 				//Finding Property Title Here.
 				// if( isset( $_COOKIE['lang'] ) && ( $_COOKIE['lang'] == "english" )) {
 					$city_name=get_perticular_field_value('zc_city','city_name'," and city_name='".$property_details[0]['city']."'");

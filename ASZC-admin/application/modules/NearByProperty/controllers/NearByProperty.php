@@ -8,6 +8,8 @@ class NearByProperty extends CI_Controller {
    {
 	parent::__construct();
 	$this->load->library('session');
+	   $this->load->library('upload');
+	   $this->load->library('image_lib');
 	userLoginCheck($this->session->userdata);
 	$this->controller = 'NearByProperty';
 	$this->load->library('pagination');
@@ -261,8 +263,6 @@ class NearByProperty extends CI_Controller {
 		redirect('NearByProperty/manage_location/update/'.$nearbypropertyDetailsId);
 	}
 
-	
-
 	public function index_edit_page( $cat_id = 0  ) {
 
 		$this->load->model('Common_model');
@@ -275,74 +275,144 @@ class NearByProperty extends CI_Controller {
 
 		if( isset($_REQUEST['Submit']) && ($_REQUEST['Submit'] == "Submit" ) && ($_REQUEST['nearbypropertyId'] != 0 ) ) {
 
-			$lat_lng_array = $this->Common_model->getLangLat( $this->input->post('street_address') . ','.$this->input->post( 'street_no' ) . ','. $this->input->post( 'city' ) . ',' . $this->input->post( 'provience' ) . ',' . $this->input->post( 'zip' ));
+			$lat_lng_array = $this->Common_model->getLangLat($this->input->post('street_address') . ',' . $this->input->post('street_no') . ',' . $this->input->post('city') . ',' . $this->input->post('provience') . ',' . $this->input->post('zip'));
 
-			$latitude = (float) $lat_lng_array->lat;
+			$latitude = (float)$lat_lng_array->lat;
 
 			$longitude = (float)$lat_lng_array->lng;
 
-				
 
 			$updatByPrms = $_REQUEST['nearbypropertyId'];
 
-			$dataStr = " `category_id` ='".$_REQUEST['category_id']."',`name`='".$_REQUEST['name']."',`opt_name` ='".$_REQUEST['opt_name']."',`provience`='".$_REQUEST['province']."',`city` ='".$_REQUEST['city']."',`zip`='".$_REQUEST['zip']."',`street_address` ='".$_REQUEST['street_address']."',`street_no`='".$_REQUEST['street_no']."',`modified_on`='".time()."'";
+			$dataStr = " `category_id` ='" . $_REQUEST['category_id'] . "',`name`='" . $_REQUEST['name'] . "',`opt_name` ='" . $_REQUEST['opt_name'] . "',`provience`='" . $_REQUEST['province'] . "',`city` ='" . $_REQUEST['city'] . "',`zip`='" . $_REQUEST['zip'] . "',`street_address` ='" . $_REQUEST['street_address'] . "',`street_no`='" . $_REQUEST['street_no'] . "',`modified_on`='" . time() . "'";
 
 			$attr = "property_details_id";
 
 			$table_name = "nearbyproperty_details";
 
-			$this->Common_model->common_update_by_attribute_name($dataStr, $updatByPrms,$attr ,$table_name);
+			$this->Common_model->common_update_by_attribute_name($dataStr, $updatByPrms, $attr, $table_name);
 
-			
 
-			if( isset($_FILES['property_image']['name']) && ($_FILES['property_image']['name'] != "" )) {
+			/*	if( isset($_FILES['property_image']['name']) && ($_FILES['property_image']['name'] != "" )) {
 
-					
 
-				$name_type = end(explode('.', $_FILES['property_image']['name']));
 
-				$valid_array_type = array('jpg', 'jpeg', 'png', 'bmp','JPG' ,'JPEG','PNG');
+                    $name_type = end(explode('.', $_FILES['property_image']['name']));
 
-				if (in_array($name_type, $valid_array_type)) {
+                    $valid_array_type = array('jpg', 'jpeg', 'png', 'bmp','JPG' ,'JPEG','PNG');
 
-			
+                    if (in_array($name_type, $valid_array_type)) {
 
-					$nearByPropertyDir = 'assets/uploads/NearByProperty/';
 
-					$new_thumb_targetpath = 'assets/uploads/NearByProperty/thumb/';
 
-					if(!file_exists($nearByPropertyDir)){
+                        $nearByPropertyDir = 'assets/uploads/NearByProperty/';
 
-						mkdir($nearByPropertyDir, 0777, false);
+                        $new_thumb_targetpath = 'assets/uploads/NearByProperty/thumb/';
 
-					}
+                        if(!file_exists($nearByPropertyDir)){
 
-					if(!file_exists($new_thumb_targetpath)){
+                            mkdir($nearByPropertyDir, 0777, false);
 
-						mkdir($new_thumb_targetpath, 0777, false);
+                        }
 
-					}
+                        if(!file_exists($new_thumb_targetpath)){
 
-					$property_name = "property".$updatByPrms.'_pic.'.$name_type;
+                            mkdir($new_thumb_targetpath, 0777, false);
 
-					$new_targetpath = $nearByPropertyDir.$property_name;
+                        }
 
-					@unlink($new_targetpath);
+                        $property_name = "property".$updatByPrms.'_pic.'.$name_type;
 
-					copy($_FILES['property_image']['tmp_name'], $new_targetpath);
+                        $new_targetpath = 'assets/uploads/NearByProperty/thumb/'.$property_name;
+                        //$image_path = 'assets/uploads/NearByProperty/thumb/'.$property_name;
 
-					$upadteData=array('url'=>$property_name);
+                        @unlink($new_targetpath);
 
-					$this->db->where('property_details_id',$updatByPrms);
+                        copy($_FILES['property_image']['tmp_name'], $new_targetpath);
 
-					$this->db->update('zc_nearbyproperty_details',$upadteData);
+                        $upadteData=array('url'=>$property_name);
 
-			
+                        $this->db->where('property_details_id',$updatByPrms);
 
+                        $this->db->update('zc_nearbyproperty_details',$upadteData);
+
+
+
+                    }
+
+                }
+
+            }*/
+			if (isset($_FILES['property_image']['name']) && ($_FILES['property_image']['name'] != "")) {
+				//$new_file = "Property" . $property_id;
+				$updatByPrms = $_REQUEST['nearbypropertyId'];
+				$structure = 'assets/uploads/NearByProperty/';
+
+				if (!is_dir('assets/uploads/NearByProperty/' . $updatByPrms)) {
+					mkdir('assets/uploads/NearByProperty/' . $updatByPrms, 0777, true);
+					chmod('assets/uploads/NearByProperty/' . $updatByPrms, 0777);
+				}
+				if (!is_dir('assets/uploads/NearByProperty/' . $updatByPrms . '/thumb/' . $updatByPrms)) {
+					mkdir('assets/uploads/NearByProperty/' . $updatByPrms . '/thumb/', 0777, true);
 				}
 
-			}
 
+				//$updatByPrms = $_REQUEST['nearbypropertyId'];
+				$name_type = end(explode('.', $_FILES['property_image']['name']));
+				//echo '<pre>';print_r($updatByPrms);die;
+				$upload_path = 'assets/uploads/NearByProperty/' . $updatByPrms;
+				//echo '<pre>';print_r($upload_path);
+
+				$this->upload->initialize($this->set_upload_options($upload_path));
+
+
+				$this->upload->do_upload('property_image');
+				$upload_data = $this->upload->data();
+				//echo '<pre>';print_r($upload_data);die;
+				$file_names = $upload_data['file_name'];
+
+				//$property_name = "property".$updatByPrms.'_pic.'.$name_type;
+				//echo '<pre>';print_r($property_name);die;
+
+				//$original_size = getimagesize($_FILES['property_image']['tmp_name']);
+				//echo '<pre>';print_r($property_name);
+				//$ratio = $original_size[0] / $original_size[1];
+
+				/*
+                 *	161x241
+                */
+
+				if (!is_dir('/assets/uploads/NearByProperty/thumb/' . $updatByPrms)) {
+					mkdir('/assets/uploads/NearByProperty/thumb/' . $updatByPrms, 0777, true);
+				}
+
+				$config = array(
+					'source_image' => 'assets/uploads/NearByProperty/' . $updatByPrms . '/' . $file_names,
+					'new_image' => 'assets/uploads/NearByProperty/' . $updatByPrms . '/thumb/' . $file_names,
+					'width' => 92,
+					'height' => 82,
+				);
+				//echo '<pre>';print_r($config);die;
+				$this->image_lib->initialize($config);
+				$this->image_lib->resize();
+				$dfile_name = get_perticular_field_value('zc_nearbyproperty_details', 'url', " and property_details_id =" . $updatByPrms);
+				$dfile = 'assets/uploads/NearByProperty/' . $updatByPrms . '/' . $dfile_name;
+				if (is_file($dfile)) {
+					@unlink($dfile);
+				}
+				$dfile_name = get_perticular_field_value('zc_nearbyproperty_details', 'url', " and property_details_id =" . $updatByPrms);
+				$dfile1 = 'assets/uploads/NearByProperty/' . $updatByPrms . '/thumb/' . $dfile_name;
+				if (is_file($dfile1)) {
+					@unlink($dfile1);
+				}
+
+				$upadteData = array('url' => $file_names);
+
+				$this->db->where('property_details_id', $updatByPrms);
+
+				$this->db->update('zc_nearbyproperty_details', $upadteData);
+
+			}
 		}
 
 		$data['title_en'] = "Edit Near By Property";
@@ -369,6 +439,18 @@ class NearByProperty extends CI_Controller {
 
 		}
 
+	}
+
+	private function set_upload_options($upload_path)
+	{
+		$config = array();
+		$config['upload_path'] = $upload_path;
+		$config['allowed_types'] = '*';
+		$config['max_size'] = '0';
+		$config['overwrite'] = FALSE;
+		$config['encrypt_name'] = TRUE;
+		$config['set_file_ext'] = TRUE;
+		return $config;
 	}
 
 	public function manage_location(){

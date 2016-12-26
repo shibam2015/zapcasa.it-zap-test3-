@@ -54,9 +54,10 @@
 		$i=1;            
 		foreach ($property_details as $results){ 
 			$catnm=get_category_nm($results['category_id']);
-			$propImg = base_url().'assets/images/no_proimg.jpg';			
+			$propImg = base_url() . '/assets/images/no_proimg.jpg';
 		if($results['url'] && file_exists("./assets/uploads/NearByProperty/".$results['url'])){
-			$propImg = base_url().'assets/uploads/NearByProperty/'.$results['url'];
+			//echo '<pre>';print_r($results);
+			$propImg = base_url() . '/assets/uploads/NearByProperty/' . $results['property_details_id'] . '/thumb/' . $results['url'];
 		}
 		?>
         <tr>
