@@ -275,10 +275,21 @@
 							$contract="Sell";
 						}
 						$prop_det_url.=$contract;
-						$prop_det_url.='-'.trim($property_featured_detail['city']);
-						$prop_det_url.='-'.trim($property_featured_detail['provience']);
+						//$prop_det_url.='-'.trim($property_featured_detail['city']);
+						//$prop_det_url.='-'.trim($property_featured_detail['provience']);
+						
+						if($_COOKIE['lang'] == "english")				
+						{
+							$prop_det_url.='-'.trim($property_featured_detail['city_name']);
+							$prop_det_url.='-'.trim($property_featured_detail['provience_name']);
+						}
+						else
+						{
+							$prop_det_url.='-'.trim($property_featured_detail['city_name_it']);
+							$prop_det_url.='-'.trim($property_featured_detail['provience_name_it']);
+						}
 						$prop_det_url.='-'.trim($property_featured_detail['property_id']);
-
+						
 						$parentCategoryName = get_category_field_value($property_featured_detail['category_id']);
 						$parms_name = "";
 						if( $parentCategoryName == 1 ) {
@@ -441,8 +452,18 @@
 						$prop_det_url.=$contract;
 						$typology_name=get_perticular_field_value('zc_typologies','name'," and status='active' and typology_id='".$lprop['typology']."'");
 						//$prop_det_url.='-'.trim($typology_name);
-						$prop_det_url.='-'.trim($lprop['city']);
-						$prop_det_url.='-'.trim($lprop['provience']);
+						//$prop_det_url.='-'.trim($lprop['city']);
+						//$prop_det_url.='-'.trim($lprop['provience']);
+						if($_COOKIE['lang'] == "english")				
+						{
+							$prop_det_url.='-'.trim($lprop['city_name']);
+							$prop_det_url.='-'.trim($lprop['provience_name']);
+						}
+						else
+						{
+							$prop_det_url.='-'.trim($lprop['city_name_it']);
+							$prop_det_url.='-'.trim($lprop['provience_name_it']);
+						}
 						$prop_det_url.='-'.trim($lprop['property_id']);
 						/*-------------end-----------------------*/
 						if( isset( $_COOKIE['lang'] ) && ( $_COOKIE['lang'] == "english" )) {

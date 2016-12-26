@@ -1165,8 +1165,12 @@ $(document).ready(function() {
         				 url: urlCustom, 
         				 data: {dataField: arrInputId },
         				 success: function(msg){
-        					document.getElementById("property_del_str").value = "";
-        					document.getElementById("draft_del_str").value = "";
+        				 	if(type=="draft"){
+        						document.getElementById("draft_del_str").value = "";
+        				 	}
+        				 	else {
+        						document.getElementById("property_del_str").value = "";
+        				 	}
         					location.reload(true);	
         				 },
         				 error: function(){

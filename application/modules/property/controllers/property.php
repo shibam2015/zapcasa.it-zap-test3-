@@ -259,6 +259,10 @@ class property extends CI_Controller {
 		if(isset($proHolderDetails[0]['status']) && ($proHolderDetails[0]['status'] == 0)){
 			redirect('errors/error_404.php');
 		}
+
+		if(isset($proHolderDetails[0]['verified']) && isset($proHolderDetails[0]['verified']) == '0') {
+			redirect('errors/error_404.php');	
+		}
 		
 		//Advertiser Has Suspended The Property or admin have inactive property.
 		if($data[0]['suspention_status']==1 || $data[0]['property_approval']==0){
