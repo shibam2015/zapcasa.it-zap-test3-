@@ -504,7 +504,6 @@
 			}else{
 				var pageString = $('#selectSingleToPageString').val();
 			}
-			alert(pageString);
 			var urlCustom = "<?php echo base_url()?>property/del_bulk_msg";
 			if (arrInputId != "") {
 			   $.ajax({

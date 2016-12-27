@@ -1607,6 +1607,15 @@ class property extends CI_Controller {
 				$i++;
 			}
 			$HTML .= "</table>";
+			if($uid == $all_msgs['0']['user_id_to'] && $all_msgs['0']['msg_from_delete'] == '1') {
+				$Status = 0;
+				$HTML .= '<div class="warrning"> <p> ' . $this->lang->line('conversation_deleted') . '</p></div>';
+			} 
+			else if ($uid == $all_msgs['0']['user_id_from'] && $all_msgs['0']['msg_to_delete'] == '1') {
+				$Status = 0;
+				$HTML .= '<div class="warrning"> <p> ' . $this->lang->line('conversation_deleted') . '</p></div>';
+			}
+
 			if ($data["msg_totals"][0]['admin_approval'] == '') {
 				$Status = 0;
 				$HTML .= '<div class="warrning"> <p> ' . $this->lang->line('inbox_this_property_deleted') . '</p></div>';
@@ -2749,10 +2758,12 @@ class property extends CI_Controller {
 					$uid = $msgDetails[0]['user_id_to'];
 					$mgrid = $msgDetails[0]['msg_grp_id'];
 					$rs=$this->propertym->delete_per_msg($uid,$mgrid,'from');					
+					$rs=$this->propertym->delete_per_msg($uid,$mgrid,'to');					
 				}elseif($type=='to'){	//For Sent Items.
 					$uid = $msgDetails[0]['user_id_from'];
 					$mgrid = $msgDetails[0]['msg_grp_id'];
 					$rs=$this->propertym->delete_per_msg($uid,$mgrid,'to');
+					$rs=$this->propertym->delete_per_msg($uid,$mgrid,'from');					
 				}
 			}
 		}
@@ -3492,20 +3503,25 @@ class property extends CI_Controller {
 	}
 	public function delete_msg_per(){
 		$delete_msg_ids=$this->input->post('msg_id');
-		$user_id=$this->session->userdata('user_id');
-		$msgDetails = get_all_value('zc_property_message_info'," and msg_id='".$delete_msg_ids."'");
-		if(($msgDetails[0]['msg_from_delete'] == '1' && $msgDetails[0]['msg_to_delete'] == '0')){
+		$uid=$this->session->userdata('user_id');
+		//$msgDetails = get_all_value('zc_property_message_info'," and msg_id='".$delete_msg_ids."'");
+		/*if(($msgDetails[0]['msg_from_delete'] == '1' && $msgDetails[0]['msg_to_delete'] == '0')){
 			//------Condition for sent msg. will be attached in 'or' condition
 			//($msgDetails[0]['msg_from_delete'] == '0' && $msgDetails[0]['msg_to_delete'] == '1')
 			$rs=$this->propertym->delete_per_msg_2($delete_msg_ids, "to");
+			$rs=$this->propertym->delete_per_msg($user_id,$mgrid,'from');					
 		}else{
 			if($user_id==$msgDetails[0]['user_id_to']){
-				/*$this->propertym->insert_update("update zc_property_message_info set msg_to_delete = '1' where msg_id='".$delete_msg_ids."'");*/
 				$rs=$this->propertym->delete_per_msg_2($delete_msg_ids, "to");
 			}elseif($user_id==$msgDetails[0]['user_id_from']){
 				$this->propertym->insert_update("update zc_property_message_info set msg_from_delete = '1' where msg_id='".$delete_msg_ids."'");
 			}
-		}
+		}*/
+		$msgDetails = get_all_value('zc_property_message_info'," and msg_id='".$delete_msg_ids."'");
+		$mgrid = $msgDetails[0]['msg_grp_id'];
+		$rs=$this->propertym->delete_per_msg($uid,$mgrid,'from');					
+		$rs=$this->propertym->delete_per_msg($uid,$mgrid,'to');					
+		
 		echo $msg = $this->lang->line('property_info_inbox_delete_message');
 		$newdata = array("delete_inbox_message" => $msg);
 		$this->session->set_userdata($newdata);
