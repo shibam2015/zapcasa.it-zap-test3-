@@ -160,7 +160,7 @@
 	*/
 	/*if($('.pagination').length){
 		var paginationHTML = '';
-		$('.pagination a,strong').each(function(){
+		$('.pagination a,pagination strong').each(function(){
 			if($(this).is('a')){
 				paginationHTML+='<li><a href="'+$(this).attr('href')+'">'+$(this).html()+'</a></li>';
 			}else{
