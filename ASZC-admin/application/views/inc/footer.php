@@ -158,9 +158,9 @@
 	 *	So we fix the issue here.
 	 *	DON'T REMOVE THIS SCRIPT.
 	*/
-	/*if($('.pagination').length){
+	if($('.pagination').length){
 		var paginationHTML = '';
-		$('.pagination a,pagination strong').each(function(){
+		$('.pagination a,.pagination strong').each(function(){
 			if($(this).is('a')){
 				paginationHTML+='<li><a href="'+$(this).attr('href')+'">'+$(this).html()+'</a></li>';
 			}else{
@@ -168,7 +168,7 @@
 			}
 		});
 		$('.pagination').html(paginationHTML);
-	}*/
+	}
 	</script>
 	<div class="neon-loading-bar progress-is-hidden"><span data-pct="0" style="width: 0px;"></span></div>
 	</body>
