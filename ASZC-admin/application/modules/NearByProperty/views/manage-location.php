@@ -62,8 +62,11 @@ $(document).ready(function() {
 <hr />
 	<?php
 				//Finding Property Title Here.
+				
+				//echo '<pre>';print_r($property_details);
 				// if( isset( $_COOKIE['lang'] ) && ( $_COOKIE['lang'] == "english" )) {
 					$city_name=get_perticular_field_value('zc_city','city_name'," and city_name='".$property_details[0]['city']."'");
+
 					$province_code=get_perticular_field_value('zc_region_master','province_code'," and city='".mysql_real_escape_string($city_name)."'");
 									
 				// } else {

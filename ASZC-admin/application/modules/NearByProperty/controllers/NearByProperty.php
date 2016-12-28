@@ -226,7 +226,7 @@ class NearByProperty extends CI_Controller {
 			$this->db->insert('zc_nearbyproperty_details', $data);
 			$nearbypropertyDetailsId = $this->db->insert_id();
 			if( $nearbypropertyDetailsId > 0 ) {	
-				if( isset($_FILES['property_image']['name']) && ($_FILES['property_image']['name'] != "" )) {
+				/*if( isset($_FILES['property_image']['name']) && ($_FILES['property_image']['name'] != "" )) {
 					$name_type = end(explode('.', $_FILES['property_image']['name']));
 					$valid_array_type = array('jpg', 'jpeg', 'png', 'bmp','JPG' ,'JPEG','PNG');
 					if (in_array($name_type, $valid_array_type)) {
@@ -251,16 +251,84 @@ class NearByProperty extends CI_Controller {
 						$upadteData=array('url'=>$property_name);
 						$this->db->where('property_details_id',$nearbypropertyDetailsId);
 						$this->db->update('zc_nearbyproperty_details',$upadteData);						
-					}
+					}*/
+					if (isset($_FILES['property_image']['name']) && ($_FILES['property_image']['name'] != "")) {
+				//$new_file = "Property" . $property_id;
+				//$updatByPrms = $_REQUEST['nearbypropertyId'];
+				$structure = 'assets/uploads/NearByProperty/';
+
+				if (!is_dir('assets/uploads/NearByProperty/' . $nearbypropertyDetailsId)) {
+					mkdir('assets/uploads/NearByProperty/' . $nearbypropertyDetailsId, 0777, true);
+					chmod('assets/uploads/NearByProperty/' . $nearbypropertyDetailsId, 0777);
+				}
+				if (!is_dir('assets/uploads/NearByProperty/' . $nearbypropertyDetailsId . '/thumb/' . $nearbypropertyDetailsId)) {
+					mkdir('assets/uploads/NearByProperty/' . $nearbypropertyDetailsId . '/thumb/', 0777, true);
+				}
+
+
+				//$updatByPrms = $_REQUEST['nearbypropertyId'];
+				$name_type = end(explode('.', $_FILES['property_image']['name']));
+				//echo '<pre>';print_r($updatByPrms);die;
+				$upload_path = 'assets/uploads/NearByProperty/' . $nearbypropertyDetailsId;
+				//echo '<pre>';print_r($upload_path);
+
+				$this->upload->initialize($this->set_upload_options($upload_path));
+
+
+				$this->upload->do_upload('property_image');
+				$upload_data = $this->upload->data();
+				//echo '<pre>';print_r($upload_data);die;
+				$file_names = $upload_data['file_name'];
+
+				//$property_name = "property".$updatByPrms.'_pic.'.$name_type;
+				//echo '<pre>';print_r($property_name);die;
+
+				//$original_size = getimagesize($_FILES['property_image']['tmp_name']);
+				//echo '<pre>';print_r($property_name);
+				//$ratio = $original_size[0] / $original_size[1];
+
+				/*
+                 *	161x241
+                */
+
+				if (!is_dir('/assets/uploads/NearByProperty/thumb/' . $nearbypropertyDetailsId)) {
+					mkdir('/assets/uploads/NearByProperty/thumb/' . $nearbypropertyDetailsId, 0777, true);
+				}
+
+				$config = array(
+					'source_image' => 'assets/uploads/NearByProperty/' . $nearbypropertyDetailsId . '/' . $file_names,
+					'new_image' => 'assets/uploads/NearByProperty/' . $nearbypropertyDetailsId . '/thumb/' . $file_names,
+					'width' => 92,
+					'height' => 82,
+				);
+				//echo '<pre>';print_r($config);die;
+				$this->image_lib->initialize($config);
+				$this->image_lib->resize();
+				$dfile_name = get_perticular_field_value('zc_nearbyproperty_details', 'url', " and property_details_id =" . $nearbypropertyDetailsId);
+				$dfile = 'assets/uploads/NearByProperty/' . $nearbypropertyDetailsId . '/' . $dfile_name;
+				if (is_file($dfile)) {
+					@unlink($dfile);
+				}
+				$dfile_name = get_perticular_field_value('zc_nearbyproperty_details', 'url', " and property_details_id =" . $nearbypropertyDetailsId);
+				$dfile1 = 'assets/uploads/NearByProperty/' . $nearbypropertyDetailsId . '/thumb/' . $dfile_name;
+				if (is_file($dfile1)) {
+					@unlink($dfile1);
+				}
+
+				$upadteData = array('url' => $file_names);
+
+				$this->db->where('property_details_id',$nearbypropertyDetailsId);
+						$this->db->update('zc_nearbyproperty_details',$upadteData);	
 				}
 			}
-		}
+		redirect('NearByProperty/manage_location/update/'.$nearbypropertyDetailsId);
+
+			}
 			
 		$data['title_en'] = "Add Near By Property";
 		$data['provience_list']=$this->Common_model->get_provience_list();
 		$data['category_list']=$this->Common_model->get_category_list();
-		// $this->load->view('index_edit', $data);		
-		redirect('NearByProperty/manage_location/update/'.$nearbypropertyDetailsId);
+		$this->load->view('index_edit', $data);		
 	}
 
 	public function index_edit_page( $cat_id = 0  ) {

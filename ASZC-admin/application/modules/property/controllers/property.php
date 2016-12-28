@@ -152,6 +152,7 @@ class Property extends CI_Controller {
 			$res = $this->db->query($sql);
 		}
 		$this->property_model->update_property_details($data,$property_id);
+		
 		$this->session->set_flashdata('success', 'Blocked note has been added & status has been updated');
 		//redirect('/property/'.$type.'/'.$activetype.($page==''?'':'/'.$page));
 	}
@@ -1051,6 +1052,63 @@ class Property extends CI_Controller {
 		$rs=$this->property_model->del_property_img($img_id);
 		$this->session->set_flashdata('success', "The property image is Deleted successfully");
 		redirect('property/edit_property_details/'.$property_id);
+	}
+
+	public function send_blocked_note(){
+		$type=$this->input->post('type');
+		$page=$this->input->post('page');
+		$userid=$this->input->post('userid');
+		
+		$data['blocked_note'] = $this->input->post('blockednote');
+		$data['status'] = '0';
+		$this->users->updateUser($data, $userid);
+		
+		$default_email = get_perticular_field_value('zc_settings','meta_value'," and meta_name='default_email'");
+		$email = get_perticular_field_value('zc_user', 'email_id', " and user_id='" . $userid . "'");
+		$user_full_name = get_perticular_field_value('zc_user','first_name'," and user_id='".$userid."'").' '.get_perticular_field_value('zc_user','last_name'," and user_id='".$userid."'");
+		
+		$mail_from = isset($default_email) ? $default_email : "no-reply@zapcasa.it";
+		$mail_to = $email;
+		
+		$languagePref = get_perticular_field_value('zc_user_preference','language'," and user_id='".$userid."'");
+		$subject = ($languagePref == 'it'?'Il tuo account è stato bloccato.':'Your account has been blocked.');
+		if($languagePref == 'it'){
+			$msg='<body style="font-family:Century Gothic; color: #4c4d51; font-size:13px;">			
+			<div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
+				<div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
+				<div style="border-bottom:1px solid #d1d1d1;">
+					<img src="'.base_url().'assets/images/logo.png" alt="ZapCasa"/>
+				</div>
+				<div style="padding:15px;">
+					<strong>Ciao '.$user_full_name.'</strong>,<br>
+					<p>Questo è una notifica automatica per informarti che il tuo account ZapCasa è stato bloccato.</p>
+					<p>Per maggiori informazioni ti invitiamo ad effettuare il login su <a href="http://www.zapcasa.it">www.zapcasa.it</a>.</p><br>
+					<p>Saluti,<br><a href="http://www.zapcasa.it">www.zapcasa.it</a></p>
+				</div>
+			</div>
+			</body>';
+		}else{
+			$msg='<body style="font-family:Century Gothic; color: #4c4d51; font-size:13px;">			
+			<div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
+				<div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
+				<div style="border-bottom:1px solid #d1d1d1;">
+					<img src="'.base_url().'assets/images/logo.png" alt="ZapCasa"/>
+				</div>
+				<div style="padding:15px;">
+					<strong>Hi '.$user_full_name.'</strong>,<br>
+					<p>This is an automatic notification to inform you that your ZapCasa account has been blocked.</p>
+					<p>For further information please login on <a href="http://www.zapcasa.it">www.zapcasa.it</a>.</p><br>
+					<p>Regards,<br><a href="http://www.zapcasa.it">www.zapcasa.it</a></p>
+				</div>
+			</div>
+			</body>';
+		}
+
+		$body=$msg;
+		sendemail($mail_from, $mail_to, $subject, $body, $cc='');
+		
+		$this->session->set_flashdata('success', 'Blocked note has been added & status has been updated');
+		//redirect($this->controller.($type=='index'?'':'/'.$type).($page==''?'':'/'.$page));
 	}
 }
 ?>
