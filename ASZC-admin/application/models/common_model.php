@@ -30,7 +30,7 @@ class Common_model extends CI_Model{
 		return $data;
 	}
 	public function dashboardLatestPropertiesTotal(){
-		$sql="SELECT * FROM `zc_property_details` WHERE `property_status`='2' AND suspention_status='0' ORDER BY `property_id` DESC";
+		$sql="SELECT * FROM `zc_property_details` WHERE `property_status`='2' AND property_approval='1' ORDER BY `property_id` DESC";
 		$query=$this->db->query($sql);
 		return $query->num_rows();
 	}

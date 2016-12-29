@@ -141,9 +141,19 @@ $(document).ready(function() {
                             	$typology_name=get_perticular_field_value('zc_typologies','name'," and status='active' and typology_id='".$prop_typology."'");
 								$provience=get_perticular_field_value('zc_property_details','provience'," and property_id='".$property_id."'");
 								$st_name1=get_perticular_field_value('zc_region_master','Province_Code'," and `province_name` LIKE '%".$provience."%' group by Province_Code");
-								$prop_det_url.='-'.trim($city);
-								$prop_det_url.='-'.trim($provience);
-                            	$prop_det_url.='-'.trim($property_id);						
+								//$prop_det_url.='-'.trim($city);
+								//$prop_det_url.='-'.trim($provience);
+                            	if($_COOKIE['lang'] == "english")				
+								{
+									$prop_det_url.='-'.trim($property_list['city_name']);
+									$prop_det_url.='-'.trim($property_list['provience_name']);
+								}
+								else
+								{
+									$prop_det_url.='-'.trim($property_list['city_name_it']);
+									$prop_det_url.='-'.trim($property_list['provience_name_it']);
+								}					
+                            	$prop_det_url.='-'.trim($property_id);	
                             	$category_id=get_perticular_field_value('zc_property_details','category_id'," and property_id='".$property_id."'");
 								$search_title=get_property_type($category_id);											
                             	$main_image=get_perticular_field_value('zc_property_img','file_name'," and property_id='".$property_id."' and img_type='main_image'");

@@ -1433,8 +1433,18 @@ class property extends CI_Controller {
 		//$prop_det_url.='-'.trim($typology_name);
 		$city=get_perticular_field_value('zc_property_details','city'," and property_id='".$property_id."'");
 		$provience=get_perticular_field_value('zc_property_details','provience'," and property_id='".$property_id."'");
-		$prop_det_url.='-'.trim($city);
-		$prop_det_url.='-'.trim($provience);
+		//$prop_det_url.='-'.trim($city);
+		//$prop_det_url.='-'.trim($provience);
+		if($_COOKIE['lang'] == "english")				
+		{
+			$prop_det_url.='-'.get_perticular_field_value('zc_city','city_name'," and city_id='".$city."'");
+			$prop_det_url.='-'.get_perticular_field_value('zc_provience','provience_name'," and provience_id='".$provience."'");
+		}
+		else
+		{
+			$prop_det_url.='-'.get_perticular_field_value('zc_city','city_name_it'," and city_id='".$city."'");
+			$prop_det_url.='-'.get_perticular_field_value('zc_provience','provience_name'," and provience_id='".$provience."'");
+		}	
 		$prop_det_url.='-'.trim($property_id);
 		///////////////////////////////////////////////////
 		$category_id=get_perticular_field_value('zc_property_details','category_id'," and property_id='".$property_id."'");
