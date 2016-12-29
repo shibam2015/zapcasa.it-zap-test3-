@@ -448,7 +448,7 @@ var page="proDetails";
                   if($this->session->userdata( 'user_id' )!='' || $this->session->userdata('user_id')!='0')
 				   {
 				?>
-                <a id="save" href="javascript:void(0);" onClick="return save_property(<?php echo isset( $property_images['property_id'] ) ? $property_images['property_id'] : $property_details[0]['property_id']; ?>);"><?php echo $this->lang->line('details_property_image_save');?></a>
+                <a id="save" href="javascript:void(0)" onClick="return save_property(<?php echo isset( $property_images['property_id'] ) ? $property_images['property_id'] : $property_details[0]['property_id']; ?>);"><?php echo $this->lang->line('details_property_image_save');?></a>
                 <?php
 				   }
 				  else
@@ -1355,10 +1355,6 @@ var page="proDetails";
 		<script type="text/javascript">
 		$("#success").delay(3200).fadeOut(300);
 		$("#eror").delay(3200).fadeOut(300);
-
-		$('#extView').click(funciton() {
-			alert("hi");
-		});
 
 		function stopVideo()
 		{
