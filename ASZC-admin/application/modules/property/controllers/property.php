@@ -176,7 +176,7 @@ class Property extends CI_Controller {
 		$mail_from = isset($default_email) ? $default_email : "no-reply@zapcasa.it";
 		$mail_to = $email;
 		$languagePref = get_perticular_field_value('zc_user_preference', 'language', " and user_id='" . $userid . "'");
-		$subject = ($languagePref == 'it' ? 'Il tuo account è stato bloccato.' : 'Your account has been blocked.');
+		$subject = ($languagePref == 'it' ? 'Il tuo Proprietà è stato bloccato.' : 'Your Property has been blocked.');
 		if ($languagePref == 'it') {
 			$msg = '<body style="font-family:Century Gothic; color: #4c4d51; font-size:13px;">
 			<div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
@@ -186,7 +186,7 @@ class Property extends CI_Controller {
 				</div>
 				<div style="padding:15px;">
 					<strong>Ciao ' . $user_full_name . '</strong>,<br>
-					<p>Questo è una notifica automatica per informarti che il tuo account ZapCasa è stato bloccato.</p>
+					<p>Questo è una notifica automatica per informarti che il tuo on Proprietà ZapCasa è stato bloccato.</p>
 					<p>Per maggiori informazioni ti invitiamo ad effettuare il login su <a href="http://www.zapcasa.it">www.zapcasa.it</a>.</p><br>
 					<p>Saluti,<br><a href="http://www.zapcasa.it">www.zapcasa.it</a></p>
 				</div>
