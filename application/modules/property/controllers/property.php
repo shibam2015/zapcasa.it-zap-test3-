@@ -1402,7 +1402,8 @@ class property extends CI_Controller {
 		$data["pagination"] = array();
 		$config["base_url"] = base_url() . "property/get_saved_property";
 		$existingPropertIDs = get_perticular_field_value('zc_property_details',"GROUP_CONCAT(`property_id`)","");
-		$config["total_rows"] = get_perticular_count('zc_saved_property'," AND saved_by_user_id=$uid ".($existingPropertIDs==''?"":"AND `property_id` IN(".$existingPropertIDs.")"));
+		//$config["total_rows"] = get_perticular_count('zc_saved_property'," AND saved_by_user_id=$uid ".($existingPropertIDs==''?"":"AND `property_id` IN(".$existingPropertIDs.")"));
+		$config['total_rows'] = $this->propertym->count_get_saved_property();
 		$config["per_page"] = 10;
 		$config["uri_segment"] = 3;
 		$pagination = clone($this->pagination);

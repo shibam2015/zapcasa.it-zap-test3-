@@ -24,6 +24,7 @@ $(document).ready(function() {
 </script>
 </head>
 <body class="noJS">
+
     <script>
         var bodyTag = document.getElementsByTagName("body")[0];
         bodyTag.className = bodyTag.className.replace("noJS", "hasJS");
@@ -91,8 +92,13 @@ $(document).ready(function() {
                             foreach($property_lists as $property_list ){
                             	// $suspended_user_type = get_perticular_field_value('zc_user','user_type'," and user_id='".$propertyDetails[0]['suspention_by_user']."'");
                             	$suspended_user_type = get_perticular_field_value('zc_user','user_type'," and user_id='".$this->session->userdata('user_id')."'");
+								//$user_status = get_perticular_field_value('zc_user','status'," and user_id='".$property_id."'");
+								//echo '<pre>';print_r($property_lists);die;
+
 								/////////////////////////property name///////////////////////////////////
 								$property_id=$property_list['property_id'];
+								$user_status_list = $property_list['user_status'];
+								//echo property_id;die;
 								$prop_contract_id=get_perticular_field_value('zc_property_details','contract_id'," and property_id='".$property_id."'");
 								$prop_typology=get_perticular_field_value('zc_property_details','typology'," and property_id='".$property_id."'");
 								$property_name="";
@@ -103,13 +109,15 @@ $(document).ready(function() {
                             	$contract="";
                             	$prop_det_url='';
                             	$property_status = 2;
-								$suspention_status = 0;									
+								$suspention_status = 0;
+								//$user_status=0;
+								//$user_status_list = 0;									
                             	if($prop_contract_id==1){
                             		$contract="Rent";
                             	}
                             	if($prop_contract_id==2){
                             		$contract="Sell";
-                            	}
+								}
                             	$property_name.= $contract;
                             	$typology_name=get_perticular_field_value('zc_typologies','name'," and status='active' and typology_id='".$prop_typology."'");
                             	$property_name.=' '.stripslashes($typology_name);
@@ -121,7 +129,9 @@ $(document).ready(function() {
                             	$prop_typology = '';
                             	$prop_id = 0;
                             	$address = "";
+
                             	if(isset($propertyDetails[0])) {
+									//echo '<pre>';print_r($propertyDetails);die;
                             		$property_status = $propertyDetails[0]['property_status'];
 									$suspention_status = $propertyDetails[0]['suspention_status'];
                             		$city =  $propertyDetails[0]['city'];
@@ -130,6 +140,7 @@ $(document).ready(function() {
                             		$prop_price = $propertyDetails[0]['price'];
                             		$prop_update_price = $propertyDetails[0]['update_price'];
                             		$prop_id = $propertyDetails[0]['property_id'];
+
                             		if($propertyDetails[0]['area']!='') {
                             			$address .= $propertyDetails[0]['area'].' - ';
                             		}
@@ -190,7 +201,7 @@ $(document).ready(function() {
 											$toPageString = "/".$this->uri->segment('3');
 										}										
                             			?>
-                        <tr <?php echo $class1;?> <?php echo(($property_status == 2 && $suspention_status == 0)?'':'style="background:#ffffd7"'); ?>>
+										<tr <?php echo $class1; ?> <?php echo(($property_status == 2 && ($suspention_status == 0 && $user_status_list == 1)) ? '' : 'style="background:#ffffd7"'); ?>>
                             <td><?php echo ($entryCounter + $this->uri->segment('3'));?></td>
                             <td>
 							<?php
@@ -238,12 +249,15 @@ $(document).ready(function() {
                             <td>
                                 <span>
                                     <div class="property_img">
-                                        <a <?php echo(($property_status == 2 && $suspention_status == 0)?'href="'.$parms_url.'"':'style="color:#686868;"'); ?>>
+										<a <?php echo(($property_status == 2 && ($suspention_status == 0 && $user_status_list == 1)) ? 'href="' . $parms_url . '"' : 'style="color:#686868;"'); ?>>
                                         <?php
 										$main_img=get_perticular_field_value('zc_property_img','file_name'," and property_id='".$property_id."' and img_type='main_image'");
 										if($main_img!=''){
 											?>
-											<img src="<?php echo base_url();?>assets/uploads/Property/Property<?php echo $property_id;?>/thumb_92_82/<?php echo $main_img;?>" alt="" width="102px" height="68px;" <?php echo(($property_status == 2 && $suspention_status == 0)?'':'style="opacity:0.4;filter:alpha(opacity=40);"'); ?>>
+											<img
+												src="<?php echo base_url();?>assets/uploads/Property/Property<?php echo $property_id;?>/thumb_92_82/<?php echo $main_img;?>"
+												alt="" width="102px"
+												height="68px;" <?php echo(($property_status == 2 && ($suspention_status == 0 && $user_status_list == 1)) ? '' : 'style="opacity:0.4;filter:alpha(opacity=40);"'); ?>>
 											<?php
 										}else{
 											?>
@@ -262,7 +276,7 @@ $(document).ready(function() {
 											?>
 										</h4>
                                         <h4 style="font-size:15px;">
-                                            <a <?php echo(($property_status == 2 && $suspention_status == 0)?'href="'.$parms_url.'"':'style="color:#999999;"'); ?>>
+											<a <?php echo(($property_status == 2 && ($suspention_status == 0 && $user_status_list == 1)) ? 'href="' . $parms_url . '"' : 'style="color:#999999;"'); ?>>
 											<?php
 											$ContractType=get_perticular_field_value('zc_contract_types',($_COOKIE['lang']=='it'?'name_it':'name')," and contract_id='".$prop_contract_id."'");
 											$TypologyName=get_perticular_field_value('zc_typologies',($_COOKIE['lang']=='it'?'name_it':'name')," and status='active' and typology_id='".$propertyDetails[0]['typology']."'");
@@ -333,7 +347,7 @@ $(document).ready(function() {
 											}
 											?>
 											</font>
-                                            <?php echo(($property_status == 2 && $suspention_status == 0)?'':'<span style="color:#ff1515;font-weight:bold;margin-left:10px;">'.$this->lang->line('saved_property_unavailable').'</span>'); ?>
+											<?php echo(($property_status == 2 && ($suspention_status == 0 && $user_status_list == 1)) ? '' : '<span style="color:#ff1515;font-weight:bold;margin-left:10px;">' . $this->lang->line('saved_property_unavailable') . '</span>'); ?>
 										</p>
                                     </div>
                                     <div class="clear"></div>
@@ -342,7 +356,7 @@ $(document).ready(function() {
                             <td>
                                 <input type="hidden" id="saved_<?php echo $property_list['saved_id'] ?>" value="<?php echo $parms_url;?>">
 								<?php
-								if($property_status == 2 && $suspention_status == 0){
+								if ($property_status == 2 && ($suspention_status == 0 && $user_status_list == 1)) {
 								?>
                                 <div class="mask">
 									<button class="modify" onClick="return prop_view(<?php echo $property_list['saved_id'];?>);"><?php echo $this->lang->line('saved_property_button_view');?></button>
