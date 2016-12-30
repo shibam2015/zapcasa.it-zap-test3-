@@ -305,6 +305,7 @@ class property extends CI_Controller {
 		$data['nearby_category']=$this->propertym->get_nearby_category_property();
 		$data['user_profile']=$this->usersm->user_profile($data['property_details']['0']['property_post_by']);
 		//print_r($data['user_profile']);exit;
+		$data['show_save_search_flag'] = 1;
 		$this->load->view('property/detail_property',$data);
 		///////////for server///////////////////////////////////////////
 		/* $segs = $this->uri->segment_array();
@@ -2913,6 +2914,7 @@ class property extends CI_Controller {
 		$contract_id='';
 		$save_search_id = 0 ;
 		$new_saved_search=$this->session->userdata('new_search');
+
 		$contract_id = $new_saved_search['contract_type'];
 		$property_post_by_type='';
 		if(!empty($new_saved_search['property_post_by_type'])){
@@ -2965,7 +2967,7 @@ class property extends CI_Controller {
 
 		$new_data['saved_property_name']	= $property_name;
 		$new_data['saved_by_user_id']		= $this->session->userdata('user_id');
-		$new_data['location']				= isset($new_saved_search['location'])?$new_saved_search['location']:0;
+		$new_data['location']				= isset($new_saved_search['location'])?$new_saved_search['location']:'';
 		$new_data['category']				= $category;
 		$new_data['contract_id']			= $contract_id;
 		$new_data['property_post_by_type']	= isset($property_post_by_type)?$property_post_by_type:"";
@@ -3000,29 +3002,28 @@ class property extends CI_Controller {
 				
 		if($this->input->post('save_search_id')!= "" && $this->input->post('save_search_id') > 0){
 			$save_search_id=$this->input->post('save_search_id');
-
 			$new_data['saved_property_name']	= $property_name;
 			$new_data['saved_by_user_id']		= $this->session->userdata('user_id');
-			$new_data['location']				= ($this->input->post('location') != '')?$this->input->post('location'):0;
+			$new_data['location']				= ($this->input->post('location') != '' && $this->input->post('location') != $this->lang->line('search_header_location_field'))?$this->input->post('location'):'';
 			$new_data['category']				= ($this->input->post('category_id') != '')?$this->input->post('category_id'):0;
 			$new_data['contract_id'] = ($this->input->post('contract_type') != '') ? $this->input->post('contract_type') : "";
 			//$new_data['property_post_by_type']	= ($this->input->post('posted_by') != '')?implode(",", $this->input->post('posted_by')):"";
-			$new_data['status']					= ($this->input->post('status') != '')?$this->input->post('status'):"1";
+			$new_data['status']					= ($this->input->post('status') != '')?$this->input->post('status'):"";
 			$new_data['min_price']				= ($this->input->post('min_price') != '')?$this->input->post('min_price'):0;
 			$new_data['max_price']				= ($this->input->post('max_price') != '')?$this->input->post('max_price'):0;
 			$new_data['min_room']				= ($this->input->post('min_room') != '')?$this->input->post('min_room'):0;
 			$new_data['max_room']				= ($this->input->post('max_room') != '')?$this->input->post('max_room'):0;
 			$new_data['typology']				= ($this->input->post('typology') != '')?implode(",", $this->input->post('typology')):"";
-			$new_data['bathrooms_no']			= ($this->input->post('bathrooms_no') != '')?$this->input->post('bathrooms_no'):'all';
+			$new_data['bathrooms_no']			= ($this->input->post('bathrooms_no') != '')?$this->input->post('bathrooms_no'):'';
 			$new_data['min_surface_area']		= ($this->input->post('min_surface_area') != '')?$this->input->post('min_surface_area'):0;
 			$new_data['max_surface_area']		= ($this->input->post('max_surface_area') != '')?$this->input->post('max_surface_area'):0;
 			$new_data['min_beds_no']			= ($this->input->post('min_beds_no') != '')?$this->input->post('min_beds_no'):0;
 			$new_data['max_beds_no']			= ($this->input->post('max_beds_no') != '')?$this->input->post('max_beds_no'):0;
-			$new_data['kind']					= ($this->input->post('kind') != '')?$this->input->post('kind'):'all';
-			$new_data['energyclass']			= ($this->input->post('energyclass') != '')?$this->input->post('energyclass'):'all';
-			$new_data['heating']				= ($this->input->post('heating') != '')?$this->input->post('heating'):'all';
-			$new_data['parking']				= ($this->input->post('parking') != '')?$this->input->post('parking'):'all';
-			$new_data['furnished']				= ($this->input->post('furnished') != '')?$this->input->post('furnished'):'all';
+			$new_data['kind']					= ($this->input->post('kind') != '')?$this->input->post('kind'):'';
+			$new_data['energyclass']			= ($this->input->post('energyclass') != '')?$this->input->post('energyclass'):'';
+			$new_data['heating']				= ($this->input->post('heating') != '')?$this->input->post('heating'):'';
+			$new_data['parking']				= ($this->input->post('parking') != '')?$this->input->post('parking'):'';
+			$new_data['furnished']				= ($this->input->post('furnished') != '')?$this->input->post('furnished'):'';
 			$new_data['roommates']				= ($this->input->post('roommates') != '')?$this->input->post('roommates'):0;
 			$new_data['occupation']				= ($this->input->post('occupation') != '')?$this->input->post('occupation'):0;
 			$new_data['smokers']				= ($this->input->post('smokers') == '1')?$this->input->post('smokers'):0;
@@ -3036,7 +3037,6 @@ class property extends CI_Controller {
 			$new_data['saved_date']				= date('Y-m-d H:i:s');
 			$new_data['property_category']		= ($this->input->post('property_category') != '')?$this->input->post('property_category'):'';
 		}
-
 
 		$search_filter = $this->session->userdata('new_search');
 		//echo '<pre>';print_r($new_saved_search);
@@ -3084,6 +3084,8 @@ class property extends CI_Controller {
 	public function save_search_modify() {
 		$save_search_id = $this->input->post('save_search_id');
 		$rs=$this->propertym->get_details_saved_property( $save_search_id );
+		
+
 		if(count($rs) > 0 ){
 			$data = "";
 			$location = isset($rs['location'])?urlencode($rs['location']):'';
@@ -3093,14 +3095,14 @@ class property extends CI_Controller {
 			$status = isset( $rs['status'] ) ? $rs['status'] : '';
 			$property_category = isset( $rs['property_category'] ) ? $rs['property_category'] : '';
 			$saved_property_name = $rs['saved_property_name'];
-			$min_price = isset( $rs['min_price'] ) ? $rs['min_price'] : '';
-			$max_price = isset( $rs['max_price'] ) ? $rs['max_price'] : '';
+			$min_price = isset( $rs['min_price'] ) ? urlencode($rs['min_price']) : '';
+			$max_price = isset( $rs['max_price'] ) ? urlencode($rs['max_price']) : '';
 			$min_room = isset( $rs['min_room'] ) ? $rs['min_room'] : '';
 			$max_room = isset( $rs['max_room'] ) ? $rs['max_room'] : '';
 			
-			if( $min_price == '0'){
+			if( $min_price == '0,00'){
 				$min_price = "";
-			} if( $max_price == '0'){
+			} if( $max_price == '0,00'){
 				$max_price = "";
 			} if( $min_room == '0'){
 				$min_room = "";

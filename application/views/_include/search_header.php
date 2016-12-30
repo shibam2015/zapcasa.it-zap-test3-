@@ -1016,18 +1016,20 @@ function selectCountry(val, fname, disname) {
 		<input type="button"  id="save_search" name="search" value="Save Search" >
 		-->
 		<?php
-		if($this->session->userdata( 'user_id' )!='' || $this->session->userdata('user_id')!='0'){
-		?>
-		<a class="save_search" href="javascript:void(0);">
-			<?php echo $this->lang->line('search_header_save_search');?>
-		</a>
+		if($show_save_search_flag != 1) {
+			if($this->session->userdata( 'user_id' )!='' || $this->session->userdata('user_id')!='0'){
+			?>
+			<a class="save_search" href="javascript:void(0);">
+				<?php echo $this->lang->line('search_header_save_search');?>
+			</a>
+			<?php
+			}else{
+			?>
+			<a class="save_search_poup" href="javascript:void(0);">
+				<?php echo $this->lang->line('search_header_save_search');?>
+			</a>
 		<?php
-		}else{
-		?>
-		<a class="save_search_poup" href="javascript:void(0);">
-			<?php echo $this->lang->line('search_header_save_search');?>
-		</a>
-		<?php
+			}
 		}
 		?>
 	</div>
@@ -1037,18 +1039,20 @@ function selectCountry(val, fname, disname) {
 	<div class="bottom_btnbar" style="float:right;margin-top:-10px;">
 		<input type="submit" name="search" value="<?php echo $this->lang->line('search_header_button_search');?>">
 		<?php
-		if($this->session->userdata( 'user_id' )!='' || $this->session->userdata('user_id')!='0') {
-		?>
-		<a class="save_search" href="javascript:void(0);">
-			<?php echo $this->lang->line('search_header_save_search');?>
-		</a>
+		if($show_save_search_flag != 1) {
+			if($this->session->userdata( 'user_id' )!='' || $this->session->userdata('user_id')!='0') {
+			?>
+			<a class="save_search" href="javascript:void(0);">
+				<?php echo $this->lang->line('search_header_save_search');?>
+			</a>
+			<?php
+			} else {
+			?>
+			<a class="save_search_poup" href="javascript:void(0);">
+				<?php echo $this->lang->line('search_header_save_search');?>
+			</a>
 		<?php
-		} else {
-		?>
-		<a class="save_search_poup" href="javascript:void(0);">
-			<?php echo $this->lang->line('search_header_save_search');?>
-		</a>
-		<?php
+			}
 		}
 		?>
 		<!-- <a class="save_search" href="javascript:void(0);">Save Search</a>-->
