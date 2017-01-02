@@ -161,7 +161,7 @@
 	if($('.pagination').length){
 		var paginationHTML = '';
 		$('.pagination a,.pagination strong').each(function(){
-			if($(this).is('a')){
+			if($(this).is('a[href != "#"]')){
 				paginationHTML+='<li><a href="'+$(this).attr('href')+'">'+$(this).html()+'</a></li>';
 			}else{
 				paginationHTML+='<li class="active"><a href="#">'+$(this).html()+'</a></li>';
