@@ -1599,7 +1599,7 @@ var page="proDetails";
 		);
 		?>
 		<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/map.css?nocache=289671982568" type="text/css"/>
-		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?"></script>
+		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?=MAP_KEY?>"></script>
 		<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/label.js"></script>
 		<script type="text/javascript">
 		var WebRoot = '<?php echo base_url(); ?>';

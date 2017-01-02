@@ -43,3 +43,4 @@ define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 /*Local Constant Define*/
 define('DEFAULT_EMAIL', 'no-reply@zapcasa.it');
 define('INFO_EMAIL', 'vcodertechnolab@gmail.com');//info@zapcasa.it
+define('MAP_KEY', 'AIzaSyC3-bfA1DHW79vttrBDIKjD4UFia1c0LNI');//info@zapcasa.it
