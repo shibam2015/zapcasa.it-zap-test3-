@@ -239,8 +239,9 @@ $(function(){
 							$count_img=get_perticular_count('zc_property_img'," and property_id='".$arrProp->property_id."' and img_type!='preliminary'");
 							if($arrProp->main_img != ''){
 								$propertyImage = base_url().'assets/uploads/Property/Property'.$arrProp->property_id.'/thumb_200_296/'.$arrProp->main_img;
+								$propertyImageThumb = base_url().'assets/uploads/Property/Property'.$arrProp->property_id.'/thumb_92_82/'.$arrProp->main_img;
 							}else{
-								$propertyImage = base_url().'assets/images/no_proimg.jpg';
+								$propertyImageThumb = $propertyImage = base_url().'assets/images/no_proimg.jpg';
 							}
 							?>
 							<a href="<?php echo base_url();?><?php echo $first_segment;?>/<?php echo $prop_det_url;?>">
@@ -652,7 +653,7 @@ $(function(){
 							'proaddress' => $propertyAddress,
 							'propurl' => base_url().$first_segment.'/'.$prop_det_url,
 							'proprice' => '<font style="color:#ED6B1F">'.$propertyPrice.'</font>',
-							'proimg' => $propertyImage,
+							'proimg' => $propertyImageThumb,
 						);
 						$gMapCounter++;
 					}
