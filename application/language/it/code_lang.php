@@ -2569,7 +2569,7 @@ $lang['cal_december']	= "Dicembre";
 
 /* Custom added lines */
 
-$lang['prop_not_avilable']	= "proprietà viene eliminata, non è più disponibile";
+$lang['prop_not_avilable']	= "Immobile eliminato, non più disponibile";
 $lang['add_property_form_price_min'] = "Inserisci un un valore minimo";
 $lang['conversation_deleted']	= "conversazione cancellato";
 /* Custom added lines */

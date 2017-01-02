@@ -7059,6 +7059,7 @@ hr + .mail-env {
 .property_report .property_buyerlist .propertyListingReport{ padding:5px; border-left:1px solid #436794; border-bottom:1px solid #436794; border-right:1px solid #436794;}
 .property_report .property_buyerlist .propertyListingReport tr td{ padding:4px 10px;}
 .property_report .property_buyerlist .propertyListingReport tr td a{color:#224f87;}
+.property_report .property_buyerlist .propertyListingReport tr td li.active a{color:#ffffff;}
 .property_report .property_buyerlist .propertyListingReport tr:nth-child(odd){background:#f2f8ff; }
 .property_report .property_buyerlist .propertyListingReport tr:nth-child(even){background:#d0e0f4;}
 .property_report .property_buyerlist .heading{background-color:#1592e9; color:#fff; font-weight:bold;}

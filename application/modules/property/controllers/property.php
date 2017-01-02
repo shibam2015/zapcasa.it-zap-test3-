@@ -2781,6 +2781,7 @@ class property extends CI_Controller {
 				}
 			}
 		}
+		$this->propertym->delete_per_msg_permenent();
 		$msg = $this->lang->line('property_info_inbox_delete_message');
 		$newdata = array("delete_inbox_message" => $msg);	 
 		$this->session->set_userdata($newdata);
@@ -3536,7 +3537,7 @@ class property extends CI_Controller {
 		$mgrid = $msgDetails[0]['msg_grp_id'];
 		$rs=$this->propertym->delete_per_msg($uid,$mgrid,'from');					
 		$rs=$this->propertym->delete_per_msg($uid,$mgrid,'to');					
-		
+		$this->propertym->delete_per_msg_permenent();
 		echo $msg = $this->lang->line('property_info_inbox_delete_message');
 		$newdata = array("delete_inbox_message" => $msg);
 		$this->session->set_userdata($newdata);

@@ -1355,6 +1355,12 @@ class propertym extends CI_Model {
 		$this->db->query($sql_del);
 	}
 
+	public function delete_per_msg_permenent() {
+		
+		$sql_del="DELETE FROM zc_property_message_info WHERE msg_from_delete = '1' AND msg_to_delete = '1' ";
+		$this->db->query($sql_del);
+	}
+
 	public function delete_per_msg_2($msgid,$type) {
 		if($type=='to'){		//	For Inbox Items.
 			$sql_del="update zc_property_message_info set msg_from_delete='0',msg_to_delete='1' where msg_id='".$msgid."'";
