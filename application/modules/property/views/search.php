@@ -590,12 +590,12 @@ $(function(){
 									if($arrProp->price!='0.00'){
 										$propertyPrice.= '<span style="color:#000; font-weight:bold;float:left;">&euro;'.show_price($arrProp->price).'&nbsp;</span>';
 										if($arrProp->contract_id==1){
-											$propertyPrice.= '<span style="color:#000; font-weight:bold;float:left;">'.$this->lang->line('property_search_per_month').'</span>';
+											$propertyPrice .= '<span style="color:#000; font-weight:bold;float:left;">' . $this->lang->line('property_search_per_month') . '&nbsp;</span>';
 										}
 										if($arrProp->update_price!='0.00'){
 											$per_prop=percentage($arrProp->update_price,$arrProp->price);
 											if($per_prop!=0){
-												$propertyPrice.= '<span style="color:#000; font-weight:bold;float:left;">|</span>';
+												$propertyPrice .= '<span style="color:#000; font-weight:bold;float:left;">|&nbsp;</span>';
 												if ($per_prop < 0){
 													$propertyPrice.= '<span style="float: left;"><img src="'.base_url().'assets/images/green.gif" style="margin:5px 0 0 0;" width="8px" height="8px"></span>';
 													$propertyPrice.= '<span style="color:#090; font-weight:bold; padding-left:2px; float: left;">'.percentage($arrProp->update_price,$arrProp->price).' % </span>';

@@ -278,8 +278,12 @@ class propertym extends CI_Model {
 		$featuredProperties = array();
 		$featured_property = get_featured_property();		
 		if(count($featured_property)>0){
+			$i = 1;
 			foreach($featured_property as $property_featured_detail){
-				$featuredProperties[] = $property_featured_detail['property_id'];
+				if ($i <= 3) {
+					$featuredProperties[] = $property_featured_detail['property_id'];
+				}
+				$i++;
 			}
 			$featuredPropertySQL = implode(",",$featuredProperties);
 			$orderby = 'FIELD(zc_property_details.property_id,'.$featuredPropertySQL.') DESC, ';

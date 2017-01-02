@@ -201,7 +201,9 @@ class property extends CI_Controller {
 			$this->session->set_userdata('new_search',$filters);
 			$data['property_details'] = $this->propertym->getProeprtiesByFilter($filters,$startpoint,$perpage);
 		}
-		
+		/*echo "<pre>";
+		var_dump($data['property_details']);
+		die();*/
 		
 		if(!strpos($_SERVER['QUERY_STRING'], "page=")===false){
 			$QUERY_STRING = str_replace("&page=".$_GET['page'],"",$_SERVER['QUERY_STRING']);			

@@ -229,11 +229,12 @@ var page="proDetails";
 									$nearByProData = get_nearby_area($key['category_id']);									
 									if(count($nearByProData) > 0){
 										foreach($nearByProData as $nearByProDataKey){
+											// echo '<pre>';print_r($segs);die;
 											$nearby_lat = $nearByProDataKey['latitude'];
 											$nearby_lng = $nearByProDataKey['longitude'];
 											$position="(".$nearby_lat.", ".$nearby_lng.")";
 											if( $nearByProDataKey['url'] != "" ) {
-												$nearby_image_path = base_url().'ASZC-admin/assets/uploads/NearByProperty/thumb/'.$nearByProDataKey['url'];
+												$nearby_image_path = base_url() . 'ASZC-admin/assets/uploads/NearByProperty/' . $nearByProDataKey['property_details_id'] . '/thumb/' . $nearByProDataKey['url'];
 											} else {
 												$nearby_image_path = base_url()."assets/images/no_proimg.jpg";
 											}

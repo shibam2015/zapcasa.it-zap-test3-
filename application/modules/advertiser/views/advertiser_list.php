@@ -24,7 +24,8 @@ $(document).ready(function() {
 	});
 });
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+<!--<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>-->
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?= MAP_KEY ?>">
     <script>
 	
 /*function initialize() {
@@ -58,8 +59,8 @@ function initialize() {
 	 zoomControl: false,
 };
 
-  var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-   var map2 = new google.maps.Map(document.getElementById("map-canvas1"),mapProp);
+	var map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+	//var map2 = new google.maps.Map(document.getElementById("map-canvas1"),mapProp);
 
 	  
 	  

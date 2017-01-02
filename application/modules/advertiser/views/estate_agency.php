@@ -11,6 +11,10 @@
 	 .nicescroll-rails{
 		display:none; 
 	 }
+
+   #map_canvas {
+	   transition: all 2s;
+   }
    
 </style>
 <script type="text/javascript">
@@ -24,7 +28,10 @@ $(document).ready(function() {
 	});
 });
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+<!---<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=<?= MAP_KEY ?>"></script>-->
+<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/map.css?nocache=289671982568" type="text/css"/>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?= MAP_KEY ?>">
+</script>
     <script>
 	
 /*function initialize() {
@@ -47,10 +54,11 @@ google.maps.event.addDomListener(window, 'load', initialize);*/
 
 
 function initialize() {
-  var mapOptions = {
+
+	var mapOptions = {
     zoom: 4,
     center: new google.maps.LatLng(-25.363882, 131.044922),
-	 zoomControl: false,
+		zoomControl: true,
   };
   var mapProp = {
   zoom: 7,
@@ -58,10 +66,10 @@ function initialize() {
 	 zoomControl: false,
 };
 
-  var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-   var map2 = new google.maps.Map(document.getElementById("map-canvas1"),mapProp);
+	var map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+	// var map2 = new google.maps.Map(document.getElementById("map_canvas"),mapProp);
 
-	  
+
 	  
   var marker = new google.maps.Marker({
     position: map.getCenter(),
@@ -220,7 +228,6 @@ bodyTag.className = bodyTag.className.replace("noJS", "hasJS");
 	<div class="refinesearch">
         <?php $this->load->view("_include/search_header_advertiser"); ?>
     </div>
-    
     <h2 class="searchfound"><?php echo $this->lang->line('advertise_list_rentals');?> <font style="font-size:12px; font-weight:normal;"><?php echo $total_row;?> <?php echo $this->lang->line('advertise_list_results');?></font> 
     	<?php /*?>
     	<span class="post_brn"><a href="#"><?php echo $this->lang->line('advertise_list_post_your_property');?> <font><?php echo $this->lang->line('advertise_list_free');?></font></a></span> */ ?>
@@ -257,17 +264,24 @@ bodyTag.className = bodyTag.className.replace("noJS", "hasJS");
     </h2>
     
  <!-- <div class="rightmap_area"><img src="images/map_small.jpg" ></div>-->
-  
+
+
+	<div class="rightmap_area" id="map_canvas" style="width:445px;height:367px;border:solid 1px #DDDDDD;"></div>
+
 	<div class="searchresult_box searchresult_box2" style="height:660px ! important;overflow:hidden;">
       <div style="width:100%;overflow:auto;height:620px !important;overflow:auto;">
     <!--<div id="paginationdemo" class="demo">
 	  <div id="p1" class="pagedemo _current">-->
         <ul>
-        <?php
+
+			<?php
 		if(count($advertiser_lists)!=0)
 		{
           foreach($advertiser_lists as $advertiser_list)
 		  {
+			  echo '<pre>';
+			  print_r($advertiser_lists);
+			  die;
 			  $link=base_url().'advertiser/advertiser_details/'.$advertiser_list['user_id'];
 			  
 			  $user_pref = get_all_preference_by_user("zc_user_preference",$where=" AND user_id=".$advertiser_list['user_id']);
@@ -384,6 +398,7 @@ bodyTag.className = bodyTag.className.replace("noJS", "hasJS");
 	<?php } ?>
 </div>
 
+
 <!------ footer part ------------->
 
 <?php $this->load->view("_include/footer_search");?>
@@ -392,3 +407,4 @@ bodyTag.className = bodyTag.className.replace("noJS", "hasJS");
 
 </body>
 </html>
+
