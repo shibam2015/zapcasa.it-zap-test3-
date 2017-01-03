@@ -278,12 +278,16 @@ $(document).ready(function() {
                                 //$price=$property_details[0]['price'];
                                 /*}*/
                                 // echo $price;exit;
+                                $class = "required number groupOfCurrencyBox input_price";
+                                if($property_details[0]['private_nagotiation']==1) {
+                                    $class = "number groupOfCurrencyBox";
+                                }
                                 ?>
                             <input type="text" name="input_price"
                                    placeholder="<?php echo $this->lang->line('add_property_price_field'); ?>"
                                    id="input_price" onKeyPress="return unchecked_radio();"
                                    style="width:350px !important;" value="<?php echo $price; ?>"
-                                   class="required number groupOfCurrencyBox">
+                                   class="<?=$class?>">
                         </div>
                         <div class="radio_text" style="padding:0;line-height:40px;">
                             <span> <?php echo $this->lang->line('edit_property_ok');?> </span>
@@ -1336,7 +1340,7 @@ $(document).ready(function() {
 			//$("#special_err_price").show();
         }
         function blank_text(){
-			$("#input_price").removeClass('error required number');
+			$("#input_price").removeClass('error required number input_price');
 			$("#special_err_price").html('');
 			$("#input_price").val('');
         }
@@ -1412,10 +1416,7 @@ $(document).ready(function() {
 				rules: {
 					zip: {digits: true},
                     url: {youtube: "#url"},
-                    input_price: {
-                        required: true,
-                        input_price: true
-                    }
+
 				},
 				messages: {
 					zip: {digits: "<?php echo $this->lang->line('edit_property_form_please_provide_a_digits_only'); ?>"},
