@@ -17,6 +17,10 @@
 	height: 450px !important;
 	transition: all 2s;
 }
+
+#extView {
+	dispaly: none;
+}
 #map_canvas{ transition: all 2s; }
 </style>
 <script type="text/javascript">
@@ -741,7 +745,7 @@ var agent = "default";
 var zoomControl = true;
 var MarkerDraggable = false;
 var DrawCircleAroundMarker = false;
-var CircleMapRadius = 750;
+var CircleMapRadius = 3.10685596;
 var geocoder;
 var markerTitles = [];
 // markers array: name, type (icon), lat, long, description, uri, address

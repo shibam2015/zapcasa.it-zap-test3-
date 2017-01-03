@@ -287,6 +287,7 @@ var page="advDetails";
        
          </div>
                 <div class="property_info">
+
                 	<div class="company_logo" style="height:175px;">
                 <?php
                   if($advertiser_detail[0]['user_type']=='3' || $advertiser_detail[0]['user_type']=='2') {
@@ -332,10 +333,14 @@ var page="advDetails";
         							$ShowingCityName=get_perticular_field_value('zc_region_master','city_it'," and (city = '".$advertiser_detail[0]['city']."' OR city_it = '".$advertiser_detail[0]['city']."') group by province_code");
         						}
         						//
-        						if(!strpos($advertiser_detail[0]['province'], "'")===false){
+								if (!strpos($advertiser_detail[0]['province']) === false) {
+        							
         							$ShowingProvinceCode=get_perticular_field_value('zc_region_master','province_code'," and (province_name = '".str_replace("'","\\\'",$advertiser_detail[0]['province'])."' OR province_name_it = '".str_replace("'","\\\'",$advertiser_detail[0]['province'])."') group by province_code");
-        						}else{
-        							$ShowingProvinceCode=get_perticular_field_value('zc_region_master','province_code'," and (province_name = '".$advertiser_detail[0]['province']."' OR province_name_it = '".$advertiser_detail[0]['province']."') group by province_code");
+
+								}else{
+
+									$ShowingProvinceCode=get_perticular_field_value('zc_region_master','province_code'," and (province_name = '".$advertiser_detail[0]['province']."' OR province_name_it = '".$advertiser_detail[0]['province']."') group by province_code");
+
         						}
         					}else{
         						if(!strpos($advertiser_detail[0]['province'], "'")===false){
@@ -362,6 +367,9 @@ var page="advDetails";
         					if( $ShowingCityName != "" ) {
         						$advertiserAddress.= ' '.stripslashes($ShowingCityName);
         					}
+							if ($ShowingProvinceCode != "") {
+								$advertiserAddress .= ' - ' . stripslashes($ShowingProvinceCode);
+							}
         					if( $st_name1 != "" ) {
         						$advertiserAddress.= ' - '.$st_name1;
         					}
@@ -414,7 +422,7 @@ var page="advDetails";
         					if( $ShowingCityName != "" ) {
         						$advertiserAddress.= ' '.stripslashes($ShowingCityName);
         					}
-        					if( $ShowingProvinceCode != "" ) {
+							if ($ShowingProvinceCode = "") {
         						$advertiserAddress.= ' - '.$ShowingProvinceCode;
         					}
         					echo $advertiserAddress;

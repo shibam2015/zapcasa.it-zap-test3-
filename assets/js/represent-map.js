@@ -250,13 +250,11 @@ function initialize(Type = '') {
 			{
 				var markerLabelHTML = '<div class="property-window">\
 											<div class="property-image">\
-												<a href="javascript:;">\
 													<img src="'+markerPropertyImage+'">\
-												</a>\
 											</div>\
 											<div class="property-info">\
 												<div class="marker_title">\
-													<a href="'+markerURI+'">'+MarkerText+'</a>\
+													<a>' + MarkerText + '</a>\
 												</div>\
 												<div class="marker_address">'+markerAddress+'</div>\
 											</div>\
@@ -375,10 +373,15 @@ function toggleList(type) {
 }
 // hover on list item
 function markerListMouseOver(marker_id) {
+
 	$("#marker" + marker_id).css("display", "inline");
+	//map.setZoom(map.getZoom() - 3);
 }
+
 function markerListMouseOut(marker_id){
+
 	$("#marker"+marker_id).css("display","none");
+
 }
 // detect browser agent
 $(document).ready(function() {
@@ -440,9 +443,9 @@ function ZoomControl(controlDiv, map) {
   extendedView.id = 'extView';
 
   /* Change this to be the .png image you want to use */
-  extendedView.style.backgroundImage = 'url("http://www.zapcasa.it/zap-test3/assets/images/zoom.png")';
+	/* extendedView.style.backgroundImage = 'url("http://www.zapcasa.it/zap-test3/assets/images/zoom.png")';
   extendedView.style.backgroundSize = 'cover';
-  controlWrapper.appendChild(extendedView);
+	 controlWrapper.appendChild(extendedView);*/
 
   // Setup the click event listener - zoomIn
   google.maps.event.addDomListener(zoomInButton, 'click', function() {

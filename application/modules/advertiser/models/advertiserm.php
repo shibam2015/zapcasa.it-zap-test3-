@@ -518,7 +518,8 @@ class advertiserm extends CI_Model {
 	}
 	/////////////property list of owner/agency//////////////////////
 	function get_property_list($advertiser_id){
-		$sql="select * from zc_property_details where property_post_by='".$advertiser_id."' and property_status='2' and property_approval='1' and suspention_status='0' order by `property_id` desc LIMIT 0,5";
+		//echo "<br> <pre>"; print_r($advertiser_id);exit;
+		$sql = "select * from zc_property_details where property_post_by='" . $advertiser_id . "' and property_status='2' and property_approval='1' and suspention_status='0' order by `property_id` desc LIMIT 0,5";
 		$query=$this->db->query($sql);
 		$data = array();
 		if($query->num_rows()>0){

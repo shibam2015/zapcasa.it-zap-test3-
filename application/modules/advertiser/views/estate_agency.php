@@ -279,9 +279,7 @@ bodyTag.className = bodyTag.className.replace("noJS", "hasJS");
 		{
           foreach($advertiser_lists as $advertiser_list)
 		  {
-			  echo '<pre>';
-			  print_r($advertiser_lists);
-			  die;
+
 			  $link=base_url().'advertiser/advertiser_details/'.$advertiser_list['user_id'];
 			  
 			  $user_pref = get_all_preference_by_user("zc_user_preference",$where=" AND user_id=".$advertiser_list['user_id']);
@@ -347,7 +345,9 @@ bodyTag.className = bodyTag.className.replace("noJS", "hasJS");
 							</div>
 						<?php } ?>	
 	                    <div class="propFeatures">
-	                    <h3><?php echo $this->lang->line('advertise_list_property_post');?>  <font style="color:#ED6B1F"><?php echo get_perticular_count('zc_property_details'," and property_post_by='".$advertiser_list['user_id']."'");?></font></h3></div>
+							<h3><?php echo $this->lang->line('advertise_list_property_post'); ?>  <font
+									style="color:#ED6B1F"><?php echo get_perticular_count('zc_property_details', " and property_post_by='" . $advertiser_list['user_id'] . "'and 	property_status='2'and property_approval='1'"); ?></font>
+							</h3></div>
 	                </div>
 	            </li>
             <?php

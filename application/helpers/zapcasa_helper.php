@@ -680,8 +680,12 @@ function force_download( $filename = '', $data = '' ){
 		'js' => 'application/javascript',
 		'json' => 'application/json',
 		'xml' => 'application/xml',
-		'swf' => 'application/x-shockwave-flash',
+		//'swf' => 'application/x-shockwave-flash',
 		'flv' => 'video/x-flv',
+		'wmv' => 'video/x-ms-wmv',
+		'mp4' => 'video/mp4',
+		'3gp' => 'video/3gpp',
+
 		// images
 		'png' => 'image/png',
 		'jpe' => 'image/jpeg',

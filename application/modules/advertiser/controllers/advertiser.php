@@ -499,6 +499,7 @@ class advertiser extends CI_Controller {
 				$config['page_query_string'] = true;
 				$config['total_rows'] =  $total_row;
 				$config['per_page'] = 10;
+
 				if (!empty($_GET['offset'])) {
 					$offset = $_GET['offset'];
 				} else {
