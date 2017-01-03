@@ -219,7 +219,7 @@ $(document).ready(function() {
                                    placeholder="<?php echo $this->lang->line('add_property_price_field'); ?>"
                                    id="input_price" onKeyPress="return unchecked_radio();"
                                    style="width:350px !important;" value="0,00"
-                                   class="required number groupOfCurrencyBox">
+                                   class="required number groupOfCurrencyBox input_price">
                         </div>
                         <div class="radio_text" style="padding:0;line-height:40px;">
                             <span> <?php echo $this->lang->line('add_property_ok');?> </span>
@@ -1088,11 +1088,12 @@ $(document).ready(function() {
         	//alert('sdfgsdfg');
         	//$(this).prop('checked', false);
         	$("#pvt_negotiation").prop("checked", false);
-        	$("#input_price").addClass('required number');
+            $("#input_price").addClass('required number');
+        	// $("#input_price").removeClass('input_price');
         	//$("#special_err_price").show();
         }
         function blank_text(){
-        	$("#input_price").removeClass('error required number');
+        	$("#input_price").removeClass('error required number input_price');
         	$("#special_err_price").html('');
         	$("#input_price").val('');
         }
@@ -1168,12 +1169,7 @@ $(document).ready(function() {
 						return false;
 					}
 				}
-                if(price <= 0)
-                {
-                    alert('<?php echo $this->lang->line('property_prive_validate_msg');?>');
-                    $('#input_price').focus();
-                    return false;
-                }
+                
 				loaderCall('Save Draft');
 				draftClicked.preventDefault();
 				//document.getElementById("register").submit();
@@ -1182,10 +1178,6 @@ $(document).ready(function() {
 				rules: {
 					zip: {digits: true},
                     url: {youtube: "#url"},
-                    input_price: {
-                        required: true,
-                        input_price: true,
-                    }
 				},
 				messages: {
 					zip: {digits: "<?php echo $this->lang->line('add_property_form_please_provide_a_digits_only');?>"},
