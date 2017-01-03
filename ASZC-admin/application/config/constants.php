@@ -35,6 +35,7 @@ define('FOPEN_WRITE_CREATE',					'ab');
 define('FOPEN_READ_WRITE_CREATE',				'a+b');
 define('FOPEN_WRITE_CREATE_STRICT',				'xb');
 define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
+define('MAP_KEY', 'AIzaSyC3-bfA1DHW79vttrBDIKjD4UFia1c0LNI');//info@zapcasa.it
 
 
 /* End of file constants.php */
