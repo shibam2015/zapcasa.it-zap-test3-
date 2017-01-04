@@ -598,7 +598,7 @@ class advertiser extends CI_Controller {
 				} else {
 						$mail_from = isset($default_email) ? $default_email : "no-reply@zapcasa.it";
 						$mail_to = $email_user_to;
-						$subject = $this->lang->line('new_feedback_mail_subject_text');
+						$subject = 'Hai ricevuto un nuovo retroazione';
 
 						//$link = base_url().'My_Feedback/'.$rs.'/details';
 						$msg = '<body style="font-family:Century Gothic; color: #4c4d51; font-size:13px;">
@@ -608,17 +608,18 @@ class advertiser extends CI_Controller {
 											<img src="' . base_url() . 'assets/images/logo.png" alt="ZapCasa">
 										</div>
 										<div style="padding:15px;">
-											<strong>' . $this->lang->line('new_mail-hi') . ' ' . $user_name . ',</strong>
-											<p>' . $this->lang->line('new_feedback_mail_you_have_received_a_new_feedback_from') . '.</p>
-											<p>' . $this->lang->line('new_feedback_mail_to_red_id') . ' <a style="text-decoration:none;color:blue;" href="' . base_url() . 'My_Feedback">' . $this->lang->line('new_feedback_mail_click_here') . '</a></p>
-											<p><br>' . $this->lang->line('regards_mail') . ',<br><a href="http://www.zapcasa.it">www.zapcasa.it</a></p>
+											<strong>Ciao ' . $user_name . '</strong>
+											<p>Hai ricevuto un nuovo retroazione</p>
+											<p>Per leggerlo, vai alla pagina My feedback su ZapCasa <a style="text-decoration:none;color:blue;" href="' . base_url() . 'My_Feedback">CLICCA QUI!</a></p>
+											<p><br>Saluti,<br><a href="http://www.zapcasa.it">www.zapcasa.it</a></p>
 										</div>
 										<div style="padding:15px;border-top:1px solid #ddd;">
-											<p>' . $this->lang->line('Messages_you_are_receiving_this_email_because') . '</p>
+											<p>Stai ricevuto questa email perché sei registrato su ZapCasa. Per interrompere la ricezione di queste email, accedere al proprio conto ZapCasa e disattivare le notifiche.www.zapcasa.it</p>
 										</div>
 									</div>
 								</body>';
 						$body = $msg;
+						//echo $msg;die();
 
 						sendemail($mail_from, $mail_to, $subject, $body, $cc = '');
 
