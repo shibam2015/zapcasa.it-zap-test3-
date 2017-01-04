@@ -272,33 +272,24 @@ function get_city(id) {
 
 $("#property_image").change(function(){
 
-    var ext = this.value.match(/\.(.+)$/)[1];
-
-    var ext = ext.toLowerCase();
-
-    switch (ext) {
-
-        case 'jpg':
-
-        case 'jpeg':
-
+	var name = $(this).val();
+	var ext = name.substr((name.lastIndexOf('.') + 1));
+	var ext = ext.toLowerCase();
+	switch (ext) {
+		case 'jpg':
+		case 'jpeg':
 		case 'JPEG':
-
-        case 'png':
-
-        case 'gif':
-
-            readURL(this,1);
-
-            break;
-
-        default:
-
-            alert('Only jpg, jpeg ,png, or gif file can be uploaded.');
-
-            this.value = '';
-
-    }
+		case 'JPG':
+		case 'PNG':
+		case 'GIF':
+		case 'png':
+		case 'gif':
+			readURL(this, 1);
+			break;
+		default:
+			alert('<?php echo "".$this->lang->line('add_property_form_file_upload_restriction');?>');
+			this.value = '';
+	}
 
 });
 

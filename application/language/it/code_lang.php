@@ -2573,5 +2573,12 @@ $lang['prop_not_avilable']	= "Immobile eliminato, non più disponibile";
 $lang['add_property_form_price_min'] = "Inserisci un un valore minimo";
 $lang['conversation_deleted']	= "conversazione cancellato";
 /* Custom added lines */
+/*Mail*/
+$lang['new_feedback_mail_subject_text'] = 'Hai ricevuto un nuovo retroazione';
+$lang['new_feedback_mail_you_have_received_a_new_feedback_from'] = 'Hai ricevuto un nuovo retroazione';
+$lang['new_mail-hi'] = 'Ciao';
+$lang['regards_mail'] = 'Saluti';
+$lang['new_feedback_mail_to_red_id'] = 'Per leggerlo, vai alla pagina My feedback su ZapCasa';
+$lang['Messages_you_are_receiving_this_email_because'] = 'tai ricevuto questa email perché sei registrato su ZapCasa. Per interrompere la ricezione di queste email, accedere al proprio conto ZapCasa e disattivare le notifiche.www.zapcasa.it';
 
 ?>

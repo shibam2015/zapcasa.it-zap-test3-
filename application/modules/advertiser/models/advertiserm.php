@@ -743,7 +743,7 @@ class advertiserm extends CI_Model {
 		if ($lastpage > 1) {
 			$pagination .= "<div class='inbox_delete_pagination_rht'>";
 			if ($page > 1)
-				$pagination .= "<a href='".$path."$prev'>&lsaquo;</a>";
+				$pagination .= "<a href='" . $path . "$prev'>‹</a>";
 			else
 				$pagination .= "";
 			if ($lastpage < 7 + ($adjacents * 2)) {
@@ -790,7 +790,7 @@ class advertiserm extends CI_Model {
 				}
 			}
 			if ($page < $counter - 1)
-				$pagination .= "<a href='".$path."$next'>&rsaquo;</a>";
+				$pagination .= "<a href='" . $path . "$next'>›</a>";
 			else
 				$pagination .= "";
 			$pagination .= "</div>\n";

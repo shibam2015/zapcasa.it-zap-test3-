@@ -155,7 +155,7 @@ else
                 </div>
                 <table width="100%" border="0" cellspacing="3" cellpadding="3"  id="inbox_msg">
                   <tr class="heading">
-                    <td width="4%">&nbsp;</td>
+					  <td width="4%"> </td>
                     <td width="49%"><?php echo $this->lang->line('feedback_message_inbox_subject');?></td>
                     <td width="21%"><?php echo $this->lang->line('feedback_message_inbox_from');?></td>
                     <td width="14%"><?php echo $this->lang->line('feedback_message_inbox_date');?></td>
@@ -347,7 +347,7 @@ function click_me(id){
 		}
 	});
 	if(typeof id != "undefined" && id!=0 ){
-		$("#inbox_delete_pagination").html("<a class='view_prop' style='float:left;' title='<?php echo $this->lang->line('inbox_back_to_the_list');?>' onClick='window.location.reload();'>&laquo;</a><a class='msg_del' href='javascript:void(0);'><img title='<?php echo $this->lang->line('inbox_heading_delete_icon_title');?>' style='cursor:pointer;' onclick='return delete_pmsg(" + id + ");' src='<?php echo base_url();?>assets/images/delete_icon.png'></a>");
+		$("#inbox_delete_pagination").html("<a class='view_prop' style='float:left;' title='<?php echo $this->lang->line('inbox_back_to_the_list');?>' onClick='window.location.reload();'>«</a><a class='msg_del' href='javascript:void(0);'><img title='<?php echo $this->lang->line('inbox_heading_delete_icon_title');?>' style='cursor:pointer;' onclick='return delete_pmsg(" + id + ");' src='<?php echo base_url();?>assets/images/delete_icon.png'></a>");
 		//open_reply();
 	}else{
 		$("#inbox_delete_pagination").html("<a class='msg_del'  href='javascript:void(0);'></a>");

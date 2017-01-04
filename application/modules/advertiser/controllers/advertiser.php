@@ -520,83 +520,119 @@ class advertiser extends CI_Controller {
 			$this->load->view('advertiser/estate_agency',$data);	
 		}
 	}
-	function add_feedback(){
-		if( $this->session->userdata( 'user_id' ) == 0 || $this->session->userdata( 'user_id' ) == "" ) {
+
+	function add_feedback()
+	{
+		if ($this->session->userdata('user_id') == 0 || $this->session->userdata('user_id') == "") {
 			//redirect('/');
 		}
-		$new_data=array();
+		$new_data = array();
 		$agree_terms = 0;
 		$receive_mail = 0;
-		if( isset($_POST['agree_terms']) ) {
+		if (isset($_POST['agree_terms'])) {
 			$agree_terms = $this->input->post('agree_terms');
 		}
-		if( isset($_POST['receive_mail']) ) {
+		if (isset($_POST['receive_mail'])) {
 			$receive_mail = $this->input->post('receive_mail');
 		}
-		$owner_id=$this->input->post('owner_id');
-		$new_data['feedback_date']=date('d-m-Y');
-		$new_data['feedback_subject']=$this->input->post('subject');
-		$new_data['feedback_msg']=$this->input->post('message');
-		$new_data['user_email']=$this->input->post('email_id');
-		$new_data['user_name']=$this->input->post('name');
-		$new_data['feedback_to_id']= $owner_id;
+		$owner_id = $this->input->post('owner_id');
+		$new_data['feedback_date'] = date('d-m-Y');
+		$new_data['feedback_subject'] = $this->input->post('subject');
+		$new_data['feedback_msg'] = $this->input->post('message');
+		$new_data['user_email'] = $this->input->post('email_id');
+		$new_data['user_name'] = $this->input->post('name');
+		$new_data['feedback_to_id'] = $owner_id;
 
-		$new_data['privacy_policy']=$agree_terms;
-		$new_data['newsletter']= $receive_mail;
+		$new_data['privacy_policy'] = $agree_terms;
+		$new_data['newsletter'] = $receive_mail;
 
-		if($this->session->userdata('user_id') != '') {
-			$new_data['user_status_type']= '1';
-		}else{
-			$new_data['user_status_type']= '0';
+		if ($this->session->userdata('user_id') != '') {
+			$new_data['user_status_type'] = '1';
+		} else {
+			$new_data['user_status_type'] = '0';
 		}
-		if($this->session->userdata( 'user_id')!=$owner_id){			
-			$rs=$this->propertym->add_feedback($new_data);
-			if($rs) {
-				if($this->session->userdata( 'user_id' ) != ''){			 
-					$user_id=$this->session->userdata( 'user_id' );
-					$email_user=get_perticular_field_value('zc_user','email_id'," and user_id='".$user_id."'");
-				}else{
-					$email_user=$this->input->post('email_id');
+		if ($this->session->userdata('user_id') != $owner_id) {
+			$rs = $this->propertym->add_feedback($new_data);
+			if ($rs) {
+				if ($this->session->userdata('user_id') != '') {
+					$user_id = $this->session->userdata('user_id');
+					$email_user = get_perticular_field_value('zc_user', 'email_id', " and user_id='" . $user_id . "'");
+				} else {
+					$email_user = $this->input->post('email_id');
 				}
-				
-				$user_preference_loc = get_all_value('zc_user_preference'," and user_id='".$owner_id."'");
-				$user_name=get_perticular_field_value('zc_user','first_name'," and user_id='".$owner_id."'")." ".get_perticular_field_value('zc_user','last_name'," and user_id='".$owner_id."'");
-				$email_user_to=get_perticular_field_value('zc_user','email_id'," and user_id='".$owner_id."'");
-				if(isset( $user_preference_loc[0]) &&(count( $user_preference_loc[0]) > 0 )){
-					
-					if( $user_preference_loc[0]['send_me_email'] == 1){
-						
-						$mail_from= isset($default_email) ? $default_email : "no-reply@zapcasa.it";
-						$mail_to=$email_user_to;
-						$subject= $this->lang->line('new_feedback_mail_subject_text');
-						
+
+				$user_preference_loc = get_all_value('zc_user_preference', " and user_id='" . $owner_id . "'");
+				$user_name = get_perticular_field_value('zc_user', 'first_name', " and user_id='" . $owner_id . "'") . " " . get_perticular_field_value('zc_user', 'last_name', " and user_id='" . $owner_id . "'");
+				$email_user_to = get_perticular_field_value('zc_user', 'email_id', " and user_id='" . $owner_id . "'");
+				if (isset($user_preference_loc[0]) && (count($user_preference_loc[0]) > 0)) {
+
+					if ($user_preference_loc[0]['send_me_email'] == 1 && $user_preference_loc[0]['language'] == 'english') {
+
+						$mail_from = isset($default_email) ? $default_email : "no-reply@zapcasa.it";
+						$mail_to = $email_user_to;
+						$subject = $this->lang->line('new_feedback_mail_subject_text');
+
 						//$link = base_url().'My_Feedback/'.$rs.'/details';
 						$msg = '<body style="font-family:Century Gothic; color: #4c4d51; font-size:13px;">
 									<div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
 										<div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
 										<div style="border-bottom:1px solid #d1d1d1;">
-											<img src="'.base_url().'assets/images/logo.png" alt="ZapCasa">
+											<img src="' . base_url() . 'assets/images/logo.png" alt="ZapCasa">
 										</div>
 										<div style="padding:15px;">
-											<strong>'.$this->lang->line('new_mail-hi').' '.$user_name.',</strong>
-											<p>'.$this->lang->line('new_feedback_mail_you_have_received_a_new_feedback_from').'.</p>
-											<p>'.$this->lang->line('new_feedback_mail_to_red_id').' <a style="text-decoration:none;color:blue;" href="'.base_url().'My_Feedback">'.$this->lang->line('new_feedback_mail_click_here').'</a></p>
-											<p><br>'.$this->lang->line('regards_mail').',<br><a href="http://www.zapcasa.it">www.zapcasa.it</a></p>
+											<strong>' . $this->lang->line('new_mail-hi') . ' ' . $user_name . ',</strong>
+											<p>' . $this->lang->line('new_feedback_mail_you_have_received_a_new_feedback_from') . '.</p>
+											<p>' . $this->lang->line('new_feedback_mail_to_red_id') . ' <a style="text-decoration:none;color:blue;" href="' . base_url() . 'My_Feedback">' . $this->lang->line('new_feedback_mail_click_here') . '</a></p>
+											<p><br>' . $this->lang->line('regards_mail') . ',<br><a href="http://www.zapcasa.it">www.zapcasa.it</a></p>
 										</div>
 										<div style="padding:15px;border-top:1px solid #ddd;">
-											<p>'.$this->lang->line('Messages_you_are_receiving_this_email_because').'</p>
+											<p>' . $this->lang->line('Messages_you_are_receiving_this_email_because') . '</p>
 										</div>
 									</div>
 								</body>';
-						$body=$msg;
-						
-						sendemail($mail_from, $mail_to, $subject, $body, $cc='');
+						$body = $msg;
+
+						sendemail($mail_from, $mail_to, $subject, $body, $cc = '');
+
+
+				} else {
+						$mail_from = isset($default_email) ? $default_email : "no-reply@zapcasa.it";
+						$mail_to = $email_user_to;
+						$subject = $this->lang->line('new_feedback_mail_subject_text');
+
+						//$link = base_url().'My_Feedback/'.$rs.'/details';
+						$msg = '<body style="font-family:Century Gothic; color: #4c4d51; font-size:13px;">
+									<div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
+										<div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
+										<div style="border-bottom:1px solid #d1d1d1;">
+											<img src="' . base_url() . 'assets/images/logo.png" alt="ZapCasa">
+										</div>
+										<div style="padding:15px;">
+											<strong>' . $this->lang->line('new_mail-hi') . ' ' . $user_name . ',</strong>
+											<p>' . $this->lang->line('new_feedback_mail_you_have_received_a_new_feedback_from') . '.</p>
+											<p>' . $this->lang->line('new_feedback_mail_to_red_id') . ' <a style="text-decoration:none;color:blue;" href="' . base_url() . 'My_Feedback">' . $this->lang->line('new_feedback_mail_click_here') . '</a></p>
+											<p><br>' . $this->lang->line('regards_mail') . ',<br><a href="http://www.zapcasa.it">www.zapcasa.it</a></p>
+										</div>
+										<div style="padding:15px;border-top:1px solid #ddd;">
+											<p>' . $this->lang->line('Messages_you_are_receiving_this_email_because') . '</p>
+										</div>
+									</div>
+								</body>';
+						$body = $msg;
+
+						sendemail($mail_from, $mail_to, $subject, $body, $cc = '');
+
+
 					}
-				}
 				$msgdata = $this->lang->line('advertiser_msg_your_feedback_is_posting_successfully');
 				$this->session->set_flashdata('success_feedback', $msgdata);
-				redirect('advertiser/advertiser_details/'.$owner_id);
+					redirect('advertiser/advertiser_details/' . $owner_id);
 			}
+				$msgdata = $this->lang->line('advertiser_msg_your_feedback_is_posting_successfully');
+				$this->session->set_flashdata('success_feedback', $msgdata);
+				redirect('advertiser/advertiser_details/' . $owner_id);
+			}
+
 
 		} else{
 			$msgdata = $this->lang->line('advertiser_msg_you_cant_feedback_yourself');
