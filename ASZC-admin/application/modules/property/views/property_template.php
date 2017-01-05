@@ -198,7 +198,7 @@
 						$expDateLength = get_perticular_field_value('zc_property_featured','number_of_days'," and property_id='".$property_detail['property_id']."'");
 						$expireDate = strtotime(date('Y-m-d', strtotime($startDate . " +".$expDateLength." days")));
 						if($todayDate < $expireDate){
-							$featuredLink = '<a href="'.base_url()."property/".($property_detail['feature_status']==0?'property_feature_resume':'property_feature_suspend')."/".$property_detail['property_id'].$pageLink.'" class="btn btn-'.($property_detail['feature_status']==0?'gold':'red').' btn-sm btn-icon btn-xs">
+							$featuredLink = '<a href="' . base_url() . "property/" . ($property_detail['feature_status'] == 0 ? 'property_feature_resume' : 'make_featured') . "/" . $property_detail['property_id'] . $pageLink . '" class="btn btn-' . ($property_detail['feature_status'] == 0 ? 'gold' : 'red') . ' btn-sm btn-icon btn-xs">
 												<i class="entypo-back-in-time"></i>'.($property_detail['feature_status']==0?'Resume':'Suspend').'
 											 </a>';
 						}

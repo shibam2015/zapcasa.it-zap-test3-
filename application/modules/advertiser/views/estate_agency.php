@@ -32,6 +32,8 @@ $(document).ready(function() {
 <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/map.css?nocache=289671982568" type="text/css"/>
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?= MAP_KEY ?>">
 </script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/represent-map1.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/markerclusterer.js"></script>
     <script>
 	
 /*function initialize() {
@@ -53,7 +55,7 @@ google.maps.event.addDomListener(window, 'load', initialize);*/
 
 
 
-function initialize() {
+/*function initialize() {
 
 	var mapOptions = {
     zoom: 4,
@@ -92,11 +94,44 @@ function initialize() {
   
 }
 
-google.maps.event.addDomListener(window, 'load', initialize);
+ google.maps.event.addDomListener(window, 'load', initialize);*/
 
 
 
     </script>
+<script type="text/javascript">
+	var WebRoot = '<?php echo base_url(); ?>';
+	var centerZoom = 4;
+	var centerLatitude = <?php echo(!empty($GoogleMapMarkers)?$GoogleMapMarkers[0]['latitude']:'41.500000'); ?>;
+	var centerLongitude = <?php echo(!empty($GoogleMapMarkers)?$GoogleMapMarkers[0]['longitude']:'21.500000'); ?>;
+	var map;
+	var infowindow = null;
+	var gmarkers = [];
+	var markerTitles = [];
+	var highestZIndex = 0;
+	var agent = "default";
+	var zoomControl = true;
+	var MarkerDraggable = false;
+	var DrawCircleAroundMarker = false;
+	var CircleMapRadius = 3.10685596;
+	var geocoder;
+	var markerTitles = [];
+	// markers array: name, type (icon), lat, long, description, uri, address
+	GoogleMapMarkers = new Array();
+	<?php
+    if(!empty($GoogleMapMarkers)){
+        $gMi = 0;
+        foreach($GoogleMapMarkers as $gM){
+    ?>
+	GoogleMapMarkers.push(["<?php echo $gM['proptitle']; ?>", "<?php echo $gM['hackerspace']; ?>", <?php echo $gM['latitude']; ?>, <?php echo $gM['longitude']; ?>, "<?php echo $gM['proaddress']; ?>", "<?php echo $gM['propurl']; ?>", '<?php echo $gM['proprice']; ?>', "<?php echo $gM['proimg']; ?>"]);
+	markerTitles[<?php echo $gMi; ?>] = "<?php echo $gM['proptitle']; ?>";
+	<?php
+        $gMi++;
+        }
+    }
+    ?>
+
+</script>
 
 <script type="text/javascript">
 $(function(){
@@ -275,11 +310,17 @@ bodyTag.className = bodyTag.className.replace("noJS", "hasJS");
         <ul>
 
 			<?php
+			$GoogleMapMarkers = array();
+			$l = 1;
 		if(count($advertiser_lists)!=0)
 		{
+			$alt = 0;
+			$gMapCounter = 0;
           foreach($advertiser_lists as $advertiser_list)
 		  {
 
+			  //echo "<pre>";
+			  //print_r($advertiser_list);die();
 			  $link=base_url().'advertiser/advertiser_details/'.$advertiser_list['user_id'];
 			  
 			  $user_pref = get_all_preference_by_user("zc_user_preference",$where=" AND user_id=".$advertiser_list['user_id']);
@@ -307,6 +348,9 @@ bodyTag.className = bodyTag.className.replace("noJS", "hasJS");
 							if($user_image!='') {
 						?>
 	                    		<img src="<?php echo base_url();?>assets/uploads/thumb_92_82/<?php echo $user_image; ?>" alt="<?php echo $business_name; ?>">
+								<?php
+								$propertyImageThumb = base_url() . 'assets/uploads/thumb_92_82/' . $user_image;
+								?>
 								
 							<?php
 							} else {
@@ -321,6 +365,14 @@ bodyTag.className = bodyTag.className.replace("noJS", "hasJS");
 	                </div>
 	                <div class="listingContent">
 					<h2 style="padding: 0 0 5px;" ><a href="<?php echo $link;?>"><?php echo $business_name;?></a></h2>
+
+						<h2 class="hackerspace">
+							<a href="<?php echo base_url() . $first_segment . '/' . $prop_det_url; ?>"
+							   onMouseOver="goToMarker('<?php echo $gMapCounter; ?>')"
+							   onMouseOut="markerListMouseOut('<?php echo $gMapCounter; ?>')">
+								<!--<?php echo $business_name; ?>-->
+							</a>
+						</h2>
 	                    <?php if( $user_pref[0]['my_address_display'] == 0 ) {  ?>
 		                    <div class="listAddress">
 		                    	<?php if( $nameForBusiness != "" ) {?><p style="font-weight: bold;color: #000000;" ><?php echo $nameForBusiness; ?></p><?php } ?>
@@ -350,8 +402,25 @@ bodyTag.className = bodyTag.className.replace("noJS", "hasJS");
 							</h3></div>
 	                </div>
 	            </li>
-            <?php
-		  		}
+
+					<?php
+					$alt++;
+					if ($alt > 1) {
+						$alt = 0;
+					}
+					$GoogleMapMarkers[$gMapCounter] = array(
+
+						'proptitle' => $business_name,
+						'hackerspace' => 'marker' . $arrProp->contract_id,
+						'latitude' => ($latitude == '0' ? '42.500000' : $latitude),
+						'longitude' => ($longitude == '0' ? '21.500000' : $longitude),
+						'proaddress' => $advertiser_list['street_address'],
+						//'propurl' => base_url().$first_segment.'/'.$prop_det_url,
+						//'proprice' => '<font style="color:#ED6B1F">'.$propertyPrice.'</font>',
+						'proimg' => $propertyImageThumb,
+					);
+					$gMapCounter++;
+				}
 		  	}		
 		  }
 		  ?>

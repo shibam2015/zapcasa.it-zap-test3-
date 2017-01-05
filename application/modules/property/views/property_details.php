@@ -114,6 +114,7 @@ $(document).ready(function() {
                                 <div class="clear"></div>
 						<?php
 						if(!empty($property_list)){
+							//echo "<pre>"; print_r($property_list);die();
 							foreach($property_list as $property_lists){
 								$suspended_user_type = get_perticular_field_value('zc_user','user_type'," and user_id='".$property_lists['suspention_by_user']."'");
 								if(!in_array($property_lists['property_id'],$featuredPropertyId)){
@@ -138,7 +139,8 @@ $(document).ready(function() {
 													?>
 													</div>
 													<div style="display:table-cell;vertical-align:middle;">
-														<a style="display:table-cell;vertical-align:middle;" <?php echo(($suspended_user_type != 4 || $property_lists['suspention_status'] == 0)?'href='.base_url().'property/edit_property/'.$property_id:''); ?>>
+														<a style="display:table-cell;vertical-align:middle;" <?php echo(($suspended_user_type != 4 && $property_lists['property_approval'] == 1) ? 'href=' . base_url() . 'property/edit_property/' . $property_id : 'href=' . base_url() . 'property/edit_property1/' . $property_id); ?>>
+
 														<?php
 														$main_img=get_perticular_field_value('zc_property_img','file_name'," and property_id='".$property_id."' and img_type='main_image'");
 														if($main_img!=''){
@@ -165,7 +167,7 @@ $(document).ready(function() {
 													?>
 												</h4>
 												<h2 style="display:table;width:100%;">
-													<a style="display:table-cell;vertical-align:middle;" <?php echo(($suspended_user_type != 4 || $property_lists['suspention_status'] == 0)?'href='.base_url().'property/edit_property/'.$property_id:''); ?>>
+													<a style="display:table-cell;vertical-align:middle;" <?php echo(($suspended_user_type != 4 && $property_lists['property_approval'] == 1) ? 'href=' . base_url() . 'property/edit_property/' . $property_id : 'href=' . base_url() . 'property/blocked_property/' . $property_id); ?>>
 														<?php
 														$TypologyName=get_perticular_field_value('zc_typologies',($_COOKIE['lang']=='it'?'name_it':'name')," and status='active' and typology_id='".$property_lists['typology']."'");
 														$CityName=get_perticular_field_value('zc_city',($_COOKIE['lang']=='it'?'city_name_it':'city_name')," and (`city_id` = '".$property_lists['city']."')");

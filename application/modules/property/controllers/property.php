@@ -1689,7 +1689,7 @@ class property extends CI_Controller {
 			$user_preference_loc = get_all_value('zc_user_preference', " and user_id='" . $new_message['user_id_to'] . "'");
 			$email_user = get_perticular_field_value('zc_user', 'email_id', " and user_id='" . $user_id . "'");
 			if (isset($user_preference_loc[0]) && (count($user_preference_loc[0]) > 0)) {
-				if ($user_preference_loc[0]['reply_msg'] == 1) {
+				if ($user_preference_loc[0]['reply_msg'] == 1 && $user_preference_loc[0]['language'] == 'english') {
 					$details = array();
 					/*$mail_from = $email_user;*/
 
@@ -1735,7 +1735,55 @@ class property extends CI_Controller {
 					} else {
 						$this->lang->load('code', 'it');
 					}
+				} else {
+					$details = array();
+					/*$mail_from = $email_user;*/
+
+					$sql = "SELECT * FROM zc_user_preference WHERE user_id=" . $new_message['user_id_to'];
+					$query = $this->db->query($sql);
+					$lang = $query->result();
+					$lang = $lang[0]->language;
+
+					if (isset($lang) && ($lang == "english")) {
+						$this->lang->load('code', 'english');
+					} else {
+						$this->lang->load('code', 'it');
+					}
+
+					$mail_from = isset($default_email) ? $default_email : "no-reply@zapcasa.it";
+					$mail_to = $new_message['email_id_to'];
+					$subject = 'Rispondi Messaggio di avviso - Zapcasa';
+					$link = "";
+					$subject_rpl = get_perticular_field_value('zc_property_message_info', 'subject', " and msg_id='" . $_POST['msg_id'] . "'");
+					$username_rpl = get_perticular_field_value('zc_user', 'user_name', " and user_id='" . $_POST['user_id_form'] . "'");
+					$message = '<body style="font-family:Century Gothic; color: #4c4d51; font-size:13px;">
+												<div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
+													<div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
+													<div style="border-bottom:1px solid #d1d1d1;">
+														<img src="' . base_url() . 'assets/images/logo.png" alt="logo"/>
+													</div>
+													<div style="padding:15px;">
+														<strong>Ciao, ' . $new_message['user_name_to'] . '</strong>
+														<p>' . $username_rpl . ' risposto al tuo messaggio.</p>
+														<p>Per leggere e rispondere a questo messaggio, vai al tuo arrivo in ZapCasa. <a style="text-decoration:none;color:blue;" href="' . base_url() . 'property/get_message">CLICCA QUI</a></p>
+														<p>Saluti,<br><a href="http://www.zapcasa.it">www.zapcasa.it</a></p>
+													</div>
+													<div style="padding:15px;border-top:1px solid #ddd;">
+														<p>Stai ricevuto questa email perché sei registrato su ZapCasa. Per interrompere la ricezione di queste email, accedere al proprio conto ZapCasa e disattivare le notifiche. www.zapcasa.it</p>
+													</div>
+												</div>
+											</body>';
+					$body = $message;
+					//echo $message;die();
+					sendemail($mail_from, $mail_to, $subject, $body, $cc = '');
+
+					if (isset($_COOKIE['lang']) && ($_COOKIE['lang'] == "english")) {
+						$this->lang->load('code', 'english');
+					} else {
+						$this->lang->load('code', 'it');
+					}
 				}
+
 			}
 			$msgdata = $this->lang->line('message_success_reply');
 			$this->session->set_flashdata('msg', $msgdata);
@@ -1973,6 +2021,18 @@ class property extends CI_Controller {
 			}
 		}
 	}
+
+	public function blocked_property()
+
+	{
+		$uid = $this->session->userdata('user_id');
+
+		$data = array();
+		$this->load->view('property/blockedproperty', $data);
+
+
+	}
+
 
 	public function manage_location()
 	{

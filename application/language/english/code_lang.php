@@ -2,8 +2,12 @@
 $lang['ref_code'] = 'Ref.';
 /* ---------------- Block User ------------------------ */
 $lang['blocked_sorry_ur_account_is_blocked'] = "We are sorry, your ZapCasa account is blocked.";
+$lang['blocked_sorry_ur_property_is_suspended'] = "Sorry this content is suspended.";
 $lang['blocked_werecommend_that_youdonot_continue_tothis_website'] = "The access to your private area as well as all activities associated with your account are disabled.";
+$lang['blocked_werecommend_that_youdonot_continue_tothis_website_property'] = "We are checking if it is complies with the Terms of zapcasa.";
+$lang['blocked_werecommend_that_youdonot_continue_tothis_website_property1'] = "After check it could be totally resumed partialy modified or completely deleted.";
 $lang['blocked_go_to_home_page_instead'] = "Go to home page.";
+$lang['blocked_go_to_property_page_instead'] = "Back to the list of property";
 $lang['blocked_learn_more'] = "Learn more.";
 $lang['ur_ac_is_blocked'] = "Your ZapCasa account is blocked.";
 /* ---------------- Home Page ------------------------ */
