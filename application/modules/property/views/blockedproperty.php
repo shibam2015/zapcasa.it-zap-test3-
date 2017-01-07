@@ -112,7 +112,7 @@
                 <div class="block-btn">
                     <h3 style="font-size:16px;text-align: center;margin-top: 70px;">
 
-                        <a href="<?php echo base_url(); ?>Property/property_details/property_list">
+                        <a href="<?php echo base_url(); ?>property/property_details/property_list">
                             <?php echo $this->lang->line('blocked_go_to_property_page_instead'); ?>
                         </a>
 

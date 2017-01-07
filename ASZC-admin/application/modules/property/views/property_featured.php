@@ -97,8 +97,10 @@
 	<!--<a <?php echo $statusURL; ?> class="btn btn-success <?php echo $btn_class; ?> btn-sm btn-icon btn-xs">
 				<i class="<?php echo $css_class; ?>"></i><?php echo $activeStatus; ?>
 			</a>-->
-
 	<?php
+	if ($property_details[0]['feature_status'] == '1') {
+		?>
+		<?php
 	$pageLink = "";
 	$featuredLink = '<a href="' . base_url() . "property/make_featured/" . $property_details[0]['property_id'] . '" class="btn btn-blue btn-sm btn-icon btn-xs">
 								<i class="entypo-back-in-time"></i>Feature&nbsp;&nbsp;
@@ -116,9 +118,10 @@
 		}
 	}
 	echo $featuredLink;
-	?>
 
-	<a href="<?php echo base_url(); ?>property/delete_property/<?php echo $property_details[0]['property_id']; ?>"
+		?>
+
+		<a href="<?php echo base_url(); ?>property/delete_property/<?php echo $property_details[0]['property_id']; ?>"
 	   class="btn btn-sm btn-icon btn-xs btn-red" onclick="return confirm('Are your sure?')">
 		<i class="entypo-cancel"></i>Delete
 	</a>
@@ -131,7 +134,8 @@
 	   href="<?php echo base_url(); ?>property/edit_property_details/<?php echo $property_details[0]['property_id']; ?>">
 		<i class="entypo-pencil"></i>Edit Property
 	</a>
-
+	<?php } else {
+	} ?>
 
 	<hr />
 

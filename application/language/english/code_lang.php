@@ -2580,5 +2580,6 @@ $lang['change_password_new_password_must_be_different'] = "You can't choose your
 $lang['add_property_form_price_min'] = "Please Enter a Minimum one Value ";
 $lang['prop_not_avilable']	= "This property is deleted, no longer available";
 $lang['conversation_deleted']	= "Conversation deleted";
+$lang['property_inactive_by_admin'] = "Property inactive by admin";
 /* Custom added lines */
 ?>

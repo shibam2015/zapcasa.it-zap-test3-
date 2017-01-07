@@ -1621,30 +1621,36 @@ class property extends CI_Controller {
 				$i++;
 			}
 			$HTML .= "</table>";
-			if($uid == $all_msgs['0']['user_id_to'] && $all_msgs['0']['msg_from_delete'] == '1') {
-				$Status = 0;
-				$HTML .= '<div class="warrning"> <p> ' . $this->lang->line('conversation_deleted') . '</p></div>';
-			} 
-			else if ($uid == $all_msgs['0']['user_id_from'] && $all_msgs['0']['msg_to_delete'] == '1') {
-				$Status = 0;
-				$HTML .= '<div class="warrning"> <p> ' . $this->lang->line('conversation_deleted') . '</p></div>';
-			}
+			if ($all_msgs['0']['property_id'] != 0) {
+				if ($uid == $all_msgs['0']['user_id_to'] && $all_msgs['0']['msg_from_delete'] == '1') {
+					$Status = 0;
+					$HTML .= '<div class="warrning"> <p> ' . $this->lang->line('conversation_deleted') . '</p></div>';
+				} else if ($uid == $all_msgs['0']['user_id_from'] && $all_msgs['0']['msg_to_delete'] == '1') {
+					$Status = 0;
+					$HTML .= '<div class="warrning"> <p> ' . $this->lang->line('conversation_deleted') . '</p></div>';
+				}
 
-			if ($data["msg_totals"][0]['admin_approval'] == '') {
-				$Status = 0;
-				$HTML .= '<div class="warrning"> <p> ' . $this->lang->line('inbox_this_property_deleted') . '</p></div>';
-			} else if ($data["msg_totals"][0]['admin_approval'] == 0) {
-				$Status = 0;
-				$HTML .= '<div class="warrning"> <p> ' . $this->lang->line('inbox_this_property_inactive_by_admin') . '</p></div>';
-			} else if ($data['check_user_to'][0]['status'] == 0) {
-				$Status = 0;
-				$HTML .= '<div class="warrning"> <p> ' . $this->lang->line('inbox_this_user_is_no_longer_registered') . '</p></div>';
-			} else if ($data["msg_totals"][0]['blocked_note'] != "" && strlen($data["msg_totals"][0]['blocked_note']) > 0) {
-				$Status = 0;
-				$HTML .= '<div class="warrning"> <p> ' . $this->lang->line('inbox_this_user_has_been_blocked') . '</p></div>';
-			} else if (isset($data["msg_totals"][0]['suspention_status']) && $data["msg_totals"][0]['suspention_status'] == 1) {
-				$Status = 0;
-				$HTML .= '<div class="warrning"> <p> ' . $this->lang->line('suspended_property_msg_by_admin_first') . '</p></div>';
+				if ($data["msg_totals"][0]['admin_approval'] == '') {
+					$Status = 0;
+					$HTML .= '<div class="warrning"> <p> ' . $this->lang->line('inbox_this_property_deleted') . '</p></div>';
+				} else if ($data["msg_totals"][0]['admin_approval'] == 0) {
+					$Status = 0;
+					$HTML .= '<div class="warrning"> <p> ' . $this->lang->line('inbox_this_property_inactive_by_admin') . '</p></div>';
+				} else if ($data['check_user_to'][0]['status'] == 0) {
+					$Status = 0;
+					$HTML .= '<div class="warrning"> <p> ' . $this->lang->line('inbox_this_user_is_no_longer_registered') . '</p></div>';
+				} else if ($data["msg_totals"][0]['blocked_note'] != "" && strlen($data["msg_totals"][0]['blocked_note']) > 0) {
+					$Status = 0;
+					$HTML .= '<div class="warrning"> <p> ' . $this->lang->line('inbox_this_user_has_been_blocked') . '</p></div>';
+				} else if (isset($data["msg_totals"][0]['suspention_status']) && $data["msg_totals"][0]['suspention_status'] == 1) {
+					$Status = 0;
+					$HTML .= '<div class="warrning"> <p> ' . $this->lang->line('suspended_property_msg_by_admin_first') . '</p></div>';
+				}
+			} else {
+				if ($data['check_user_to'][0]['status'] == 0) {
+					$Status = 0;
+					$HTML .= '<div class="warrning"> <p> ' . $this->lang->line('inbox_this_user_is_no_longer_registered') . '</p></div>';
+				}
 			}
 		}
 		$ResData = array("Output" => $HTML, "Status" => $Status);

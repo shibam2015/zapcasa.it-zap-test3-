@@ -133,6 +133,7 @@ $(document).ready(function() {
                             	if(isset($propertyDetails[0])) {
 									//echo '<pre>';print_r($propertyDetails);die;
                             		$property_status = $propertyDetails[0]['property_status'];
+									$property_approval = $propertyDetails[0]['property_approval'];
 									$suspention_status = $propertyDetails[0]['suspention_status'];
                             		$city =  $propertyDetails[0]['city'];
                             		$prop_typology = $propertyDetails[0]['typology'];
@@ -201,7 +202,7 @@ $(document).ready(function() {
 											$toPageString = "/".$this->uri->segment('3');
 										}										
                             			?>
-										<tr <?php echo $class1; ?> <?php echo(($property_status == 2 && ($suspention_status == 0 && $user_status_list == 1)) ? '' : 'style="background:#ffffd7"'); ?>>
+										<tr <?php echo $class1; ?> <?php echo(($property_status == 2 && ($suspention_status == 0 && $user_status_list == 1 && $property_approval != '0')) ? '' : 'style="background:#ffffd7"'); ?>>
                             <td><?php echo ($entryCounter + $this->uri->segment('3'));?></td>
                             <td>
 							<?php
@@ -249,7 +250,7 @@ $(document).ready(function() {
                             <td>
                                 <span>
                                     <div class="property_img">
-										<a <?php echo(($property_status == 2 && ($suspention_status == 0 && $user_status_list == 1)) ? 'href="' . $parms_url . '"' : 'style="color:#686868;"'); ?>>
+										<a <?php echo(($property_status == 2 && ($suspention_status == 0 && $user_status_list == 1 && $property_approval != '0')) ? 'href="' . $parms_url . '"' : 'style="color:#686868;"'); ?>>
                                         <?php
 										$main_img=get_perticular_field_value('zc_property_img','file_name'," and property_id='".$property_id."' and img_type='main_image'");
 										if($main_img!=''){
@@ -257,7 +258,7 @@ $(document).ready(function() {
 											<img
 												src="<?php echo base_url();?>assets/uploads/Property/Property<?php echo $property_id;?>/thumb_92_82/<?php echo $main_img;?>"
 												alt="" width="102px"
-												height="68px;" <?php echo(($property_status == 2 && ($suspention_status == 0 && $user_status_list == 1)) ? '' : 'style="opacity:0.4;filter:alpha(opacity=40);"'); ?>>
+												height="68px;" <?php echo(($property_status == 2 && ($suspention_status == 0 && $user_status_list == 1 && $property_approval != '0')) ? '' : 'style="opacity:0.4;filter:alpha(opacity=40);"'); ?>>
 											<?php
 										}else{
 											?>
@@ -276,7 +277,7 @@ $(document).ready(function() {
 											?>
 										</h4>
                                         <h4 style="font-size:15px;">
-											<a <?php echo(($property_status == 2 && ($suspention_status == 0 && $user_status_list == 1)) ? 'href="' . $parms_url . '"' : 'style="color:#999999;"'); ?>>
+											<a <?php echo(($property_status == 2 && ($suspention_status == 0 && $user_status_list == 1 && $property_approval != '0')) ? 'href="' . $parms_url . '"' : 'style="color:#999999;"'); ?>>
 											<?php
 											$ContractType=get_perticular_field_value('zc_contract_types',($_COOKIE['lang']=='it'?'name_it':'name')," and contract_id='".$prop_contract_id."'");
 											$TypologyName=get_perticular_field_value('zc_typologies',($_COOKIE['lang']=='it'?'name_it':'name')," and status='active' and typology_id='".$propertyDetails[0]['typology']."'");
@@ -349,6 +350,13 @@ $(document).ready(function() {
 											</font>
 											<?php echo(($property_status == 2 && ($suspention_status == 0 && $user_status_list == 1)) ? '' : '<span style="color:#ff1515;font-weight:bold;margin-left:10px;">' . $this->lang->line('saved_property_unavailable') . '</span>'); ?>
 										</p>
+										<?php
+										if ($property_approval == '0') {
+											?>
+											<p style="color:red"><?php echo $this->lang->line('property_inactive_by_admin'); ?></p>
+										<?php
+										}
+										?>
                                     </div>
                                     <div class="clear"></div>
                                 </span>
@@ -356,14 +364,15 @@ $(document).ready(function() {
                             <td>
                                 <input type="hidden" id="saved_<?php echo $property_list['saved_id'] ?>" value="<?php echo $parms_url;?>">
 								<?php
-								if ($property_status == 2 && ($suspention_status == 0 && $user_status_list == 1)) {
+								if ($property_status == 2 && ($suspention_status == 0 && $user_status_list == 1 && $property_approval != '0')) {
 								?>
                                 <div class="mask">
 									<button class="modify" onClick="return prop_view(<?php echo $property_list['saved_id'];?>);"><?php echo $this->lang->line('saved_property_button_view');?></button>
 								</div>
                                 <?php
 								}
-								?>											
+								?>		
+																		
                             </td>
                             <td>
                             	<?php if(count($property_lists) == 1 && $toPageString != '') { 

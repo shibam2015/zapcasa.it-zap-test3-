@@ -139,7 +139,7 @@ $(document).ready(function() {
 													?>
 													</div>
 													<div style="display:table-cell;vertical-align:middle;">
-														<a style="display:table-cell;vertical-align:middle;" <?php echo(($suspended_user_type != 4 && $property_lists['property_approval'] == 1) ? 'href=' . base_url() . 'property/edit_property/' . $property_id : 'href=' . base_url() . 'property/edit_property1/' . $property_id); ?>>
+														<a style="display:table-cell;vertical-align:middle;" <?php echo(($suspended_user_type != 4 && $property_lists['property_approval'] == 1) ? 'href=' . base_url() . 'property/edit_property/' . $property_id : 'href=' . base_url() . 'property/blocked_property/' . $property_id); ?>>
 
 														<?php
 														$main_img=get_perticular_field_value('zc_property_img','file_name'," and property_id='".$property_id."' and img_type='main_image'");
@@ -304,9 +304,11 @@ $(document).ready(function() {
 													}else{
 														echo $this->lang->line('property_search_private_nagotiation');
 													}
+
 													?>
 													</font>
-													<?php		
+
+												<?php
 												}else{
 													echo "<span style='color:#FF0000;'>";
 													echo "<label style='font-weight:bold; ' >".$this->lang->line('suspended_property_msg_by_admin_first')."</label>";
@@ -315,8 +317,16 @@ $(document).ready(function() {
 												}	
 												?> 
 												</p>
+												<?php
+												if ($property_lists['property_approval'] == '0') {
+													?>
+													<p style="color:red"><?php echo $this->lang->line('property_inactive_by_admin'); ?></p>
+												<?php
+												}
+												?>
 											</div>
 										</div>
+
 										<div style="display:table;width:100%;background:rgba(0, 0, 0, 0.08);min-height:25px;margin-top:10px;">
 											<div style="display:table-cell;vertical-align:middle;padding-left:5px;">
 												<?php

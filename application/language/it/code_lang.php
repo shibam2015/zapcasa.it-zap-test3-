@@ -2483,7 +2483,7 @@ $lang['prop_not_block_suspend'] = "Proprietà è stata bloccata o inattivato sul
 $lang['suspended_property_msg_by_admin_first'] = "Proprietà è stata sospesa. Non più disponibile !";
 $lang['inbox_this_property_inactive_by_admin'] = "La proprietà è stata inattivata. Non più disponibile !";
 $lang['inbox_user_blocked'] = "Siete stati bloccati o inattivati. Non più disponibile !";
-$lang['inbox_this_property_deleted'] = "Proprietà è stata eliminata. Non più disponibile !";
+$lang['inbox_this_property_deleted'] = "Immobile eliminato, non più disponibile!";
 
 $lang['change_password_you_enter_a_wrong_password'] = "Password corrente non è valido, riprovare!";
 $lang['change_password_new_password_must_be_different'] = "Non puoi scegliere la tua vecchia password come nuova password. Si prega di scegliere una diversa.";
@@ -2580,5 +2580,6 @@ $lang['new_mail-hi'] = 'Ciao';
 $lang['regards_mail'] = 'Saluti';
 $lang['new_feedback_mail_to_red_id'] = 'Per leggerlo, vai alla pagina My feedback su ZapCasa';
 $lang['Messages_you_are_receiving_this_email_because'] = 'tai ricevuto questa email perché sei registrato su ZapCasa. Per interrompere la ricezione di queste email, accedere al proprio conto ZapCasa e disattivare le notifiche.www.zapcasa.it';
+$lang['property_inactive_by_admin'] = "Proprietà inattiva da admin";
 
 ?>

@@ -1051,7 +1051,7 @@ class propertym extends CI_Model {
 	public function get_saved_property($limit, $start){
 		$uid=$this->session->userdata( 'user_id' );
 		$sql = "SELECT sp.*, zc_city.*, zc_provience.*,u.status as user_status FROM zc_saved_property as sp JOIN zc_property_details as pd ON sp.property_id = pd.property_id ";
-		$sql .= "JOIN zc_user as u ON pd.property_post_by = u.user_id left join zc_city on pd.city = zc_city.city_id left join zc_provience on pd.provience = zc_provience.provience_id WHERE sp.saved_by_user_id = " . $uid . " AND pd.property_approval='1' AND pd.property_status = '2'  AND u.verified='1' ORDER BY sp.saved_date DESC LIMIT " . $start . "," . $limit;
+		$sql .= "JOIN zc_user as u ON pd.property_post_by = u.user_id left join zc_city on pd.city = zc_city.city_id left join zc_provience on pd.provience = zc_provience.provience_id WHERE sp.saved_by_user_id = " . $uid . "  AND pd.property_status = '2'  AND u.verified='1' ORDER BY sp.saved_date DESC LIMIT " . $start . "," . $limit;
 
 		// $this->db->where('saved_by_user_id =',$uid);
 		// $this->db->order_by("saved_date", "desc");
