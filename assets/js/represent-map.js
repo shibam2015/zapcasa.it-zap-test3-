@@ -220,6 +220,42 @@ function initialize(Type = '') {
 		marker.type = MarkerType;
 		gmarkers.push(marker);
 
+		if (val[8] == 'proDetails') {
+			var markerLabelHTML = '<div class="property-window">\
+											<div class="property-image">\
+													<img src="' + markerPropertyImage + '">\
+											</div>\
+											<div class="property-info">\
+												<div class="marker_title">\
+													<a>' + MarkerText + '</a>\
+												</div>\
+												<div class="marker_address">' + markerAddress + '</div>\
+											</div>\
+										</div>';
+		}
+		else {
+			var markerLabelHTML = '<div class="property-window">\
+											<div class="property-image">\
+												<a href="' + markerURI + '">\
+													<img src="' + markerPropertyImage + '">\
+												</a>\
+											</div>\
+											<div class="property-info">\
+												<div class="marker_title">\
+													<a href="' + markerURI + '">' + MarkerText + '</a>\
+												</div>\
+												<div class="marker_address">' + markerAddress + '</div>\
+												<div class="marker_price">' + markerPrice + '</div>\
+											</div>\
+										</div>';
+		}
+		var infowindow = new google.maps.InfoWindow({
+			content: markerLabelHTML
+		});
+		marker.addListener('click', function () {
+			infowindow.close();
+			infowindow.open(map, marker);
+		});
 		if(val[8] != "noMarker")
 		{
 			// add marker hover events (if not viewing on mobile)
@@ -244,42 +280,12 @@ function initialize(Type = '') {
 			var markerURI_short = markerURI.replace("http://", "");
 			var markerURI_short = markerURI_short.replace("www.", "");
 			// add marker click effects (open infowindow)
+			/*google.maps.event.addListener(marker,'click',function(){
 
-			google.maps.event.addListener(marker,'click',function(){
-			if(val[8] == 'proDetails')
-			{
-				var markerLabelHTML = '<div class="property-window">\
-											<div class="property-image">\
-													<img src="'+markerPropertyImage+'">\
-											</div>\
-											<div class="property-info">\
-												<div class="marker_title">\
-													<a>' + MarkerText + '</a>\
-												</div>\
-												<div class="marker_address">'+markerAddress+'</div>\
-											</div>\
-										</div>';
-			}
-			else
-			{
-				var markerLabelHTML = '<div class="property-window">\
-											<div class="property-image">\
-												<a href="'+markerURI+'">\
-													<img src="'+markerPropertyImage+'">\
-												</a>\
-											</div>\
-											<div class="property-info">\
-												<div class="marker_title">\
-													<a href="'+markerURI+'">'+MarkerText+'</a>\
-												</div>\
-												<div class="marker_address">'+markerAddress+'</div>\
-												<div class="marker_price">'+markerPrice+'</div>\
-											</div>\
-										</div>';
-			}
+			 alert("asdadas");
 				infowindow.setContent(markerLabelHTML);
 				infowindow.open(map, this);
-			});
+			 });*/
 		}
 
 		
@@ -336,8 +342,10 @@ function initialize(Type = '') {
 // zoom to specific marker
 function goToMarker(marker_id){
 	if (marker_id) {
+		//infowindow.close();
 		map.panTo(gmarkers[marker_id].getPosition());
-		map.setZoom(centerZoom);
+		//map.setZoom(centerZoom);
+		map.setZoom(15);
 		google.maps.event.trigger(gmarkers[marker_id], 'click');
 	}
 }
@@ -373,14 +381,25 @@ function toggleList(type) {
 }
 // hover on list item
 function markerListMouseOver(marker_id) {
-
 	$("#marker" + marker_id).css("display", "inline");
 	//map.setZoom(map.getZoom() - 3);
 }
 
 function markerListMouseOut(marker_id){
 
-	$("#marker"+marker_id).css("display","none");
+	if (marker_id) {
+		//map.panTo(gmarkers[marker_id].getPosition());
+		map.setZoom(centerZoom);
+		//infowindow.close();
+		//$("#marker" + marker_id).css("display", "none");
+		//google.maps.event.trigger(infoWindow, 'closeclick');
+		/*google.maps.event.trigger(gmarkers[marker_id], 'closeclick');
+		 google.maps.event.addListener(markerInfoWindow, "closeclick", function()
+		 {
+		 mapRef.panTo(mapSettings.center);
+		 mapRef.setZoom(2);
+		 });*/
+	}
 
 }
 // detect browser agent
