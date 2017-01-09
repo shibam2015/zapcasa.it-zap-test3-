@@ -60,11 +60,27 @@ $(document).ready(function() {
 </h3>
 
 <hr />
-		        <?php	
-				//Finding Property Title Here.
-				// if( isset( $_COOKIE['lang'] ) && ( $_COOKIE['lang'] == "english" )) {
-					$city_name=get_perticular_field_value('zc_city','city_name'," and city_name='".$property_details[0]['city']."'");
-					$province_code=get_perticular_field_value('zc_region_master','province_code'," and city='".mysql_real_escape_string($city_name)."'");
+	<?php
+	//echo '<pre>';print_r($property_details);
+	//Finding Property Title Here.
+	if (isset($_COOKIE['lang']) && ($_COOKIE['lang'] == "english")) {
+		$name = get_perticular_field_value('zc_contract_types', 'name', " and contract_id='" . $property_details[0]['contract_id'] . "'");
+		$typology_name = get_perticular_field_value('zc_typologies', 'name', " and status='active' and typology_id='" . $property_details[0]['typology'] . "'");
+		$city_name = get_perticular_field_value('zc_city', 'city_name', " and city_id='" . $property_details[0]['city'] . "'");
+		$property_Image = get_perticular_field_value('zc_property_img', 'file_name', " and property_id='" . $property_details[0]['property_id'] . "'");
+		$province_code = get_perticular_field_value('zc_region_master', 'province_code', " and city='" . mysql_real_escape_string($city_name) . "'");
+
+		$proptitle = $name . " For " . stripslashes($typology_name) . " in " . $city_name . ", " . $province_code;
+	} else {
+		$name_it = get_perticular_field_value('zc_contract_types', 'name_it', " and contract_id='" . $property_details[0]['contract_id'] . "'");
+		$typology_name = get_perticular_field_value('zc_typologies', 'name_it', " and status='active' and typology_id='" . $property_details[0]['typology'] . "'");
+		$city_name = get_perticular_field_value('zc_city', 'city_name_it', " and city_id='" . $property_details[0]['city'] . "'");
+		$province_code = get_perticular_field_value('zc_region_master', 'province_code', " and city_it='" . mysql_real_escape_string($city_name) . "'");
+
+		$proptitle = stripslashes($typology_name) . " in " . $name_it . " a " . $city_name . ", " . $province_code;
+	}
+		
+
 									
 				// } else {
 				// 	$city_name=get_perticular_field_value('zc_city','city_name_it'," and city_id='".$property_details[0]['city']."'");
@@ -72,22 +88,30 @@ $(document).ready(function() {
 				// }
 
 				//FInding Property Address Here.
-				$propertyShowingAddress = '';
-				$propertyAddress = ($property_details[0]['street_address']!=''?$property_details[0]['street_address'].', ':'');
-				$propertyAddress.= ($property_details[0]['street_no']!=''?$property_details[0]['street_no']:'');
-				$propertyShowingAddress.=$propertyAddress.', '.$city_name.', '.$province_code;
-				$propertyAddress.= ($property_details[0]['zip']!=''?' - '.$property_details[0]['zip']:'');
-				$propertyShowingAddress.= ($property_details[0]['zip']!=''?' - '.$property_details[0]['zip']:'');
+
+	$propertyShowingAddress = '';
+	$propertyAddress = ($property_details[0]['area'] != '' ? $property_details[0]['area'] . ' - ' : '');
+	$propertyAddress .= ($property_details[0]['street_address'] != '' ? $property_details[0]['street_address'] . ', ' : '');
+	$propertyAddress .= ($property_details[0]['street_no'] != '' ? $property_details[0]['street_no'] : '');
+	$propertyShowingAddress .= $propertyAddress . ', ' . $city_name . ', ' . $province_code;
+	$propertyAddress .= ($property_details[0]['zip'] != '' ? ' - ' . $property_details[0]['zip'] : '');
+	$propertyShowingAddress .= ($property_details[0]['zip'] != '' ? ' - ' . $property_details[0]['zip'] : '');
+	$propertyImage = base_url() . "assets/images/no_proimg.jpg";
+	$image_path = $property_Image;
+	if ($image_path != "") {
+		$propertyImage = frontend_path() . "assets/uploads/Property/Property" . $property_details[0]['property_id'] . "/thumb_92_82/" . $image_path;
+	}
+		
 				
 				$GoogleMapMarkers[0] = array(
-					'proptitle' => '',
+					'proptitle' => $proptitle,
 					'hackerspace' => 'markers',
 					'latitude' => ($property_details[0]['latitude']=='0'?'0':$property_details[0]['latitude']),
 					'longitude' => ($property_details[0]['longitude']=='0'?'0':$property_details[0]['longitude']),
 					'proaddress' => $propertyAddress,
 					'propurl' => 'javascript:void(0);',
 					'proprice' => '',
-					'proimg' => ''
+					'proimg' => $propertyImage
 				);
 				
 				?>
@@ -106,22 +130,31 @@ $(document).ready(function() {
 						?>
 						<div class="cat_select">
                             <label style="display:block;">
-								<font style="color:#f33038;">*</font>Latitude&nbsp;&nbsp; 
+								<font
+									style="color:#f33038;">*</font><?php echo $this->lang->line('managae_location_page_latitude_str'); ?>
 							</label>
 							<label style="display:none;font-weight:normal" generated="true" for="promaplatitude" class="error"></label>
                             <input value="<?php echo(!empty($GoogleMapMarkers)?$GoogleMapMarkers[0]['latitude']:''); ?>" name="promaplatitude" id="promaplatitude" placeholder="Enter Latitude" type="text" class="required placeholder">
                         </div>
 						<div class="cat_select">
                             <label style="display:block;">
-								<font style="color:#f33038;">*</font>Longitude&nbsp;&nbsp;
+								<font
+									style="color:#f33038;">*</font><?php echo $this->lang->line('managae_location_page_longitude_str'); ?>
 							</label>
 							<label style="display:none;font-weight:normal" generated="true" for="promaplongitude" class="error"></label>
                             <input value="<?php echo(!empty($GoogleMapMarkers)?$GoogleMapMarkers[0]['longitude']:''); ?>" name="promaplongitude" id="promaplongitude" placeholder="Enter Longitude" type="text" class="required placeholder">
                         </div>
-						<div class="cat_select">
-                            <label style="display:block;">&nbsp;</label>						
+						<div class="cat_select" style="width:245px;">
+							<label style="display:block;">&nbsp;</label>
+							<input type="hidden" name="locupdatetype" value="<?php echo $locupdatetype; ?>">
 							<input type="hidden" name="locupdatefor" value="<?php echo $property_details[0]['property_id']; ?>">
-							<input type="submit" value="Save" name="btnSubmit" class="mainbt" style="margin-right:0;">
+							<input type="submit"
+								   value="<?php echo $this->lang->line('managae_location_page_save_position_str'); ?>"
+								   name="btnSubmit" class="mainbt" style="margin-right:0;">
+							<a style="height:33px; margin:0px;float:right;" class="mainbt"
+							   href="<?php echo base_url() . 'property/skip_manage_loc/' . $locupdatetype . '/' . $property_details[0]['property_id']; ?>">
+								<?php echo $this->lang->line('managae_location_page_skip_str'); ?>
+							</a>
                         </div>
 						<?php echo form_close();?>
 					</div>
@@ -138,6 +171,7 @@ $(document).ready(function() {
 		<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/map.css?nocache=289671982568" type="text/css"/>
 		<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/zapcasa_style.css" type="text/css"/>
 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?= MAP_KEY ?>"></script>
+	<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/markerclusterer.js"></script>
 		<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/label.js"></script>
 		<script type="text/javascript">
 		var WebRoot = '<?php echo base_url(); ?>';

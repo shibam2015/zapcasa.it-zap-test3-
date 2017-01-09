@@ -436,7 +436,7 @@ class User extends CI_Controller {
 		//echo '<pre>';print_r($rs);die;
 		if($rs){
 			foreach($rs as $key=>$val){
-				echo '<option value="'.$val.'">'.str_replace("\'","'",$val).'</option>';
+				echo '<option value="' . $val . '">' . str_replace("'", "'", $val) . '</option>';
 			}
 		}
 	}
@@ -483,9 +483,9 @@ class User extends CI_Controller {
 		} elseif ($this->input->post('language_nm') == 'it') {
 			$mailSubject = 'Attiva il tuo account ZapCasa';
 			$mailThanksHi = 'Ciao';
-			$mailThanks_text_1 = 'ricevi questa email perché hai richiesto di registrarti su ZapCasa.';
+			$mailThanks_text_1 = 'ricevi questa email perchĂŠ hai richiesto di registrarti su ZapCasa.';
 			$mailThanks_note = 'Nota';
-			$mailThanks_text_2 = 'Se pensi di aver ricevuto questo messaggio per errore e non sei stato tu a richiedere la registrazione non fare niente, La tua email sarà cancellata automaticamente entro 72 ore.';
+			$mailThanks_text_2 = 'Se pensi di aver ricevuto questo messaggio per errore e non sei stato tu a richiedere la registrazione non fare niente, La tua email sarĂ  cancellata automaticamente entro 72 ore.';
 			$mailThanks_text_3 = 'Per attivare il tuo account ZapCasa, clicca sul seguente link o copialo nel tuo browser';
 			$mailThanks_text_4 = 'Saluti';
 
@@ -690,9 +690,9 @@ class User extends CI_Controller {
 		}elseif($this->input->post('language_nm')=='it'){
 			$mailSubject = 'Attiva il tuo account ZapCasa';
 			$mailThanksHi = 'Ciao';
-			$mailThanks_text_1 = 'ricevi questa email perché hai richiesto di registrarti su ZapCasa.';
+			$mailThanks_text_1 = 'ricevi questa email perchĂŠ hai richiesto di registrarti su ZapCasa.';
 			$mailThanks_note = 'Nota';
-			$mailThanks_text_2 = 'Se pensi di aver ricevuto questo messaggio per errore e non sei stato tu a richiedere la registrazione non fare niente, La tua email sarà cancellata automaticamente entro 72 ore.';
+			$mailThanks_text_2 = 'Se pensi di aver ricevuto questo messaggio per errore e non sei stato tu a richiedere la registrazione non fare niente, La tua email sarĂ  cancellata automaticamente entro 72 ore.';
 			$mailThanks_text_3 = 'Per attivare il tuo account ZapCasa, clicca sul seguente link o copialo nel tuo browser';
 			$mailThanks_text_4 = 'Saluti';
 
@@ -976,7 +976,7 @@ class User extends CI_Controller {
 		$mail_to = $email;
 		
 		$languagePref = get_perticular_field_value('zc_user_preference','language'," and user_id='".$userid."'");
-		$subject = ($languagePref == 'it'?'Il tuo account è stato bloccato.':'Your account has been blocked.');
+		$subject = ($languagePref == 'it' ? 'Il tuo account Ă¨ stato bloccato.' : 'Your account has been blocked.');
 		if($languagePref == 'it'){
 			$msg='<body style="font-family:Century Gothic; color: #4c4d51; font-size:13px;">			
 			<div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
@@ -986,7 +986,7 @@ class User extends CI_Controller {
 				</div>
 				<div style="padding:15px;">
 					<strong>Ciao '.$user_full_name.'</strong>,<br>
-					<p>Questo è una notifica automatica per informarti che il tuo account ZapCasa è stato bloccato.</p>
+					<p>Questo Ă¨ una notifica automatica per informarti che il tuo account ZapCasa Ă¨ stato bloccato.</p>
 					<p>Per maggiori informazioni ti invitiamo ad effettuare il login su <a href="http://www.zapcasa.it">www.zapcasa.it</a>.</p><br>
 					<p>Saluti,<br><a href="http://www.zapcasa.it">www.zapcasa.it</a></p>
 				</div>
@@ -1001,15 +1001,16 @@ class User extends CI_Controller {
 				</div>
 				<div style="padding:15px;">
 					<strong>Hi '.$user_full_name.'</strong>,<br>
-					<p>This is an automatic notification to inform you that your ZapCasa account has been blocked.</p>
-					<p>For further information please login on <a href="http://www.zapcasa.it">www.zapcasa.it</a>.</p><br>
+					<p>This is an automatic notification to inform you that your ZapCasa account has been blocked by Administrator.</p>
+					<p>For further information please Contact on <a href="http://www.zapcasa.it">www.zapcasa.it</a>Administrator.</p><br>
 					<p>Regards,<br><a href="http://www.zapcasa.it">www.zapcasa.it</a></p>
 				</div>
 			</div>
 			</body>';
 		}
-
+		//<p>For further information please login on <a href="http://www.zapcasa.it">www.zapcasa.it</a>.</p><br>
 		$body=$msg;
+
 		sendemail($mail_from, $mail_to, $subject, $body, $cc='');
 		
 		$this->session->set_flashdata('success', 'Blocked note has been added & status has been updated');

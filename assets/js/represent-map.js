@@ -221,6 +221,7 @@ function initialize(Type = '') {
 		gmarkers.push(marker);
 
 		if (val[8] == 'proDetails') {
+			//alert('aaaaaaaaaaaa');
 			var markerLabelHTML = '<div class="property-window">\
 											<div class="property-image">\
 													<img src="' + markerPropertyImage + '">\
@@ -234,6 +235,7 @@ function initialize(Type = '') {
 										</div>';
 		}
 		else {
+			//alert('aaaaaaaaaaaa');
 			var markerLabelHTML = '<div class="property-window">\
 											<div class="property-image">\
 												<a href="' + markerURI + '">\
@@ -250,6 +252,8 @@ function initialize(Type = '') {
 										</div>';
 		}
 		var infowindow = new google.maps.InfoWindow({
+
+			//alert('hiiiii');
 			content: markerLabelHTML
 		});
 		marker.addListener('click', function () {
@@ -258,6 +262,7 @@ function initialize(Type = '') {
 		});
 		if(val[8] != "noMarker")
 		{
+			//alert('aaaaaaaaaaaa');
 			// add marker hover events (if not viewing on mobile)
 			if (agent == "default") {
 				google.maps.event.addListener(marker, "mouseover", function() {
@@ -347,6 +352,7 @@ function goToMarker(marker_id){
 		//map.setZoom(centerZoom);
 		map.setZoom(15);
 		google.maps.event.trigger(gmarkers[marker_id], 'click');
+		infowindow.close();
 	}
 }
 // toggle (hide/show) markers of a given type (on the map)
@@ -387,11 +393,11 @@ function markerListMouseOver(marker_id) {
 
 function markerListMouseOut(marker_id){
 
-	if (marker_id) {
+	//if (marker_id) {
 		//map.panTo(gmarkers[marker_id].getPosition());
 		map.setZoom(centerZoom);
 		//infowindow.close();
-		//$("#marker" + marker_id).css("display", "none");
+	$("#marker" + marker_id).css("display", "none");
 		//google.maps.event.trigger(infoWindow, 'closeclick');
 		/*google.maps.event.trigger(gmarkers[marker_id], 'closeclick');
 		 google.maps.event.addListener(markerInfoWindow, "closeclick", function()
@@ -399,7 +405,7 @@ function markerListMouseOut(marker_id){
 		 mapRef.panTo(mapSettings.center);
 		 mapRef.setZoom(2);
 		 });*/
-	}
+	//}
 
 }
 // detect browser agent
@@ -461,10 +467,10 @@ function ZoomControl(controlDiv, map) {
   extendedView.style.height = '24px';
   extendedView.id = 'extView';
 
-  /* Change this to be the .png image you want to use */
-	/* extendedView.style.backgroundImage = 'url("http://www.zapcasa.it/zap-test3/assets/images/zoom.png")';
+	/*Change this to be the .png image you want to use */
+	extendedView.style.backgroundImage = 'url("http://www.zapcasa.it/zap-test3/assets/images/zoom.png")';
   extendedView.style.backgroundSize = 'cover';
-	 controlWrapper.appendChild(extendedView);*/
+	controlWrapper.appendChild(extendedView);
 
   // Setup the click event listener - zoomIn
   google.maps.event.addDomListener(zoomInButton, 'click', function() {

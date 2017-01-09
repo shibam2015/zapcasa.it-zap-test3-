@@ -61,36 +61,45 @@ $(document).ready(function() {
 
 <hr />
 	<?php
-				//Finding Property Title Here.
-				
-				//echo '<pre>';print_r($property_details);
-				// if( isset( $_COOKIE['lang'] ) && ( $_COOKIE['lang'] == "english" )) {
-					$city_name=get_perticular_field_value('zc_city','city_name'," and city_name='".$property_details[0]['city']."'");
+	// echo '<pre>';print_r($property_details);
+	//Finding Property Title Here.
+	if (isset($_COOKIE['lang']) && ($_COOKIE['lang'] == "english")) {
+		//$name=get_perticular_field_value('zc_contract_types','name'," and contract_id='".$property_details[0]['contract_id']."'");
+		//$typology_name=get_perticular_field_value('zc_typologies','name'," and status='active' and typology_id='".$property_details[0]['typology']."'");
+		//$city_name=get_perticular_field_value('zc_city','city_name'," and city_id='".$property_details[0]['city']."'");
+		$province_code = get_perticular_field_value('zc_region_master', 'province_code', " and city='" . mysql_real_escape_string($property_details[0]['provience']) . "'");
 
-					$province_code=get_perticular_field_value('zc_region_master','province_code'," and city='".mysql_real_escape_string($city_name)."'");
-									
-				// } else {
-				// 	$city_name=get_perticular_field_value('zc_city','city_name_it'," and city_id='".$property_details[0]['city']."'");
-				// 	$province_code=get_perticular_field_value('zc_region_master','province_code'," and city_it='".mysql_real_escape_string($city_name)."'");
-				// }
+		$proptitle = stripslashes($property_details[0]['name']) . " in " . $property_details[0]['provience'] . ", " . $province_code;
+	} else {
+		//$name_it=get_perticular_field_value('zc_contract_types','name_it'," and contract_id='".$property_details[0]['contract_id']."'");
+		//$typology_name=get_perticular_field_value('zc_typologies','name_it'," and status='active' and typology_id='".$property_details[0]['typology']."'");
+		//$city_name=get_perticular_field_value('zc_city','city_name_it'," and city_id='".$property_details[0]['city']."'");
+		$province_code = get_perticular_field_value('zc_region_master', 'province_code', " and city_it='" . mysql_real_escape_string($property_details[0]['provience']) . "'");
+
+		$proptitle = $property_details[0]['name'] . " For " . stripslashes($property_details[0]['name']) . " in " . $property_details[0]['provience'] . ", " . $province_code;
+	}
 
 				//FInding Property Address Here.
 				$propertyShowingAddress = '';
 				$propertyAddress = ($property_details[0]['street_address']!=''?$property_details[0]['street_address'].', ':'');
 				$propertyAddress.= ($property_details[0]['street_no']!=''?$property_details[0]['street_no']:'');
-				$propertyShowingAddress.=$propertyAddress.', '.$city_name.', '.$province_code;
+	$propertyShowingAddress .= $propertyAddress . ', ' . $property_details[0]['provience'] . ', ' . $province_code;
 				$propertyAddress.= ($property_details[0]['zip']!=''?' - '.$property_details[0]['zip']:'');
 				$propertyShowingAddress.= ($property_details[0]['zip']!=''?' - '.$property_details[0]['zip']:'');
-				
+	//$propertyImage = base_url()."assets/images/no_proimg.jpg";
+	//$image_path =$property_details[0]['url'];
+	if ($property_details[0]['url'] != "") {
+		$propertyImage = base_url() . "assets/uploads/Property/Property" . $property_details[0]['property_details_id'] . "/thumb_92_82/" . $property_details[0]['url'];
+	}
 				$GoogleMapMarkers[0] = array(
-					'proptitle' => '',
+					'proptitle' => $proptitle,
 					'hackerspace' => 'markers',
 					'latitude' => ($property_details[0]['latitude']=='0'?'0':$property_details[0]['latitude']),
 					'longitude' => ($property_details[0]['longitude']=='0'?'0':$property_details[0]['longitude']),
 					'proaddress' => $propertyAddress,
 					'propurl' => 'javascript:void(0);',
 					'proprice' => '',
-					'proimg' => ''
+					'proimg' => $propertyImage
 				);
 				
 				?>

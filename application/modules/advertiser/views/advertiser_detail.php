@@ -422,7 +422,7 @@ var page="advDetails";
         					if( $ShowingCityName != "" ) {
         						$advertiserAddress.= ' '.stripslashes($ShowingCityName);
         					}
-							if ($ShowingProvinceCode = "") {
+							if ($ShowingProvinceCode != "") {
         						$advertiserAddress.= ' - '.$ShowingProvinceCode;
         					}
         					echo $advertiserAddress;

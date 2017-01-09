@@ -150,7 +150,7 @@ function initialize(Type = '') {
         for (i = 0; i < gmarkers.length; i++) {
             gmarkers[i].setMap(null);
         }
-        gmarkers = [];
+        gmarkers = [];      
     }
 
     map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
@@ -193,7 +193,7 @@ function initialize(Type = '') {
         var mLatitude = val[2];
         var mLongitude = val[3];
         var markerAddress = val[4];
-        var markerURI = val[5];
+        var markerURI = val[5];     
         var markerPrice = val[6];
         var markerPropertyImage = val[7];
 
@@ -226,7 +226,48 @@ function initialize(Type = '') {
         marker.type = MarkerType;
         gmarkers.push(marker);
 
+        if (val[8] == 'proDetails') {
+            //alert('aaaaaaaaaaaa');
+            var markerLabelHTML = '<div class="property-window">\
+                                            <div class="property-image">\
+                                                    <img src="' + markerPropertyImage + '">\
+                                            </div>\
+                                            <div class="property-info">\
+                                                <div class="marker_title">\
+                                                    ' + MarkerText + '\
+                                                </div>\
+                                                <div class="marker_address">' + markerAddress + '</div>\
+                                            </div>\
+                                        </div>';
+        }
+        else {
+            //alert('aaaaaaaaaaaa');
+            var markerLabelHTML = '<div class="property-window">\
+                                            <div class="property-image">\
+                                                <a href="' + markerURI + '">\
+                                                    <img src="' + markerPropertyImage + '">\
+                                                </a>\
+                                            </div>\
+                                            <div class="property-info">\
+                                                <div class="marker_title">\
+                                                    <a href="' + markerURI + '">' + MarkerText + '</a>\
+                                                </div>\
+                                                <div class="marker_address">' + markerAddress + '</div>\
+                                                <div class="marker_price">' + markerPrice + '</div>\
+                                            </div>\
+                                        </div>';
+        }
+        var infowindow = new google.maps.InfoWindow({
+
+            //alert('hiiiii');
+            content: markerLabelHTML
+        });
+        marker.addListener('click', function () {
+            infowindow.close();
+            infowindow.open(map, marker);
+        });
         if (val[8] != "noMarker") {
+            //alert('aaaaaaaaaaaa');
             // add marker hover events (if not viewing on mobile)
             if (agent == "default") {
                 google.maps.event.addListener(marker, "mouseover", function () {
@@ -249,40 +290,12 @@ function initialize(Type = '') {
             var markerURI_short = markerURI.replace("http://", "");
             var markerURI_short = markerURI_short.replace("www.", "");
             // add marker click effects (open infowindow)
+            /*google.maps.event.addListener(marker,'click',function(){
 
-            google.maps.event.addListener(marker, 'click', function () {
-                if (val[8] == 'proDetails') {
-                    var markerLabelHTML = '<div class="property-window">\
-											<div class="property-image">\
-													<img src="' + markerPropertyImage + '">\
-											</div>\
-											<div class="property-info">\
-												<div class="marker_title">\
-													<a>' + MarkerText + '</a>\
-												</div>\
-												<div class="marker_address">' + markerAddress + '</div>\
-											</div>\
-										</div>';
-                }
-                else {
-                    var markerLabelHTML = '<div class="property-window">\
-											<div class="property-image">\
-												<a href="' + markerURI + '">\
-													<img src="' + markerPropertyImage + '">\
-												</a>\
-											</div>\
-											<div class="property-info">\
-												<div class="marker_title">\
-													<a href="' + markerURI + '">' + MarkerText + '</a>\
-												</div>\
-												<div class="marker_address">' + markerAddress + '</div>\
-												<div class="marker_price">' + markerPrice + '</div>\
-											</div>\
-										</div>';
-                }
+             alert("asdadas");
                 infowindow.setContent(markerLabelHTML);
                 infowindow.open(map, this);
-            });
+             });*/
         }
 
 
@@ -319,8 +332,8 @@ function initialize(Type = '') {
             geocodePosition(marker.getPosition())
             $('#promaplatitude').val(point.lat());
             $('#promaplongitude').val(point.lng());
-        });
-
+        });     
+        
         // add marker label
         var latLng = new google.maps.LatLng(mLatitude, mLongitude);
         var label = new Label({
@@ -338,14 +351,17 @@ function initialize(Type = '') {
         maxZoom: 15,
         imagePath: 'https://cdn.rawgit.com/googlemaps/js-marker-clusterer/gh-pages/images/m'
     };
-    var mc = new MarkerClusterer(map, gmarkers, mcOptions);
+    var mc = new MarkerClusterer(map, gmarkers, mcOptions);     
 }
 // zoom to specific marker
 function goToMarker(marker_id) {
     if (marker_id) {
+        //infowindow.close();
         map.panTo(gmarkers[marker_id].getPosition());
-        map.setZoom(centerZoom);
+        //map.setZoom(centerZoom);
+        map.setZoom(12);
         google.maps.event.trigger(gmarkers[marker_id], 'click');
+        //infowindow.close();
     }
 }
 // toggle (hide/show) markers of a given type (on the map)
@@ -380,14 +396,25 @@ function toggleList(type) {
 }
 // hover on list item
 function markerListMouseOver(marker_id) {
-
     $("#marker" + marker_id).css("display", "inline");
     //map.setZoom(map.getZoom() - 3);
 }
 
 function markerListMouseOut(marker_id) {
 
+    //if (marker_id) {
+    //map.panTo(gmarkers[marker_id].getPosition());
+    map.setZoom(centerZoom);
+    infowindow.close();
     $("#marker" + marker_id).css("display", "none");
+    //google.maps.event.trigger(infoWindow, 'closeclick');
+    /*google.maps.event.trigger(gmarkers[marker_id], 'closeclick');
+     google.maps.event.addListener(markerInfoWindow, "closeclick", function()
+     {
+     mapRef.panTo(mapSettings.center);
+     mapRef.setZoom(2);
+     });*/
+    //}
 
 }
 // detect browser agent
@@ -449,7 +476,7 @@ function ZoomControl(controlDiv, map) {
     extendedView.style.height = '24px';
     extendedView.id = 'extView';
 
-    /* Change this to be the .png image you want to use */
+    /*Change this to be the .png image you want to use */
     /* extendedView.style.backgroundImage = 'url("http://www.zapcasa.it/zap-test3/assets/images/zoom.png")';
      extendedView.style.backgroundSize = 'cover';
      controlWrapper.appendChild(extendedView);*/
@@ -472,7 +499,7 @@ function ZoomControl(controlDiv, map) {
             fullView();
         // map.setZoom(map.getZoom() - 3);
     });
-
+    
 }
 
 function fullView(tmp='') {

@@ -11,6 +11,12 @@
 .gm-style .gm-style-iw{top:16px !importent;}
 .gmnoprint img {max-width: none;}
 #over_map { right: 2%; position: absolute; top: 15px; z-index: 99; }
+
+.marker_title {
+	font-weight: bold;
+	color: #074d86;
+	font-size: 18px;
+}
 .fullScreen
 {
 	width: 100% !important;
@@ -1585,7 +1591,7 @@ var page="proDetails";
 		$propertyImage = base_url()."assets/images/no_proimg.jpg";
 		$image_path = prop_image($property_details[0]['property_id']);			
 		if( $image_path != "" ) {
-			$propertyImage =  base_url()."assets/uploads/Property/Property".$property_details[0]['property_id']."/thumb_200_296/".$image_path;
+			$propertyImage = base_url() . "assets/uploads/Property/Property" . $property_details[0]['property_id'] . "/thumb_92_82/" . $image_path;
 		}
 		$mainProGoogleMapMarkers = array();
 		$mainProGoogleMapMarkers[] = array(
@@ -1636,7 +1642,7 @@ GoogleMapMarkers.push(["<?php echo $gM['proptitle']; ?>","<?php echo $gM['hacker
 		}
 		?>
 </script>
-		<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/represent-map.js"></script>
+	<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/represent-map1.js"></script>
 		<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/markerclusterer.js"></script>
 	</body>
 </html>

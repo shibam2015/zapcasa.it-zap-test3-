@@ -205,6 +205,32 @@ function initialize(Type = '') {
 		marker.type = MarkerType;
 		gmarkers.push(marker);
 
+		var markerLabelHTML = '<div class="property-window">\
+											<div class="property-image">\
+												<a href="' + markerURI + '">\
+													<img src="' + markerPropertyImage + '">\
+												</a>\
+											</div>\
+											<div class="property-info">\
+												<div class="marker_title">\
+													<a href="' + markerURI + '">' + MarkerText + '</a>\
+												</div>\
+												<div class="marker_address">' + markerAddress + '</div>\
+												<div class="marker_price">' + markerPrice + '</div>\
+											</div>\
+										</div>';
+
+		var infowindow = new google.maps.InfoWindow({
+
+			//alert('hiiiii');
+			content: markerLabelHTML
+		});
+		marker.addListener('click', function () {
+			infowindow.close();
+			infowindow.open(map, marker);
+		});
+		
+
 		if(val[8] != "noMarker")
 		{
 			// add marker hover events (if not viewing on mobile)
@@ -230,26 +256,8 @@ function initialize(Type = '') {
 			var markerURI_short = markerURI_short.replace("www.", "");
 			// add marker click effects (open infowindow)
 
-			google.maps.event.addListener(marker,'click',function(){
-				var markerLabelHTML = '<div class="property-window">\
-											<div class="property-image">\
-												<a href="'+markerURI+'">\
-													<img src="'+markerPropertyImage+'">\
-												</a>\
-											</div>\
-											<div class="property-info">\
-												<div class="marker_title">\
-													<a href="'+markerURI+'">'+MarkerText+'</a>\
-												</div>\
-												<div class="marker_address">'+markerAddress+'</div>\
-												<div class="marker_price">'+markerPrice+'</div>\
-											</div>\
-										</div>';
-				infowindow.setContent(markerLabelHTML);
-				infowindow.open(map, this);
-			});
-		}
 
+		}
 		
 		// Add circle overlay and bind to marker
 		var circle = new google.maps.Circle({

@@ -489,9 +489,9 @@ $(document).ready(function(){
                 </tr>
                 <?php
 				}
-				?> 
-                
-                <tr class="unshown_extra">
+				?>
+
+                <!-- <tr class="unshown_extra">
                     <td>Company Location</td>
                     <td width="5%"></td>
                     <td class="usernme">
@@ -503,11 +503,11 @@ $(document).ready(function(){
                                 <img src="<?php echo base_url();?>assets/images/location_icon.png" alt="<?php echo $this->lang->line('home_page_search_near_me'); ?>" style="width:28px; margin:5px;">
                             </a>
                             <input type="text" name="location" value="<?php echo $new_arr['location']; ?>" class="required location" id="location" style="width:76%; float:left;">
-                            <!-- <div id="suggesstion-box2" style='overflow:auto;max-height:300px;position:absolute;z-index:1;width:260px;'> -->
+                            <!-- <div id="suggesstion-box2" style='overflow:auto;max-height:300px;position:absolute;z-index:1;width:260px;'> 
                             </div>
                         </span>
                     </td>
-                </tr>
+                </tr>-->
 
             </table>
             <div style="margin:20px 0; margin-left:42%;">

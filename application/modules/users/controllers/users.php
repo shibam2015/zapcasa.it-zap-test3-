@@ -1801,7 +1801,48 @@ class users extends CI_Controller{
 		$this->upload_image_2('user_file_2', $uid);
 		$msg = $this->lang->line('user_info_success_message');
 		$this->session->set_flashdata('success', $msg);
-		redirect('users/my_account');
+		redirect('users/manage_location');
+	}
+
+	public function manage_location()
+	{
+		//$uid=$this->session->userdata('user_id');
+		//if( $uid != 0 ) {
+		//	redirect('users/my_account');
+		//}
+		$data = array();
+		$this->load->view('users/manage-location', $data);
+	}
+
+	public function update_location()
+	{
+
+		$uid = $this->input->post('locupdatefor');
+		//$uid = $this->session->userdata('user_id');
+		//$this->session->set_flashdata('msg', $msgdata);
+		//redirect('users/my_account');
+		echo $uid;
+		die();
+		if ($uid == 0 || $uid == '') {
+			redirect('users/common_reg');
+		} else {
+			$user_type = get_perticular_field_value('zc_user', 'user_type', " and user_id='" . $uid . "'");
+			if ($user_type != '1') {
+				$new_user['latitude'] = (float)$this->input->post('promaplatitude');
+				$new_user['longitude'] = (float)$this->input->post('promaplongitude');
+				$property_ids = $this->usersm->edit_user_land($new_data, $uid);
+
+				$msgdata = $this->lang->line('property_the_property_is_posted_successfully');
+
+				$this->session->set_flashdata('msg', $msgdata);
+				redirect('users/my_account');
+
+			} else {
+				$msgdata = $this->lang->line('property_please_login_to_add_your_property');
+				$this->session->set_flashdata('error_user', $msgdata);
+				redirect('users/common_reg');
+			}
+		}
 	}
 
 	public function remove1(){
@@ -2074,5 +2115,6 @@ class users extends CI_Controller{
 
 
 	}
+
 }
 ?>

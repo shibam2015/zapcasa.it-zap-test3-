@@ -132,7 +132,7 @@ $(document).ready(function() {
 		$propertyImage = base_url()."assets/images/no_proimg.jpg";
 		$image_path = prop_image($property_details[0]['property_id']);			
 		if( $image_path != "" ) {
-			$propertyImage =  base_url()."assets/uploads/Property/Property".$property_details[0]['property_id']."/thumb_200_296/".$image_path;
+			$propertyImage = base_url() . "assets/uploads/Property/Property" . $property_details[0]['property_id'] . "/thumb_92_82/" . $image_path;
 		}
 		//FInding Property Address Here.
 		$propertyShowingAddress = '';
