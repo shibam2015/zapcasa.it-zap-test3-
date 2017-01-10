@@ -120,13 +120,13 @@
 <!------ body part -------------->
 <div class="main">
     <div id="breadcrumb" class="fk-lbreadbcrumb newvd">
-        	
+                    
             <span>
 				<a href="<?php echo base_url(); ?>">
                     <?php echo $this->lang->line('edit_property_form_home'); ?>
                 </a>
 			</span> >
-        <?php
+        <!--<?php
         if ($locupdatetype == 'update') {
             ?>
             <span>
@@ -149,7 +149,7 @@
 			</span> >
         <?php
         }
-        ?>
+        ?>-->
         <span>
 				<?php echo $this->lang->line('managae_location_page_manage_location_str'); ?>
 			</span>
@@ -158,41 +158,42 @@
     <?php
     //Finding Property Title Here.
     if (isset($_COOKIE['lang']) && ($_COOKIE['lang'] == "english")) {
-        $name = get_perticular_field_value('zc_contract_types', 'name', " and contract_id='" . $property_details[0]['contract_id'] . "'");
-        $typology_name = get_perticular_field_value('zc_typologies', 'name', " and status='active' and typology_id='" . $property_details[0]['typology'] . "'");
-        $city_name = get_perticular_field_value('zc_city', 'city_name', " and city_id='" . $property_details[0]['city'] . "'");
-        $province_code = get_perticular_field_value('zc_region_master', 'province_code', " and city='" . mysql_real_escape_string($city_name) . "'");
+        //$name = get_perticular_field_value('zc_contract_types', 'name', " and contract_id='" . $property_details[0]['contract_id'] . "'");
+        // $typology_name = get_perticular_field_value('zc_typologies', 'name', " and status='active' and typology_id='" . $property_details[0]['typology'] . "'");
+        // $city_name = get_perticular_field_value('zc_city', 'city_name', " and city_id='" . $user_details[0]['city'] . "'");
+        $province_code = get_perticular_field_value('zc_region_master', 'province_code', " and city='" . mysql_real_escape_string($user_details[0]['city']) . "'");
 
-        $proptitle = $name . " For " . stripslashes($typology_name) . " in " . $city_name . ", " . $province_code;
+        $proptitle = stripslashes($user_details[0]['first_name']) . '&nbsp' . stripslashes($user_details[0]['last_name']) . " in " . $user_details[0]['city'] . ", " . $province_code;
     } else {
-        $name_it = get_perticular_field_value('zc_contract_types', 'name_it', " and contract_id='" . $property_details[0]['contract_id'] . "'");
-        $typology_name = get_perticular_field_value('zc_typologies', 'name_it', " and status='active' and typology_id='" . $property_details[0]['typology'] . "'");
-        $city_name = get_perticular_field_value('zc_city', 'city_name_it', " and city_id='" . $property_details[0]['city'] . "'");
-        $province_code = get_perticular_field_value('zc_region_master', 'province_code', " and city_it='" . mysql_real_escape_string($city_name) . "'");
+        // $name_it = get_perticular_field_value('zc_contract_types', 'name_it', " and contract_id='" . //$property_details[0]['contract_id'] . "'");
+        //$typology_name = get_perticular_field_value('zc_typologies', 'name_it', " and status='active' and typology_id='" . $property_details[0]['typology'] . "'");
+        // $city_name = get_perticular_field_value('zc_city', 'city_name_it', " and city_id='" . $property_details[0]['city'] . "'");
+        $province_code = get_perticular_field_value('zc_region_master', 'province_code', " and city_it='" . mysql_real_escape_string($user_details[0]['city']) . "'");
 
-        $proptitle = stripslashes($typology_name) . " in " . $name_it . " a " . $city_name . ", " . $province_code;
+        $proptitle = stripslashes($user_details[0]['first_name']) . stripslashes($user_details[0]['last_name']) . " in " . $user_details[0]['city'] . ", " . $province_code;
     }
 
     //Finding Property Image Here.
-    $propertyImage = base_url() . "assets/images/no_proimg.jpg";
-    $image_path = prop_image($property_details[0]['property_id']);
+    $propertyImage = base_url() . "assets/images/no_prof.png";
+    $image_path = $user_details[0]['file_1'];
     if ($image_path != "") {
-        $propertyImage = base_url() . "assets/uploads/Property/Property" . $property_details[0]['property_id'] . "/thumb_200_296/" . $image_path;
+        $propertyImage = base_url() . "assets/uploads/thumb_92_82/" . $image_path;
     }
     //FInding Property Address Here.
+    $Company_name = $user_details[0]['company_name'];
     $propertyShowingAddress = '';
-    $propertyAddress = ($property_details[0]['area'] != '' ? $property_details[0]['area'] . ' - ' : '');
-    $propertyAddress .= ($property_details[0]['street_address'] != '' ? $property_details[0]['street_address'] . ', ' : '');
-    $propertyAddress .= ($property_details[0]['street_no'] != '' ? $property_details[0]['street_no'] : '');
+    $propertyAddress = ($user_details[0]['area'] != '' ? $user_details[0]['area'] . ' - ' : '');
+    $propertyAddress .= ($user_details[0]['street_address'] != '' ? $user_details[0]['street_address'] . ', ' : '');
+    $propertyAddress .= ($user_details[0]['street_no'] != '' ? $user_details[0]['street_no'] : '');
     $propertyShowingAddress .= $propertyAddress . ', ' . $city_name . ', ' . $province_code;
-    $propertyAddress .= ($property_details[0]['zip'] != '' ? ' - ' . $property_details[0]['zip'] : '');
-    $propertyShowingAddress .= ($property_details[0]['zip'] != '' ? ' - ' . $property_details[0]['zip'] : '');
+    $propertyAddress .= ($user_details[0]['zip'] != '' ? ' - ' . $user_details[0]['zip'] : '');
+    $propertyShowingAddress .= ($user_details[0]['zip'] != '' ? ' - ' . $user_details[0]['zip'] : '');
 
     $GoogleMapMarkers[0] = array(
         'proptitle' => $proptitle,
         'hackerspace' => 'markers',
-        'latitude' => ($property_details[0]['latitude'] == '0' ? '0' : $property_details[0]['latitude']),
-        'longitude' => ($property_details[0]['longitude'] == '0' ? '0' : $property_details[0]['longitude']),
+        'latitude' => ($user_details[0]['latitude'] == '0' ? '0' : $user_details[0]['latitude']),
+        'longitude' => ($user_details[0]['longitude'] == '0' ? '0' : $user_details[0]['longitude']),
         'proaddress' => $propertyAddress,
         'propurl' => 'javascript:void(0);',
         'proprice' => '',

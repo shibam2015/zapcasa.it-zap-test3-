@@ -1681,7 +1681,7 @@ class users extends CI_Controller{
 		$this->upload_image_2('user_file_2',$uid);
 		$msg = $this->lang->line('user_info_success_message');
 		$this->session->set_flashdata('success', $msg);
-		redirect('users/my_account');
+		redirect('users/manage_location');
 	}
 
 	public function upload_image_1($form_field_name, $uid)
@@ -1772,7 +1772,7 @@ class users extends CI_Controller{
 		$rs = $this->usersm->upadte_user($new_user, $uid);
 		$msg = $this->lang->line('user_info_success_message');
 		$this->session->set_flashdata('success', $msg);
-		redirect('users/my_account');
+		redirect('users/manage_location');
 	}
 
 	public function update_agency_reg()
@@ -1806,31 +1806,32 @@ class users extends CI_Controller{
 
 	public function manage_location()
 	{
-		//$uid=$this->session->userdata('user_id');
+		$uid = $this->session->userdata('user_id');
 		//if( $uid != 0 ) {
 		//	redirect('users/my_account');
 		//}
 		$data = array();
+		$data['user_details'] = $this->usersm->user_profile($uid);
 		$this->load->view('users/manage-location', $data);
 	}
 
 	public function update_location()
 	{
 
-		$uid = $this->input->post('locupdatefor');
-		//$uid = $this->session->userdata('user_id');
+		//$uid = $this->input->post('locupdatefor');
+		$uid = $this->session->userdata('user_id');
 		//$this->session->set_flashdata('msg', $msgdata);
 		//redirect('users/my_account');
-		echo $uid;
-		die();
+
+
 		if ($uid == 0 || $uid == '') {
 			redirect('users/common_reg');
 		} else {
 			$user_type = get_perticular_field_value('zc_user', 'user_type', " and user_id='" . $uid . "'");
-			if ($user_type != '1') {
+			if ($user_type = '1') {
 				$new_user['latitude'] = (float)$this->input->post('promaplatitude');
 				$new_user['longitude'] = (float)$this->input->post('promaplongitude');
-				$property_ids = $this->usersm->edit_user_land($new_data, $uid);
+				$property_ids = $this->usersm->edit_user_land($new_user, $uid);
 
 				$msgdata = $this->lang->line('property_the_property_is_posted_successfully');
 

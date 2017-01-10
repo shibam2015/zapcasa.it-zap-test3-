@@ -32,8 +32,8 @@ $(document).ready(function() {
 <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/map.css?nocache=289671982568" type="text/css"/>
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?= MAP_KEY ?>">
 </script>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/represent-map.js"></script>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/markerclusterer.js"></script>
+
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/label.js"></script>
     <script>
 	
 /*function initialize() {
@@ -132,6 +132,8 @@ google.maps.event.addDomListener(window, 'load', initialize);*/
     ?>
 
 </script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/represent-map.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/markerclusterer.js"></script>
 
 <script type="text/javascript">
 $(function(){
@@ -297,8 +299,9 @@ bodyTag.className = bodyTag.className.replace("noJS", "hasJS");
 	     </span>
     
     </h2>
-    
- <!-- <div class="rightmap_area"><img src="images/map_small.jpg" ></div>-->
+
+
+	<!-- <div class="rightmap_area"><img src="images/map_small.jpg" ></div>-->
 
 
 	<div class="rightmap_area" id="map_canvas" style="width:445px;height:367px;border:solid 1px #DDDDDD;"></div>
@@ -319,8 +322,8 @@ bodyTag.className = bodyTag.className.replace("noJS", "hasJS");
           foreach($advertiser_lists as $advertiser_list)
 		  {
 
-			  //echo "<pre>";
-			  //print_r($advertiser_list);die();
+			  // echo "<pre>";
+			  // print_r($advertiser_list);
 			  $link=base_url().'advertiser/advertiser_details/'.$advertiser_list['user_id'];
 			  
 			  $user_pref = get_all_preference_by_user("zc_user_preference",$where=" AND user_id=".$advertiser_list['user_id']);
@@ -398,26 +401,56 @@ bodyTag.className = bodyTag.className.replace("noJS", "hasJS");
 						<?php } ?>	
 	                    <div class="propFeatures">
 							<h3><?php echo $this->lang->line('advertise_list_property_post'); ?>  <font
-									style="color:#ED6B1F"><?php echo get_perticular_count('zc_property_details', " and property_post_by='" . $advertiser_list['user_id'] . "'and 	property_status='2'and property_approval='1'"); ?></font>
+									style="color:#ED6B1F"><?php echo get_perticular_count('zc_property_details', " and property_post_by='" . $advertiser_list['user_id'] . "'and 	property_status ='2'and property_approval ='1'"); ?></font>
 							</h3></div>
 	                </div>
 	            </li>
-
+					<?php echo "<pre>";
+					print_r($advertiser_lists);
+					die(); ?>
 					<?php
-					$alt++;
-					if ($alt > 1) {
-						$alt = 0;
-					}
-					$GoogleMapMarkers[$gMapCounter] = array(
+					//Finding Property Title Here.
+					if (isset($_COOKIE['lang']) && ($_COOKIE['lang'] == "english")) {
+						//$name = get_perticular_field_value('zc_contract_types', 'name', " and contract_id='" . $property_details[0]['contract_id'] . "'");
+						// $typology_name = get_perticular_field_value('zc_typologies', 'name', " and status='active' and typology_id='" . $property_details[0]['typology'] . "'");
+						// $city_name = get_perticular_field_value('zc_city', 'city_name', " and city_id='" . $user_details[0]['city'] . "'");
+						$province_code = get_perticular_field_value('zc_region_master', 'province_code', " and city='" . mysql_real_escape_string($advertiser_list->city) . "'");
 
-						'proptitle' => $business_name,
-						'hackerspace' => 'marker' . $arrProp->contract_id,
-						'latitude' => ($latitude == '0' ? '42.500000' : $latitude),
-						'longitude' => ($longitude == '0' ? '21.500000' : $longitude),
-						'proaddress' => $advertiser_list['street_address'],
+						$proptitle = stripslashes($advertiser_list->first_name) . '&nbsp' . stripslashes($advertiser_list->last_name) . " in " . $advertiser_list->city . ", " . $province_code;
+					} else {
+						// $name_it = get_perticular_field_value('zc_contract_types', 'name_it', " and contract_id='" . //$property_details[0]['contract_id'] . "'");
+						//$typology_name = get_perticular_field_value('zc_typologies', 'name_it', " and status='active' and typology_id='" . $property_details[0]['typology'] . "'");
+						// $city_name = get_perticular_field_value('zc_city', 'city_name_it', " and city_id='" . $property_details[0]['city'] . "'");
+						$province_code = get_perticular_field_value('zc_region_master', 'province_code', " and city='" . mysql_real_escape_string($advertiser_list->city) . "'");
+
+						$proptitle = stripslashes($advertiser_list->first_name) . '&nbsp' . stripslashes($advertiser_list->last_name) . " in " . $advertiser_list->city . ", " . $province_code;
+					}
+
+					//Finding Property Image Here.
+					// $propertyImage = base_url() . "assets/images/no_prof.png";
+					/*$image_path = $user_details[0]['file_1'];
+                    if ($image_path != "") {
+                        $propertyImage = base_url() . "assets/uploads/thumb_92_82/" . $image_path;
+                    }*/
+					//FInding Property Address Here.
+					// $Company_name = $advertiser_list[0]['company_name'];
+					$propertyShowingAddress = '';
+					//$propertyAddress = ($advertiser_list[0]['area'] != '' ? $advertiser_list[0]['area'] . ' - ' : '');
+					$propertyAddress .= ($advertiser_list->street_address != '' ? $advertiser_list->street_address . ', ' : '');
+					$propertyAddress .= ($advertiser_list->street_no != '' ? $advertiser_list->street_no : '');
+					$propertyShowingAddress .= $propertyAddress . ', ' . $city_name . ', ' . $province_code;
+					$propertyAddress .= ($advertiser_list->zip != '' ? ' - ' . $advertiser_list->zip : '');
+					$propertyShowingAddress .= ($advertiser_list->zip != '' ? ' - ' . $advertiser_list->zip : '');
+
+					$GoogleMapMarkers[$gMapCounter] = array(
+						'proptitle' => $proptitle,
+						'hackerspace' => 'marker',
+						'latitude' => ($advertiser_list->latitude == '0' ? '42.500000' : $advertiser_list->latitude),
+						'longitude' => ($advertiser_list->longitude == '0' ? '21.500000' : $advertiser_list->longitude),
+						'proaddress' => $propertyAddress,
 						//'propurl' => base_url().$first_segment.'/'.$prop_det_url,
 						//'proprice' => '<font style="color:#ED6B1F">'.$propertyPrice.'</font>',
-						'proimg' => $propertyImageThumb,
+						'proimg' => $propertyImage
 					);
 					$gMapCounter++;
 				}

@@ -12,6 +12,18 @@ class Users extends CI_Model{
         $query = $this->db->get('user');
         return $query->result();
     }
+
+	public function user_profile($user_id)
+	{
+		$sql = "select * from zc_user where user_id='" . $user_id . "'";
+		$query = $this->db->query($sql);
+		if ($query->num_rows() > 0) {
+			foreach ($query->result_array() as $row) {
+				$data[] = $row;
+			}
+			return $data;
+		}
+	}
 	public function getUsers1(&$config, $start,$type=''){
         $this->db->select('user_id');
         $this->db->where(array('user_type' =>$type));

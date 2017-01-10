@@ -255,14 +255,14 @@ class usersm extends CI_Model {
 		return $this->db->query($update_sql);
 	}
 
-	public function edit_user_land($new_data, $uid)
+	public function edit_user_land($new_user, $uid)
 	{
 		$query = $this->db->query("SELECT * FROM zc_user WHERE user_id='" . $uid . "'");
 		$res = $query->result();
 
 
 		$where = "user_id = '" . $uid . "'";
-		$str = $this->db->update('zc_user', $new_data, $where);
+		$str = $this->db->update('zc_user', $new_user, $where);
 	}
 	public function update_profile_1($file_name,$uid){
 		$sql="update zc_user set file_1='".$file_name."' where user_id='".$uid."'";
