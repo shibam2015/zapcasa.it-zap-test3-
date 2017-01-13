@@ -121,13 +121,14 @@ $(document).ready(function() {
 									$property_id=$property_lists['property_id'];
 								?>
                                 <li>
-                                    <div class="last_property" style="padding:10px 0 0 0;<?php echo($suspended_user_type != 4 || $property_lists['suspention_status'] == 0?'':'background:#FFFFD7'); ?>">
+									<div class="last_property"
+										 style="padding:10px 0 0 0;<?php echo($suspended_user_type != 4 && $property_lists['property_approval'] != 0 ? '' : 'background:#FFFFD7'); ?>">
 										<div style="display:table">
 											<div style="display:table-cell;width:150px;vertical-align:top;">
 												<div style="display:table">
 													<div style="display:table-cell;vertical-align:middle;">
 													<?php
-													if($suspended_user_type != 4 || $property_lists['suspention_status'] == 0){
+													if ($suspended_user_type != 4 && $property_lists['property_approval'] == 1) {
 														?>
 														<input type="checkbox" name="propertyId[]"  style="float:left; margin-left: 5px; margin-right: 2px;" class="property" value="<?php echo $property_lists['property_id'];?>" onClick="checkArr('property');">
 														<?php
@@ -185,9 +186,13 @@ $(document).ready(function() {
 														echo $PropTitle;
 														?>
 													</a>
+													<?php
+													if ($property_lists['property_approval'] == 1) {
+														?>
 													<div style="display:table-cell;vertical-align:middle;width:110px;">
 														<?php
-														if( $suspended_user_type != 4 || $property_lists['suspention_status'] == 0 ) {
+
+														if ($suspended_user_type != 4 || $property_lists['suspention_status'] == 0) {
 															if($user_type==2) {
 															?>     
 															<div class="not_approval">
@@ -210,6 +215,7 @@ $(document).ready(function() {
 																</a>
 																<?php
 																}
+
 																?>
 															</div>
 															<?php
@@ -243,6 +249,8 @@ $(document).ready(function() {
 														}	
 														?>
 													</div>
+													<?php
+													} ?>
 												</h2>
 												<h3>
 												<?php
@@ -320,7 +328,11 @@ $(document).ready(function() {
 												<?php
 												if ($property_lists['property_approval'] == '0') {
 													?>
-													<p style="color:red"><?php echo $this->lang->line('property_inactive_by_admin'); ?></p>
+													<p style="color:red"><?php echo $this->lang->line('property_inactive_by_admin'); ?>
+														,<?php echo $this->lang->line('blocked_werecommend_that_youdonot_continue_tothis_website_property');
+														?>
+														<br><?php echo $this->lang->line('blocked_werecommend_that_youdonot_continue_tothis_website_property1'); ?>
+													</p>
 												<?php
 												}
 												?>

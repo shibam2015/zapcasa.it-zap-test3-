@@ -130,6 +130,8 @@ $route['user/check_user_avail'] = 'user/check_user_avail';
 $route['user/check_ssn_avail'] = 'user/check_ssn_avail';
 $route['user/city_search'] = 'user/city_search';
 $route['user/adduser'] = 'user/adduser';
+$route['user/manage_location/(.*)'] = 'user/manage_location/(.*)';
+$route['user/update_location/(.*)'] = 'user/update_location/(.*)';
 $route['user/(.*)'] = 'user/index/$1';
 
 $route['property/delete_property/(.*)'] = 'property/delete_property/$1';

@@ -34,6 +34,8 @@ $(document).ready(function() {
 </script>
 
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/label.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/represent-map.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/markerclusterer.js"></script>
     <script>
 	
 /*function initialize() {
@@ -132,8 +134,7 @@ google.maps.event.addDomListener(window, 'load', initialize);*/
     ?>
 
 </script>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/represent-map.js"></script>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/markerclusterer.js"></script>
+
 
 <script type="text/javascript">
 $(function(){
@@ -405,9 +406,7 @@ bodyTag.className = bodyTag.className.replace("noJS", "hasJS");
 							</h3></div>
 	                </div>
 	            </li>
-					<?php echo "<pre>";
-					print_r($advertiser_lists);
-					die(); ?>
+
 					<?php
 					//Finding Property Title Here.
 					if (isset($_COOKIE['lang']) && ($_COOKIE['lang'] == "english")) {

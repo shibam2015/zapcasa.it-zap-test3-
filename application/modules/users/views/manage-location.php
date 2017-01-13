@@ -258,7 +258,7 @@
                     <div class="cat_select" style="width:245px;">
                         <label style="display:block;">&nbsp;</label>
                         <input type="hidden" name="locupdatetype" value="<?php echo $locupdatetype; ?>">
-                        <input type="hidden" name="locupdatefor" value="<?php echo $users[0]['property_id']; ?>">
+                        <input type="hidden" name="locupdatefor" value="<?php echo $user_details[0]['user_id']; ?>">
                         <input type="submit"
                                value="<?php echo $this->lang->line('managae_location_page_save_position_str'); ?>"
                                name="btnSubmit" class="mainbt" style="margin-right:0;">

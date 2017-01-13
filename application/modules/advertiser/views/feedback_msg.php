@@ -319,10 +319,10 @@ function delete_pmsg(id){
 		   			page = page[1]-10;
 		   			var str = "/"+page;
 		   			document.getElementById("inboxes_del_str").value = "";
-					location.href = "<?php echo base_url().'property/get_send_message'; ?>"+str;
+					location.href = "<?php echo base_url().'My_Feedback'; ?>" + str;
 					return;
 		   		}
-			    location.href = "<?php echo base_url().'property/get_send_message'; ?>"+pageString;
+				location.href = "<?php echo base_url().'My_Feedback'; ?>" + pageString;
             },error: function(e){
 				alert("<?php echo $this->lang->line('feedback_message_there_is_something_wrong');?>");
             }

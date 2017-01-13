@@ -2580,6 +2580,6 @@ $lang['new_mail-hi'] = 'Ciao';
 $lang['regards_mail'] = 'Saluti';
 $lang['new_feedback_mail_to_red_id'] = 'Per leggerlo, vai alla pagina My feedback su ZapCasa';
 $lang['Messages_you_are_receiving_this_email_because'] = 'tai ricevuto questa email perché sei registrato su ZapCasa. Per interrompere la ricezione di queste email, accedere al proprio conto ZapCasa e disattivare le notifiche.www.zapcasa.it';
-$lang['property_inactive_by_admin'] = "Proprietà inattiva da admin";
+$lang['property_inactive_by_admin'] = "Proprietà è sospeso";
 
 ?>

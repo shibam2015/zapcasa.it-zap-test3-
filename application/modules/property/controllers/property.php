@@ -1501,7 +1501,7 @@ class property extends CI_Controller {
 		$data["msg_totals"] = $this->propertym->get_msg_detail1($uid, $config["per_page"], $page, $WHERE);
 		$data['check_user_to'] = $this->propertym->check_user_to_status($uid);
 		#echo "<pre> ===>"; print_r($all_msgs);
-		#echo "<pre> ===>"; print_r($data);exit;
+		//echo "<pre> ===>"; print_r($msg_totals);exit;
 		$HTML = '';
 		$Status = 1;
 		//$msg_detail=get_perticular_field_value('zc_property_message_info','message'," and msg_id='".$msg_id."'");
@@ -1636,7 +1636,7 @@ class property extends CI_Controller {
 				} else if ($data["msg_totals"][0]['admin_approval'] == 0) {
 					$Status = 0;
 					$HTML .= '<div class="warrning"> <p> ' . $this->lang->line('inbox_this_property_inactive_by_admin') . '</p></div>';
-				} else if ($data['check_user_to'][0]['status'] == 0) {
+				} else if ($data["check_user_to"][0]['status'] == 0) {
 					$Status = 0;
 					$HTML .= '<div class="warrning"> <p> ' . $this->lang->line('inbox_this_user_is_no_longer_registered') . '</p></div>';
 				} else if ($data["msg_totals"][0]['blocked_note'] != "" && strlen($data["msg_totals"][0]['blocked_note']) > 0) {
@@ -1647,9 +1647,12 @@ class property extends CI_Controller {
 					$HTML .= '<div class="warrning"> <p> ' . $this->lang->line('suspended_property_msg_by_admin_first') . '</p></div>';
 				}
 			} else {
-				if ($data['check_user_to'][0]['status'] == 0) {
+				if ($data["check_user_to"][0]['status'] == 0) {
 					$Status = 0;
 					$HTML .= '<div class="warrning"> <p> ' . $this->lang->line('inbox_this_user_is_no_longer_registered') . '</p></div>';
+				} else if ($data["msg_totals"][0]['blocked_note'] != "" && strlen($data["msg_totals"][0]['blocked_note']) > 0) {
+					$Status = 0;
+					$HTML .= '<div class="warrning"> <p> ' . $this->lang->line('inbox_this_user_has_been_blocked') . '</p></div>';
 				}
 			}
 		}

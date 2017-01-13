@@ -148,9 +148,7 @@ $(document).ready(function() {
 							<label style="display:block;">&nbsp;</label>
 							<input type="hidden" name="locupdatetype" value="<?php echo $locupdatetype; ?>">
 							<input type="hidden" name="locupdatefor" value="<?php echo $property_details[0]['property_id']; ?>">
-							<input type="submit"
-								   value="<?php echo $this->lang->line('managae_location_page_save_position_str'); ?>"
-								   name="btnSubmit" class="mainbt" style="margin-right:0;">
+							<input type="submit" value="Save" name="btnSubmit" class="mainbt" style="margin-right:0;">
 							<a style="height:33px; margin:0px;float:right;" class="mainbt"
 							   href="<?php echo base_url() . 'property/skip_manage_loc/' . $locupdatetype . '/' . $property_details[0]['property_id']; ?>">
 								<?php echo $this->lang->line('managae_location_page_skip_str'); ?>
@@ -171,11 +169,10 @@ $(document).ready(function() {
 		<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/map.css?nocache=289671982568" type="text/css"/>
 		<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/zapcasa_style.css" type="text/css"/>
 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?= MAP_KEY ?>"></script>
-	<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/markerclusterer.js"></script>
 		<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/label.js"></script>
 		<script type="text/javascript">
 		var WebRoot = '<?php echo base_url(); ?>';
-		var centerZoom = <?php echo(!empty($GoogleMapMarkers)?($GoogleMapMarkers[0]['latitude']=='0'?'7':'14'):'7'); ?>;;
+		var centerZoom = <?php echo(!empty($GoogleMapMarkers)?($GoogleMapMarkers[0]['latitude']=='0'?'7':'14'):'7'); ?>;
 		var centerLatitude = <?php echo(!empty($GoogleMapMarkers)?($GoogleMapMarkers[0]['latitude']=='0'?'42.500000':$GoogleMapMarkers[0]['latitude']):'41.500000'); ?>;
 		var centerLongitude = <?php echo(!empty($GoogleMapMarkers)?($GoogleMapMarkers[0]['longitude']=='0'?'12.500000':$GoogleMapMarkers[0]['longitude']):'21.500000'); ?>;
 		var map;

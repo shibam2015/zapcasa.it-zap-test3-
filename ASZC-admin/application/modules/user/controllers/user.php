@@ -65,7 +65,7 @@ class User extends CI_Controller {
 				break;
 		}
 
-		//$data['users'] = $this->users->getUsers($config, $this->uri->segment($config['uri_segment'], 0),$whereClause);
+		$data['users'] = $this->users->getUsers($config, $this->uri->segment($config['uri_segment'], 0), $whereClause);
 		$this->pagination->initialize($config);
 		$data['pagination'] = $this->pagination->create_links();
 		
@@ -748,7 +748,7 @@ class User extends CI_Controller {
 
 	public function update_owner(){
 		$user_id=$this->uri->segment('3');
-		//echo '<pre>';print_r($_POST);die;
+
 		$rs=$this->users->general_owner_update($user_id);
 		if($rs) {
 			/*$this->upload_image_1('user_file_1',$user_id);
@@ -759,7 +759,7 @@ class User extends CI_Controller {
 			$this->upload_image_2('user_file_2',$user_id);
 			//$msg = "Profile data updated successfully";
 			//$this->session->set_flashdata('success', $msg);
-			redirect('user/manage_location' . $user_id);
+			redirect('user/manage_location/' . $user_id);
 		}
 	}
 
@@ -770,58 +770,41 @@ class User extends CI_Controller {
 		if($rs){
 			$this->upload_image_1('user_file_1',$user_id);
 			$this->upload_image_2('user_file_2',$user_id);
-			$msg = "Profile data updated successfully";
-			$this->session->set_flashdata('success', $msg);
-
+			//$msg = "Profile data updated successfully";
+			//$this->session->set_flashdata('success', $msg);
+			redirect('user/manage_location/' . $user_id);
 		}
-		$data = array();
-		$data['user_details'] = $this->users->user_profile($user_id);
-		$this->load->view('user/manage-location', $data);
-		//redirect('user/manage_location/'.$user_id);
 	}
 
-	public function manage_location()
+	public function manage_location($user_id)
 	{
-		$user_id = $this->uri->segment('3');
-		//if( $uid != 0 ) {
-		//	redirect('users/my_account');
-		//}
+		//echo "hiii";die();
 		$data = array();
+		$user_id = $this->uri->segment('3');
+
+		//$data['locupdatetype'] = $this->uri->segment('3');
+		
 		$data['user_details'] = $this->users->user_profile($user_id);
+
 		$this->load->view('user/manage-location', $data);
 	}
 
 	public function update_location()
 	{
+		//echo "hii";die();
+		$user_id = $this->uri->segment('3');
+		//echo '<pre>';print_r($user_id);die;
 
-		//$uid = $this->input->post('locupdatefor');
-		$uid = $this->session->userdata('user_id');
-		//$this->session->set_flashdata('msg', $msgdata);
-		//redirect('users/my_account');
+		$lat = (float)$this->input->post('promaplatitude');
+		$long = (float)$this->input->post('promaplongitude');
 
+		//$sql = "UPDATE zc_user SET latitude='" . $lat . "', longitude='" . $long . "' WHERE user_id=" . $user_id;
+		$this->db->query("UPDATE zc_user SET latitude='" . $lat . "', longitude='" . $long . "' WHERE user_id=" . $user_id);
+		//return $query->result_array();
 
-		if ($uid == 0 || $uid == '') {
-			redirect('users/common_reg');
-		} else {
-			$user_type = get_perticular_field_value('zc_user', 'user_type', " and user_id='" . $uid . "'");
-			if ($user_type = '1') {
-				$new_user['latitude'] = (float)$this->input->post('promaplatitude');
-				$new_user['longitude'] = (float)$this->input->post('promaplongitude');
-				$property_ids = $this->usersm->edit_user_land($new_user, $uid);
+		redirect('user/edit_profile/' . $user_id);
 
-				$msgdata = $this->lang->line('property_the_property_is_posted_successfully');
-
-				$this->session->set_flashdata('msg', $msgdata);
-				redirect('user/edit_profile/' . $user_id);
-
-			} else {
-				$msgdata = $this->lang->line('property_please_login_to_add_your_property');
-				$this->session->set_flashdata('error_user', $msgdata);
-				//redirect('users/common_reg');
-			}
-		}
 	}
-
 
 	public function user_search()
 	{
