@@ -32,30 +32,33 @@ function CreateImageUsingImageMagicWithGravity($data){
 	$sourcePath = $data['sourcePath'];
 	$destinationPath = $data['destinationPath'];
 	$watermarkLogoPath = $data['watermarkLogoPath'];
-	$imageSize = $data['imageSize'];	
-	
-	$rrr = exec ("/usr/bin/convert -strip ".$sourcePath." -flatten \
+	$imageSize = $data['imageSize'];
+
+	/*$rrr = exec ("/usr/bin/convert -strip ".$sourcePath." -flatten \
 			-resize ".$imageSize."^ -gravity Center -crop ".$imageSize."+0+0 +repage \
 			-gravity SouthWest -draw 'image Over 0,0 100,43 'zap_logo.png'' \
-			-background white -alpha remove -quality 80% ".$destinationPath);
+			-background white -alpha remove -quality 80% ".$destinationPath);*/
+	exec("/usr/bin/convert " . $sourcePath . "  -resize " . $imageSize . " -gravity center -crop " . $imageSize . "+0+0 +repage " . $destinationPath);
 }
 function CreateImageUsingImageMagicWithOutGravity($data){
 	$sourcePath = $data['sourcePath'];
 	$destinationPath = $data['destinationPath'];
 	$imageSize = $data['imageSize'];
-	exec ("/usr/bin/convert -strip ".$sourcePath." -flatten \
+	/*exec ("/usr/bin/convert -strip ".$sourcePath." -flatten \
 			-resize ".$imageSize."^ -gravity Center -crop ".$imageSize."+0+0 +repage \
-			-background white -alpha remove -quality 80% ".$destinationPath);
+			-background white -alpha remove -quality 80% ".$destinationPath);*/
+	exec("/usr/bin/convert " . $sourcePath . "  -resize " . $imageSize . " -gravity center -background white -crop " . $imageSize . "+0+0 +repage " . $destinationPath);
 }
 // USE THIS FOR BIG IMAGE AND FOR PLANIMETRY
 
 function CreateImageUsingImageMagicWithOutGravitybBigImage($data){
 	$sourcePath = $data['sourcePath'];
 	$destinationPath = $data['destinationPath'];
-	$imageSize = $data['imageSize'];	
-	exec ("/usr/bin/convert -strip ".$sourcePath." -flatten \
+	$imageSize = $data['imageSize'];
+	/*exec ("/usr/bin/convert -strip ".$sourcePath." -flatten \
 			-resize ".$imageSize." \
-			-background white -alpha remove -quality 80% ".$destinationPath);
+			-background white -alpha remove -quality 80% ".$destinationPath);*/
+	exec("/usr/bin/convert " . $sourcePath . "  -resize " . $imageSize . " -gravity center -background white -crop " . $imageSize . "+0+0 +repage " . $destinationPath);
 }
 /*
  *

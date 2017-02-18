@@ -16,7 +16,7 @@ function CreateImageUsingImageMagic($data){
 	$sourcePath = $data['sourcePath'];
 	$destinationPath = $data['destinationPath'];
 	$imageSize = $data['imageSize'];
-	exec ("/usr/bin/convert ".$sourcePath."   -resize ".$imageSize."\!  ".$destinationPath);
+	exec("/usr/bin/convert " . $sourcePath . "   -resize " . $imageSize . "!  " . $destinationPath);
 }
 
 function CreateImageUsingImageMagicWithGravity($data)
@@ -25,23 +25,27 @@ function CreateImageUsingImageMagicWithGravity($data)
 	$destinationPath = $data['destinationPath'];
 	$watermarkLogoPath = $data['watermarkLogoPath'];
 	$imageSize = $data['imageSize'];
-	//echo '<pre>';print_r($data);
-	 exec ("convert -strip ".$sourcePath." -flatten /
+	//echo '<pre>';print_r($data);exit;
+	//exec ("/usr/bin/convert ".$sourcePath."   -resize ".$imageSize."!  ".$destinationPath);
+	/*exec ("convert -strip ".$sourcePath." -flatten /
         -resize ".$imageSize."^ -gravity Center -crop ".$imageSize."+0+0 +repage /
         -gravity SouthWest -draw 'image Over 0,0 100,43 'zap_logo.png'' /
-        -background white -alpha remove -quality 80% ".$destinationPath);
+        -background white -alpha remove -quality 80% ".$destinationPath);*/
 
 	// return copy($sourcePath, $destinationPath);
+	exec("/usr/bin/convert " . $sourcePath . "  -resize " . $imageSize . " -gravity center -crop " . $imageSize . "+0+0 +repage " . $destinationPath);
 
 }
 function CreateImageUsingImageMagicWithOutGravity($data){
 	$sourcePath = $data['sourcePath'];
 	$destinationPath = $data['destinationPath'];
 	$imageSize = $data['imageSize'];
-	exec ("convert -strip ".$sourcePath." -flatten /
+	/*exec ("convert -strip ".$sourcePath." -flatten /
 			-resize ".$imageSize."^ -gravity Center -crop ".$imageSize."+0+0 +repage /
-			-background white -alpha remove -quality 80% ".$destinationPath);
+			-background white -alpha remove -quality 80% ".$destinationPath);*/
 	// return copy($sourcePath, $destinationPath);
+	exec("/usr/bin/convert " . $sourcePath . "  -resize " . $imageSize . " -gravity center -background white -crop " . $imageSize . "+0+0 +repage " . $destinationPath);
+
 }
 
 // USE THIS FOR BIG IMAGE AND FOR PLANIMETRY
@@ -50,9 +54,10 @@ function CreateImageUsingImageMagicWithOutGravitybBigImage($data){
 	$sourcePath = $data['sourcePath'];
 	$destinationPath = $data['destinationPath'];
 	$imageSize = $data['imageSize'];
-	exec ("/usr/local/bin/convert -strip ".$sourcePath." -flatten \
-			-resize ".$imageSize." \
-			-background white -alpha remove -quality 80% ".$destinationPath);
+	/*exec ("/usr/local/bin/convert -strip ".$sourcePath." -flatten 
+			-resize ".$imageSize." 
+			-background white -alpha remove -quality 80% ".$destinationPath);*/
+	exec("/usr/bin/convert " . $sourcePath . "  -resize " . $imageSize . " -gravity center -background white -crop " . $imageSize . "+0+0 +repage " . $destinationPath);
 	// return copy($sourcePath, $destinationPath);
 }
 
@@ -165,8 +170,10 @@ function get_perticular_count($tablename,$where=""){
 	return $record;
 }
 function get_all_value($tablename,$where=""){
+
 	$CI =& get_instance();
-	$str="select * from ".$tablename." where 1=1 ".$where;
+#echo "<br> ==> ".
+	$str = "select * from " . $tablename . " where 1=1 " . $where;
 	$query=$CI->db->query($str);
 	$record="";
 	if($query->num_rows()>0){
@@ -353,7 +360,7 @@ function access_token( $length = 8 ){
 }
 if (!function_exists('sendemail')) {
 	function sendemail($mail_from, $mail_to, $subject, $body, $cc='') {
-		// echo $mail_from."\n".$mail_to."\n".$subject."\n".$body;exit;		
+		// echo $mail_from."n".$mail_to."n".$subject."n".$body;exit;		
 		$CI = & get_instance();
 		$CI->load->library("email");
 		$CI->email->set_mailtype("html");
@@ -640,7 +647,7 @@ function send_mail( $details = array() ){
         'charset'   => 'utf-8' // utf-8, iso-8859-1
     );
     $CI->email->initialize($config);
-	$CI->email->set_newline("\r\n");
+	$CI->email->set_newline("rn");
     $CI->email->from( $details['from'], 'no-reply@zapcasa.it' );
     $CI->email->to( $details['to'] ); 
     $CI->email->subject( $details['subject']);
