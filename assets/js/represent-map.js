@@ -1,4 +1,4 @@
-// resize marker list to fit window
+// resize marker list to fit window var infoWindow = [];//var infoWindow = new google.maps.InfoWindow(); 
 function resizeList() {
 	newHeight = $('html').height() - $('#topbar').height();
 	$('#list').css('height', newHeight + "px");
@@ -265,8 +265,7 @@ function initialize(Type = '') {
 			//alert('aaaaaaaaaaaa');
 			// add marker hover events (if not viewing on mobile)
 			if (agent == "default") {
-				google.maps.event.addListener(marker, "mouseover", function() {
-					this.old_ZIndex = this.getZIndex();
+				google.maps.event.addListener(marker, "mouseover", function() {					this.old_ZIndex = this.getZIndex();
 					this.setZIndex(9999);
 					$("#marker" + i).css("display", "inline");
 					$("#marker" + i).css("z-index", "99999");
@@ -346,12 +345,12 @@ function initialize(Type = '') {
 }
 // zoom to specific marker
 function goToMarker(marker_id){
-	if (marker_id) {
+	if (marker_id!='') {	if(typeof infowindow != 'undefined'){		infowindow.close();		google.maps.event.trigger(infowindow, 'closeclick');	}
 		//infowindow.close();
 		map.panTo(gmarkers[marker_id].getPosition());
 		//map.setZoom(centerZoom);
-		map.setZoom(15);
-		google.maps.event.trigger(gmarkers[marker_id], 'click');
+		map.setZoom(18);
+		google.maps.event.trigger(gmarkers[marker_id], 'click');		
 		infowindow.close();
 	}
 }
@@ -392,12 +391,11 @@ function markerListMouseOver(marker_id) {
 }
 
 function markerListMouseOut(marker_id){
-
 	//if (marker_id) {
 		//map.panTo(gmarkers[marker_id].getPosition());
 		map.setZoom(centerZoom);
 		//infowindow.close();
-	$("#marker" + marker_id).css("display", "none");
+	$("#marker" + marker_id).css("display", "none");if(typeof infowindow != 'undefined'){		infowindow.close();		 google.maps.event.addListener(infowindow, "closeclick", function()		 {		        infowindow.close();		 });}
 		//google.maps.event.trigger(infoWindow, 'closeclick');
 		/*google.maps.event.trigger(gmarkers[marker_id], 'closeclick');
 		 google.maps.event.addListener(markerInfoWindow, "closeclick", function()
