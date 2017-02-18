@@ -11,19 +11,17 @@ use HtmlObject\Text;
 abstract class TreeObject
 {
   /**
-   * Parent of the object
-   *
-   * @var TreeObject
-   */
-  protected $parent;
-
-  /**
    * The name of the child for the parent
    *
    * @var string
    */
   public $parentIndex;
-
+  /**
+   * Parent of the object
+   *
+   * @var TreeObject
+   */
+  protected $parent;
   /**
    * Children of the object
    *
@@ -44,6 +42,59 @@ abstract class TreeObject
   ////////////////////////////////////////////////////////////////////
   /////////////////////////////// PARENT /////////////////////////////
   ////////////////////////////////////////////////////////////////////
+
+  /**
+   * Check if an object has a parent
+   *
+   * @return boolean
+   */
+  public function hasParent()
+  {
+    return (bool)$this->parent;
+  }
+
+  /**
+   * Check if the object has children
+   *
+   * @return boolean
+   */
+  public function hasChildren()
+  {
+    return !is_null($this->children) and !empty($this->children);
+  }
+
+  /**
+   * Check if a given element is after another sibling
+   *
+   * @param integer|string $sibling The sibling
+   *
+   * @return boolean
+   */
+  public function isAfter($sibling)
+  {
+    $children = array_keys($this->getParent()->getChildren());
+    $child = array_search($this->parentIndex, $children);
+    $sibling = array_search($sibling, $children);
+
+    return $child > $sibling;
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  ////////////////////////////// CHILDREN ////////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+  // Get
+  ////////////////////////////////////////////////////////////////////
+
+  /**
+   * Get all children
+   *
+   * @return array
+   */
+  public function getChildren()
+  {
+    return $this->children;
+  }
 
   /**
    * Get the Element's parent
@@ -77,108 +128,6 @@ abstract class TreeObject
 
     return $this;
   }
-
-  /**
-   * Check if an object has a parent
-   *
-   * @return boolean
-   */
-  public function hasParent()
-  {
-    return (bool) $this->parent;
-  }
-
-  ////////////////////////////////////////////////////////////////////
-  ////////////////////////////// CHILDREN ////////////////////////////
-  ////////////////////////////////////////////////////////////////////
-
-  // Get
-  ////////////////////////////////////////////////////////////////////
-
-  /**
-   * Get a specific child of the element
-   *
-   * @param string $name The Element's name
-   *
-   * @return Element
-   */
-  public function getChild($name)
-  {
-    // Direct fetching
-    $child = Helpers::arrayGet($this->getChildren(), $name);
-    if ($child) {
-      return $child;
-    }
-
-    // Dot notation
-    $children = explode('.', $name);
-    if (sizeof($children) == 1) {
-      return Helpers::arrayGet($this->getChildren(), $children[0]);
-    }
-
-    // Recursive fetching
-    $subject = $this;
-    foreach ($children as $child) {
-      if (!$subject) {
-        return;
-      }
-
-      $subject = $subject->getChild($child);
-    }
-
-    return $subject;
-  }
-
-  /**
-   * Check if an Element has a Child
-   *
-   * @param string $name The child's name
-   *
-   * @return boolean
-   */
-  public function hasChild($name)
-  {
-    return (bool) $this->getChild($name);
-  }
-
-  /**
-   * Get all children
-   *
-   * @return array
-   */
-  public function getChildren()
-  {
-    return $this->children;
-  }
-
-  /**
-   * Check if the object has children
-   *
-   * @return boolean
-   */
-  public function hasChildren()
-  {
-    return !is_null($this->children) and !empty($this->children);
-  }
-
-  /**
-   * Check if a given element is after another sibling
-   *
-   * @param integer|string $sibling The sibling
-   *
-   * @return boolean
-   */
-  public function isAfter($sibling)
-  {
-    $children = array_keys($this->getParent()->getChildren());
-    $child    = array_search($this->parentIndex, $children);
-    $sibling  = array_search($sibling, $children);
-
-    return $child > $sibling;
-  }
-
-  // Set
-  ////////////////////////////////////////////////////////////////////
 
   /**
    * Nests an object withing the current object
@@ -233,6 +182,9 @@ abstract class TreeObject
     return $this;
   }
 
+  // Set
+  ////////////////////////////////////////////////////////////////////
+
   /**
    * Add an object to the current object
    *
@@ -261,35 +213,38 @@ abstract class TreeObject
     return $this->insertChildAtPosition($child, $name, $subject);
   }
 
-  // Prepend or append
-  ////////////////////////////////////////////////////////////////////
-
   /**
-   * Append to an element
+   * Get a specific child of the element
    *
-   * @param Element $child
-   * @param string  $name
-   * @param string  $to
+   * @param string $name The Element's name
    *
-   * @return self
+   * @return Element
    */
-  public function appendChild($child, $name = null, $to = null)
+  public function getChild($name)
   {
-    return $this->insertChildAtPosition($child, $name, null, $to);
-  }
+    // Direct fetching
+    $child = Helpers::arrayGet($this->getChildren(), $name);
+    if ($child) {
+      return $child;
+    }
 
-  /**
-   * Prepend to an element
-   *
-   * @param Element $child
-   * @param string  $name
-   * @param string  $to
-   *
-   * @return self
-   */
-  public function prependChild($child, $name = null, $to = 0)
-  {
-    return $this->insertChildAtPosition($child, $name, null, $to, true);
+    // Dot notation
+    $children = explode('.', $name);
+    if (sizeof($children) == 1) {
+      return Helpers::arrayGet($this->getChildren(), $children[0]);
+    }
+
+    // Recursive fetching
+    $subject = $this;
+    foreach ($children as $child) {
+      if (!$subject) {
+        return;
+      }
+
+      $subject = $subject->getChild($child);
+    }
+
+    return $subject;
   }
 
   /**
@@ -333,8 +288,7 @@ abstract class TreeObject
     return $this;
   }
 
-  ////////////////////////////////////////////////////////////////////
-  ////////////////////////////// HELPERS /////////////////////////////
+  // Prepend or append
   ////////////////////////////////////////////////////////////////////
 
   /**
@@ -359,5 +313,49 @@ abstract class TreeObject
     }
 
     return new Text($value);
+  }
+
+  /**
+   * Check if an Element has a Child
+   *
+   * @param string $name The child's name
+   *
+   * @return boolean
+   */
+  public function hasChild($name)
+  {
+    return (bool)$this->getChild($name);
+  }
+
+  /**
+   * Append to an element
+   *
+   * @param Element $child
+   * @param string $name
+   * @param string $to
+   *
+   * @return self
+   */
+  public function appendChild($child, $name = null, $to = null)
+  {
+    return $this->insertChildAtPosition($child, $name, null, $to);
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  ////////////////////////////// HELPERS /////////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+  /**
+   * Prepend to an element
+   *
+   * @param Element $child
+   * @param string $name
+   * @param string $to
+   *
+   * @return self
+   */
+  public function prependChild($child, $name = null, $to = 0)
+  {
+    return $this->insertChildAtPosition($child, $name, null, $to, true);
   }
 }

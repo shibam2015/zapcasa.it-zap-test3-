@@ -34,37 +34,6 @@ class Frame implements Serializable
     }
 
     /**
-     * @param  bool $shortened
-     * @return string|null
-     */
-    public function getFile($shortened = false)
-    {
-        if(empty($this->frame['file'])) {
-            return null;
-        }
-
-        $file = $this->frame['file'];
-
-        // Check if this frame occurred within an eval().
-        // @todo: This can be made more reliable by checking if we've entered
-        // eval() in a previous trace, but will need some more work on the upper
-        // trace collector(s).
-        if(preg_match('/^(.*)\((\d+)\) : eval\(\)\'d code$/', $file, $matches)) {
-            $file = $this->frame['file'] = $matches[1];
-            $this->frame['line'] = (int) $matches[2];
-        }
-
-        if($shortened && is_string($file)) {
-            // Replace the part of the path that all frames have in common, and add 'soft hyphens' for smoother line-breaks.
-            $dirname = dirname(dirname(dirname(dirname(dirname(dirname(__DIR__))))));
-            $file = str_replace($dirname, "…", $file);
-            $file = str_replace("/", "/&shy;", $file);
-        }
-
-        return $file;
-    }
-
-    /**
      * @return int|null
      */
     public function getLine()
@@ -94,28 +63,6 @@ class Frame implements Serializable
     public function getArgs()
     {
         return isset($this->frame['args']) ? (array) $this->frame['args'] : array();
-    }
-
-    /**
-     * Returns the full contents of the file for this frame,
-     * if it's known.
-     * @return string|null
-     */
-    public function getFileContents()
-    {
-        if($this->fileContentsCache === null && $filePath = $this->getFile()) {
-
-            // Return null if the file doesn't actually exist - this may
-            // happen in cases where the filename is provided as, for
-            // example, 'Unknown'
-            if(!is_file($filePath)) {
-                return null;
-            }
-
-            $this->fileContentsCache = file_get_contents($filePath);
-        }
-
-        return $this->fileContentsCache;
     }
 
     /**
@@ -161,7 +108,7 @@ class Frame implements Serializable
     /**
      * Returns the array containing the raw frame data from which
      * this Frame object was built
-     * 
+     *
      * @return array
      */
     public function getRawFrame()
@@ -212,6 +159,59 @@ class Frame implements Serializable
 
             return $lines;
         }
+    }
+
+    /**
+     * Returns the full contents of the file for this frame,
+     * if it's known.
+     * @return string|null
+     */
+    public function getFileContents()
+    {
+        if ($this->fileContentsCache === null && $filePath = $this->getFile()) {
+
+            // Return null if the file doesn't actually exist - this may
+            // happen in cases where the filename is provided as, for
+            // example, 'Unknown'
+            if (!is_file($filePath)) {
+                return null;
+            }
+
+            $this->fileContentsCache = file_get_contents($filePath);
+        }
+
+        return $this->fileContentsCache;
+    }
+
+    /**
+     * @param  bool $shortened
+     * @return string|null
+     */
+    public function getFile($shortened = false)
+    {
+        if (empty($this->frame['file'])) {
+            return null;
+        }
+
+        $file = $this->frame['file'];
+
+        // Check if this frame occurred within an eval().
+        // @todo: This can be made more reliable by checking if we've entered
+        // eval() in a previous trace, but will need some more work on the upper
+        // trace collector(s).
+        if (preg_match('/^(.*)\((\d+)\) : eval\(\)\'d code$/', $file, $matches)) {
+            $file = $this->frame['file'] = $matches[1];
+            $this->frame['line'] = (int)$matches[2];
+        }
+
+        if ($shortened && is_string($file)) {
+            // Replace the part of the path that all frames have in common, and add 'soft hyphens' for smoother line-breaks.
+            $dirname = dirname(dirname(dirname(dirname(dirname(dirname(__DIR__))))));
+            $file = str_replace($dirname, "…", $file);
+            $file = str_replace("/", "/&shy;", $file);
+        }
+
+        return $file;
     }
 
     /**

@@ -66,6 +66,20 @@ class View implements ArrayAccess, Renderable {
 	}
 
 	/**
+	 * Get the sections of the rendered view.
+	 *
+	 * @return array
+	 */
+	public function renderSections()
+	{
+		$env = $this->environment;
+
+		return $this->render(function ($view) use ($env) {
+			return $env->getSections();
+		});
+	}
+
+	/**
 	 * Get the string contents of the view.
 	 *
 	 * @param  \Closure  $callback
@@ -110,21 +124,6 @@ class View implements ArrayAccess, Renderable {
 	}
 
 	/**
-	 * Get the sections of the rendered view.
-	 *
-	 * @return array
-	 */
-	public function renderSections()
-	{
-		$env = $this->environment;
-
-		return $this->render(function($view) use ($env)
-		{
-			return $env->getSections();
-		});
-	}
-
-	/**
 	 * Get the evaluated contents of the view.
 	 *
 	 * @return string
@@ -155,6 +154,19 @@ class View implements ArrayAccess, Renderable {
 	}
 
 	/**
+	 * Add a view instance to the view data.
+	 *
+	 * @param  string $key
+	 * @param  string $view
+	 * @param  array $data
+	 * @return \Illuminate\View\View
+	 */
+	public function nest($key, $view, array $data = array())
+	{
+		return $this->with($key, $this->environment->make($view, $data));
+	}
+
+	/**
 	 * Add a piece of data to the view.
 	 *
 	 * @param  string|array  $key
@@ -173,19 +185,6 @@ class View implements ArrayAccess, Renderable {
 		}
 
 		return $this;
-	}
-
-	/**
-	 * Add a view instance to the view data.
-	 *
-	 * @param  string  $key
-	 * @param  string  $view
-	 * @param  array   $data
-	 * @return \Illuminate\View\View
-	 */
-	public function nest($key, $view, array $data = array())
-	{
-		return $this->with($key, $this->environment->make($view, $data));
 	}
 
 	/**

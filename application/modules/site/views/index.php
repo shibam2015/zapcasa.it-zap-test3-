@@ -326,7 +326,7 @@
 						}
 						?>
 						<span>
-							<a href="<?php echo $parms_url;?>">
+							<a href="<?php echo str_replace("\'", "", $parms_url); ?>">
 								<img src="<?php echo base_url();?>assets/uploads/Property/Property<?php echo $property_featured_detail['property_id'];?>/thumb_860_482/<?php echo $main_image;?>" alt="<?php echo str_replace("\'","'",$proptitle); ?>"/>
 								<h4 style="font-size:13px;"><?php echo str_replace("\'","'",$proptitle); ?></h4>
 							</a>
@@ -485,9 +485,11 @@
 						}
 
 							?>
-						<span>
-							<a href="<?php echo base_url();?><?php echo $first_segment;?>/<?php echo $prop_det_url;?>">
-								<img src="<?php echo $lpropImg; ?>" alt="<?php echo str_replace("\'","'",$proptitle); ?>">
+
+							<span>
+							<a href="<?php echo base_url();?><?php echo $first_segment;?>/<?php echo str_replace("\'", "", $prop_det_url);?>">
+								<img src="<?php echo $lpropImg; ?>"
+									 alt="<?php echo str_replace("\'", "", $proptitle); ?>">
 								<h4 style="font-size:13px;"><?php echo str_replace("\'","'",$proptitle); ?></h4>
 							</a>
 							<p class="price">

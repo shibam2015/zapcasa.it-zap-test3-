@@ -68,6 +68,14 @@ class Session implements SessionInterface, \IteratorAggregate, \Countable
     /**
      * {@inheritdoc}
      */
+    public function registerBag(SessionBagInterface $bag)
+    {
+        $this->storage->registerBag($bag);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function start()
     {
         return $this->storage->start();
@@ -224,11 +232,13 @@ class Session implements SessionInterface, \IteratorAggregate, \Countable
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the flashbag interface.
+     *
+     * @return FlashBagInterface
      */
-    public function registerBag(SessionBagInterface $bag)
+    public function getFlashBag()
     {
-        $this->storage->registerBag($bag);
+        return $this->getBag($this->flashName);
     }
 
     /**
@@ -237,15 +247,5 @@ class Session implements SessionInterface, \IteratorAggregate, \Countable
     public function getBag($name)
     {
         return $this->storage->getBag($name);
-    }
-
-    /**
-     * Gets the flashbag interface.
-     *
-     * @return FlashBagInterface
-     */
-    public function getFlashBag()
-    {
-        return $this->getBag($this->flashName);
     }
 }

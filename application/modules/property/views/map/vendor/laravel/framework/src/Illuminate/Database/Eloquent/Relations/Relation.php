@@ -9,32 +9,29 @@ use Illuminate\Database\Eloquent\Collection;
 abstract class Relation {
 
 	/**
+	 * Indicates if the relation is adding constraints.
+	 *
+	 * @var bool
+	 */
+	protected static $constraints = true;
+	/**
 	 * The Eloquent query builder instance.
 	 *
 	 * @var \Illuminate\Database\Eloquent\Builder
 	 */
 	protected $query;
-
 	/**
 	 * The parent model instance.
 	 *
 	 * @var \Illuminate\Database\Eloquent\Model
 	 */
 	protected $parent;
-
 	/**
 	 * The related model instance.
 	 *
 	 * @var \Illuminate\Database\Eloquent\Model
 	 */
 	protected $related;
-
-	/**
-	 * Indicates if the relation is adding constraints.
-	 *
-	 * @var bool
-	 */
-	protected static $constraints = true;
 
 	/**
 	 * Create a new relation instance.
@@ -58,6 +55,26 @@ abstract class Relation {
 	 * @return void
 	 */
 	abstract public function addConstraints();
+
+	/**
+	 * Run a callback with constraints disabled on the relation.
+	 *
+	 * @param  \Closure $callback
+	 * @return mixed
+	 */
+	public static function noConstraints(Closure $callback)
+	{
+		static::$constraints = false;
+
+		// When resetting the relation where clause, we want to shift the first element
+		// off of the bindings, leaving only the constraints that the developers put
+		// as "extra" on the relationships, and not original relation constraints.
+		$results = call_user_func($callback);
+
+		static::$constraints = true;
+
+		return $results;
+	}
 
 	/**
 	 * Set the constraints for an eager load of the relation.
@@ -116,13 +133,13 @@ abstract class Relation {
 	}
 
 	/**
-	 * Restore all of the soft deleted related models.
+	 * Get the related model of the relation.
 	 *
-	 * @return int
+	 * @return \Illuminate\Database\Eloquent\Model
 	 */
-	public function restore()
+	public function getRelated()
 	{
-		return $this->query->withTrashed()->restore();
+		return $this->related;
 	}
 
 	/**
@@ -134,6 +151,16 @@ abstract class Relation {
 	public function rawUpdate(array $attributes = array())
 	{
 		return $this->query->update($attributes);
+	}
+
+	/**
+	 * Restore all of the soft deleted related models.
+	 *
+	 * @return int
+	 */
+	public function restore()
+	{
+		return $this->query->withTrashed()->restore();
 	}
 
 	/**
@@ -153,39 +180,24 @@ abstract class Relation {
 	}
 
 	/**
-	 * Run a callback with constraints disabled on the relation.
+	 * Wrap the given value with the parent query's grammar.
 	 *
-	 * @param  \Closure  $callback
-	 * @return mixed
+	 * @param  string $value
+	 * @return string
 	 */
-	public static function noConstraints(Closure $callback)
+	public function wrap($value)
 	{
-		static::$constraints = false;
-
-		// When resetting the relation where clause, we want to shift the first element
-		// off of the bindings, leaving only the constraints that the developers put
-		// as "extra" on the relationships, and not original relation constraints.
-		$results = call_user_func($callback);
-
-		static::$constraints = true;
-
-		return $results;
+		return $this->parent->getQuery()->getGrammar()->wrap($value);
 	}
 
 	/**
-	 * Get all of the primary keys for an array of models.
+	 * Get the fully qualified parent key name.
 	 *
-	 * @param  array   $models
-	 * @param  string  $key
-	 * @return array
+	 * @return string
 	 */
-	protected function getKeys(array $models, $key = null)
+	protected function getQualifiedParentKeyName()
 	{
-		return array_values(array_map(function($value) use ($key)
-		{
-			return $key ? $value->getAttribute($key) : $value->getKey();
-
-		}, $models));
+		return $this->parent->getQualifiedKeyName();
 	}
 
 	/**
@@ -219,26 +231,6 @@ abstract class Relation {
 	}
 
 	/**
-	 * Get the fully qualified parent key name.
-	 *
-	 * @return string
-	 */
-	protected function getQualifiedParentKeyName()
-	{
-		return $this->parent->getQualifiedKeyName();
-	}
-
-	/**
-	 * Get the related model of the relation.
-	 *
-	 * @return \Illuminate\Database\Eloquent\Model
-	 */
-	public function getRelated()
-	{
-		return $this->related;
-	}
-
-	/**
 	 * Get the name of the "created at" column.
 	 *
 	 * @return string
@@ -269,17 +261,6 @@ abstract class Relation {
 	}
 
 	/**
-	 * Wrap the given value with the parent query's grammar.
-	 *
-	 * @param  string  $value
-	 * @return string
-	 */
-	public function wrap($value)
-	{
-		return $this->parent->getQuery()->getGrammar()->wrap($value);
-	}
-
-	/**
 	 * Handle dynamic method calls to the relationship.
 	 *
 	 * @param  string  $method
@@ -293,6 +274,21 @@ abstract class Relation {
 		if ($result === $this->query) return $this;
 
 		return $result;
+	}
+
+	/**
+	 * Get all of the primary keys for an array of models.
+	 *
+	 * @param  array $models
+	 * @param  string $key
+	 * @return array
+	 */
+	protected function getKeys(array $models, $key = null)
+	{
+		return array_values(array_map(function ($value) use ($key) {
+			return $key ? $value->getAttribute($key) : $value->getKey();
+
+		}, $models));
 	}
 
 }

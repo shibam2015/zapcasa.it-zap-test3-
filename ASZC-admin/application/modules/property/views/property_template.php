@@ -153,12 +153,15 @@
 				<td><?php echo $propertyRefCode; ?></td>
 				<td><?php echo $property_posted_by; ?></td>
 				<td>
+					<?php $page = $this->uri->segment('4');
+					$pageLink = '/' . $type . '/' . $activetype . ($page == '' ? '' : '/' . $page);?>
 					<!--
 					<a class="btn btn-default editbtn btn-sm btn-icon btn-xs" title="Click here to view" href="<?php //echo base_url();?>property/view_property_details/<?php //echo $property_detail['property_id']; ?>">
 						<i class="entypo-search"></i>&nbsp;
 					</a>
 					-->
-					<a class="btn btn-default editbtn btn-sm btn-icon btn-xs" title="Click here to edit" href="<?php echo base_url();?>property/edit_property_details/<?php echo $property_detail['property_id']; ?>">
+					<a class="btn btn-default editbtn btn-sm btn-icon btn-xs" title="Click here to edit"
+					   href="<?php echo base_url();?>property/edit_property_details/<?php echo $property_detail['property_id']; ?><?php echo $pageLink;?>">
 						<i class="entypo-pencil"></i>&nbsp;
 					</a>
 					<?php
@@ -198,7 +201,7 @@
 						$expDateLength = get_perticular_field_value('zc_property_featured','number_of_days'," and property_id='".$property_detail['property_id']."'");
 						$expireDate = strtotime(date('Y-m-d', strtotime($startDate . " +".$expDateLength." days")));
 						if($todayDate < $expireDate){
-							$featuredLink = '<a href="' . base_url() . "property/" . ($property_detail['feature_status'] == 0 ? 'property_feature_resume' : 'make_featured') . "/" . $property_detail['property_id'] . $pageLink . '" class="btn btn-' . ($property_detail['feature_status'] == 0 ? 'gold' : 'red') . ' btn-sm btn-icon btn-xs">
+							$featuredLink = '<a href="' . base_url() . "property/" . ($property_detail['feature_status'] == 0 ? 'make_featured' : 'make_featured') . "/" . $property_detail['property_id'] . $pageLink . '" class="btn btn-' . ($property_detail['feature_status'] == 0 ? 'gold' : 'red') . ' btn-sm btn-icon btn-xs">
 												<i class="entypo-back-in-time"></i>'.($property_detail['feature_status']==0?'Resume':'Suspend').'
 											 </a>';
 						}

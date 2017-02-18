@@ -24,19 +24,6 @@ class ArrayStore extends TaggableStore implements StoreInterface {
 	}
 
 	/**
-	 * Store an item in the cache for a given number of minutes.
-	 *
-	 * @param  string  $key
-	 * @param  mixed   $value
-	 * @param  int     $minutes
-	 * @return void
-	 */
-	public function put($key, $value, $minutes)
-	{
-		$this->storage[$key] = $value;
-	}
-
-	/**
 	 * Increment the value of an item in the cache.
 	 *
 	 * @param  string  $key
@@ -74,6 +61,19 @@ class ArrayStore extends TaggableStore implements StoreInterface {
 	public function forever($key, $value)
 	{
 		return $this->put($key, $value, 0);
+	}
+
+	/**
+	 * Store an item in the cache for a given number of minutes.
+	 *
+	 * @param  string $key
+	 * @param  mixed $value
+	 * @param  int $minutes
+	 * @return void
+	 */
+	public function put($key, $value, $minutes)
+	{
+		$this->storage[$key] = $value;
 	}
 
 	/**

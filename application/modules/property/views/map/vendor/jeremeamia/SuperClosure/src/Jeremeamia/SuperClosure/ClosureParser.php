@@ -39,6 +39,20 @@ class ClosureParser
     protected $code;
 
     /**
+     * @param \ReflectionFunction $reflection
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function __construct(\ReflectionFunction $reflection)
+    {
+        if (!$reflection->isClosure()) {
+            throw new \InvalidArgumentException('You must provide the reflection of a closure.');
+        }
+
+        $this->reflection = $reflection;
+    }
+
+    /**
      * Creates a ClosureParser for the provided closure
      *
      * @param \Closure $closure
@@ -64,20 +78,6 @@ class ClosureParser
     }
 
     /**
-     * @param \ReflectionFunction $reflection
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function __construct(\ReflectionFunction $reflection)
-    {
-        if (!$reflection->isClosure()) {
-            throw new \InvalidArgumentException('You must provide the reflection of a closure.');
-        }
-
-        $this->reflection = $reflection;
-    }
-
-    /**
      * Returns the reflection of the closure
      *
      * @return \ReflectionFunction
@@ -85,6 +85,35 @@ class ClosureParser
     public function getReflection()
     {
         return $this->reflection;
+    }
+
+    /**
+     * Returns the variables that in the "use" clause of the closure definition. These are referred to as the "used
+     * variables", "static variables", or "closed upon variables", "context" of the closure.
+     *
+     * @return array
+     */
+    public function getUsedVariables()
+    {
+        if (!$this->usedVariables) {
+            // Get the variable names defined in the AST
+            $usedVarNames = array_map(function ($usedVar) {
+                return $usedVar->var;
+            }, $this->getClosureAbstractSyntaxTree()->uses);
+
+            // Get the variable names and values using reflection
+            $usedVarValues = $this->reflection->getStaticVariables();
+
+            // Combine the two arrays to create a canonical hash of variable names and values
+            $this->usedVariables = array();
+            foreach ($usedVarNames as $name) {
+                if (isset($usedVarValues[$name])) {
+                    $this->usedVariables[$name] = $usedVarValues[$name];
+                }
+            }
+        }
+
+        return $this->usedVariables;
     }
 
     /**
@@ -131,32 +160,21 @@ class ClosureParser
     }
 
     /**
-     * Returns the variables that in the "use" clause of the closure definition. These are referred to as the "used
-     * variables", "static variables", or "closed upon variables", "context" of the closure.
+     * Loads the PHP file and produces an abstract syntax tree (AST) of the code. This is stored in an internal cache by
+     * the filename for memoization within the same process
      *
      * @return array
      */
-    public function getUsedVariables()
+    protected function getFileAbstractSyntaxTree()
     {
-        if (!$this->usedVariables) {
-            // Get the variable names defined in the AST
-            $usedVarNames = array_map(function ($usedVar) {
-                return $usedVar->var;
-            }, $this->getClosureAbstractSyntaxTree()->uses);
+        $filename = $this->reflection->getFileName();
 
-            // Get the variable names and values using reflection
-            $usedVarValues = $this->reflection->getStaticVariables();
-
-            // Combine the two arrays to create a canonical hash of variable names and values
-            $this->usedVariables = array();
-            foreach ($usedVarNames as $name) {
-                if (isset($usedVarValues[$name])) {
-                    $this->usedVariables[$name] = $usedVarValues[$name];
-                }
-            }
+        if (!isset(self::$cache[$filename])) {
+            $parser = new \PHPParser_Parser(new \PHPParser_Lexer_Emulative);
+            self::$cache[$filename] = $parser->parse(file_get_contents($filename));
         }
 
-        return $this->usedVariables;
+        return self::$cache[$filename];
     }
 
     /**
@@ -173,23 +191,5 @@ class ClosureParser
         }
 
         return $this->code;
-    }
-
-    /**
-     * Loads the PHP file and produces an abstract syntax tree (AST) of the code. This is stored in an internal cache by
-     * the filename for memoization within the same process
-     *
-     * @return array
-     */
-    protected function getFileAbstractSyntaxTree()
-    {
-        $filename = $this->reflection->getFileName();
-
-        if (!isset(self::$cache[$filename])) {
-            $parser = new \PHPParser_Parser(new \PHPParser_Lexer_Emulative);
-            self::$cache[$filename] = $parser->parse(file_get_contents($filename));
-        }
-
-        return self::$cache[$filename];
     }
 }

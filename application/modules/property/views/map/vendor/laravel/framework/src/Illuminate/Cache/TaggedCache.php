@@ -32,14 +32,21 @@ class TaggedCache implements StoreInterface {
 	}
 
 	/**
-	 * Determine if an item exists in the cache.
+	 * Store an item in the cache if the key does not exist.
 	 *
 	 * @param  string  $key
+	 * @param  mixed $value
+	 * @param  \DateTime|int $minutes
 	 * @return bool
 	 */
-	public function has($key)
+	public function add($key, $value, $minutes)
 	{
-		return ! is_null($this->get($key));
+		if (is_null($this->get($key))) {
+			$this->put($key, $value, $minutes);
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -57,34 +64,37 @@ class TaggedCache implements StoreInterface {
 	}
 
 	/**
+	 * Get a fully qualified key for a tagged item.
+	 *
+	 * @param  string  $key
+	 * @return string
+	 */
+	public function taggedItemKey($key)
+	{
+		return $this->getPrefix() . sha1($this->tags->getNamespace()) . ':' . $key;
+	}
+
+	/**
+	 * Get the cache key prefix.
+	 *
+	 * @return string
+	 */
+	public function getPrefix()
+	{
+		return $this->store->getPrefix();
+	}
+
+	/**
 	 * Store an item in the cache for a given number of minutes.
 	 *
 	 * @param  string  $key
 	 * @param  mixed   $value
-	 * @param  int     $minutes
+	 * @param  int $minutes
 	 * @return void
 	 */
 	public function put($key, $value, $minutes)
 	{
 		return $this->store->put($this->taggedItemKey($key), $value, $minutes);
-	}
-
-	/**
-	 * Store an item in the cache if the key does not exist.
-	 *
-	 * @param  string  $key
-	 * @param  mixed   $value
-	 * @param  \DateTime|int  $minutes
-	 * @return bool
-	 */
-	public function add($key, $value, $minutes)
-	{
-		if (is_null($this->get($key)))
-		{
-			$this->put($key, $value, $minutes); return true;
-		}
-
-		return false;
 	}
 
 	/**
@@ -109,18 +119,6 @@ class TaggedCache implements StoreInterface {
 	public function decrement($key, $value = 1)
 	{
 		$this->store->decrement($this->taggedItemKey($key), $value);
-	}
-
-	/**
-	 * Store an item in the cache indefinitely.
-	 *
-	 * @param  string  $key
-	 * @param  mixed   $value
-	 * @return void
-	 */
-	public function forever($key, $value)
-	{
-		$this->store->forever($this->taggedItemKey($key), $value);
 	}
 
 	/**
@@ -165,6 +163,17 @@ class TaggedCache implements StoreInterface {
 	}
 
 	/**
+	 * Determine if an item exists in the cache.
+	 *
+	 * @param  string $key
+	 * @return bool
+	 */
+	public function has($key)
+	{
+		return !is_null($this->get($key));
+	}
+
+	/**
 	 * Get an item from the cache, or store the default value forever.
 	 *
 	 * @param  string   $key
@@ -196,24 +205,15 @@ class TaggedCache implements StoreInterface {
 	}
 
 	/**
-	 * Get a fully qualified key for a tagged item.
+	 * Store an item in the cache indefinitely.
 	 *
 	 * @param  string  $key
-	 * @return string
+	 * @param  mixed $value
+	 * @return void
 	 */
-	public function taggedItemKey($key)
+	public function forever($key, $value)
 	{
-		return $this->getPrefix().sha1($this->tags->getNamespace()).':'.$key;
-	}
-
-	/**
-	 * Get the cache key prefix.
-	 *
-	 * @return string
-	 */
-	public function getPrefix()
-	{
-		return $this->store->getPrefix();
+		$this->store->forever($this->taggedItemKey($key), $value);
 	}
 
 }

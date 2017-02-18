@@ -6,10 +6,10 @@ use Eloquent;
 Class Setting extends Eloquent
 {
 
-    protected $table='settings';
+    public $timestamps = false;
 
 	// Disabling Auto Timestamps
-    public $timestamps = false;
+    protected $table = 'settings';
 
     public function users()
     {

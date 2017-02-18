@@ -95,6 +95,16 @@ abstract class MorphOneOrMany extends HasOneOrMany {
 	}
 
 	/**
+	 * Get the plain morph type name without the table.
+	 *
+	 * @return string
+	 */
+	public function getPlainMorphType()
+	{
+		return last(explode('.', $this->morphType));
+	}
+
+	/**
 	 * Create a new instance of the related model.
 	 *
 	 * @param  array  $attributes
@@ -138,16 +148,6 @@ abstract class MorphOneOrMany extends HasOneOrMany {
 	public function getMorphType()
 	{
 		return $this->morphType;
-	}
-
-	/**
-	 * Get the plain morph type name without the table.
-	 *
-	 * @return string
-	 */
-	public function getPlainMorphType()
-	{
-		return last(explode('.', $this->morphType));
 	}
 
 	/**

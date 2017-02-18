@@ -47,22 +47,6 @@ class HostIpProvider extends AbstractProvider implements ProviderInterface
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function getReversedData(array $coordinates)
-    {
-        throw new UnsupportedException('The HostIpProvider is not able to do reverse geocoding.');
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getName()
-    {
-        return 'host_ip';
-    }
-
-    /**
      * @param string $query
      *
      * @return array
@@ -84,5 +68,21 @@ class HostIpProvider extends AbstractProvider implements ProviderInterface
             'country'     => $data['country_name'],
             'countryCode' => $data['country_code'],
         )));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getReversedData(array $coordinates)
+    {
+        throw new UnsupportedException('The HostIpProvider is not able to do reverse geocoding.');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getName()
+    {
+        return 'host_ip';
     }
 }

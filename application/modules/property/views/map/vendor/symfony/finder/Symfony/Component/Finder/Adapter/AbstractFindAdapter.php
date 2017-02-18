@@ -123,14 +123,6 @@ abstract class AbstractFindAdapter extends AbstractAdapter
     }
 
     /**
-     * {@inheritdoc}
-     */
-    protected function canBeUsed()
-    {
-        return $this->shell->testCommand('find');
-    }
-
-    /**
      * @param Command $command
      * @param string  $dir
      *
@@ -303,6 +295,13 @@ abstract class AbstractFindAdapter extends AbstractAdapter
 
     /**
      * @param Command $command
+     * @param array $contains
+     * @param bool $not
+     */
+    abstract protected function buildContentFiltering(Command $command, array $contains, $not = false);
+
+    /**
+     * @param Command $command
      * @param string  $sort
      *
      * @throws \InvalidArgumentException
@@ -319,9 +318,10 @@ abstract class AbstractFindAdapter extends AbstractAdapter
     abstract protected function buildFormatSorting(Command $command, $sort);
 
     /**
-     * @param Command $command
-     * @param array   $contains
-     * @param bool    $not
+     * {@inheritdoc}
      */
-    abstract protected function buildContentFiltering(Command $command, array $contains, $not = false);
+    protected function canBeUsed()
+    {
+        return $this->shell->testCommand('find');
+    }
 }

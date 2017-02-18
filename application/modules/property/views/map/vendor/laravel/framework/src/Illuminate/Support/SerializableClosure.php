@@ -34,6 +34,16 @@ class SerializableClosure extends SuperClosure {
 	}
 
 	/**
+	 * Uses the serialize method directly to lazily fetch the code and variables if needed
+	 */
+	protected function determineCodeAndVariables()
+	{
+		if (!$this->code) {
+			list($this->code, $this->variables) = unserialize($this->serialize());
+		}
+	}
+
+	/**
 	 * Returns the "used" variables of the closure being serialized
 	 *
 	 * @return array
@@ -43,17 +53,6 @@ class SerializableClosure extends SuperClosure {
 		$this->determineCodeAndVariables();
 
 		return $this->variables;
-	}
-
-	/**
-	 * Uses the serialize method directly to lazily fetch the code and variables if needed
-	 */
-	protected function determineCodeAndVariables()
-	{
-		if (!$this->code)
-		{
-			list($this->code, $this->variables) = unserialize($this->serialize());
-		}
 	}
 
 }

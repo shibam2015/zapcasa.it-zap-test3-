@@ -496,48 +496,6 @@ class Crypt_Base
     }
 
     /**
-     * Sets the initialization vector. (optional)
-     *
-     * SetIV is not required when CRYPT_MODE_ECB (or ie for AES: CRYPT_AES_MODE_ECB) is being used.  If not explicitly set, it'll be assumed
-     * to be all zero's.
-     *
-     * Note: Could, but not must, extend by the child Crypt_* class
-     *
-     * @access public
-     * @param String $iv
-     */
-    function setIV($iv)
-    {
-        if ($this->mode == CRYPT_MODE_ECB) {
-            return;
-        }
-
-        $this->iv = $iv;
-        $this->changed = true;
-    }
-
-    /**
-     * Sets the key.
-     *
-     * The min/max length(s) of the key depends on the cipher which is used.
-     * If the key not fits the length(s) of the cipher it will paded with null bytes
-     * up to the closest valid key length.  If the key is more than max length,
-     * we trim the excess bits.
-     *
-     * If the key is not explicitly set, it'll be assumed to be all null bytes.
-     *
-     * Note: Could, but not must, extend by the child Crypt_* class
-     *
-     * @access public
-     * @param String $key
-     */
-    function setKey($key)
-    {
-        $this->key = $key;
-        $this->changed = true;
-    }
-
-    /**
      * Sets the password.
      *
      * Depending on what $method is set to, setPassword()'s (optional) parameters are as follows:
@@ -629,6 +587,48 @@ class Crypt_Base
         $this->setKey($key);
 
         return true;
+    }
+
+    /**
+     * Sets the key.
+     *
+     * The min/max length(s) of the key depends on the cipher which is used.
+     * If the key not fits the length(s) of the cipher it will paded with null bytes
+     * up to the closest valid key length.  If the key is more than max length,
+     * we trim the excess bits.
+     *
+     * If the key is not explicitly set, it'll be assumed to be all null bytes.
+     *
+     * Note: Could, but not must, extend by the child Crypt_* class
+     *
+     * @access public
+     * @param String $key
+     */
+    function setKey($key)
+    {
+        $this->key = $key;
+        $this->changed = true;
+    }
+
+    /**
+     * Sets the initialization vector. (optional)
+     *
+     * SetIV is not required when CRYPT_MODE_ECB (or ie for AES: CRYPT_AES_MODE_ECB) is being used.  If not explicitly set, it'll be assumed
+     * to be all zero's.
+     *
+     * Note: Could, but not must, extend by the child Crypt_* class
+     *
+     * @access public
+     * @param String $iv
+     */
+    function setIV($iv)
+    {
+        if ($this->mode == CRYPT_MODE_ECB) {
+            return;
+        }
+
+        $this->iv = $iv;
+        $this->changed = true;
     }
 
     /**
@@ -868,6 +868,311 @@ class Crypt_Base
     }
 
     /**
+     * Setup the CRYPT_MODE_MCRYPT $engine
+     *
+     * (re)init, if necessary, the (ext)mcrypt resources and flush all $buffers
+     * Used (only) if $engine = CRYPT_MODE_MCRYPT
+     *
+     * _setupMcrypt() will be called each time if $changed === true
+     * typically this happens when using one or more of following public methods:
+     *
+     * - setKey()
+     *
+     * - setIV()
+     *
+     * - disableContinuousBuffer()
+     *
+     * - First run of encrypt() / decrypt()
+     *
+     *
+     * Note: Could, but not must, extend by the child Crypt_* class
+     *
+     * @see setKey()
+     * @see setIV()
+     * @see disableContinuousBuffer()
+     * @access private
+     */
+    function _setupMcrypt()
+    {
+        $this->_clearBuffers();
+        $this->enchanged = $this->dechanged = true;
+
+        if (!isset($this->enmcrypt)) {
+            static $mcrypt_modes = array(
+                CRYPT_MODE_CTR => 'ctr',
+                CRYPT_MODE_ECB => MCRYPT_MODE_ECB,
+                CRYPT_MODE_CBC => MCRYPT_MODE_CBC,
+                CRYPT_MODE_CFB => 'ncfb',
+                CRYPT_MODE_OFB => MCRYPT_MODE_NOFB,
+                CRYPT_MODE_STREAM => MCRYPT_MODE_STREAM,
+            );
+
+            $this->demcrypt = mcrypt_module_open($this->cipher_name_mcrypt, '', $mcrypt_modes[$this->mode], '');
+            $this->enmcrypt = mcrypt_module_open($this->cipher_name_mcrypt, '', $mcrypt_modes[$this->mode], '');
+
+            // we need the $ecb mcrypt resource (only) in MODE_CFB with enableContinuousBuffer()
+            // to workaround mcrypt's broken ncfb implementation in buffered mode
+            // see: {@link http://phpseclib.sourceforge.net/cfb-demo.phps}
+            if ($this->mode == CRYPT_MODE_CFB) {
+                $this->ecb = mcrypt_module_open($this->cipher_name_mcrypt, '', MCRYPT_MODE_ECB, '');
+            }
+
+        } // else should mcrypt_generic_deinit be called?
+
+        if ($this->mode == CRYPT_MODE_CFB) {
+            mcrypt_generic_init($this->ecb, $this->key, str_repeat("\0", $this->block_size));
+        }
+    }
+
+    /**
+     * Clears internal buffers
+     *
+     * Clearing/resetting the internal buffers is done everytime
+     * after disableContinuousBuffer() or on cipher $engine (re)init
+     * ie after setKey() or setIV()
+     *
+     * Note: Could, but not must, extend by the child Crypt_* class
+     *
+     * @access public
+     */
+    function _clearBuffers()
+    {
+        $this->enbuffer = array('encrypted' => '', 'xor' => '', 'pos' => 0, 'enmcrypt_init' => true);
+        $this->debuffer = array('ciphertext' => '', 'xor' => '', 'pos' => 0, 'demcrypt_init' => true);
+
+        // mcrypt's handling of invalid's $iv:
+        // $this->encryptIV = $this->decryptIV = strlen($this->iv) == $this->block_size ? $this->iv : str_repeat("\0", $this->block_size);
+        $this->encryptIV = $this->decryptIV = str_pad(substr($this->iv, 0, $this->block_size), $this->block_size, "\0");
+    }
+
+    /**
+     * Pads a string
+     *
+     * Pads a string using the RSA PKCS padding standards so that its length is a multiple of the blocksize.
+     * $this->block_size - (strlen($text) % $this->block_size) bytes are added, each of which is equal to
+     * chr($this->block_size - (strlen($text) % $this->block_size)
+     *
+     * If padding is disabled and $text is not a multiple of the blocksize, the string will be padded regardless
+     * and padding will, hence forth, be enabled.
+     *
+     * @see Crypt_Base::_unpad()
+     * @param String $text
+     * @access private
+     * @return String
+     */
+    function _pad($text)
+    {
+        $length = strlen($text);
+
+        if (!$this->padding) {
+            if ($length % $this->block_size == 0) {
+                return $text;
+            } else {
+                user_error("The plaintext's length ($length) is not a multiple of the block size ({$this->block_size})");
+                $this->padding = true;
+            }
+        }
+
+        $pad = $this->block_size - ($length % $this->block_size);
+
+        return str_pad($text, $length + $pad, chr($pad));
+    }
+
+    /**
+     * Setup the CRYPT_MODE_INTERNAL $engine
+     *
+     * (re)init, if necessary, the internal cipher $engine and flush all $buffers
+     * Used (only) if $engine == CRYPT_MODE_INTERNAL
+     *
+     * _setup() will be called each time if $changed === true
+     * typically this happens when using one or more of following public methods:
+     *
+     * - setKey()
+     *
+     * - setIV()
+     *
+     * - disableContinuousBuffer()
+     *
+     * - First run of encrypt() / decrypt() with no init-settings
+     *
+     * Internally: _setup() is called always before(!) en/decryption.
+     *
+     * Note: Could, but not must, extend by the child Crypt_* class
+     *
+     * @see setKey()
+     * @see setIV()
+     * @see disableContinuousBuffer()
+     * @access private
+     */
+    function _setup()
+    {
+        $this->_clearBuffers();
+        $this->_setupKey();
+
+        if ($this->use_inline_crypt) {
+            $this->_setupInlineCrypt();
+        }
+    }
+
+    /**
+     * Setup the key (expansion)
+     *
+     * Only used if $engine == CRYPT_MODE_INTERNAL
+     *
+     * Note: Must extend by the child Crypt_* class
+     *
+     * @see Crypt_Base::_setup()
+     * @access private
+     */
+    function _setupKey()
+    {
+        user_error((version_compare(PHP_VERSION, '5.0.0', '>=') ? __METHOD__ : __FUNCTION__) . '() must extend by class ' . get_class($this), E_USER_ERROR);
+    }
+
+    /**
+     * Setup the performance-optimized function for de/encrypt()
+     *
+     * Stores the created (or existing) callback function-name
+     * in $this->inline_crypt
+     *
+     * Internally for phpseclib developers:
+     *
+     *     _setupInlineCrypt() would be called only if:
+     *
+     *     - $engine == CRYPT_MODE_INTERNAL and
+     *
+     *     - $use_inline_crypt === true
+     *
+     *     - each time on _setup(), after(!) _setupKey()
+     *
+     *
+     *     This ensures that _setupInlineCrypt() has always a
+     *     full ready2go initializated internal cipher $engine state
+     *     where, for example, the keys allready expanded,
+     *     keys/block_size calculated and such.
+     *
+     *     It is, each time if called, the responsibility of _setupInlineCrypt():
+     *
+     *     - to set $this->inline_crypt to a valid and fully working callback function
+     *       as a (faster) replacement for encrypt() / decrypt()
+     *
+     *     - NOT to create unlimited callback functions (for memory reasons!)
+     *       no matter how often _setupInlineCrypt() would be called. At some
+     *       point of amount they must be generic re-useable.
+     *
+     *     - the code of _setupInlineCrypt() it self,
+     *       and the generated callback code,
+     *       must be, in following order:
+     *       - 100% safe
+     *       - 100% compatible to encrypt()/decrypt()
+     *       - using only php5+ features/lang-constructs/php-extensions if
+     *         compatibility (down to php4) or fallback is provided
+     *       - readable/maintainable/understandable/commented and... not-cryptic-styled-code :-)
+     *       - >= 10% faster than encrypt()/decrypt() [which is, by the way,
+     *         the reason for the existence of _setupInlineCrypt() :-)]
+     *       - memory-nice
+     *       - short (as good as possible)
+     *
+     * Note: - _setupInlineCrypt() is using _createInlineCryptFunction() to create the full callback function code.
+     *       - In case of using inline crypting, _setupInlineCrypt() must extend by the child Crypt_* class.
+     *       - The following variable names are reserved:
+     *         - $_*  (all variable names prefixed with an underscore)
+     *         - $self (object reference to it self. Do not use $this, but $self instead)
+     *         - $in (the content of $in has to en/decrypt by the generated code)
+     *       - The callback function should not use the 'return' statement, but en/decrypt'ing the content of $in only
+     *
+     *
+     * @see Crypt_Base::_setup()
+     * @see Crypt_Base::_createInlineCryptFunction()
+     * @see Crypt_Base::encrypt()
+     * @see Crypt_Base::decrypt()
+     * @access private
+     */
+    function _setupInlineCrypt()
+    {
+        // If a Crypt_* class providing inline crypting it must extend _setupInlineCrypt()
+
+        // If, for any reason, an extending Crypt_Base() Crypt_* class
+        // not using inline crypting then it must be ensured that: $this->use_inline_crypt = false
+        // ie in the class var declaration of $use_inline_crypt in general for the Crypt_* class,
+        // in the constructor at object instance-time
+        // or, if it's runtime-specific, at runtime
+
+        $this->use_inline_crypt = false;
+    }
+
+    /**
+     * Encrypts a block
+     *
+     * Note: Must extend by the child Crypt_* class
+     *
+     * @access private
+     * @param String $in
+     * @return String
+     */
+    function _encryptBlock($in)
+    {
+        user_error((version_compare(PHP_VERSION, '5.0.0', '>=') ? __METHOD__ : __FUNCTION__) . '() must extend by class ' . get_class($this), E_USER_ERROR);
+    }
+
+    /**
+     * Generate CTR XOR encryption key
+     *
+     * Encrypt the output of this and XOR it against the ciphertext / plaintext to get the
+     * plaintext / ciphertext in CTR mode.
+     *
+     * @see Crypt_Base::decrypt()
+     * @see Crypt_Base::encrypt()
+     * @param String $iv
+     * @param Integer $length
+     * @access private
+     * @return String $xor
+     */
+    function _generateXor(&$iv, $length)
+    {
+        $xor = '';
+        $block_size = $this->block_size;
+        $num_blocks = floor(($length + ($block_size - 1)) / $block_size);
+        for ($i = 0; $i < $num_blocks; $i++) {
+            $xor .= $iv;
+            for ($j = 4; $j <= $block_size; $j += 4) {
+                $temp = substr($iv, -$j, 4);
+                switch ($temp) {
+                    case "\xFF\xFF\xFF\xFF":
+                        $iv = substr_replace($iv, "\x00\x00\x00\x00", -$j, 4);
+                        break;
+                    case "\x7F\xFF\xFF\xFF":
+                        $iv = substr_replace($iv, "\x80\x00\x00\x00", -$j, 4);
+                        break 2;
+                    default:
+                        extract(unpack('Ncount', $temp));
+                        $iv = substr_replace($iv, pack('N', $count + 1), -$j, 4);
+                        break 2;
+                }
+            }
+        }
+
+        return $xor;
+    }
+
+    /**
+     * String Shift
+     *
+     * Inspired by array_shift
+     *
+     * @param String $string
+     * @param optional Integer $index
+     * @access private
+     * @return String
+     */
+    function _stringShift(&$string, $index = 1)
+    {
+        $substr = substr($string, 0, $index);
+        $string = substr($string, $index);
+        return $substr;
+    }
+
+    /**
      * Decrypts a message.
      *
      * If strlen($ciphertext) is not a multiple of the block size, null bytes will be added to the end of the string until
@@ -1080,6 +1385,46 @@ class Crypt_Base
     }
 
     /**
+     * Unpads a string.
+     *
+     * If padding is enabled and the reported padding length is invalid the encryption key will be assumed to be wrong
+     * and false will be returned.
+     *
+     * @see Crypt_Base::_pad()
+     * @param String $text
+     * @access private
+     * @return String
+     */
+    function _unpad($text)
+    {
+        if (!$this->padding) {
+            return $text;
+        }
+
+        $length = ord($text[strlen($text) - 1]);
+
+        if (!$length || $length > $this->block_size) {
+            return false;
+        }
+
+        return substr($text, 0, -$length);
+    }
+
+    /**
+     * Decrypts a block
+     *
+     * Note: Must extend by the child Crypt_* class
+     *
+     * @access private
+     * @param String $in
+     * @return String
+     */
+    function _decryptBlock($in)
+    {
+        user_error((version_compare(PHP_VERSION, '5.0.0', '>=') ? __METHOD__ : __FUNCTION__) . '() must extend by class ' . get_class($this), E_USER_ERROR);
+    }
+
+    /**
      * Pad "packets".
      *
      * Block ciphers working by encrypting between their specified [$this->]block_size at a time
@@ -1179,351 +1524,6 @@ class Crypt_Base
 
         $this->continuousBuffer = false;
         $this->changed = true;
-    }
-
-    /**
-     * Encrypts a block
-     *
-     * Note: Must extend by the child Crypt_* class
-     *
-     * @access private
-     * @param String $in
-     * @return String
-     */
-    function _encryptBlock($in)
-    {
-        user_error((version_compare(PHP_VERSION, '5.0.0', '>=')  ? __METHOD__ : __FUNCTION__)  . '() must extend by class ' . get_class($this), E_USER_ERROR);
-    }
-
-    /**
-     * Decrypts a block
-     *
-     * Note: Must extend by the child Crypt_* class
-     *
-     * @access private
-     * @param String $in
-     * @return String
-     */
-    function _decryptBlock($in)
-    {
-        user_error((version_compare(PHP_VERSION, '5.0.0', '>=')  ? __METHOD__ : __FUNCTION__)  . '() must extend by class ' . get_class($this), E_USER_ERROR);
-    }
-
-    /**
-     * Setup the key (expansion)
-     *
-     * Only used if $engine == CRYPT_MODE_INTERNAL
-     *
-     * Note: Must extend by the child Crypt_* class
-     *
-     * @see Crypt_Base::_setup()
-     * @access private
-     */
-    function _setupKey()
-    {
-        user_error((version_compare(PHP_VERSION, '5.0.0', '>=')  ? __METHOD__ : __FUNCTION__)  . '() must extend by class ' . get_class($this), E_USER_ERROR);
-    }
-
-    /**
-     * Setup the CRYPT_MODE_INTERNAL $engine
-     *
-     * (re)init, if necessary, the internal cipher $engine and flush all $buffers
-     * Used (only) if $engine == CRYPT_MODE_INTERNAL
-     *
-     * _setup() will be called each time if $changed === true
-     * typically this happens when using one or more of following public methods:
-     *
-     * - setKey()
-     *
-     * - setIV()
-     *
-     * - disableContinuousBuffer()
-     *
-     * - First run of encrypt() / decrypt() with no init-settings
-     *
-     * Internally: _setup() is called always before(!) en/decryption.
-     *
-     * Note: Could, but not must, extend by the child Crypt_* class
-     *
-     * @see setKey()
-     * @see setIV()
-     * @see disableContinuousBuffer()
-     * @access private
-     */
-    function _setup()
-    {
-        $this->_clearBuffers();
-        $this->_setupKey();
-
-        if ($this->use_inline_crypt) {
-            $this->_setupInlineCrypt();
-        }
-    }
-
-    /**
-     * Setup the CRYPT_MODE_MCRYPT $engine
-     *
-     * (re)init, if necessary, the (ext)mcrypt resources and flush all $buffers
-     * Used (only) if $engine = CRYPT_MODE_MCRYPT
-     *
-     * _setupMcrypt() will be called each time if $changed === true
-     * typically this happens when using one or more of following public methods:
-     *
-     * - setKey()
-     *
-     * - setIV()
-     *
-     * - disableContinuousBuffer()
-     *
-     * - First run of encrypt() / decrypt()
-     *
-     *
-     * Note: Could, but not must, extend by the child Crypt_* class
-     *
-     * @see setKey()
-     * @see setIV()
-     * @see disableContinuousBuffer()
-     * @access private
-     */
-    function _setupMcrypt()
-    {
-        $this->_clearBuffers();
-        $this->enchanged = $this->dechanged = true;
-
-        if (!isset($this->enmcrypt)) {
-            static $mcrypt_modes = array(
-                CRYPT_MODE_CTR    => 'ctr',
-                CRYPT_MODE_ECB    => MCRYPT_MODE_ECB,
-                CRYPT_MODE_CBC    => MCRYPT_MODE_CBC,
-                CRYPT_MODE_CFB    => 'ncfb',
-                CRYPT_MODE_OFB    => MCRYPT_MODE_NOFB,
-                CRYPT_MODE_STREAM => MCRYPT_MODE_STREAM,
-            );
-
-            $this->demcrypt = mcrypt_module_open($this->cipher_name_mcrypt, '', $mcrypt_modes[$this->mode], '');
-            $this->enmcrypt = mcrypt_module_open($this->cipher_name_mcrypt, '', $mcrypt_modes[$this->mode], '');
-
-            // we need the $ecb mcrypt resource (only) in MODE_CFB with enableContinuousBuffer()
-            // to workaround mcrypt's broken ncfb implementation in buffered mode
-            // see: {@link http://phpseclib.sourceforge.net/cfb-demo.phps}
-            if ($this->mode == CRYPT_MODE_CFB) {
-                $this->ecb = mcrypt_module_open($this->cipher_name_mcrypt, '', MCRYPT_MODE_ECB, '');
-            }
-
-        } // else should mcrypt_generic_deinit be called?
-
-        if ($this->mode == CRYPT_MODE_CFB) {
-            mcrypt_generic_init($this->ecb, $this->key, str_repeat("\0", $this->block_size));
-        }
-    }
-
-    /**
-     * Pads a string
-     *
-     * Pads a string using the RSA PKCS padding standards so that its length is a multiple of the blocksize.
-     * $this->block_size - (strlen($text) % $this->block_size) bytes are added, each of which is equal to
-     * chr($this->block_size - (strlen($text) % $this->block_size)
-     *
-     * If padding is disabled and $text is not a multiple of the blocksize, the string will be padded regardless
-     * and padding will, hence forth, be enabled.
-     *
-     * @see Crypt_Base::_unpad()
-     * @param String $text
-     * @access private
-     * @return String
-     */
-    function _pad($text)
-    {
-        $length = strlen($text);
-
-        if (!$this->padding) {
-            if ($length % $this->block_size == 0) {
-                return $text;
-            } else {
-                user_error("The plaintext's length ($length) is not a multiple of the block size ({$this->block_size})");
-                $this->padding = true;
-            }
-        }
-
-        $pad = $this->block_size - ($length % $this->block_size);
-
-        return str_pad($text, $length + $pad, chr($pad));
-    }
-
-    /**
-     * Unpads a string.
-     *
-     * If padding is enabled and the reported padding length is invalid the encryption key will be assumed to be wrong
-     * and false will be returned.
-     *
-     * @see Crypt_Base::_pad()
-     * @param String $text
-     * @access private
-     * @return String
-     */
-    function _unpad($text)
-    {
-        if (!$this->padding) {
-            return $text;
-        }
-
-        $length = ord($text[strlen($text) - 1]);
-
-        if (!$length || $length > $this->block_size) {
-            return false;
-        }
-
-        return substr($text, 0, -$length);
-    }
-
-    /**
-     * Clears internal buffers
-     *
-     * Clearing/resetting the internal buffers is done everytime
-     * after disableContinuousBuffer() or on cipher $engine (re)init
-     * ie after setKey() or setIV()
-     *
-     * Note: Could, but not must, extend by the child Crypt_* class
-     *
-     * @access public
-     */
-    function _clearBuffers()
-    {
-        $this->enbuffer = array('encrypted'  => '', 'xor' => '', 'pos' => 0, 'enmcrypt_init' => true);
-        $this->debuffer = array('ciphertext' => '', 'xor' => '', 'pos' => 0, 'demcrypt_init' => true);
-
-        // mcrypt's handling of invalid's $iv:
-        // $this->encryptIV = $this->decryptIV = strlen($this->iv) == $this->block_size ? $this->iv : str_repeat("\0", $this->block_size);
-        $this->encryptIV = $this->decryptIV = str_pad(substr($this->iv, 0, $this->block_size), $this->block_size, "\0");
-    }
-
-    /**
-     * String Shift
-     *
-     * Inspired by array_shift
-     *
-     * @param String $string
-     * @param optional Integer $index
-     * @access private
-     * @return String
-     */
-    function _stringShift(&$string, $index = 1)
-    {
-        $substr = substr($string, 0, $index);
-        $string = substr($string, $index);
-        return $substr;
-    }
-
-    /**
-     * Generate CTR XOR encryption key
-     *
-     * Encrypt the output of this and XOR it against the ciphertext / plaintext to get the
-     * plaintext / ciphertext in CTR mode.
-     *
-     * @see Crypt_Base::decrypt()
-     * @see Crypt_Base::encrypt()
-     * @param String $iv
-     * @param Integer $length
-     * @access private
-     * @return String $xor
-     */
-    function _generateXor(&$iv, $length)
-    {
-        $xor = '';
-        $block_size = $this->block_size;
-        $num_blocks = floor(($length + ($block_size - 1)) / $block_size);
-        for ($i = 0; $i < $num_blocks; $i++) {
-            $xor.= $iv;
-            for ($j = 4; $j <= $block_size; $j+= 4) {
-                $temp = substr($iv, -$j, 4);
-                switch ($temp) {
-                    case "\xFF\xFF\xFF\xFF":
-                        $iv = substr_replace($iv, "\x00\x00\x00\x00", -$j, 4);
-                        break;
-                    case "\x7F\xFF\xFF\xFF":
-                        $iv = substr_replace($iv, "\x80\x00\x00\x00", -$j, 4);
-                        break 2;
-                    default:
-                        extract(unpack('Ncount', $temp));
-                        $iv = substr_replace($iv, pack('N', $count + 1), -$j, 4);
-                        break 2;
-                }
-            }
-        }
-
-        return $xor;
-    }
-
-    /**
-     * Setup the performance-optimized function for de/encrypt()
-     *
-     * Stores the created (or existing) callback function-name
-     * in $this->inline_crypt
-     *
-     * Internally for phpseclib developers:
-     *
-     *     _setupInlineCrypt() would be called only if:
-     *
-     *     - $engine == CRYPT_MODE_INTERNAL and
-     *
-     *     - $use_inline_crypt === true
-     *
-     *     - each time on _setup(), after(!) _setupKey()
-     *
-     *
-     *     This ensures that _setupInlineCrypt() has always a
-     *     full ready2go initializated internal cipher $engine state
-     *     where, for example, the keys allready expanded,
-     *     keys/block_size calculated and such.
-     *
-     *     It is, each time if called, the responsibility of _setupInlineCrypt():
-     *
-     *     - to set $this->inline_crypt to a valid and fully working callback function
-     *       as a (faster) replacement for encrypt() / decrypt()
-     *
-     *     - NOT to create unlimited callback functions (for memory reasons!)
-     *       no matter how often _setupInlineCrypt() would be called. At some
-     *       point of amount they must be generic re-useable.
-     *
-     *     - the code of _setupInlineCrypt() it self,
-     *       and the generated callback code,
-     *       must be, in following order:
-     *       - 100% safe
-     *       - 100% compatible to encrypt()/decrypt()
-     *       - using only php5+ features/lang-constructs/php-extensions if
-     *         compatibility (down to php4) or fallback is provided
-     *       - readable/maintainable/understandable/commented and... not-cryptic-styled-code :-)
-     *       - >= 10% faster than encrypt()/decrypt() [which is, by the way,
-     *         the reason for the existence of _setupInlineCrypt() :-)]
-     *       - memory-nice
-     *       - short (as good as possible)
-     *
-     * Note: - _setupInlineCrypt() is using _createInlineCryptFunction() to create the full callback function code.
-     *       - In case of using inline crypting, _setupInlineCrypt() must extend by the child Crypt_* class.
-     *       - The following variable names are reserved:
-     *         - $_*  (all variable names prefixed with an underscore)
-     *         - $self (object reference to it self. Do not use $this, but $self instead)
-     *         - $in (the content of $in has to en/decrypt by the generated code)
-     *       - The callback function should not use the 'return' statement, but en/decrypt'ing the content of $in only
-     *
-     *
-     * @see Crypt_Base::_setup()
-     * @see Crypt_Base::_createInlineCryptFunction()
-     * @see Crypt_Base::encrypt()
-     * @see Crypt_Base::decrypt()
-     * @access private
-     */
-    function _setupInlineCrypt()
-    {
-        // If a Crypt_* class providing inline crypting it must extend _setupInlineCrypt()
-
-        // If, for any reason, an extending Crypt_Base() Crypt_* class
-        // not using inline crypting then it must be ensured that: $this->use_inline_crypt = false
-        // ie in the class var declaration of $use_inline_crypt in general for the Crypt_* class,
-        // in the constructor at object instance-time
-        // or, if it's runtime-specific, at runtime
-
-        $this->use_inline_crypt = false;
     }
 
     /**

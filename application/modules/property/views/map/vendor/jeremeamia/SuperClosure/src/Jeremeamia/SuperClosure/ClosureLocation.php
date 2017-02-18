@@ -10,31 +10,23 @@ namespace Jeremeamia\SuperClosure;
 class ClosureLocation
 {
     /** @var string */
-    protected $closureScopeClass;
-
-    /** @var string */
     public $class;
-
     /** @var string */
     public $directory;
-
     /** @var string */
     public $file;
-
     /** @var string */
     public $function;
-
     /** @var string */
     public $line;
-
     /** @var string */
     public $method;
-
     /** @var string */
     public $namespace;
-
     /** @var string */
     public $trait;
+    /** @var string */
+    protected $closureScopeClass;
 
     /**
      * Creates a ClosureLocation and seeds it with all the data that can be gleaned from the closure's reflection

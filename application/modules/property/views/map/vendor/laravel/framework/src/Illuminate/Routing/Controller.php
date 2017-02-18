@@ -6,26 +6,23 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 abstract class Controller {
 
 	/**
+	 * The route filterer implementation.
+	 *
+	 * @var \Illuminate\Routing\RouteFiltererInterface
+	 */
+	protected static $filterer;
+	/**
 	 * The "before" filters registered on the controller.
 	 *
 	 * @var array
 	 */
 	protected $beforeFilters = array();
-
 	/**
 	 * The "after" filters registered on the controller.
 	 *
 	 * @var array
 	 */
 	protected $afterFilters = array();
-
-	/**
-	 * The route filterer implementation.
-	 *
-	 * @var \Illuminate\Routing\RouteFiltererInterface
-	 */
-	protected static $filterer;
-
 	/**
 	 * The layout used by the controller.
 	 *
@@ -43,18 +40,6 @@ abstract class Controller {
 	public function beforeFilter($filter, array $options = array())
 	{
 		$this->beforeFilters[] = $this->parseFilter($filter, $options);
-	}
-
-	/**
-	 * Register an "after" filter on the controller.
-	 *
-	 * @param  \Closure|string  $filter
-	 * @param  array  $options
-	 * @return void
-	 */
-	public function afterFilter($filter, array $options = array())
-	{
-		$this->afterFilters[] = $this->parseFilter($filter, $options);
 	}
 
 	/**
@@ -100,16 +85,24 @@ abstract class Controller {
 	}
 
 	/**
-	 * Register a controller instance method as a filter.
+	 * Get the route filterer implementation.
 	 *
-	 * @param  string  $filter
-	 * @return string
+	 * @return \Illuminate\Routing\RouteFiltererInterface
 	 */
-	protected function registerInstanceFilter($filter)
+	public static function getFilterer()
 	{
-		$this->getFilterer()->filter($filter, array($this, substr($filter, 1)));
+		return static::$filterer;
+	}
 
-		return $filter;
+	/**
+	 * Set the route filterer implementation.
+	 *
+	 * @param  \Illuminate\Routing\RouteFiltererInterface $filterer
+	 * @return void
+	 */
+	public static function setFilterer(RouteFiltererInterface $filterer)
+	{
+		static::$filterer = $filterer;
 	}
 
 	/**
@@ -133,6 +126,31 @@ abstract class Controller {
 	}
 
 	/**
+	 * Register a controller instance method as a filter.
+	 *
+	 * @param  string  $filter
+	 * @return string
+	 */
+	protected function registerInstanceFilter($filter)
+	{
+		$this->getFilterer()->filter($filter, array($this, substr($filter, 1)));
+
+		return $filter;
+	}
+
+	/**
+	 * Register an "after" filter on the controller.
+	 *
+	 * @param  \Closure|string $filter
+	 * @param  array $options
+	 * @return void
+	 */
+	public function afterFilter($filter, array $options = array())
+	{
+		$this->afterFilters[] = $this->parseFilter($filter, $options);
+	}
+
+	/**
 	 * Remove the given before filter.
 	 *
 	 * @param  string  $filter
@@ -141,17 +159,6 @@ abstract class Controller {
 	public function forgetBeforeFilter($filter)
 	{
 		$this->beforeFilters = $this->removeFilter($filter, $this->getBeforeFilters());
-	}
-
-	/**
-	 * Remove the given after filter.
-	 *
-	 * @param  string  $filter
-	 * @return void
-	 */
-	public function forgetAfterFilter($filter)
-	{
-		$this->afterFilters = $this->removeFilter($filter, $this->getAfterFilters());
 	}
 
 	/**
@@ -180,6 +187,17 @@ abstract class Controller {
 	}
 
 	/**
+	 * Remove the given after filter.
+	 *
+	 * @param  string $filter
+	 * @return void
+	 */
+	public function forgetAfterFilter($filter)
+	{
+		$this->afterFilters = $this->removeFilter($filter, $this->getAfterFilters());
+	}
+
+	/**
 	 * Get the registered "after" filters.
 	 *
 	 * @return array
@@ -188,34 +206,6 @@ abstract class Controller {
 	{
 		return $this->afterFilters;
 	}
-
-	/**
-	 * Get the route filterer implementation.
-	 *
-	 * @return \Illuminate\Routing\RouteFiltererInterface
-	 */
-	public static function getFilterer()
-	{
-		return static::$filterer;
-	}
-
-	/**
-	 * Set the route filterer implementation.
-	 *
-	 * @param  \Illuminate\Routing\RouteFiltererInterface  $filterer
-	 * @return void
-	 */
-	public static function setFilterer(RouteFiltererInterface $filterer)
-	{
-		static::$filterer = $filterer;
-	}
-
-	/**
-	 * Create the layout used by the controller.
-	 *
-	 * @return void
-	 */
-	protected function setupLayout() {}
 
 	/**
 	 * Execute an action on the controller.
@@ -239,6 +229,15 @@ abstract class Controller {
 		}
 
 		return $response;
+	}
+
+	/**
+	 * Create the layout used by the controller.
+	 *
+	 * @return void
+	 */
+	protected function setupLayout()
+	{
 	}
 
 	/**

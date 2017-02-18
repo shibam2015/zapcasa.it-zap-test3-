@@ -77,9 +77,25 @@ class PHPParser_PrettyPrinter_Default extends PHPParser_PrettyPrinterAbstract
         return '"' . $this->pEncapsList($node->parts, '"') . '"';
     }
 
+    public function pEncapsList(array $encapsList, $quote)
+    {
+        $return = '';
+        foreach ($encapsList as $element) {
+            if (is_string($element)) {
+                $return .= addcslashes($element, "\n\r\t\f\v$" . $quote . "\\");
+            } else {
+                $return .= '{' . $this->p($element) . '}';
+            }
+        }
+
+        return $return;
+    }
+
     public function pScalar_LNumber(PHPParser_Node_Scalar_LNumber $node) {
         return (string) $node->value;
     }
+
+    // Assignments
 
     public function pScalar_DNumber(PHPParser_Node_Scalar_DNumber $node) {
         $stringValue = (string) $node->value;
@@ -87,8 +103,6 @@ class PHPParser_PrettyPrinter_Default extends PHPParser_PrettyPrinterAbstract
         // ensure that number is really printed as float
         return ctype_digit($stringValue) ? $stringValue . '.0' : $stringValue;
     }
-
-    // Assignments
 
     public function pExpr_Assign(PHPParser_Node_Expr_Assign $node) {
         return $this->pInfixOp('Expr_Assign', $node->var, ' = ', $node->expr);
@@ -138,11 +152,11 @@ class PHPParser_PrettyPrinter_Default extends PHPParser_PrettyPrinterAbstract
         return $this->pInfixOp('Expr_AssignShiftLeft', $node->var, ' <<= ', $node->expr);
     }
 
+    // Binary expressions
+
     public function pExpr_AssignShiftRight(PHPParser_Node_Expr_AssignShiftRight $node) {
         return $this->pInfixOp('Expr_AssignShiftRight', $node->var, ' >>= ', $node->expr);
     }
-
-    // Binary expressions
 
     public function pExpr_Plus(PHPParser_Node_Expr_Plus $node) {
         return $this->pInfixOp('Expr_Plus', $node->left, ' + ', $node->right);
@@ -240,11 +254,11 @@ class PHPParser_PrettyPrinter_Default extends PHPParser_PrettyPrinterAbstract
         return $this->pInfixOp('Expr_SmallerOrEqual', $node->left, ' <= ', $node->right);
     }
 
+    // Unary expressions
+
     public function pExpr_Instanceof(PHPParser_Node_Expr_Instanceof $node) {
         return $this->pInfixOp('Expr_Instanceof', $node->expr, ' instanceof ', $node->class);
     }
-
-    // Unary expressions
 
     public function pExpr_BooleanNot(PHPParser_Node_Expr_BooleanNot $node) {
         return $this->pPrefixOp('Expr_BooleanNot', '!', $node->expr);
@@ -278,11 +292,11 @@ class PHPParser_PrettyPrinter_Default extends PHPParser_PrettyPrinterAbstract
         return $this->pPostfixOp('Expr_PostDec', $node->var, '--');
     }
 
+    // Casts
+
     public function pExpr_ErrorSuppress(PHPParser_Node_Expr_ErrorSuppress $node) {
         return $this->pPrefixOp('Expr_ErrorSuppress', '@', $node->expr);
     }
-
-    // Casts
 
     public function pExpr_Cast_Int(PHPParser_Node_Expr_Cast_Int $node) {
         return $this->pPrefixOp('Expr_Cast_Int', '(int) ', $node->expr);
@@ -308,11 +322,11 @@ class PHPParser_PrettyPrinter_Default extends PHPParser_PrettyPrinterAbstract
         return $this->pPrefixOp('Expr_Cast_Bool', '(bool) ', $node->expr);
     }
 
+    // Function calls and similar constructs
+
     public function pExpr_Cast_Unset(PHPParser_Node_Expr_Cast_Unset $node) {
         return $this->pPrefixOp('Expr_Cast_Unset', '(unset) ', $node->expr);
     }
-
-    // Function calls and similar constructs
 
     public function pExpr_FuncCall(PHPParser_Node_Expr_FuncCall $node) {
         return $this->p($node->name) . '(' . $this->pCommaSeparated($node->args) . ')';
@@ -321,6 +335,24 @@ class PHPParser_PrettyPrinter_Default extends PHPParser_PrettyPrinterAbstract
     public function pExpr_MethodCall(PHPParser_Node_Expr_MethodCall $node) {
         return $this->pVarOrNewExpr($node->var) . '->' . $this->pObjectProperty($node->name)
              . '(' . $this->pCommaSeparated($node->args) . ')';
+    }
+
+    public function pVarOrNewExpr(PHPParser_Node $node)
+    {
+        if ($node instanceof PHPParser_Node_Expr_New) {
+            return '(' . $this->p($node) . ')';
+        } else {
+            return $this->p($node);
+        }
+    }
+
+    public function pObjectProperty($node)
+    {
+        if ($node instanceof PHPParser_Node_Expr) {
+            return '{' . $this->p($node) . '}';
+        } else {
+            return $node;
+        }
     }
 
     public function pExpr_StaticCall(PHPParser_Node_Expr_StaticCall $node) {
@@ -345,6 +377,8 @@ class PHPParser_PrettyPrinter_Default extends PHPParser_PrettyPrinterAbstract
     public function pExpr_Print(PHPParser_Node_Expr_Print $node) {
         return 'print ' . $this->p($node->expr);
     }
+
+    // Other
 
     public function pExpr_Eval(PHPParser_Node_Expr_Eval $node) {
         return 'eval(' . $this->p($node->expr) . ')';
@@ -373,8 +407,6 @@ class PHPParser_PrettyPrinter_Default extends PHPParser_PrettyPrinterAbstract
 
         return 'list(' . implode(', ', $pList) . ')';
     }
-
-    // Other
 
     public function pExpr_Variable(PHPParser_Node_Expr_Variable $node) {
         if ($node->name instanceof PHPParser_Node_Expr) {
@@ -438,6 +470,8 @@ class PHPParser_PrettyPrinter_Default extends PHPParser_PrettyPrinterAbstract
         return 'clone ' . $this->p($node->expr);
     }
 
+    // Declarations
+
     public function pExpr_Ternary(PHPParser_Node_Expr_Ternary $node) {
         // a bit of cheating: we treat the ternary as a binary op where the ?...: part is the operator.
         // this is okay because the part between ? and : never needs parentheses.
@@ -461,8 +495,6 @@ class PHPParser_PrettyPrinter_Default extends PHPParser_PrettyPrinterAbstract
                  . ')';
         }
     }
-
-    // Declarations
 
     public function pStmt_Namespace(PHPParser_Node_Stmt_Namespace $node) {
         if ($this->canUseSemicolonNamespaces) {
@@ -494,6 +526,16 @@ class PHPParser_PrettyPrinter_Default extends PHPParser_PrettyPrinterAbstract
              . (null !== $node->extends ? ' extends ' . $this->p($node->extends) : '')
              . (!empty($node->implements) ? ' implements ' . $this->pCommaSeparated($node->implements) : '')
              . "\n" . '{' . "\n" . $this->pStmts($node->stmts) . "\n" . '}';
+    }
+
+    public function pModifiers($modifiers)
+    {
+        return ($modifiers & PHPParser_Node_Stmt_Class::MODIFIER_PUBLIC ? 'public ' : '')
+        . ($modifiers & PHPParser_Node_Stmt_Class::MODIFIER_PROTECTED ? 'protected ' : '')
+        . ($modifiers & PHPParser_Node_Stmt_Class::MODIFIER_PRIVATE ? 'private ' : '')
+        . ($modifiers & PHPParser_Node_Stmt_Class::MODIFIER_STATIC ? 'static ' : '')
+        . ($modifiers & PHPParser_Node_Stmt_Class::MODIFIER_ABSTRACT ? 'abstract ' : '')
+        . ($modifiers & PHPParser_Node_Stmt_Class::MODIFIER_FINAL ? 'final ' : '');
     }
 
     public function pStmt_Trait(PHPParser_Node_Stmt_Trait $node) {
@@ -543,6 +585,8 @@ class PHPParser_PrettyPrinter_Default extends PHPParser_PrettyPrinterAbstract
         return 'const ' . $this->pCommaSeparated($node->consts) . ';';
     }
 
+    // Control flow
+
     public function pStmt_Function(PHPParser_Node_Stmt_Function $node) {
         return 'function ' . ($node->byRef ? '&' : '') . $node->name
              . '(' . $this->pCommaSeparated($node->params) . ')'
@@ -561,8 +605,6 @@ class PHPParser_PrettyPrinter_Default extends PHPParser_PrettyPrinterAbstract
     public function pStmt_DeclareDeclare(PHPParser_Node_Stmt_DeclareDeclare $node) {
         return $node->key . ' = ' . $this->p($node->value);
     }
-
-    // Control flow
 
     public function pStmt_If(PHPParser_Node_Stmt_If $node) {
         return 'if (' . $this->p($node->cond) . ') {'
@@ -636,6 +678,8 @@ class PHPParser_PrettyPrinter_Default extends PHPParser_PrettyPrinterAbstract
         return 'continue' . ($node->num !== null ? ' ' . $this->p($node->num) : '') . ';';
     }
 
+    // Other
+
     public function pStmt_Return(PHPParser_Node_Stmt_Return $node) {
         return 'return' . (null !== $node->expr ? ' ' . $this->p($node->expr) : '') . ';';
     }
@@ -652,8 +696,6 @@ class PHPParser_PrettyPrinter_Default extends PHPParser_PrettyPrinterAbstract
         return 'goto ' . $node->name . ';';
     }
 
-    // Other
-
     public function pStmt_Echo(PHPParser_Node_Stmt_Echo $node) {
         return 'echo ' . $this->pCommaSeparated($node->exprs) . ';';
     }
@@ -665,6 +707,8 @@ class PHPParser_PrettyPrinter_Default extends PHPParser_PrettyPrinterAbstract
     public function pStmt_Global(PHPParser_Node_Stmt_Global $node) {
         return 'global ' . $this->pCommaSeparated($node->vars) . ';';
     }
+
+    // Helpers
 
     public function pStmt_StaticVar(PHPParser_Node_Stmt_StaticVar $node) {
         return '$' . $node->name
@@ -681,45 +725,5 @@ class PHPParser_PrettyPrinter_Default extends PHPParser_PrettyPrinterAbstract
 
     public function pStmt_HaltCompiler(PHPParser_Node_Stmt_HaltCompiler $node) {
         return '__halt_compiler();' . $node->remaining;
-    }
-
-    // Helpers
-
-    public function pObjectProperty($node) {
-        if ($node instanceof PHPParser_Node_Expr) {
-            return '{' . $this->p($node) . '}';
-        } else {
-            return $node;
-        }
-    }
-
-    public function pModifiers($modifiers) {
-        return ($modifiers & PHPParser_Node_Stmt_Class::MODIFIER_PUBLIC    ? 'public '    : '')
-             . ($modifiers & PHPParser_Node_Stmt_Class::MODIFIER_PROTECTED ? 'protected ' : '')
-             . ($modifiers & PHPParser_Node_Stmt_Class::MODIFIER_PRIVATE   ? 'private '   : '')
-             . ($modifiers & PHPParser_Node_Stmt_Class::MODIFIER_STATIC    ? 'static '    : '')
-             . ($modifiers & PHPParser_Node_Stmt_Class::MODIFIER_ABSTRACT  ? 'abstract '  : '')
-             . ($modifiers & PHPParser_Node_Stmt_Class::MODIFIER_FINAL     ? 'final '     : '');
-    }
-
-    public function pEncapsList(array $encapsList, $quote) {
-        $return = '';
-        foreach ($encapsList as $element) {
-            if (is_string($element)) {
-                $return .= addcslashes($element, "\n\r\t\f\v$" . $quote . "\\");
-            } else {
-                $return .= '{' . $this->p($element) . '}';
-            }
-        }
-
-        return $return;
-    }
-
-    public function pVarOrNewExpr(PHPParser_Node $node) {
-        if ($node instanceof PHPParser_Node_Expr_New) {
-            return '(' . $this->p($node) . ')';
-        } else {
-            return $this->p($node);
-        }
     }
 }

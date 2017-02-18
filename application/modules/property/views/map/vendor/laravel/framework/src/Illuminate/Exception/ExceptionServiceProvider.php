@@ -32,19 +32,6 @@ class ExceptionServiceProvider extends ServiceProvider {
 	}
 
 	/**
-	 * Register the exception handler instance.
-	 *
-	 * @return void
-	 */
-	protected function registerHandler()
-	{
-		$this->app['exception'] = $this->app->share(function($app)
-		{
-			return new Handler($app, $app['exception.plain'], $app['exception.debug']);
-		});
-	}
-
-	/**
 	 * Register the plain exception displayer.
 	 *
 	 * @return void
@@ -189,6 +176,18 @@ class ExceptionServiceProvider extends ServiceProvider {
 		$base = $this->app['path.base'];
 
 		return $base.'/vendor/laravel/framework/src/Illuminate/Exception/resources';
+	}
+
+	/**
+	 * Register the exception handler instance.
+	 *
+	 * @return void
+	 */
+	protected function registerHandler()
+	{
+		$this->app['exception'] = $this->app->share(function ($app) {
+			return new Handler($app, $app['exception.plain'], $app['exception.debug']);
+		});
 	}
 
 }

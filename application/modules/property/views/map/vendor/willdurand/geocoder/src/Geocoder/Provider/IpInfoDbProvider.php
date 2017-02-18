@@ -69,22 +69,6 @@ class IpInfoDbProvider extends AbstractProvider implements ProviderInterface
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function getReversedData(array $coordinates)
-    {
-        throw new UnsupportedException('The IpInfoDbProvider is not able to do reverse geocoding.');
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getName()
-    {
-        return 'ip_info_db';
-    }
-
-    /**
      * @param string $query
      *
      * @return array
@@ -118,5 +102,21 @@ class IpInfoDbProvider extends AbstractProvider implements ProviderInterface
             'countryCode' => isset($data['countryName']) ? $data['countryCode'] : null,
             'timezone'    => $timezone,
         )));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getReversedData(array $coordinates)
+    {
+        throw new UnsupportedException('The IpInfoDbProvider is not able to do reverse geocoding.');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getName()
+    {
+        return 'ip_info_db';
     }
 }

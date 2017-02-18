@@ -149,16 +149,6 @@ class DirectionsRequest
     }
 
     /**
-     * Checks if the directions request has a destination.
-     *
-     * @return boolean TRUE if the directions request has a destination else FALSE.
-     */
-    public function hasDestination()
-    {
-        return $this->destination !== null;
-    }
-
-    /**
      * Gets the directions request destination.
      *
      * @return string | \Ivory\GoogleMap\Base\Coordinate The directions request destination.
@@ -239,16 +229,6 @@ class DirectionsRequest
     }
 
     /**
-     * Checks if the directions request has an origin.
-     *
-     * @return boolean TRUE if the directions request has an origin else FALSE.
-     */
-    public function hasOrigin()
-    {
-        return $this->origin !== null;
-    }
-
-    /**
      * Gets the directions request origin.
      *
      * @return string | \Ivory\GoogleMap\Base\Coordinate The directions request origin.
@@ -293,16 +273,6 @@ class DirectionsRequest
     }
 
     /**
-     * Checks if the directions request has a departure time.
-     *
-     * @return boolean TRUE if the directions request has a departure time else FALSE.
-     */
-    public function hasDepartureTime()
-    {
-        return $this->departureTime !== null;
-    }
-
-    /**
      * Gets the directions request departure time.
      *
      * @return \DateTime The directions request departure time.
@@ -320,16 +290,6 @@ class DirectionsRequest
     public function setDepartureTime(DateTime $departureTime = null)
     {
         $this->departureTime = $departureTime;
-    }
-
-    /**
-     * Checks if the directions request has an arrival time.
-     *
-     * @return boolean TRUE if the directions request has an arrival time else FALSE.
-     */
-    public function hasArrivalTime()
-    {
-        return $this->arrivalTime !== null;
     }
 
     /**
@@ -468,32 +428,6 @@ class DirectionsRequest
     public function hasTravelMode()
     {
         return $this->travelMode !== null;
-    }
-
-    /**
-     * Gets the directions request travel mode.
-     *
-     * @return string The directions request travel mode.
-     */
-    public function getTravelMode()
-    {
-        return $this->travelMode;
-    }
-
-    /**
-     * Sets the directions request travel mode.
-     *
-     * @param string $travelMode The directions request travel mode.
-     *
-     * @throws \Ivory\GoogleMap\Exception\DirectionsException If the travel mode is not valid.
-     */
-    public function setTravelMode($travelMode = null)
-    {
-        if (!in_array($travelMode, TravelMode::getTravelModes()) && ($travelMode !== null)) {
-            throw DirectionsException::invalidDirectionsRequestTravelMode();
-        }
-
-        $this->travelMode = $travelMode;
     }
 
     /**
@@ -646,5 +580,71 @@ class DirectionsRequest
         }
 
         return $isValid;
+    }
+
+    /**
+     * Checks if the directions request has a destination.
+     *
+     * @return boolean TRUE if the directions request has a destination else FALSE.
+     */
+    public function hasDestination()
+    {
+        return $this->destination !== null;
+    }
+
+    /**
+     * Checks if the directions request has an origin.
+     *
+     * @return boolean TRUE if the directions request has an origin else FALSE.
+     */
+    public function hasOrigin()
+    {
+        return $this->origin !== null;
+    }
+
+    /**
+     * Gets the directions request travel mode.
+     *
+     * @return string The directions request travel mode.
+     */
+    public function getTravelMode()
+    {
+        return $this->travelMode;
+    }
+
+    /**
+     * Sets the directions request travel mode.
+     *
+     * @param string $travelMode The directions request travel mode.
+     *
+     * @throws \Ivory\GoogleMap\Exception\DirectionsException If the travel mode is not valid.
+     */
+    public function setTravelMode($travelMode = null)
+    {
+        if (!in_array($travelMode, TravelMode::getTravelModes()) && ($travelMode !== null)) {
+            throw DirectionsException::invalidDirectionsRequestTravelMode();
+        }
+
+        $this->travelMode = $travelMode;
+    }
+
+    /**
+     * Checks if the directions request has an arrival time.
+     *
+     * @return boolean TRUE if the directions request has an arrival time else FALSE.
+     */
+    public function hasArrivalTime()
+    {
+        return $this->arrivalTime !== null;
+    }
+
+    /**
+     * Checks if the directions request has a departure time.
+     *
+     * @return boolean TRUE if the directions request has a departure time else FALSE.
+     */
+    public function hasDepartureTime()
+    {
+        return $this->departureTime !== null;
     }
 }

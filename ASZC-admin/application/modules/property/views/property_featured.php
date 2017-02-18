@@ -73,6 +73,12 @@
 		</div>
 	</div>
 	<?php
+	$page = $this->uri->segment('6');
+	$type = $this->uri->segment('4');
+	$activetype = $this->uri->segment('5');
+
+	$pageLink = '/' . $type . '/' . $activetype . ($page == '' ? '' : '/' . $page);
+	//echo $pageLink;
 	if ($property_details[0]['property_status'] == '1') {
 		$activeStatus = 'Drafted&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 		$btn_class = "inactive";
@@ -98,10 +104,52 @@
 				<i class="<?php echo $css_class; ?>"></i><?php echo $activeStatus; ?>
 			</a>-->
 	<?php
-	if ($property_details[0]['feature_status'] == '1') {
+	if ($property_details[0]['feature_status'] == '1' && $property_feature_details[0]['status'] == '1' && $property_details[0]['suspention_status'] == '1') {
+		?>
+		<?php
+		//$pageLink = "";
+		$pageLink = '/' . $type . '/' . $activetype . ($page == '' ? '' : '/' . $page);
+		$featuredLink = '<a href="' . base_url() . "property/make_featured/" . $property_details[0]['property_id'] . '" class="btn btn-blue btn-sm btn-icon btn-xs">
+								<i class="entypo-back-in-time"></i>Feature&nbsp;&nbsp;
+							 </a>';
+		$featureStatus = get_perticular_field_value('zc_property_featured', 'status', " and property_id='" . $property_details[0]['property_id'] . "'");
+		if ($featureStatus == 1) {
+			$todayDate = strtotime(date('Y-m-d'));
+			$startDate = get_perticular_field_value('zc_property_featured', 'start_date', " and property_id='" . $property_details[0]['property_id'] . "'");
+			$expDateLength = get_perticular_field_value('zc_property_featured', 'number_of_days', " and property_id='" . $property_details[0]['property_id'] . "'");
+			$expireDate = strtotime(date('Y-m-d', strtotime($startDate . " +" . $expDateLength . " days")));
+			if ($todayDate < $expireDate) {
+				$featuredLink = '<a href="' . base_url() . "property/" . ($property_details[0]['feature_status'] == 0 ? 'property_feature_resume' : 'property_feature_suspend') . "/" . $property_details[0]['property_id'] . "/" . $this->uri->segment('4') . "/" . $this->uri->segment('5') . "/" . $this->uri->segment('6') . '" class="btn btn-' . ($property_details[0]['feature_status'] == 0 ? 'gold' : 'red') . ' btn-sm btn-icon btn-xs">
+										<i class="entypo-back-in-time"></i>' . ($property_details[0]['feature_status'] == 0 ? 'Resume' : 'Suspend') . '
+									 </a>';
+			}
+		}
+		echo $featuredLink;
+
+		?>
+
+		<a href="<?php echo base_url(); ?>property/make_delete_feature/<?php echo $property_details[0]['property_id']; ?>/<?php echo $this->uri->segment('4') ?>/<?php echo $this->uri->segment('5') ?>/<?php echo $this->uri->segment('6') ?>"
+		   class="btn btn-sm btn-icon btn-xs btn-red" onclick="return confirm('Are your sure?')">
+			<i class="entypo-cancel"></i>Delete
+		</a>
+
+
+		<a href="<?php echo base_url(); ?>property/all/all" class="btn btn-sm btn-icon btn-xs btn-black">
+			<i class="entypo-box"></i>Back
+		</a>
+
+		<a class="btn btn-default editbtn btn-sm btn-icon btn-xs" style="width:120px;" title="Click here to edit"
+		   href="<?php echo base_url(); ?>property/edit_property_details/<?php echo $property_details[0]['property_id']; ?>/<?php echo $this->uri->segment('4') ?>/<?php echo $this->uri->segment('5') ?>/<?php echo $this->uri->segment('6') ?>">
+			<i class="entypo-pencil"></i>Edit Property
+		</a>
+	<?php } else {
+	} ?>
+	<?php
+	if ($property_details[0]['suspention_status'] == '0' && $property_feature_details[0]['status'] == '1') {
 		?>
 		<?php
 	$pageLink = "";
+		$type =
 	$featuredLink = '<a href="' . base_url() . "property/make_featured/" . $property_details[0]['property_id'] . '" class="btn btn-blue btn-sm btn-icon btn-xs">
 								<i class="entypo-back-in-time"></i>Feature&nbsp;&nbsp;
 							 </a>';
@@ -112,7 +160,7 @@
 		$expDateLength = get_perticular_field_value('zc_property_featured', 'number_of_days', " and property_id='" . $property_details[0]['property_id'] . "'");
 		$expireDate = strtotime(date('Y-m-d', strtotime($startDate . " +" . $expDateLength . " days")));
 		if ($todayDate < $expireDate) {
-			$featuredLink = '<a href="' . base_url() . "property/" . ($property_details[0]['feature_status'] == 0 ? 'property_feature_resume' : 'property_feature_suspend') . "/" . $property_details[0]['property_id'] . $pageLink . '" class="btn btn-' . ($property_details[0]['feature_status'] == 0 ? 'gold' : 'red') . ' btn-sm btn-icon btn-xs">
+			$featuredLink = '<a href="' . base_url() . "property/" . ($property_details[0]['feature_status'] == 0 ? 'property_feature_resume' : 'property_feature_suspend') . "/" . $property_details[0]['property_id'] . "/" . $this->uri->segment('4') . "/" . $this->uri->segment('5') . "/" . $this->uri->segment('6') . '" class="btn btn-' . ($property_details[0]['feature_status'] == 0 ? 'gold' : 'red') . ' btn-sm btn-icon btn-xs">
 										<i class="entypo-back-in-time"></i>' . ($property_details[0]['feature_status'] == 0 ? 'Resume' : 'Suspend') . '
 									 </a>';
 		}
@@ -121,7 +169,7 @@
 
 		?>
 
-		<a href="<?php echo base_url(); ?>property/delete_property/<?php echo $property_details[0]['property_id']; ?>"
+		<a href="<?php echo base_url(); ?>property/make_delete_feature/<?php echo $property_details[0]['property_id']; ?>/<?php echo $this->uri->segment('4') ?>/<?php echo $this->uri->segment('5') ?>/<?php echo $this->uri->segment('6') ?>"
 	   class="btn btn-sm btn-icon btn-xs btn-red" onclick="return confirm('Are your sure?')">
 		<i class="entypo-cancel"></i>Delete
 	</a>
@@ -131,7 +179,7 @@
 	</a>
 
 	<a class="btn btn-default editbtn btn-sm btn-icon btn-xs" style="width:120px;" title="Click here to edit"
-	   href="<?php echo base_url(); ?>property/edit_property_details/<?php echo $property_details[0]['property_id']; ?>">
+	   href="<?php echo base_url(); ?>property/edit_property_details/<?php echo $property_details[0]['property_id']; ?>/<?php echo $this->uri->segment('4') ?>/<?php echo $this->uri->segment('5') ?>/<?php echo $this->uri->segment('6') ?>">
 		<i class="entypo-pencil"></i>Edit Property
 	</a>
 	<?php } else {
@@ -217,7 +265,11 @@
 
 							<div class="input-group">
 
-								<input type="text" id="featured_start_date" class="form-control datepicker" name="start_date" value="<?php echo  $property_feature_details[0]['start_date'];?>" style="width:120px !important;"">
+								<input type="text" id="" class="form-control datepicker" name="start_date"
+									   value="<?php if ($property_feature_details[0]['status'] == '1') {
+										   echo $property_feature_details[0]['start_date'];
+									   } else {
+									   } ?>" style="width:120px !important;"">
 
 								
 
@@ -277,29 +329,22 @@
 
         <div class="col-sm-5">
 
-				<button class="btn btn-success" type="submit">Make Feature</button>
+			<button class="btn btn-success"
+					type="submit"><?php if ($property_details[0]['feature_status'] == '0' || $property_feature_details[0]['status'] == '0') { ?>Make Feature<?php } else { ?>Update<?php } ?></button>
 
                 </div>
 
 		</div>
 
-        
 
-
-
-            
-
-        
-
-		
-
-			</div>
+</div>
 
 </div>
 
 <?php
 
   echo form_close();
+
 
 ?>
 

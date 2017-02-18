@@ -51,23 +51,14 @@ class TagSet {
 	}
 
 	/**
-	 * Get an array of tag identifiers for all of the tags in the set.
+	 * Get the tag identifier key for a given tag.
 	 *
-	 * @return array
-	 */
-	protected function tagIds()
-	{
-		return array_map(array($this, 'tagId'), $this->names);
-	}
-
-	/**
-	 * Get a unique namespace that changes when any of the tags are flushed.
-	 *
+	 * @param  string $name
 	 * @return string
 	 */
-	public function getNamespace()
+	public function tagKey($name)
 	{
-		return implode('|', $this->tagIds());
+		return 'tag:' . $name . ':key';
 	}
 
 	/**
@@ -84,14 +75,23 @@ class TagSet {
 	}
 
 	/**
-	 * Get the tag identifier key for a given tag.
+	 * Get a unique namespace that changes when any of the tags are flushed.
 	 *
-	 * @param  string  $name
 	 * @return string
 	 */
-	public function tagKey($name)
+	public function getNamespace()
 	{
-		return 'tag:'.$name.':key';
+		return implode('|', $this->tagIds());
+	}
+
+	/**
+	 * Get an array of tag identifiers for all of the tags in the set.
+	 *
+	 * @return array
+	 */
+	protected function tagIds()
+	{
+		return array_map(array($this, 'tagId'), $this->names);
 	}
 
 }

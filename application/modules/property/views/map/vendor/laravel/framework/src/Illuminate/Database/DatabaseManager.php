@@ -46,29 +46,6 @@ class DatabaseManager implements ConnectionResolverInterface {
 	}
 
 	/**
-	 * Get a database connection instance.
-	 *
-	 * @param  string  $name
-	 * @return \Illuminate\Database\Connection
-	 */
-	public function connection($name = null)
-	{
-		$name = $name ?: $this->getDefaultConnection();
-
-		// If we haven't created this connection, we'll create it based on the config
-		// provided in the application. Once we've created the connections we will
-		// set the "fetch mode" for PDO which determines the query return types.
-		if ( ! isset($this->connections[$name]))
-		{
-			$connection = $this->makeConnection($name);
-
-			$this->connections[$name] = $this->prepare($connection);
-		}
-
-		return $this->connections[$name];
-	}
-
-	/**
 	 * Reconnect to the given database.
 	 *
 	 * @param  string  $name
@@ -84,6 +61,16 @@ class DatabaseManager implements ConnectionResolverInterface {
 	}
 
 	/**
+	 * Get the default connection name.
+	 *
+	 * @return string
+	 */
+	public function getDefaultConnection()
+	{
+		return $this->app['config']['database.default'];
+	}
+
+	/**
 	 * Disconnect from the given database.
 	 *
 	 * @param  string  $name
@@ -94,6 +81,28 @@ class DatabaseManager implements ConnectionResolverInterface {
 		$name = $name ?: $this->getDefaultConnection();
 
 		unset($this->connections[$name]);
+	}
+
+	/**
+	 * Get a database connection instance.
+	 *
+	 * @param  string $name
+	 * @return \Illuminate\Database\Connection
+	 */
+	public function connection($name = null)
+	{
+		$name = $name ?: $this->getDefaultConnection();
+
+		// If we haven't created this connection, we'll create it based on the config
+		// provided in the application. Once we've created the connections we will
+		// set the "fetch mode" for PDO which determines the query return types.
+		if (!isset($this->connections[$name])) {
+			$connection = $this->makeConnection($name);
+
+			$this->connections[$name] = $this->prepare($connection);
+		}
+
+		return $this->connections[$name];
 	}
 
 	/**
@@ -125,6 +134,30 @@ class DatabaseManager implements ConnectionResolverInterface {
 		}
 
 		return $this->factory->make($config, $name);
+	}
+
+	/**
+	 * Get the configuration for a connection.
+	 *
+	 * @param  string $name
+	 * @return array
+	 *
+	 * @throws \InvalidArgumentException
+	 */
+	protected function getConfig($name)
+	{
+		$name = $name ?: $this->getDefaultConnection();
+
+		// To get the database connection configuration, we will just pull each of the
+		// connection configurations and get the configurations for the given name.
+		// If the configuration doesn't exist, we'll throw an exception and bail.
+		$connections = $this->app['config']['database.connections'];
+
+		if (is_null($config = array_get($connections, $name))) {
+			throw new \InvalidArgumentException("Database [$name] not configured.");
+		}
+
+		return $config;
 	}
 
 	/**
@@ -161,41 +194,6 @@ class DatabaseManager implements ConnectionResolverInterface {
 		});
 
 		return $connection;
-	}
-
-	/**
-	 * Get the configuration for a connection.
-	 *
-	 * @param  string  $name
-	 * @return array
-	 *
-	 * @throws \InvalidArgumentException
-	 */
-	protected function getConfig($name)
-	{
-		$name = $name ?: $this->getDefaultConnection();
-
-		// To get the database connection configuration, we will just pull each of the
-		// connection configurations and get the configurations for the given name.
-		// If the configuration doesn't exist, we'll throw an exception and bail.
-		$connections = $this->app['config']['database.connections'];
-
-		if (is_null($config = array_get($connections, $name)))
-		{
-			throw new \InvalidArgumentException("Database [$name] not configured.");
-		}
-
-		return $config;
-	}
-
-	/**
-	 * Get the default connection name.
-	 *
-	 * @return string
-	 */
-	public function getDefaultConnection()
-	{
-		return $this->app['config']['database.default'];
 	}
 
 	/**

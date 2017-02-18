@@ -59,24 +59,6 @@ abstract class Field extends FormerObject implements FieldInterface
   protected $isSelfClosing = true;
 
   /**
-   * Get the current framework instance
-   *
-   * @return Framework
-   */
-  protected function currentFramework()
-  {
-    if ($this->app->bound('former.form.framework')) {
-      return $this->app['former.form.framework'];
-    }
-
-    return $this->app['former.framework'];
-  }
-
-  ////////////////////////////////////////////////////////////////////
-  ///////////////////////////// INTERFACE ////////////////////////////
-  ////////////////////////////////////////////////////////////////////
-
-  /**
    * Set up a Field instance
    *
    * @param string $type A field type
@@ -111,6 +93,107 @@ abstract class Field extends FormerObject implements FieldInterface
     $this->group = new $groupClass($this->app, $this->label);
   }
 
+  ////////////////////////////////////////////////////////////////////
+  ///////////////////////////// INTERFACE ////////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+  /**
+   * Ponders a label and a field name, and tries to get the best out of it
+   *
+   * @param  string $label A label
+   * @param  string $name A field name
+   * @return array         A label and a field name
+   */
+  private function automaticLabels($name, $label)
+  {
+    // Disabled automatic labels
+    if (!$this->app['former']->getOption('automatic_label')) {
+      $this->name = $name;
+      $this->label($label);
+
+      return false;
+    }
+
+    // Check for the two possibilities
+    if ($label and is_null($name)) {
+      $name = Str::slug($label);
+    } elseif (is_null($label) and $name) {
+      $label = preg_replace('/\[\]$/', '', $name);
+    }
+
+    // Save values
+    $this->name = $name;
+    $this->label($label);
+  }
+
+  /**
+   * Adds a label to the group/field
+   *
+   * @param  string $text A label
+   * @param  array $attributes The label's attributes
+   * @return Field              A field
+   */
+  public function label($text, $attributes = array())
+  {
+    // Create the Label element
+    $for = $this->id ?: $this->name;
+    $label = $this->app['former']->label($text, $for, $attributes);
+
+    // Set label
+    if ($this->group) {
+      $this->group->setLabel($label);
+    } else {
+      $this->label = $label;
+    }
+
+    return $this;
+  }
+
+  /**
+   * Use values stored in Former to populate the current field
+   */
+  private function repopulate($fallback = null)
+  {
+    // Get values from POST, populated, and manually set value
+    $post = $this->app['former']->getPost($this->name);
+    $populator = $this->form ? $this->form->getPopulator() : $this->app['former.populator'];
+    $populate = $populator->get($this->name);
+
+    // Assign a priority to each
+    if (!is_null($post)) {
+      return $post;
+    }
+    if (!is_null($populate)) {
+      return $populate;
+    }
+
+    return $fallback ?: $this->value;
+  }
+
+  /**
+   * Get the rules applied to the current field
+   *
+   * @return array An array of rules
+   */
+  public function getRules()
+  {
+    return $this->app['former']->getRules($this->name);
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  ////////////////////////// PUBLIC INTERFACE ////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+  /**
+   * Check if field is a checkbox or a radio
+   *
+   * @return boolean
+   */
+  public function isCheckable()
+  {
+    return $this->isOfType('checkbox', 'checkboxes', 'radio', 'radios');
+  }
+
   /**
    * Redirect calls to the group if necessary
    */
@@ -133,6 +216,16 @@ abstract class Field extends FormerObject implements FieldInterface
     }
 
     return parent::__call($method, $parameters);
+  }
+
+  /**
+   * Prints out the field
+   *
+   * @return string
+   */
+  public function __toString()
+  {
+    return $this->wrapAndRender();
   }
 
   /**
@@ -160,30 +253,6 @@ abstract class Field extends FormerObject implements FieldInterface
   }
 
   /**
-   * Prints out the field
-   *
-   * @return string
-   */
-  public function __toString()
-  {
-    return $this->wrapAndRender();
-  }
-
-  ////////////////////////////////////////////////////////////////////
-  ////////////////////////// PUBLIC INTERFACE ////////////////////////
-  ////////////////////////////////////////////////////////////////////
-
-  /**
-   * Whether the current field is required or not
-   *
-   * @return boolean
-   */
-  public function isRequired()
-  {
-    return isset($this->attributes['required']);
-  }
-
-  /**
    * Check if a field is unwrappable (no label)
    *
    * @return boolean
@@ -199,14 +268,22 @@ abstract class Field extends FormerObject implements FieldInterface
       $this->group and $this->group->isRaw();
   }
 
+  ////////////////////////////////////////////////////////////////////
+  //////////////////////// SETTERS AND GETTERS ///////////////////////
+  ////////////////////////////////////////////////////////////////////
+
   /**
-   * Check if field is a checkbox or a radio
+   * Get the current framework instance
    *
-   * @return boolean
+   * @return Framework
    */
-  public function isCheckable()
+  protected function currentFramework()
   {
-    return $this->isOfType('checkbox', 'checkboxes', 'radio', 'radios');
+    if ($this->app->bound('former.form.framework')) {
+      return $this->app['former.form.framework'];
+    }
+
+    return $this->app['former.framework'];
   }
 
   /**
@@ -220,18 +297,14 @@ abstract class Field extends FormerObject implements FieldInterface
   }
 
   /**
-   * Get the rules applied to the current field
+   * Whether the current field is required or not
    *
-   * @return array An array of rules
+   * @return boolean
    */
-  public function getRules()
+  public function isRequired()
   {
-    return $this->app['former']->getRules($this->name);
+    return isset($this->attributes['required']);
   }
-
-  ////////////////////////////////////////////////////////////////////
-  //////////////////////// SETTERS AND GETTERS ///////////////////////
-  ////////////////////////////////////////////////////////////////////
 
   /**
    * Apply a Live Validation rule by chaining
@@ -248,29 +321,6 @@ abstract class Field extends FormerObject implements FieldInterface
     $live->apply(array(
       $rule => $parameters,
     ));
-
-    return $this;
-  }
-
-  /**
-   * Adds a label to the group/field
-   *
-   * @param  string $text       A label
-   * @param  array  $attributes The label's attributes
-   * @return Field              A field
-   */
-  public function label($text, $attributes = array())
-  {
-    // Create the Label element
-    $for   = $this->id ?: $this->name;
-    $label = $this->app['former']->label($text, $for, $attributes);
-
-    // Set label
-    if ($this->group) {
-      $this->group->setLabel($label);
-    } else {
-      $this->label = $label;
-    }
 
     return $this;
   }
@@ -304,6 +354,10 @@ abstract class Field extends FormerObject implements FieldInterface
     return $this;
   }
 
+  ////////////////////////////////////////////////////////////////////
+  //////////////////////////////// HELPERS ///////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
   /**
    * Change the field's name
    *
@@ -327,59 +381,5 @@ abstract class Field extends FormerObject implements FieldInterface
   public function getLabel()
   {
     return $this->label;
-  }
-
-  ////////////////////////////////////////////////////////////////////
-  //////////////////////////////// HELPERS ///////////////////////////
-  ////////////////////////////////////////////////////////////////////
-
-  /**
-   * Use values stored in Former to populate the current field
-   */
-  private function repopulate($fallback = null)
-  {
-    // Get values from POST, populated, and manually set value
-    $post      = $this->app['former']->getPost($this->name);
-    $populator = $this->form ? $this->form->getPopulator() : $this->app['former.populator'];
-    $populate  = $populator->get($this->name);
-
-    // Assign a priority to each
-    if (!is_null($post)) {
-      return $post;
-    }
-    if (!is_null($populate)) {
-      return $populate;
-    }
-
-    return $fallback ?: $this->value;
-  }
-
-  /**
-   * Ponders a label and a field name, and tries to get the best out of it
-   *
-   * @param  string $label A label
-   * @param  string $name  A field name
-   * @return array         A label and a field name
-   */
-  private function automaticLabels($name, $label)
-  {
-    // Disabled automatic labels
-    if (!$this->app['former']->getOption('automatic_label')) {
-      $this->name = $name;
-      $this->label($label);
-
-      return false;
-    }
-
-    // Check for the two possibilities
-    if ($label and is_null($name)) {
-      $name = Str::slug($label);
-    } elseif (is_null($label) and $name) {
-      $label = preg_replace('/\[\]$/', '', $name);
-    }
-
-    // Save values
-    $this->name  = $name;
-    $this->label($label);
   }
 }

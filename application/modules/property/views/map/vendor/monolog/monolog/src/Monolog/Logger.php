@@ -141,21 +141,21 @@ class Logger implements LoggerInterface
     }
 
     /**
+     * Gets all supported logging levels.
+     *
+     * @return array Assoc array with human-readable level names => level codes.
+     */
+    public static function getLevels()
+    {
+        return array_flip(static::$levels);
+    }
+
+    /**
      * @return string
      */
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Pushes a handler on to the stack.
-     *
-     * @param HandlerInterface $handler
-     */
-    public function pushHandler(HandlerInterface $handler)
-    {
-        array_unshift($this->handlers, $handler);
     }
 
     /**
@@ -216,6 +216,18 @@ class Logger implements LoggerInterface
     }
 
     /**
+     * Adds a log record at the DEBUG level.
+     *
+     * @param  string $message The log message
+     * @param  array $context The log context
+     * @return Boolean Whether the record has been processed
+     */
+    public function addDebug($message, array $context = array())
+    {
+        return $this->addRecord(static::DEBUG, $message, $context);
+    }
+
+    /**
      * Adds a log record.
      *
      * @param  integer $level   The logging level
@@ -268,15 +280,28 @@ class Logger implements LoggerInterface
     }
 
     /**
-     * Adds a log record at the DEBUG level.
+     * Pushes a handler on to the stack.
      *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * @param HandlerInterface $handler
      */
-    public function addDebug($message, array $context = array())
+    public function pushHandler(HandlerInterface $handler)
     {
-        return $this->addRecord(static::DEBUG, $message, $context);
+        array_unshift($this->handlers, $handler);
+    }
+
+    /**
+     * Gets the name of the logging level.
+     *
+     * @param  integer $level
+     * @return string
+     */
+    public static function getLevelName($level)
+    {
+        if (!isset(static::$levels[$level])) {
+            throw new InvalidArgumentException('Level "' . $level . '" is not defined, use one of: ' . implode(', ', array_keys(static::$levels)));
+        }
+
+        return static::$levels[$level];
     }
 
     /**
@@ -361,31 +386,6 @@ class Logger implements LoggerInterface
     public function addEmergency($message, array $context = array())
     {
         return $this->addRecord(static::EMERGENCY, $message, $context);
-    }
-
-    /**
-     * Gets all supported logging levels.
-     *
-     * @return array Assoc array with human-readable level names => level codes.
-     */
-    public static function getLevels()
-    {
-        return array_flip(static::$levels);
-    }
-
-    /**
-     * Gets the name of the logging level.
-     *
-     * @param  integer $level
-     * @return string
-     */
-    public static function getLevelName($level)
-    {
-        if (!isset(static::$levels[$level])) {
-            throw new InvalidArgumentException('Level "'.$level.'" is not defined, use one of: '.implode(', ', array_keys(static::$levels)));
-        }
-
-        return static::$levels[$level];
     }
 
     /**

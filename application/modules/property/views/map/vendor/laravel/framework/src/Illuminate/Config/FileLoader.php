@@ -91,6 +91,21 @@ class FileLoader implements LoaderInterface {
 	}
 
 	/**
+	 * Get the configuration path for a namespace.
+	 *
+	 * @param  string $namespace
+	 * @return string
+	 */
+	protected function getPath($namespace)
+	{
+		if (is_null($namespace)) {
+			return $this->defaultPath;
+		} elseif (isset($this->hints[$namespace])) {
+			return $this->hints[$namespace];
+		}
+	}
+
+	/**
 	 * Merge the items in the given file into the items.
 	 *
 	 * @param  array   $items
@@ -176,6 +191,17 @@ class FileLoader implements LoaderInterface {
 	}
 
 	/**
+	 * Get a file's contents by requiring it.
+	 *
+	 * @param  string $path
+	 * @return mixed
+	 */
+	protected function getRequire($path)
+	{
+		return $this->files->getRequire($path);
+	}
+
+	/**
 	 * Get the package path for an environment and group.
 	 *
 	 * @param  string  $env
@@ -188,24 +214,6 @@ class FileLoader implements LoaderInterface {
 		$file = "packages/{$package}/{$env}/{$group}.php";
 
 		return $this->defaultPath.'/'.$file;
-	}
-
-	/**
-	 * Get the configuration path for a namespace.
-	 *
-	 * @param  string  $namespace
-	 * @return string
-	 */
-	protected function getPath($namespace)
-	{
-		if (is_null($namespace))
-		{
-			return $this->defaultPath;
-		}
-		elseif (isset($this->hints[$namespace]))
-		{
-			return $this->hints[$namespace];
-		}
 	}
 
 	/**
@@ -229,17 +237,6 @@ class FileLoader implements LoaderInterface {
 	public function getNamespaces()
 	{
 		return $this->hints;
-	}
-
-	/**
-	 * Get a file's contents by requiring it.
-	 *
-	 * @param  string  $path
-	 * @return mixed
-	 */
-	protected function getRequire($path)
-	{
-		return $this->files->getRequire($path);
 	}
 
 	/**

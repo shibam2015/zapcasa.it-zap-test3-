@@ -62,28 +62,6 @@ class YandexProvider extends AbstractProvider implements LocaleAwareProviderInte
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function getReversedData(array $coordinates)
-    {
-        $query = sprintf(self::REVERSE_ENDPOINT_URL, $coordinates[1], $coordinates[0]);
-
-        if (null !== $this->toponym) {
-            $query = sprintf('%s&kind=%s', $query, $this->toponym);
-        }
-
-        return $this->executeQuery($query);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getName()
-    {
-        return 'yandex';
-    }
-
-    /**
      * @param string $query
      *
      * @return array
@@ -145,5 +123,27 @@ class YandexProvider extends AbstractProvider implements LocaleAwareProviderInte
         }
 
         return $results;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getReversedData(array $coordinates)
+    {
+        $query = sprintf(self::REVERSE_ENDPOINT_URL, $coordinates[1], $coordinates[0]);
+
+        if (null !== $this->toponym) {
+            $query = sprintf('%s&kind=%s', $query, $this->toponym);
+        }
+
+        return $this->executeQuery($query);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getName()
+    {
+        return 'yandex';
     }
 }

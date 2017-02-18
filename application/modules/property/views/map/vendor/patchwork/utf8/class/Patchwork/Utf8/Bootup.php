@@ -34,6 +34,25 @@ class Bootup
         function_exists('utf8_encode') or require __DIR__ . '/Bootup/utf8_encode.php';
     }
 
+    static function initIconv()
+    {
+        if (extension_loaded('iconv')) {
+            if ('UTF-8' !== iconv_get_encoding('input_encoding')) {
+                iconv_set_encoding('input_encoding', 'UTF-8');
+            }
+
+            if ('UTF-8' !== iconv_get_encoding('internal_encoding')) {
+                iconv_set_encoding('internal_encoding', 'UTF-8');
+            }
+
+            if ('UTF-8' !== iconv_get_encoding('output_encoding')) {
+                iconv_set_encoding('output_encoding', 'UTF-8');
+            }
+        } else if (!defined('ICONV_IMPL')) {
+            require __DIR__ . '/Bootup/iconv.php';
+        }
+    }
+
     static function initMbstring()
     {
         if (extension_loaded('mbstring'))
@@ -77,31 +96,6 @@ class Bootup
             extension_loaded('iconv') or static::initIconv();
 
             require __DIR__ . '/Bootup/mbstring.php';
-        }
-    }
-
-    static function initIconv()
-    {
-        if (extension_loaded('iconv'))
-        {
-            if ('UTF-8' !== iconv_get_encoding('input_encoding'))
-            {
-                iconv_set_encoding('input_encoding', 'UTF-8');
-            }
-
-            if ('UTF-8' !== iconv_get_encoding('internal_encoding'))
-            {
-                iconv_set_encoding('internal_encoding', 'UTF-8');
-            }
-
-            if ('UTF-8' !== iconv_get_encoding('output_encoding'))
-            {
-                iconv_set_encoding('output_encoding' , 'UTF-8');
-            }
-        }
-        else if (!defined('ICONV_IMPL'))
-        {
-            require __DIR__ . '/Bootup/iconv.php';
         }
     }
 

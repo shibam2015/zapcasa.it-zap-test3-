@@ -79,32 +79,24 @@ class DatabaseStore implements StoreInterface {
 	}
 
 	/**
-	 * Store an item in the cache for a given number of minutes.
+	 * Get a query builder for the cache table.
+	 *
+	 * @return \Illuminate\Database\Query\Builder
+	 */
+	protected function table()
+	{
+		return $this->connection->table($this->table);
+	}
+
+	/**
+	 * Remove an item from the cache.
 	 *
 	 * @param  string  $key
-	 * @param  mixed   $value
-	 * @param  int     $minutes
 	 * @return void
 	 */
-	public function put($key, $value, $minutes)
+	public function forget($key)
 	{
-		$key = $this->prefix.$key;
-
-		// All of the cached values in the database are encrypted in case this is used
-		// as a session data store by the consumer. We'll also calculate the expire
-		// time and place that on the table so we will check it on our retrieval.
-		$value = $this->encrypter->encrypt($value);
-
-		$expiration = $this->getTime() + ($minutes * 60);
-
-		try
-		{
-			$this->table()->insert(compact('key', 'value', 'expiration'));
-		}
-		catch (\Exception $e)
-		{
-			$this->table()->where('key', '=', $key)->update(compact('value', 'expiration'));
-		}
+		$this->table()->where('key', '=', $this->prefix . $key)->delete();
 	}
 
 	/**
@@ -136,16 +128,6 @@ class DatabaseStore implements StoreInterface {
 	}
 
 	/**
-	 * Get the current system time.
-	 *
-	 * @return int
-	 */
-	protected function getTime()
-	{
-		return time();
-	}
-
-	/**
 	 * Store an item in the cache indefinitely.
 	 *
 	 * @param  string  $key
@@ -158,14 +140,39 @@ class DatabaseStore implements StoreInterface {
 	}
 
 	/**
-	 * Remove an item from the cache.
+	 * Store an item in the cache for a given number of minutes.
 	 *
 	 * @param  string  $key
+	 * @param  mixed $value
+	 * @param  int $minutes
 	 * @return void
 	 */
-	public function forget($key)
+	public function put($key, $value, $minutes)
 	{
-		$this->table()->where('key', '=', $this->prefix.$key)->delete();
+		$key = $this->prefix . $key;
+
+		// All of the cached values in the database are encrypted in case this is used
+		// as a session data store by the consumer. We'll also calculate the expire
+		// time and place that on the table so we will check it on our retrieval.
+		$value = $this->encrypter->encrypt($value);
+
+		$expiration = $this->getTime() + ($minutes * 60);
+
+		try {
+			$this->table()->insert(compact('key', 'value', 'expiration'));
+		} catch (\Exception $e) {
+			$this->table()->where('key', '=', $key)->update(compact('value', 'expiration'));
+		}
+	}
+
+	/**
+	 * Get the current system time.
+	 *
+	 * @return int
+	 */
+	protected function getTime()
+	{
+		return time();
 	}
 
 	/**
@@ -176,16 +183,6 @@ class DatabaseStore implements StoreInterface {
 	public function flush()
 	{
 		$this->table()->delete();
-	}
-
-	/**
-	 * Get a query builder for the cache table.
-	 *
-	 * @return \Illuminate\Database\Query\Builder
-	 */
-	protected function table()
-	{
-		return $this->connection->table($this->table);
 	}
 
 	/**

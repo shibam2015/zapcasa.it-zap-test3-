@@ -252,17 +252,27 @@ class User extends CI_Controller {
 		//////////////////////////////////////////////////////////////////////////////
 	//////////////////////////for general  as Owner registration statrts///////////////////////
 	//////////////////////////////////////////////////////////////////////////////
+
+	private function generate_password_string($access_token, $raw_password)
+	{
+		$divider = '_';
+		$raw_string = $access_token . $divider . $raw_password;
+		$encrypted_password = md5($raw_string);
+
+		return $encrypted_password;
+	}
+	
 	public function reg_owner()
 	{
 		$uid=$this->session->userdata( 'user_id' );
 		if( $uid != 0 ) {
 			redirect('users/my_account');
 		}
-		$new_user['phone_2'] = '';			
-		$this->session->set_userdata($new_user); 
-		
+		$new_user['phone_2'] = '';
+		$this->session->set_userdata($new_user);
+
 		$captcha_lib=base_url().'/captcha/';
-		
+
 		$this->load->helper('captcha');
 		$captcha_path=base_url();
 	  $vals = array(
@@ -270,8 +280,8 @@ class User extends CI_Controller {
 		 'img_url' => $captcha_lib,
 		 'img_width' => '280',
 		 'img_height' => 80,
-		 'expiration' => 7200 
-		 
+		  'expiration' => 7200
+
 		 );
 		  $cap = create_captcha($vals);
 		  $data['captcha'] = array(
@@ -280,23 +290,30 @@ class User extends CI_Controller {
 			 'word' => $cap['word']
 			 );
 			 //print_r($data['captcha']);die;
-		
+
 		$query = $this->db->insert_string('captcha', $data['captcha']);
-		$this->db->query($query);	 
+		$this->db->query($query);
 		 // $this->session->set_userdata($data['captcha']);
 		  $data['cap_img']=$cap['image'];
-		$data['provinces']=$this->user_model->get_state_list(); 
-		
-		
+		$data['provinces'] = $this->user_model->get_state_list();
+
+
 		$this->load->view('site/users/reg_owner',$data);
-		
+
 	}
-	
-	
+
+	//////////////////////////////////////////////////////////////////////////////
+	//////////////////////////for general  as Owner registration ends///////////////////////
+	//////////////////////////////////////////////////////////////////////////////
+
+	//////////////////////////////////////////////////////////////////////////////
+	//////////////////////////for general  as Agency registration starts///////////////////////
+	//////////////////////////////////////////////////////////////////////////////
+
 	function do_owner_reg() {
 		$this->load->library('form_validation');
 		/////////store in session while first input/////////////////////////////////////
-		$new_user['phone_2'] = $this->input->post('phone_2');			
+		$new_user['phone_2'] = $this->input->post('phone_2');
 		$this->session->set_userdata($new_user);
 		/////////session ends///////////////////////////////////////////
 		if($this->input->post('submit')==/*'Register' || 'Registrati'*/$this->lang->line('reg_owner_button_register')) {
@@ -316,13 +333,13 @@ class User extends CI_Controller {
 			$this->form_validation->set_rules('email2', 'Email Confirmation', 'required');
 			$this->form_validation->set_rules('password', 'Password', 'required|matches[pass2]');
 			$this->form_validation->set_rules('pass2', 'Password Confirmation', 'required');
-			
+
 			//print_r($_POST);
 			 if($this->form_validation->run() == FALSE) {
-				  
+
 			  	$data['provinces']=$this->user_model->get_province();
 				$captcha_lib=base_url().'/captcha/';
-				
+
 				$this->load->helper('captcha');
 				$captcha_path=base_url();
 			  $vals = array(
@@ -330,8 +347,8 @@ class User extends CI_Controller {
 				 'img_url' => $captcha_lib,
 				 'img_width' => '280',
 				 'img_height' => 80,
-				 'expiration' => 7200 
-				 
+				  'expiration' => 7200
+
 				 );
 				  $cap = create_captcha($vals);
 				  $data['captcha'] = array(
@@ -340,9 +357,9 @@ class User extends CI_Controller {
 					 'word' => $cap['word']
 					 );
 					 //print_r($data['captcha']);die;
-				
+
 				$query = $this->db->insert_string('captcha', $data['captcha']);
-				$this->db->query($query);	 
+				 $this->db->query($query);
 				 // $this->session->set_userdata($data['captcha']);
 				 $data['provinces']=$this->user_model->get_state_list();
 				  $province=set_value('province');
@@ -354,20 +371,19 @@ class User extends CI_Controller {
 			  {
 				 $expiration = time()-7200; // Two hour limit
 					$this->db->query("DELETE FROM captcha WHERE captcha_time < ".$expiration);
-					
+
 					// Then see if a captcha exists:
 					$sql = "SELECT COUNT(*) AS count FROM captcha WHERE word = ? AND ip_address = ? AND captcha_time > ?";
 					$binds = array($_POST['captcha'], $this->input->ip_address(), $expiration);
 					$query = $this->db->query($sql, $binds);
 					$row = $query->row();
-					
+
 					if ($row->count == 0)
 					{
-						 
-				  
-							
-							$captcha_lib=base_url().'/captcha/';
-							
+
+
+						$captcha_lib=base_url().'/captcha/';
+
 							$this->load->helper('captcha');
 							$captcha_path=base_url();
 						  $vals = array(
@@ -375,8 +391,8 @@ class User extends CI_Controller {
 							 'img_url' => $captcha_lib,
 							 'img_width' => '280',
 							 'img_height' => 80,
-							 'expiration' => 7200 
-							 
+							  'expiration' => 7200
+
 							 );
 							  $cap = create_captcha($vals);
 							  $data['captcha'] = array(
@@ -385,9 +401,9 @@ class User extends CI_Controller {
 								 'word' => $cap['word']
 								 );
 								 //print_r($data['captcha']);die;
-							
+
 							$query = $this->db->insert_string('captcha', $data['captcha']);
-							$this->db->query($query);	 
+						$this->db->query($query);
 							 // $this->session->set_userdata($data['captcha']);
 							 $data['provinces']=$this->user_model->get_state_list();
 							  $province=set_value('province');
@@ -395,12 +411,9 @@ class User extends CI_Controller {
 							  $data['captcha_err']= $this->lang->line('reg_owner_you_submit_wrong_captcha');
 							  $data['cap_img']=$cap['image'];
 							  $this->load->view('site/users/reg_owner',$data);
-			  
-						
-					}
-				  
-				 
-				  else{
+
+
+					} else{
 				   		$new_user=array();
 						$access_token=access_token();
 						$new_user['user_type'] ='2';
@@ -422,12 +435,12 @@ class User extends CI_Controller {
 						$new_user['access_token'] 	= $access_token ;
 						$new_user['agree_terms'] = $this->input->post('agree_terms');
 						$new_user['receive_mail'] = $this->input->post('receive_mail');
-						
+
 						$this->session->set_userdata($new_user);
 						$ym=$this->session->all_userdata();
 						//echo '<pre>';print_r($ym);die;
 						redirect('users/owner_edit');
-						
+
 						/*$rs=$this->user_model->insert_user( $new_user );
 						if($rs)
 						{
@@ -443,16 +456,16 @@ class User extends CI_Controller {
 							send_mail($details);
 							redirect('user/thanksowner');
 						}*/
-				  		
+
 				  }
-			  
+
 			  }
 		}
 		else
 		{
 			$data['provinces']=$this->user_model->get_province();
 				$captcha_lib=base_url().'/captcha/';
-				
+
 				$this->load->helper('captcha');
 				$captcha_path=base_url();
 			  $vals = array(
@@ -460,8 +473,8 @@ class User extends CI_Controller {
 				 'img_url' => $captcha_lib,
 				 'img_width' => '280',
 				 'img_height' => 80,
-				 'expiration' => 7200 
-				 
+				  'expiration' => 7200
+
 				 );
 				  $cap = create_captcha($vals);
 				  $data['captcha'] = array(
@@ -470,24 +483,17 @@ class User extends CI_Controller {
 					 'word' => $cap['word']
 					 );
 					 //print_r($data['captcha']);die;
-				
+
 				$query = $this->db->insert_string('captcha', $data['captcha']);
-				$this->db->query($query);	 
+			$this->db->query($query);
 				 // $this->session->set_userdata($data['captcha']);
 				 $data['provinces']=$this->user_model->get_state_list();
 				  $data['cap_img']=$cap['image'];
 				  $this->load->view('site/users/reg_owner',$data);
 		}
-	
-	}
 
-	//////////////////////////////////////////////////////////////////////////////
-	//////////////////////////for general  as Owner registration ends///////////////////////
-	//////////////////////////////////////////////////////////////////////////////
+	}
 	
-		//////////////////////////////////////////////////////////////////////////////
-	//////////////////////////for general  as Agency registration starts///////////////////////
-	//////////////////////////////////////////////////////////////////////////////
 	public function reg_agency()
 	{
 		$uid=$this->session->userdata( 'user_id' );
@@ -497,10 +503,10 @@ class User extends CI_Controller {
 		$new_user['phone_2'] = $this->input->post('phone_2');
 		$new_user['fax_no'] = $this->input->post('fax_no');
 		$new_user['website'] = $this->input->post('website');
-		$this->session->set_userdata($new_user); 
-		
+		$this->session->set_userdata($new_user);
+
 		$captcha_lib=base_url().'/captcha/';
-		
+
 		$this->load->helper('captcha');
 		$captcha_path=base_url();
 	  $vals = array(
@@ -508,8 +514,8 @@ class User extends CI_Controller {
 		 'img_url' => $captcha_lib,
 		 'img_width' => '280',
 		 'img_height' => 80,
-		 'expiration' => 7200 
-		 
+		  'expiration' => 7200
+
 		 );
 		  $cap = create_captcha($vals);
 		  $data['captcha'] = array(
@@ -518,31 +524,38 @@ class User extends CI_Controller {
 			 'word' => $cap['word']
 			 );
 			 //print_r($data['captcha']);die;
-		
+
 		$query = $this->db->insert_string('captcha', $data['captcha']);
-		$this->db->query($query);	 
+		$this->db->query($query);
 		 // $this->session->set_userdata($data['captcha']);
 		  $data['cap_img']=$cap['image'];
-		 
-		$data['provinces']=$this->user_model->get_state_list();  
+
+		$data['provinces'] = $this->user_model->get_state_list();
 		//$data['provinces']=$this->user_model->get_province();
 		$this->load->view('site/users/reg_agency',$data);
-		
+
 	}
+
+
+
+
+	//////////////////////////////////////////////////////////////////////////////
+	//////////////////////////for general  as Agency registration ends///////////////////////
+	//////////////////////////////////////////////////////////////////////////////
 	
 	function do_agency_reg()
 	{
-		
+
 		$this->load->library('form_validation');
 		$new_user['phone_2'] = $this->input->post('phone_2');
 		$new_user['fax_no'] = $this->input->post('fax_no');
 		$new_user['website'] = $this->input->post('website');
 		$this->session->set_userdata($new_user);
-  
-		
+
+
 		if($this->input->post('submit')==/*'Register' || 'Registrati'*/$this->lang->line('reg_agency_button_register'))
 		{
-			
+
 			//$this->form_validation->set_rules('captcha','Security Code','required');
 			$this->form_validation->set_rules('user_name', 'User Name', 'required|is_unique[zc_user.user_name]');
 			$this->form_validation->set_rules('company_name', 'Company Name', 'required');
@@ -562,23 +575,23 @@ class User extends CI_Controller {
 			$this->form_validation->set_rules('email2', 'Email Confirmation', 'required');
 			$this->form_validation->set_rules('password', 'Password', 'required|matches[pass2]');
 			$this->form_validation->set_rules('pass2', 'Password Confirmation', 'required');
-			
+
 			//print_r($_POST);
 			 if($this->form_validation->run() == FALSE)
 			  {
-				
-			  	//echo 'asdasd';
+
+				  //echo 'asdasd';
 				$captcha_lib=base_url().'/captcha/';
-				
-				$this->load->helper('captcha');
+
+				  $this->load->helper('captcha');
 				$captcha_path=base_url();
 			  $vals = array(
 				 'img_path' => './captcha/',
 				 'img_url' => $captcha_lib,
 				 'img_width' => '280',
 				 'img_height' => 80,
-				 'expiration' => 7200 
-				 
+				  'expiration' => 7200
+
 				 );
 				  $cap = create_captcha($vals);
 				  $data['captcha'] = array(
@@ -587,13 +600,13 @@ class User extends CI_Controller {
 					 'word' => $cap['word']
 					 );
 					 //print_r($data['captcha']);die;
-				
-				$query = $this->db->insert_string('captcha', $data['captcha']);
-				$this->db->query($query);	 
+
+				  $query = $this->db->insert_string('captcha', $data['captcha']);
+				  $this->db->query($query);
 				 // $this->session->set_userdata($data['captcha']);
 				  $data['cap_img']=$cap['image'];
-				  
-					 $data['provinces']=$this->user_model->get_state_list();
+
+				  $data['provinces']=$this->user_model->get_state_list();
 					 $province=set_value('province');
 					$data['city']=$this->user_model->get_city($province);
 				  $this->load->view('site/users/reg_agency',$data);
@@ -602,27 +615,27 @@ class User extends CI_Controller {
 			  {
 				 $expiration = time()-7200; // Two hour limit
 					$this->db->query("DELETE FROM captcha WHERE captcha_time < ".$expiration);
-					
-					// Then see if a captcha exists:
+
+				  // Then see if a captcha exists:
 					$sql = "SELECT COUNT(*) AS count FROM captcha WHERE word = ? AND ip_address = ? AND captcha_time > ?";
 					$binds = array($_POST['captcha'], $this->input->ip_address(), $expiration);
 					$query = $this->db->query($sql, $binds);
 					$row = $query->row();
-					
-					if ($row->count == 0)
+
+				  if ($row->count == 0)
 					{
 						//echo 'captch validation';
 						$captcha_lib=base_url().'/captcha/';
-							
-							$this->load->helper('captcha');
+
+						$this->load->helper('captcha');
 							$captcha_path=base_url();
 						  $vals = array(
 							 'img_path' => './captcha/',
 							 'img_url' => $captcha_lib,
 							 'img_width' => '280',
 							 'img_height' => 80,
-							 'expiration' => 7200 
-							 
+							  'expiration' => 7200
+
 							 );
 							  $cap = create_captcha($vals);
 							  $data['captcha'] = array(
@@ -631,9 +644,9 @@ class User extends CI_Controller {
 								 'word' => $cap['word']
 								 );
 								 //print_r($data['captcha']);die;
-							
-							$query = $this->db->insert_string('captcha', $data['captcha']);
-							$this->db->query($query);	 
+
+						$query = $this->db->insert_string('captcha', $data['captcha']);
+						$this->db->query($query);
 							  $data['provinces']=$this->user_model->get_state_list();
 							  $province=set_value('province');
 							  $data['city']=$this->user_model->get_city($province);
@@ -641,14 +654,11 @@ class User extends CI_Controller {
 							  $data['cap_img']=$cap['image'];
 							  $this->load->view('site/users/reg_agency',$data);
 						/*
-						
+
 						 $this->session->set_flashdata('captcha_err', 'You submit a wrong captcha');
 						 redirect('user/reg_agency');*/
-						
-					}
-				  
-				 
-				  else{
+
+					} else{
 				   		$new_user=array();
 						$access_token=access_token();
 						$new_user['user_type'] ='3';
@@ -678,40 +688,40 @@ class User extends CI_Controller {
 						$ym=$this->session->all_userdata();
 						//echo '<pre>';print_r($ym);die;
 						redirect('users/agency_edit');
-						
-						/*$rs=$this->user_model->insert_user( $new_user );
-						if($rs)
-						{
-							$email=get_perticular_field_value('zc_user','email_id'," and user_id='".$rs."'");
-							$user_name=get_perticular_field_value('zc_user','first_name'," and user_id='".$rs."'").' '.get_perticular_field_value('zc_user','last_name'," and user_id='".$rs."'");
-							$passwrd=get_perticular_field_value('zc_user','password'," and user_id='".$rs."'");
-							$link=base_url().'user/acctivation/'.$rs.'/'.$passwrd;
-							$details=array();
-							$details['from']="biswabijoymukherji@rediffmail.com";
-							$details['to']=$email;
-							$details['subject']="Congratulation";
-							$details['message']="Welcome  ".$user_name.",<br/> To activate your account please click on the following Link <br/>  <strong> ".$link."</strong>";
-							send_mail($details);
-							redirect('user/thanksagency');
-						}*/
-				  		
+
+					  /*$rs=$this->user_model->insert_user( $new_user );
+                    if($rs)
+                    {
+                        $email=get_perticular_field_value('zc_user','email_id'," and user_id='".$rs."'");
+                        $user_name=get_perticular_field_value('zc_user','first_name'," and user_id='".$rs."'").' '.get_perticular_field_value('zc_user','last_name'," and user_id='".$rs."'");
+                        $passwrd=get_perticular_field_value('zc_user','password'," and user_id='".$rs."'");
+                        $link=base_url().'user/acctivation/'.$rs.'/'.$passwrd;
+                        $details=array();
+                        $details['from']="biswabijoymukherji@rediffmail.com";
+                        $details['to']=$email;
+                        $details['subject']="Congratulation";
+                        $details['message']="Welcome  ".$user_name.",<br/> To activate your account please click on the following Link <br/>  <strong> ".$link."</strong>";
+                        send_mail($details);
+                        redirect('user/thanksagency');
+                    }*/
+
 				  }
-			  
+
 			  }
 		}
 		else
 		{
 			$captcha_lib=base_url().'/captcha/';
-				
-				$this->load->helper('captcha');
+
+			$this->load->helper('captcha');
 				$captcha_path=base_url();
 			  $vals = array(
 				 'img_path' => './captcha/',
 				 'img_url' => $captcha_lib,
 				 'img_width' => '280',
 				 'img_height' => 80,
-				 'expiration' => 7200 
-				 
+				  'expiration' => 7200
+
 				 );
 				  $cap = create_captcha($vals);
 				  $data['captcha'] = array(
@@ -720,34 +730,17 @@ class User extends CI_Controller {
 					 'word' => $cap['word']
 					 );
 					 //print_r($data['captcha']);die;
-				
-				$query = $this->db->insert_string('captcha', $data['captcha']);
-				$this->db->query($query);	 
+
+			$query = $this->db->insert_string('captcha', $data['captcha']);
+			$this->db->query($query);
 				 // $this->session->set_userdata($data['captcha']);
 				  $data['cap_img']=$cap['image'];
-				  
-					 $data['provinces']=$this->user_model->get_state_list();
+
+			$data['provinces']=$this->user_model->get_state_list();
 					$this->load->view('site/users/reg_agency',$data);
 		}
-	
+
 	}
-	
-	
-	
-	
-			//////////////////////////////////////////////////////////////////////////////
-	//////////////////////////for general  as Agency registration ends///////////////////////
-	//////////////////////////////////////////////////////////////////////////////
-	
-	
-	 private function generate_password_string($access_token, $raw_password )
-    {
-	    $divider = '_';
-	    $raw_string = $access_token.$divider.$raw_password;
-	    $encrypted_password = md5($raw_string);
-	    
-	    return $encrypted_password;
-    }
 	
 	public function thanks()
 	{
@@ -1261,105 +1254,6 @@ class User extends CI_Controller {
 	}
 	////////////////////owner edit ends////////////////////////////////////////
 
-	
-	function upload_image_1($form_field_name,$uid)
-	{
-	
-		$config['upload_path'] = './assets/uploads/';
-		$config['allowed_types'] = 'gif|jpg|png|JPG|JPEG|PNG|jpeg|GIF';
-		$config['encrypt_name']=TRUE;
-	
-		$this->load->library('upload', $config);
-	
-		if ( ! $this->upload->do_upload($form_field_name))
-		{
-					$errors = $this->upload->display_errors();
-                    
-		}
-		else
-		{
-			////////////////delete image first////////////////////
-					$uid=$this->session->userdata( 'user_id' );
-					$dfile_name=get_perticular_field_value('zc_user','file_1'," and user_id='".$uid."'");
-					$dfile='assets/uploads/'.$dfile_name;
-					 if(is_file($dfile))
-					 @unlink($dfile);
-					$dfile_thmb='assets/uploads/thumb_92_82/'.$dfile_name;
-					 if(is_file($dfile_thmb))
-					 @unlink($dfile_thmb);
-					
-					
-					/////////////delete image end//////////////////////////
-					
-			$upload_data = $this->upload->data(); 
-			$file_names =   $upload_data['file_name'];
-			$rs_update=$this->user_model->update_profile_1($file_names,$uid);
-			 $config = array(
-			'source_image'      => $upload_data['full_path'], //path to the uploaded image
-			'new_image'         => "assets/uploads/thumb_92_82/".$file_names, //path to
-			'maintain_ratio'    => true,
-			'quality'   			 => 85,
-			'master_dim'         => 'auto',
-			'width'             => 128,
-			'height'            => 128
-			);
-			
-			$this->image_lib->initialize($config);
-			$this->image_lib->resize();
-			
-		   
-		}
-	}
-	function upload_image_2($form_field_name,$uid)
-	{
-	
-		
-		$config['upload_path'] = './assets/uploads/';
-		$config['allowed_types'] = 'gif|jpg|png|JPG|JPEG|PNG|jpeg|GIF';
-		$config['encrypt_name']=TRUE;
-		$this->load->library('upload', $config);
-		
-	
-		if ( ! $this->upload->do_upload($form_field_name))
-		{
-					$errors = $this->upload->display_errors();
-                    
-		}
-		else
-		{
-					////////////////delete image first////////////////////
-					$uid=$this->session->userdata( 'user_id' );
-					$dfile_name=get_perticular_field_value('zc_user','file_2'," and user_id='".$uid."'");
-					$dfile='assets/uploads/'.$dfile_name;
-					 if(is_file($dfile))
-					 @unlink($dfile);
-					$dfile_thmb='assets/uploads/thumb_92_82/'.$dfile_name;
-					 if(is_file($dfile_thmb))
-					 @unlink($dfile_thmb);
-					
-					
-					/////////////delete image end//////////////////////////
-					$upload_data = $this->upload->data(); 
-					$file_names =   $upload_data['file_name'];
-					$rs_update=$this->user_model->update_profile_2($file_names,$uid);
-					 $config = array(
-					'source_image'      => $upload_data['full_path'], //path to the uploaded image
-					'new_image'         => "assets/uploads/thumb_92_82/".$file_names, //path to
-					'maintain_ratio'	     => true,
-					'quality'   			 => '90%',
-					'master_dim'         => 'auto',
-					'width'             => 128,
-					'height'            => 128
-					);
-					
-					$this->image_lib->initialize($config);
-					$this->image_lib->resize();
-
-		   
-		}
-	}
-	
-	
 	function agency_edit()
 	{
 		$new_user=array();
@@ -1372,7 +1266,7 @@ class User extends CI_Controller {
 		$data['title']="agency_edit";
 		$this->load->view('site/users/agency_edit',$data);
 	}
-	
+
 	function confirm_agency_reg()
 	{
 					//echo 'ffffffffffffff';die;
@@ -1401,16 +1295,16 @@ class User extends CI_Controller {
 						$new_user['agree_terms'] = $new_arr['agree_terms'];
 						$new_user['receive_mail'] = $new_arr['receive_mail'];
 						//$new_user['about_me'] = $this->input->post('about_me');
-						
-						//echo '<pre>';print_r($new_user);die;
+
+		//echo '<pre>';print_r($new_user);die;
 						//$file=$_FILES;
 						//echo '<pre>';print_r($file);die;
-						
-						$rs=$this->user_model->insert_user( $new_user );
+
+		$rs=$this->user_model->insert_user( $new_user );
 						/*$this->upload_image_1('user_file_1',$rs);
 						$this->upload_image_2('user_file_2',$rs);*/
-						
-						if($rs)
+
+		if($rs)
 						{
 						$new_user['user_type'] ='';
 						$new_user['user_name'] ='';
@@ -1435,12 +1329,12 @@ class User extends CI_Controller {
 						$new_user['agree_terms'] = '';
 						$new_user['receive_mail'] = '';
 						$new_user['about_me'] = '';
-							
+
 							$this->session->set_userdata($new_user);
-							
+
 							$open_page_flag['open_page_flag'] = 'yes';
 							$this->session->set_userdata($open_page_flag);
-							
+
 							$email=get_perticular_field_value('zc_user','email_id'," and user_id='".$rs."'");
 							$user_name=get_perticular_field_value('zc_user','first_name'," and user_id='".$rs."'").' '.get_perticular_field_value('zc_user','last_name'," and user_id='".$rs."'");
 							$passwrd=get_perticular_field_value('zc_user','password'," and user_id='".$rs."'");
@@ -1453,7 +1347,7 @@ class User extends CI_Controller {
 							//$details['message']="<strong>Hi  ".$user_name.",</strong> <br/> <br/>You are receiving this email because you have requested to register on Zapcasa.it <br/> <br/><strong>Note: </strong>If you did not to apply for registration then do nothing, your email will be automatically deleted within 72 hours. <br/><br/>  To activate your ZapCasa account, please click on the following link or copy and paste it into your browser: <br/> <strong> ".$link."</strong> <br/><br/>Regards,<br/><strong> www.zapcasa.it</strong>";
 							//$details['message']="Welcome  ".$user_name.",<br/> To activate your account please click on the following Link <br/>  <strong> ".$link."</strong>";
 							$msg='<body style="font-family:Century Gothic; color: #4c4d51; font-size:13px;">
-		
+
 									<div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
 										<div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
 									    <div style="border-bottom:1px solid #d1d1d1;">
@@ -1468,17 +1362,16 @@ class User extends CI_Controller {
 									        <p>'.$this->lang->line('thanks_agency_text_4').',<br>www.zapcasa.it</p>
 									    </div>
 									</div>
-								
+
 								</body>';
 							$details['message']= $msg;
 							send_mail($details);
 							$url='users/thanksagency/'.$rs;
 							redirect($url);
 						}
-		
+
 	}
 	
-//////////////////////////////view page of user////////////////////////////////////////////////////////////
 function user_profile()
 {
 	$reg_id=$this->uri->segment('3');
@@ -1488,9 +1381,10 @@ function user_profile()
 	$data['countries']=$this->user_model->get_country();
 	$data['title']="agency_edit";
 	$this->load->view('site/users/user_profile',$data);
-	
+
 }
-function owner_profile()
+
+	function owner_profile()
 {
 	$reg_id=$this->uri->segment('3');
 	$this->session->set_userdata('reg_id','');
@@ -1499,8 +1393,11 @@ function owner_profile()
 	$data['countries']=$this->user_model->get_country();
 	$data['title']="agency_edit";
 	$this->load->view('site/users/owner_profile',$data);
-	
+
 }
+
+//////////////////////////////view page of user////////////////////////////////////////////////////////////
+
 function agency_profile()
 {
 	$reg_id=$this->uri->segment('3');
@@ -1510,14 +1407,8 @@ function agency_profile()
 	$data['countries']=$this->user_model->get_country();
 	$data['title']="agency_edit";
 	$this->load->view('site/users/agency_profile',$data);
-	
+
 }
-
-
-
-//////////////////////////////view page of owner////////////////////////////////////////////////////////////
-
-//////////////////////////////view page of agency////////////////////////////////////////////////////////////	
 
 function check_user_info()
 {
@@ -1532,7 +1423,7 @@ function check_user_info()
 	if($user_type==1)
 	{
 		/////////////for general profile/////////////////////////////
-		$this->load->view('site/users/user_profile',$data);	
+		$this->load->view('site/users/user_profile', $data);
 	}
 	if($user_type==2)
 	{
@@ -1544,12 +1435,12 @@ function check_user_info()
 		///////////////for company/////////////////////////////////////
 		$this->load->view('site/users/agency_profile',$data);
 	}
-	
+
 }
-//////////////user dash board///////////////////////////////////////////////////////////
-function my_account()
+
+	function my_account()
 {
-	
+
 	$data['title']="My Account";
 	$uid=$this->session->userdata( 'user_id' );
 	$data['tab_icon']='1';
@@ -1561,7 +1452,7 @@ function my_account()
 	if($user_type==1)
 	{
 		/////////////for general profile/////////////////////////////
-		$this->load->view('site/users/user_profile',$data);	
+		$this->load->view('site/users/user_profile', $data);
 	}
 	elseif($user_type==2)
 	{
@@ -1575,10 +1466,16 @@ function my_account()
 	}else {
 		redirect('/');
 	}
-	
+
 	//$this->load->view('site/user/my_account',$data);
-	
+
 }
+
+
+
+//////////////////////////////view page of owner////////////////////////////////////////////////////////////
+
+//////////////////////////////view page of agency////////////////////////////////////////////////////////////	
 
 function check_email_avail_after_reg()
 	{
@@ -1598,10 +1495,12 @@ function check_email_avail_after_reg()
 		}
 	}
 
+//////////////user dash board///////////////////////////////////////////////////////////
+
 function update_owner_reg()
 {
-	
-						$uid=$this->session->userdata( 'user_id' );
+
+	$uid=$this->session->userdata( 'user_id' );
 						$new_user['city'] = $this->input->post('city');
 						$new_user['province'] = $this->input->post('province');
 						$new_user['street_address'] = $this->input->post('street_address');
@@ -1614,14 +1513,106 @@ function update_owner_reg()
 						//echo '<pre>';print_r($new_user);die;
 						//$file=$_FILES;
 						//echo '<pre>';print_r($file);die;
-						
-						$rs=$this->user_model->upadte_owner( $new_user,$uid );
+
+	$rs=$this->user_model->upadte_owner( $new_user,$uid );
 						$this->upload_image_1('user_file_1',$uid);
 						$this->upload_image_2('user_file_2',$uid);
 						$msg = $this->lang->line('user_info_success_message');
 						$this->session->set_flashdata('success', $msg);
 						redirect('users/my_account');
 }
+
+	function upload_image_1($form_field_name, $uid)
+	{
+
+		$config['upload_path'] = './assets/uploads/';
+		$config['allowed_types'] = 'gif|jpg|png|JPG|JPEG|PNG|jpeg|GIF';
+		$config['encrypt_name'] = TRUE;
+
+		$this->load->library('upload', $config);
+
+		if (!$this->upload->do_upload($form_field_name)) {
+			$errors = $this->upload->display_errors();
+
+		} else {
+			////////////////delete image first////////////////////
+			$uid = $this->session->userdata('user_id');
+			$dfile_name = get_perticular_field_value('zc_user', 'file_1', " and user_id='" . $uid . "'");
+			$dfile = 'assets/uploads/' . $dfile_name;
+			if (is_file($dfile))
+				@unlink($dfile);
+			$dfile_thmb = 'assets/uploads/thumb_92_82/' . $dfile_name;
+			if (is_file($dfile_thmb))
+				@unlink($dfile_thmb);
+
+
+			/////////////delete image end//////////////////////////
+
+			$upload_data = $this->upload->data();
+			$file_names = $upload_data['file_name'];
+			$rs_update = $this->user_model->update_profile_1($file_names, $uid);
+			$config = array(
+				'source_image' => $upload_data['full_path'], //path to the uploaded image
+				'new_image' => "assets/uploads/thumb_92_82/" . $file_names, //path to
+				'maintain_ratio' => true,
+				'quality' => 85,
+				'master_dim' => 'auto',
+				'width' => 128,
+				'height' => 128
+			);
+
+			$this->image_lib->initialize($config);
+			$this->image_lib->resize();
+
+
+		}
+	}
+
+	function upload_image_2($form_field_name, $uid)
+	{
+
+
+		$config['upload_path'] = './assets/uploads/';
+		$config['allowed_types'] = 'gif|jpg|png|JPG|JPEG|PNG|jpeg|GIF';
+		$config['encrypt_name'] = TRUE;
+		$this->load->library('upload', $config);
+
+
+		if (!$this->upload->do_upload($form_field_name)) {
+			$errors = $this->upload->display_errors();
+
+		} else {
+			////////////////delete image first////////////////////
+			$uid = $this->session->userdata('user_id');
+			$dfile_name = get_perticular_field_value('zc_user', 'file_2', " and user_id='" . $uid . "'");
+			$dfile = 'assets/uploads/' . $dfile_name;
+			if (is_file($dfile))
+				@unlink($dfile);
+			$dfile_thmb = 'assets/uploads/thumb_92_82/' . $dfile_name;
+			if (is_file($dfile_thmb))
+				@unlink($dfile_thmb);
+
+
+			/////////////delete image end//////////////////////////
+			$upload_data = $this->upload->data();
+			$file_names = $upload_data['file_name'];
+			$rs_update = $this->user_model->update_profile_2($file_names, $uid);
+			$config = array(
+				'source_image' => $upload_data['full_path'], //path to the uploaded image
+				'new_image' => "assets/uploads/thumb_92_82/" . $file_names, //path to
+				'maintain_ratio' => true,
+				'quality' => '90%',
+				'master_dim' => 'auto',
+				'width' => 128,
+				'height' => 128
+			);
+
+			$this->image_lib->initialize($config);
+			$this->image_lib->resize();
+
+
+		}
+	}
 
 function update_user_reg()
 {

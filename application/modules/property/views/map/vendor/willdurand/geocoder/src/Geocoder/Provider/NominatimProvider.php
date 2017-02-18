@@ -92,6 +92,38 @@ class NominatimProvider extends AbstractProvider implements LocaleAwareProviderI
     }
 
     /**
+     * @return string
+     */
+    protected function getGeocodeEndpointUrl()
+    {
+        return $this->rootUrl . '/search?q=%s&format=xml&addressdetails=1&limit=%d';
+    }
+
+    /**
+     * @param string $query
+     *
+     * @return string
+     */
+    protected function executeQuery($query)
+    {
+        if (null !== $this->getLocale()) {
+            $query = sprintf('%s&accept-language=%s', $query, $this->getLocale());
+        }
+
+        return $this->getAdapter()->getContent($query);
+    }
+
+    /**
+     * @param \DOMNodeList
+     *
+     * @return string
+     */
+    private function getNodeValue(\DOMNodeList $element)
+    {
+        return $element->length ? $element->item(0)->nodeValue : null;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function getReversedData(array $coordinates)
@@ -128,36 +160,6 @@ class NominatimProvider extends AbstractProvider implements LocaleAwareProviderI
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function getName()
-    {
-        return 'openstreetmap';
-    }
-
-    /**
-     * @param string $query
-     *
-     * @return string
-     */
-    protected function executeQuery($query)
-    {
-        if (null !== $this->getLocale()) {
-            $query = sprintf('%s&accept-language=%s', $query, $this->getLocale());
-        }
-
-        return $this->getAdapter()->getContent($query);
-    }
-
-    /**
-     * @return string
-     */
-    protected function getGeocodeEndpointUrl()
-    {
-        return $this->rootUrl.'/search?q=%s&format=xml&addressdetails=1&limit=%d';
-    }
-
-    /**
      * @return string
      */
     protected function getReverseEndpointUrl()
@@ -166,12 +168,10 @@ class NominatimProvider extends AbstractProvider implements LocaleAwareProviderI
     }
 
     /**
-     * @param \DOMNodeList
-     *
-     * @return string
+     * {@inheritDoc}
      */
-    private function getNodeValue(\DOMNodeList $element)
+    public function getName()
     {
-        return $element->length ? $element->item(0)->nodeValue : null;
+        return 'openstreetmap';
     }
 }

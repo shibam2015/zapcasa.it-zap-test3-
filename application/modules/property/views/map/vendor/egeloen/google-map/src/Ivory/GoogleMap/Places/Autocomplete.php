@@ -182,18 +182,6 @@ class Autocomplete extends AbstractJavascriptVariableAsset
     }
 
     /**
-     * Checks if the autocomplete has a specific type.
-     *
-     * @param string $type The type.
-     *
-     * @return boolean TRUE if the autocomplete has te specific type else FALSE.
-     */
-    public function hasType($type)
-    {
-        return array_search($type, $this->types) !== false;
-    }
-
-    /**
      * Gets the autocomplete types.
      *
      * @return array The autocomplete types.
@@ -239,6 +227,18 @@ class Autocomplete extends AbstractJavascriptVariableAsset
     }
 
     /**
+     * Checks if the autocomplete has a specific type.
+     *
+     * @param string $type The type.
+     *
+     * @return boolean TRUE if the autocomplete has te specific type else FALSE.
+     */
+    public function hasType($type)
+    {
+        return array_search($type, $this->types) !== false;
+    }
+
+    /**
      * Removes a type from the autocomplete.
      *
      * @param string $type The type to remove.
@@ -266,18 +266,6 @@ class Autocomplete extends AbstractJavascriptVariableAsset
     }
 
     /**
-     * Checks if the autocomplete has a specific component restriction type.
-     *
-     * @param string $type The component restriction type.
-     *
-     * @return boolean TRUE if the autocomplete has the specific component restriction type else FALSE.
-     */
-    public function hasComponentRestriction($type)
-    {
-        return isset($this->componentRestrictions[$type]);
-    }
-
-    /**
      * Gets the component restrictions.
      *
      * @return array The component restrictions.
@@ -285,24 +273,6 @@ class Autocomplete extends AbstractJavascriptVariableAsset
     public function getComponentRestrictions()
     {
         return $this->componentRestrictions;
-    }
-
-    /**
-     * Gets a specific component restriction.
-     *
-     * @param string $type The component restriction type.
-     *
-     * @throws \Ivory\GoogleMap\Exception\PlaceException If the component restriction type does not exist.
-     *
-     * @return mixed The component restriction.
-     */
-    public function getComponentRestriction($type)
-    {
-        if (!$this->hasComponentRestriction($type)) {
-            throw PlaceException::autocompleteComponentRestrictionDoesNotExist($type);
-        }
-
-        return $this->componentRestrictions[$type];
     }
 
     /**
@@ -339,6 +309,36 @@ class Autocomplete extends AbstractJavascriptVariableAsset
         }
 
         $this->componentRestrictions[$type] = $value;
+    }
+
+    /**
+     * Gets a specific component restriction.
+     *
+     * @param string $type The component restriction type.
+     *
+     * @throws \Ivory\GoogleMap\Exception\PlaceException If the component restriction type does not exist.
+     *
+     * @return mixed The component restriction.
+     */
+    public function getComponentRestriction($type)
+    {
+        if (!$this->hasComponentRestriction($type)) {
+            throw PlaceException::autocompleteComponentRestrictionDoesNotExist($type);
+        }
+
+        return $this->componentRestrictions[$type];
+    }
+
+    /**
+     * Checks if the autocomplete has a specific component restriction type.
+     *
+     * @param string $type The component restriction type.
+     *
+     * @return boolean TRUE if the autocomplete has the specific component restriction type else FALSE.
+     */
+    public function hasComponentRestriction($type)
+    {
+        return isset($this->componentRestrictions[$type]);
     }
 
     /**

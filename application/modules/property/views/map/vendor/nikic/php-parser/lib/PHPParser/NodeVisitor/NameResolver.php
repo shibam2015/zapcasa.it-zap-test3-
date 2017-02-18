@@ -107,6 +107,16 @@ class PHPParser_NodeVisitor_NameResolver extends PHPParser_NodeVisitorAbstract
         return new PHPParser_Node_Name_FullyQualified($name->parts, $name->getAttributes());
     }
 
+    protected function addNamespacedName(PHPParser_Node $node)
+    {
+        if (null !== $this->namespace) {
+            $node->namespacedName = clone $this->namespace;
+            $node->namespacedName->append($node->name);
+        } else {
+            $node->namespacedName = new PHPParser_Node_Name($node->name, $node->getAttributes());
+        }
+    }
+
     protected function resolveOtherName(PHPParser_Node_Name $name) {
         // fully qualified names are already resolved and we can't do anything about unqualified
         // ones at compiler-time
@@ -123,14 +133,5 @@ class PHPParser_NodeVisitor_NameResolver extends PHPParser_NodeVisitorAbstract
         }
 
         return new PHPParser_Node_Name_FullyQualified($name->parts, $name->getAttributes());
-    }
-
-    protected function addNamespacedName(PHPParser_Node $node) {
-        if (null !== $this->namespace) {
-            $node->namespacedName = clone $this->namespace;
-            $node->namespacedName->append($node->name);
-        } else {
-            $node->namespacedName = new PHPParser_Node_Name($node->name, $node->getAttributes());
-        }
     }
 }

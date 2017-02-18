@@ -97,14 +97,6 @@ class MaxMindProvider extends AbstractProvider implements ProviderInterface
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function getReversedData(array $coordinates)
-    {
-        throw new UnsupportedException('The MaxMindProvider is not able to do reverse geocoding.');
-    }
-
-    /**
      * @param string $query
      *
      * @return array
@@ -140,26 +132,6 @@ class MaxMindProvider extends AbstractProvider implements ProviderInterface
         }
 
         return array(array_merge($this->getDefaults(), $data));
-    }
-
-    /**
-     * @param string $code
-     *
-     * @return string
-     */
-    protected function countryCodeToCountryName($code)
-    {
-        $countryNames = $this->getCountryNames();
-
-        return $countryNames[$code];
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getName()
-    {
-        return 'maxmind';
     }
 
     /**
@@ -216,6 +188,18 @@ class MaxMindProvider extends AbstractProvider implements ProviderInterface
             default:
                 throw new UnsupportedException(sprintf('Unknown MaxMind service %s', $service));
         }
+    }
+
+    /**
+     * @param string $code
+     *
+     * @return string
+     */
+    protected function countryCodeToCountryName($code)
+    {
+        $countryNames = $this->getCountryNames();
+
+        return $countryNames[$code];
     }
 
     /**
@@ -478,5 +462,21 @@ class MaxMindProvider extends AbstractProvider implements ProviderInterface
             'ZM' => 'Zambia',
             'ZW' => 'Zimbabwe',
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getReversedData(array $coordinates)
+    {
+        throw new UnsupportedException('The MaxMindProvider is not able to do reverse geocoding.');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getName()
+    {
+        return 'maxmind';
     }
 }

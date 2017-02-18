@@ -47,24 +47,6 @@ abstract class AbstractOptionsAsset extends AbstractJavascriptVariableAsset
     }
 
     /**
-     * Checks if the option exists.
-     *
-     * @param string $option The option.
-     *
-     * @throws \Ivory\GoogleMap\Exception\AssetException If the option is not valid.
-     *
-     * @return boolean TRUE if the option exists else FALSE.
-     */
-    public function hasOption($option)
-    {
-        if (!is_string($option)) {
-            throw AssetException::invalidOption();
-        }
-
-        return isset($this->options[$option]);
-    }
-
-    /**
      * Gets the options.
      *
      * @return array The options.
@@ -104,6 +86,24 @@ abstract class AbstractOptionsAsset extends AbstractJavascriptVariableAsset
         }
 
         return $this->options[$option];
+    }
+
+    /**
+     * Checks if the option exists.
+     *
+     * @param string $option The option.
+     *
+     * @throws \Ivory\GoogleMap\Exception\AssetException If the option is not valid.
+     *
+     * @return boolean TRUE if the option exists else FALSE.
+     */
+    public function hasOption($option)
+    {
+        if (!is_string($option)) {
+            throw AssetException::invalidOption();
+        }
+
+        return isset($this->options[$option]);
     }
 
     /**

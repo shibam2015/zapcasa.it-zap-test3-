@@ -72,28 +72,6 @@ class ChromePHPHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
-     */
-    protected function getDefaultFormatter()
-    {
-        return new ChromePHPFormatter();
-    }
-
-    /**
-     * Creates & sends header for a record
-     *
-     * @see sendHeader()
-     * @see send()
-     * @param array $record
-     */
-    protected function write(array $record)
-    {
-        self::$json['rows'][] = $record['formatted'];
-
-        $this->send();
-    }
-
-    /**
      * Sends the log header
      *
      * @see sendHeader()
@@ -140,19 +118,6 @@ class ChromePHPHandler extends AbstractProcessingHandler
     }
 
     /**
-     * Send header string to the client
-     *
-     * @param string $header
-     * @param string $content
-     */
-    protected function sendHeader($header, $content)
-    {
-        if (!headers_sent() && self::$sendHeaders) {
-            header(sprintf('%s: %s', $header, $content));
-        }
-    }
-
-    /**
      * Verifies if the headers are accepted by the current user agent
      *
      * @return Boolean
@@ -164,6 +129,19 @@ class ChromePHPHandler extends AbstractProcessingHandler
         }
 
         return preg_match('{\bChrome/\d+[\.\d+]*\b}', $_SERVER['HTTP_USER_AGENT']);
+    }
+
+    /**
+     * Send header string to the client
+     *
+     * @param string $header
+     * @param string $content
+     */
+    protected function sendHeader($header, $content)
+    {
+        if (!headers_sent() && self::$sendHeaders) {
+            header(sprintf('%s: %s', $header, $content));
+        }
     }
 
     /**
@@ -188,5 +166,27 @@ class ChromePHPHandler extends AbstractProcessingHandler
         }
 
         static::$sendHeaders = $value;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function getDefaultFormatter()
+    {
+        return new ChromePHPFormatter();
+    }
+
+    /**
+     * Creates & sends header for a record
+     *
+     * @see sendHeader()
+     * @see send()
+     * @param array $record
+     */
+    protected function write(array $record)
+    {
+        self::$json['rows'][] = $record['formatted'];
+
+        $this->send();
     }
 }

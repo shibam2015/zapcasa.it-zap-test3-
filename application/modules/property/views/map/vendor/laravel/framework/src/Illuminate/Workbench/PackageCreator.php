@@ -47,6 +47,18 @@ class PackageCreator {
 	}
 
 	/**
+	 * Create a package with all resource directories.
+	 *
+	 * @param  Package $package
+	 * @param  string $path
+	 * @return void
+	 */
+	public function createWithResources(Package $package, $path)
+	{
+		return $this->create($package, $path, false);
+	}
+
+	/**
 	 * Create a new package stub.
 	 *
 	 * @param  \Illuminate\Workbench\Package  $package
@@ -70,15 +82,28 @@ class PackageCreator {
 	}
 
 	/**
-	 * Create a package with all resource directories.
+	 * Create a workbench directory for the package.
 	 *
-	 * @param  Package  $package
-	 * @param  string   $path
-	 * @return void
+	 * @param  \Illuminate\Workbench\Package $package
+	 * @param  string $path
+	 * @return string
+	 *
+	 * @throws \InvalidArgumentException
 	 */
-	public function createWithResources(Package $package, $path)
+	protected function createDirectory(Package $package, $path)
 	{
-		return $this->create($package, $path, false);
+		$fullPath = $path . '/' . $package->getFullName();
+
+		// If the directory doesn't exist, we will go ahead and create the package
+		// directory in the workbench location. We will use this entire package
+		// name when creating the directory to avoid any potential conflicts.
+		if (!$this->files->isDirectory($fullPath)) {
+			$this->files->makeDirectory($fullPath, 0777, true);
+
+			return $fullPath;
+		}
+
+		throw new \InvalidArgumentException("Package exists.");
 	}
 
 	/**
@@ -105,63 +130,6 @@ class PackageCreator {
 		{
 			$this->{"write{$file}File"}($package, $directory, $plain);
 		}
-	}
-
-	/**
-	 * Write the PHPUnit stub file.
-	 *
-	 * @param  \Illuminate\Workbench\Package  $package
-	 * @param  string  $directory
-	 * @return void
-	 */
-	protected function writePhpUnitFile(Package $package, $directory)
-	{
-		$stub = __DIR__.'/stubs/phpunit.xml';
-
-		$this->files->copy($stub, $directory.'/phpunit.xml');
-	}
-
-	/**
-	 * Write the Travis stub file.
-	 *
-	 * @param  \Illuminate\Workbench\Package  $package
-	 * @param  string  $directory
-	 * @return void
-	 */
-	protected function writeTravisFile(Package $package, $directory)
-	{
-		$stub = __DIR__.'/stubs/.travis.yml';
-
-		$this->files->copy($stub, $directory.'/.travis.yml');
-	}
-
-	/**
-	 * Write the Composer.json stub file.
-	 *
-	 * @param  \Illuminate\Workbench\Package  $package
-	 * @param  string  $directory
-	 * @return void
-	 */
-	protected function writeComposerFile(Package $package, $directory, $plain)
-	{
-		$stub = $this->getComposerStub($plain);
-
-		$stub = $this->formatPackageStub($package, $stub);
-
-		$this->files->put($directory.'/composer.json', $stub);
-	}
-
-	/**
-	 * Get the Composer.json stub file contents.
-	 *
-	 * @param  bool    $plain
-	 * @return string
-	 */
-	protected function getComposerStub($plain)
-	{
-		if ($plain) return $this->files->get(__DIR__.'/stubs/plain.composer.json');
-
-		return $this->files->get(__DIR__.'/stubs/composer.json');
 	}
 
 	/**
@@ -259,26 +227,6 @@ class PackageCreator {
 	}
 
 	/**
-	 * Write the service provider stub for the package.
-	 *
-	 * @param  \Illuminate\Workbench\Package  $package
-	 * @param  string  $directory
-	 * @param  string  $stub
-	 * @return void
-	 */
-	protected function writeProviderStub(Package $package, $directory, $stub)
-	{
-		$path = $this->createClassDirectory($package, $directory);
-
-		// The primary source directory where the package's classes will live may not
-		// exist yet, so we will need to create it before we write these providers
-		// out to that location. We'll go ahead and create now here before then.
-		$file = $path.'/'.$package->name.'ServiceProvider.php';
-
-		$this->files->put($file, $stub);
-	}
-
-	/**
 	 * Get the stub for a ServiceProvider.
 	 *
 	 * @param  \Illuminate\Workbench\Package  $package
@@ -309,6 +257,26 @@ class PackageCreator {
 	}
 
 	/**
+	 * Write the service provider stub for the package.
+	 *
+	 * @param  \Illuminate\Workbench\Package $package
+	 * @param  string $directory
+	 * @param  string $stub
+	 * @return void
+	 */
+	protected function writeProviderStub(Package $package, $directory, $stub)
+	{
+		$path = $this->createClassDirectory($package, $directory);
+
+		// The primary source directory where the package's classes will live may not
+		// exist yet, so we will need to create it before we write these providers
+		// out to that location. We'll go ahead and create now here before then.
+		$file = $path . '/' . $package->name . 'ServiceProvider.php';
+
+		$this->files->put($file, $stub);
+	}
+
+	/**
 	 * Create the main source directory for the package.
 	 *
 	 * @param  \Illuminate\Workbench\Package  $package
@@ -328,46 +296,76 @@ class PackageCreator {
 	}
 
 	/**
-	 * Format a generic package stub file.
+	 * Write the PHPUnit stub file.
 	 *
 	 * @param  \Illuminate\Workbench\Package  $package
-	 * @param  string  $stub
+	 * @param  string $directory
+	 * @return void
+	 */
+	protected function writePhpUnitFile(Package $package, $directory)
+	{
+		$stub = __DIR__ . '/stubs/phpunit.xml';
+
+		$this->files->copy($stub, $directory . '/phpunit.xml');
+	}
+
+	/**
+	 * Write the Travis stub file.
+	 *
+	 * @param  \Illuminate\Workbench\Package  $package
+	 * @param  string $directory
+	 * @return void
+	 */
+	protected function writeTravisFile(Package $package, $directory)
+	{
+		$stub = __DIR__ . '/stubs/.travis.yml';
+
+		$this->files->copy($stub, $directory . '/.travis.yml');
+	}
+
+	/**
+	 * Write the Composer.json stub file.
+	 *
+	 * @param  \Illuminate\Workbench\Package $package
+	 * @param  string $directory
+	 * @return void
+	 */
+	protected function writeComposerFile(Package $package, $directory, $plain)
+	{
+		$stub = $this->getComposerStub($plain);
+
+		$stub = $this->formatPackageStub($package, $stub);
+
+		$this->files->put($directory . '/composer.json', $stub);
+	}
+
+	/**
+	 * Get the Composer.json stub file contents.
+	 *
+	 * @param  bool $plain
+	 * @return string
+	 */
+	protected function getComposerStub($plain)
+	{
+		if ($plain) return $this->files->get(__DIR__ . '/stubs/plain.composer.json');
+
+		return $this->files->get(__DIR__ . '/stubs/composer.json');
+	}
+
+	/**
+	 * Format a generic package stub file.
+	 *
+	 * @param  \Illuminate\Workbench\Package $package
+	 * @param  string $stub
 	 * @return string
 	 */
 	protected function formatPackageStub(Package $package, $stub)
 	{
-		foreach (get_object_vars($package) as $key => $value)
-		{
-			$stub = str_replace('{{'.snake_case($key).'}}', $value, $stub);
+		foreach (get_object_vars($package) as $key => $value) {
+			$stub = str_replace('{{' . snake_case($key) . '}}', $value, $stub);
 		}
 
 		return $stub;
-	}
-
-	/**
-	 * Create a workbench directory for the package.
-	 *
-	 * @param  \Illuminate\Workbench\Package  $package
-	 * @param  string  $path
-	 * @return string
-	 *
-	 * @throws \InvalidArgumentException
-	 */
-	protected function createDirectory(Package $package, $path)
-	{
-		$fullPath = $path.'/'.$package->getFullName();
-
-		// If the directory doesn't exist, we will go ahead and create the package
-		// directory in the workbench location. We will use this entire package
-		// name when creating the directory to avoid any potential conflicts.
-		if ( ! $this->files->isDirectory($fullPath))
-		{
-			$this->files->makeDirectory($fullPath, 0777, true);
-
-			return $fullPath;
-		}
-
-		throw new \InvalidArgumentException("Package exists.");
 	}
 
 }

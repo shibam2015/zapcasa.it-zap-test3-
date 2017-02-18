@@ -20,24 +20,51 @@ class TwitterBootstrap3 extends Framework implements FrameworkInterface
    * @var array
    */
   protected $availableTypes = array('horizontal', 'vertical', 'inline');
-
+  /**
+   * The field states available
+   *
+   * @var array
+   */
+  protected $states = array(
+    'has-warning', 'has-error', 'has-success',
+  );
+  /**
+   * The default HTML tag used for icons
+   *
+   * @var string
+   */
+  protected $iconTag = 'span';
+  /**
+   * The default set for icon fonts
+   * By default Bootstrap 3 offers only 'glyphicon'
+   * See Former docs to use 'social' and 'filetypes' sets for specific icons.
+   *
+   * @var string
+   */
+  protected $iconSet = 'glyphicon';
+  /**
+   * The default prefix icon names
+   * "icon" works for Bootstrap 2 and Font-awesome
+   *
+   * @var string
+   */
+  protected $iconPrefix = 'glyphicon';
   /**
    * The button types available
    *
    * @var array
    */
   private $buttons = array(
-    'lg', 'sm', 'xs', 'block', 'link',
-    'default', 'primary', 'warning',  'danger', 'success', 'info',
+      'lg', 'sm', 'xs', 'block', 'link',
+      'default', 'primary', 'warning', 'danger', 'success', 'info',
   );
-
   /**
    * The field sizes available
    *
    * @var array
    */
   private $fields = array(
-    'lg','sm',
+      'lg', 'sm',
     // 'col-xs-1', 'col-xs-2', 'col-xs-3', 'col-xs-4', 'col-xs-5', 'col-xs-6',
     // 'col-xs-7', 'col-xs-8', 'col-xs-9', 'col-xs-10', 'col-xs-11', 'col-xs-12',
     // 'col-sm-1', 'col-sm-2', 'col-sm-3', 'col-sm-4', 'col-sm-5', 'col-sm-6',
@@ -47,39 +74,6 @@ class TwitterBootstrap3 extends Framework implements FrameworkInterface
     // 'col-lg-1', 'col-lg-2', 'col-lg-3', 'col-lg-4', 'col-lg-5', 'col-lg-6',
     // 'col-lg-7', 'col-lg-8', 'col-lg-9', 'col-lg-10', 'col-lg-11', 'col-lg-12',
   );
-
-  /**
-   * The field states available
-   *
-   * @var array
-   */
-  protected $states = array(
-    'has-warning', 'has-error', 'has-success',
-  );
-
-  /**
-   * The default HTML tag used for icons
-   *
-   * @var string
-   */
-  protected $iconTag = 'span';
-
-  /**
-   * The default set for icon fonts
-   * By default Bootstrap 3 offers only 'glyphicon'
-   * See Former docs to use 'social' and 'filetypes' sets for specific icons.
-   *
-   * @var string
-   */
-  protected $iconSet = 'glyphicon';
-
-  /**
-   * The default prefix icon names
-   * "icon" works for Bootstrap 2 and Font-awesome
-   *
-   * @var string
-   */
-  protected $iconPrefix = 'glyphicon';
 
   /**
    * Create a new TwitterBootstrap instance
@@ -94,47 +88,6 @@ class TwitterBootstrap3 extends Framework implements FrameworkInterface
 
   ////////////////////////////////////////////////////////////////////
   /////////////////////////// FILTER ARRAYS //////////////////////////
-  ////////////////////////////////////////////////////////////////////
-
-  /**
-   * Filter buttons classes
-   *
-   * @param  array $classes An array of classes
-   * @return array A filtered array
-   */
-  public function filterButtonClasses($classes)
-  {
-    // Filter classes
-    // $classes = array_intersect($classes, $this->buttons);
-
-    // Prepend button type
-    $classes = $this->prependWith($classes, 'btn-');
-    $classes[] = 'btn';
-
-    return $classes;
-  }
-
-  /**
-   * Filter field classes
-   *
-   * @param  array $classes An array of classes
-   * @return array A filtered array
-   */
-  public function filterFieldClasses($classes)
-  {
-    // Filter classes
-    $classes = array_intersect($classes, $this->fields);
-
-    // Prepend field type
-    $classes = array_map(function ($class) {
-      return Str::startsWith($class, 'col') ? $class : 'input-'.$class;
-    }, $classes);
-
-    return $classes;
-  }
-
-  ////////////////////////////////////////////////////////////////////
-  ///////////////////// EXPOSE FRAMEWORK SPECIFICS ///////////////////
   ////////////////////////////////////////////////////////////////////
 
   /**
@@ -166,31 +119,8 @@ class TwitterBootstrap3 extends Framework implements FrameworkInterface
     return $inlineClass;
   }
 
-  /**
-   * Set the fields width from a label width
-   *
-   * @param array $labelWidths
-   */
-  protected function setFieldWidths($labelWidths)
-  {
-    $labelWidthClass = $fieldWidthClass = $fieldOffsetClass = '';
-
-    $viewports = $this->getFrameworkOption('viewports');
-    foreach ($labelWidths as $viewport => $columns) {
-      if ($viewport) {
-        $labelWidthClass  .= " col-$viewports[$viewport]-$columns";
-        $fieldWidthClass  .= " col-$viewports[$viewport]-".(12-$columns);
-        $fieldOffsetClass .= " col-$viewports[$viewport]-offset-$columns";
-      }
-    }
-
-    $this->labelWidth  = ltrim($labelWidthClass);
-    $this->fieldWidth  = ltrim($fieldWidthClass);
-    $this->fieldOffset = ltrim($fieldOffsetClass);
-  }
-
   ////////////////////////////////////////////////////////////////////
-  ///////////////////////////// ADD CLASSES //////////////////////////
+  ///////////////////// EXPOSE FRAMEWORK SPECIFICS ///////////////////
   ////////////////////////////////////////////////////////////////////
 
   /**
@@ -223,6 +153,47 @@ class TwitterBootstrap3 extends Framework implements FrameworkInterface
 
     return $this->addClassesToField($field, $classes);
   }
+
+  /**
+   * Filter buttons classes
+   *
+   * @param  array $classes An array of classes
+   * @return array A filtered array
+   */
+  public function filterButtonClasses($classes)
+  {
+    // Filter classes
+    // $classes = array_intersect($classes, $this->buttons);
+
+    // Prepend button type
+    $classes = $this->prependWith($classes, 'btn-');
+    $classes[] = 'btn';
+
+    return $classes;
+  }
+
+  /**
+   * Filter field classes
+   *
+   * @param  array $classes An array of classes
+   * @return array A filtered array
+   */
+  public function filterFieldClasses($classes)
+  {
+    // Filter classes
+    $classes = array_intersect($classes, $this->fields);
+
+    // Prepend field type
+    $classes = array_map(function ($class) {
+      return Str::startsWith($class, 'col') ? $class : 'input-' . $class;
+    }, $classes);
+
+    return $classes;
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  ///////////////////////////// ADD CLASSES //////////////////////////
+  ////////////////////////////////////////////////////////////////////
 
   /**
    * Add group classes
@@ -289,10 +260,6 @@ class TwitterBootstrap3 extends Framework implements FrameworkInterface
     return null;
   }
 
-  ////////////////////////////////////////////////////////////////////
-  //////////////////////////// RENDER BLOCKS /////////////////////////
-  ////////////////////////////////////////////////////////////////////
-
   /**
    * Render an help text
    *
@@ -306,6 +273,10 @@ class TwitterBootstrap3 extends Framework implements FrameworkInterface
     return Element::create('span', $text, $attributes)->addClass('help-block');
   }
 
+  ////////////////////////////////////////////////////////////////////
+  //////////////////////////// RENDER BLOCKS /////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
   /**
    * Render a disabled field
    *
@@ -317,10 +288,6 @@ class TwitterBootstrap3 extends Framework implements FrameworkInterface
   {
     return Element::create('span', $field->getValue(), $field->getAttributes());
   }
-
-  ////////////////////////////////////////////////////////////////////
-  //////////////////////////// WRAP BLOCKS ///////////////////////////
-  ////////////////////////////////////////////////////////////////////
 
   /**
    * Wrap an item to be prepended or appended to the current field
@@ -341,6 +308,10 @@ class TwitterBootstrap3 extends Framework implements FrameworkInterface
 
     return Element::create('span', $item)->addClass('input-group-'.$class);
   }
+
+  ////////////////////////////////////////////////////////////////////
+  //////////////////////////// WRAP BLOCKS ///////////////////////////
+  ////////////////////////////////////////////////////////////////////
 
   /**
    * Wrap a field with prepended and appended items
@@ -391,5 +362,28 @@ class TwitterBootstrap3 extends Framework implements FrameworkInterface
     }
 
     return $actions;
+  }
+
+  /**
+   * Set the fields width from a label width
+   *
+   * @param array $labelWidths
+   */
+  protected function setFieldWidths($labelWidths)
+  {
+    $labelWidthClass = $fieldWidthClass = $fieldOffsetClass = '';
+
+    $viewports = $this->getFrameworkOption('viewports');
+    foreach ($labelWidths as $viewport => $columns) {
+      if ($viewport) {
+        $labelWidthClass .= " col-$viewports[$viewport]-$columns";
+        $fieldWidthClass .= " col-$viewports[$viewport]-" . (12 - $columns);
+        $fieldOffsetClass .= " col-$viewports[$viewport]-offset-$columns";
+      }
+    }
+
+    $this->labelWidth = ltrim($labelWidthClass);
+    $this->fieldWidth = ltrim($fieldWidthClass);
+    $this->fieldOffset = ltrim($fieldOffsetClass);
   }
 }

@@ -23,6 +23,42 @@ class PHPParser_Lexer
     }
 
     /**
+     * Creates the token map.
+     *
+     * The token map maps the PHP internal token identifiers
+     * to the identifiers used by the Parser. Additionally it
+     * maps T_OPEN_TAG_WITH_ECHO to T_ECHO and T_CLOSE_TAG to ';'.
+     *
+     * @return array The token map
+     */
+    protected function createTokenMap()
+    {
+        $tokenMap = array();
+
+        // 256 is the minimum possible token number, as everything below
+        // it is an ASCII value
+        for ($i = 256; $i < 1000; ++$i) {
+            // T_DOUBLE_COLON is equivalent to T_PAAMAYIM_NEKUDOTAYIM
+            if (T_DOUBLE_COLON === $i) {
+                $tokenMap[$i] = PHPParser_Parser::T_PAAMAYIM_NEKUDOTAYIM;
+                // T_OPEN_TAG_WITH_ECHO with dropped T_OPEN_TAG results in T_ECHO
+            } elseif (T_OPEN_TAG_WITH_ECHO === $i) {
+                $tokenMap[$i] = PHPParser_Parser::T_ECHO;
+                // T_CLOSE_TAG is equivalent to ';'
+            } elseif (T_CLOSE_TAG === $i) {
+                $tokenMap[$i] = ord(';');
+                // and the others can be mapped directly
+            } elseif ('UNKNOWN' !== ($name = token_name($i))
+                && defined($name = 'PHPParser_Parser::' . $name)
+            ) {
+                $tokenMap[$i] = constant($name);
+            }
+        }
+
+        return $tokenMap;
+    }
+
+    /**
      * Initializes the lexer for lexing the provided source code.
      *
      * @param string $code The source code to lex
@@ -152,40 +188,5 @@ class PHPParser_Lexer
 
         // return with (); removed
         return (string) substr($textAfter, strlen($matches[0])); // (string) converts false to ''
-    }
-
-    /**
-     * Creates the token map.
-     *
-     * The token map maps the PHP internal token identifiers
-     * to the identifiers used by the Parser. Additionally it
-     * maps T_OPEN_TAG_WITH_ECHO to T_ECHO and T_CLOSE_TAG to ';'.
-     *
-     * @return array The token map
-     */
-    protected function createTokenMap() {
-        $tokenMap = array();
-
-        // 256 is the minimum possible token number, as everything below
-        // it is an ASCII value
-        for ($i = 256; $i < 1000; ++$i) {
-            // T_DOUBLE_COLON is equivalent to T_PAAMAYIM_NEKUDOTAYIM
-            if (T_DOUBLE_COLON === $i) {
-                $tokenMap[$i] = PHPParser_Parser::T_PAAMAYIM_NEKUDOTAYIM;
-            // T_OPEN_TAG_WITH_ECHO with dropped T_OPEN_TAG results in T_ECHO
-            } elseif(T_OPEN_TAG_WITH_ECHO === $i) {
-                $tokenMap[$i] = PHPParser_Parser::T_ECHO;
-            // T_CLOSE_TAG is equivalent to ';'
-            } elseif(T_CLOSE_TAG === $i) {
-                $tokenMap[$i] = ord(';');
-            // and the others can be mapped directly
-            } elseif ('UNKNOWN' !== ($name = token_name($i))
-                      && defined($name = 'PHPParser_Parser::' . $name)
-            ) {
-                $tokenMap[$i] = constant($name);
-            }
-        }
-
-        return $tokenMap;
     }
 }

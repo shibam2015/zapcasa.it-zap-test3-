@@ -68,140 +68,6 @@ class PropertyAccessor implements PropertyAccessorInterface
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function setValue(&$objectOrArray, $propertyPath, $value)
-    {
-        if (is_string($propertyPath)) {
-            $propertyPath = new PropertyPath($propertyPath);
-        } elseif (!$propertyPath instanceof PropertyPathInterface) {
-            throw new InvalidArgumentException(sprintf(
-                'The property path should be a string or an instance of '.
-                '"Symfony\Component\PropertyAccess\PropertyPathInterface". '.
-                'Got: "%s"',
-                is_object($propertyPath) ? get_class($propertyPath) : gettype($propertyPath)
-            ));
-        }
-
-        $propertyValues =& $this->readPropertiesUntil($objectOrArray, $propertyPath, $propertyPath->getLength() - 1);
-        $overwrite = true;
-
-        // Add the root object to the list
-        array_unshift($propertyValues, array(
-            self::VALUE => &$objectOrArray,
-            self::IS_REF => true,
-        ));
-
-        for ($i = count($propertyValues) - 1; $i >= 0; --$i) {
-            $objectOrArray =& $propertyValues[$i][self::VALUE];
-
-            if ($overwrite) {
-                if (!is_object($objectOrArray) && !is_array($objectOrArray)) {
-                    throw new UnexpectedTypeException($objectOrArray, 'object or array');
-                }
-
-                $property = $propertyPath->getElement($i);
-
-                if ($propertyPath->isIndex($i)) {
-                    $this->writeIndex($objectOrArray, $property, $value);
-                } else {
-                    $this->writeProperty($objectOrArray, $property, $value);
-                }
-            }
-
-            $value =& $objectOrArray;
-            $overwrite = !$propertyValues[$i][self::IS_REF];
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isReadable($objectOrArray, $propertyPath)
-    {
-        if (is_string($propertyPath)) {
-            $propertyPath = new PropertyPath($propertyPath);
-        } elseif (!$propertyPath instanceof PropertyPathInterface) {
-            throw new InvalidArgumentException(sprintf(
-                'The property path should be a string or an instance of '.
-                '"Symfony\Component\PropertyAccess\PropertyPathInterface". '.
-                'Got: "%s"',
-                is_object($propertyPath) ? get_class($propertyPath) : gettype($propertyPath)
-            ));
-        }
-
-        try {
-            $this->readPropertiesUntil($objectOrArray, $propertyPath, $propertyPath->getLength(), $this->ignoreInvalidIndices);
-
-            return true;
-        } catch (NoSuchIndexException $e) {
-            return false;
-        } catch (NoSuchPropertyException $e) {
-            return false;
-        } catch (UnexpectedTypeException $e) {
-            return false;
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isWritable($objectOrArray, $propertyPath)
-    {
-        if (is_string($propertyPath)) {
-            $propertyPath = new PropertyPath($propertyPath);
-        } elseif (!$propertyPath instanceof PropertyPathInterface) {
-            throw new InvalidArgumentException(sprintf(
-                'The property path should be a string or an instance of '.
-                '"Symfony\Component\PropertyAccess\PropertyPathInterface". '.
-                'Got: "%s"',
-                is_object($propertyPath) ? get_class($propertyPath) : gettype($propertyPath)
-            ));
-        }
-
-        try {
-            $propertyValues = $this->readPropertiesUntil($objectOrArray, $propertyPath, $propertyPath->getLength() - 1);
-            $overwrite = true;
-
-            // Add the root object to the list
-            array_unshift($propertyValues, array(
-                self::VALUE => $objectOrArray,
-                self::IS_REF => true,
-            ));
-
-            for ($i = count($propertyValues) - 1; $i >= 0; --$i) {
-                $objectOrArray = $propertyValues[$i][self::VALUE];
-
-                if ($overwrite) {
-                    if (!is_object($objectOrArray) && !is_array($objectOrArray)) {
-                        return false;
-                    }
-
-                    $property = $propertyPath->getElement($i);
-
-                    if ($propertyPath->isIndex($i)) {
-                        if (!$objectOrArray instanceof \ArrayAccess && !is_array($objectOrArray)) {
-                            return false;
-                        }
-                    } else {
-                        if (!$this->isPropertyWritable($objectOrArray, $property)) {
-                            return false;
-                        }
-                    }
-                }
-
-                $overwrite = !$propertyValues[$i][self::IS_REF];
-            }
-
-            return true;
-        } catch (NoSuchIndexException $e) {
-            return false;
-        } catch (NoSuchPropertyException $e) {
-            return false;
-        }
-    }
-
-    /**
      * Reads the path from an object up to a given path index.
      *
      * @param object|array          $objectOrArray        The object or array to read from
@@ -382,6 +248,93 @@ class PropertyAccessor implements PropertyAccessorInterface
     }
 
     /**
+     * Camelizes a given string.
+     *
+     * @param  string $string Some string
+     *
+     * @return string The camelized version of the string
+     */
+    private function camelize($string)
+    {
+        return preg_replace_callback('/(^|_|\.)+(.)/', function ($match) {
+            return ('.' === $match[1] ? '_' : '') . strtoupper($match[2]);
+        }, $string);
+    }
+
+    /**
+     * Returns whether a method is public and has the number of required parameters.
+     *
+     * @param  \ReflectionClass $class The class of the method
+     * @param  string $methodName The method name
+     * @param  int $parameters The number of parameters
+     *
+     * @return bool    Whether the method is public and has $parameters
+     *                                      required parameters
+     */
+    private function isMethodAccessible(\ReflectionClass $class, $methodName, $parameters)
+    {
+        if ($class->hasMethod($methodName)) {
+            $method = $class->getMethod($methodName);
+
+            if ($method->isPublic()
+                && $method->getNumberOfRequiredParameters() <= $parameters
+                && $method->getNumberOfParameters() >= $parameters
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setValue(&$objectOrArray, $propertyPath, $value)
+    {
+        if (is_string($propertyPath)) {
+            $propertyPath = new PropertyPath($propertyPath);
+        } elseif (!$propertyPath instanceof PropertyPathInterface) {
+            throw new InvalidArgumentException(sprintf(
+                'The property path should be a string or an instance of ' .
+                '"Symfony\Component\PropertyAccess\PropertyPathInterface". ' .
+                'Got: "%s"',
+                is_object($propertyPath) ? get_class($propertyPath) : gettype($propertyPath)
+            ));
+        }
+
+        $propertyValues =& $this->readPropertiesUntil($objectOrArray, $propertyPath, $propertyPath->getLength() - 1);
+        $overwrite = true;
+
+        // Add the root object to the list
+        array_unshift($propertyValues, array(
+            self::VALUE => &$objectOrArray,
+            self::IS_REF => true,
+        ));
+
+        for ($i = count($propertyValues) - 1; $i >= 0; --$i) {
+            $objectOrArray =& $propertyValues[$i][self::VALUE];
+
+            if ($overwrite) {
+                if (!is_object($objectOrArray) && !is_array($objectOrArray)) {
+                    throw new UnexpectedTypeException($objectOrArray, 'object or array');
+                }
+
+                $property = $propertyPath->getElement($i);
+
+                if ($propertyPath->isIndex($i)) {
+                    $this->writeIndex($objectOrArray, $property, $value);
+                } else {
+                    $this->writeProperty($objectOrArray, $property, $value);
+                }
+            }
+
+            $value =& $objectOrArray;
+            $overwrite = !$propertyValues[$i][self::IS_REF];
+        }
+    }
+
+    /**
      * Sets the value of an index in a given array-accessible value.
      *
      * @param \ArrayAccess|array $array An array or \ArrayAccess object to write to
@@ -468,6 +421,31 @@ class PropertyAccessor implements PropertyAccessorInterface
     }
 
     /**
+     * Searches for add and remove methods.
+     *
+     * @param \ReflectionClass $reflClass The reflection class for the given object
+     * @param array $singulars The singular form of the property name or null
+     *
+     * @return array|null An array containing the adder and remover when found, null otherwise
+     */
+    private function findAdderAndRemover(\ReflectionClass $reflClass, array $singulars)
+    {
+        $exception = null;
+
+        foreach ($singulars as $singular) {
+            $addMethod = 'add' . $singular;
+            $removeMethod = 'remove' . $singular;
+
+            $addMethodFound = $this->isMethodAccessible($reflClass, $addMethod, 1);
+            $removeMethodFound = $this->isMethodAccessible($reflClass, $removeMethod, 1);
+
+            if ($addMethodFound && $removeMethodFound) {
+                return array($addMethod, $removeMethod);
+            }
+        }
+    }
+
+    /**
      * Adjusts a collection-valued property by calling add*() and remove*()
      * methods.
      *
@@ -514,6 +492,93 @@ class PropertyAccessor implements PropertyAccessorInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function isReadable($objectOrArray, $propertyPath)
+    {
+        if (is_string($propertyPath)) {
+            $propertyPath = new PropertyPath($propertyPath);
+        } elseif (!$propertyPath instanceof PropertyPathInterface) {
+            throw new InvalidArgumentException(sprintf(
+                'The property path should be a string or an instance of ' .
+                '"Symfony\Component\PropertyAccess\PropertyPathInterface". ' .
+                'Got: "%s"',
+                is_object($propertyPath) ? get_class($propertyPath) : gettype($propertyPath)
+            ));
+        }
+
+        try {
+            $this->readPropertiesUntil($objectOrArray, $propertyPath, $propertyPath->getLength(), $this->ignoreInvalidIndices);
+
+            return true;
+        } catch (NoSuchIndexException $e) {
+            return false;
+        } catch (NoSuchPropertyException $e) {
+            return false;
+        } catch (UnexpectedTypeException $e) {
+            return false;
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isWritable($objectOrArray, $propertyPath)
+    {
+        if (is_string($propertyPath)) {
+            $propertyPath = new PropertyPath($propertyPath);
+        } elseif (!$propertyPath instanceof PropertyPathInterface) {
+            throw new InvalidArgumentException(sprintf(
+                'The property path should be a string or an instance of ' .
+                '"Symfony\Component\PropertyAccess\PropertyPathInterface". ' .
+                'Got: "%s"',
+                is_object($propertyPath) ? get_class($propertyPath) : gettype($propertyPath)
+            ));
+        }
+
+        try {
+            $propertyValues = $this->readPropertiesUntil($objectOrArray, $propertyPath, $propertyPath->getLength() - 1);
+            $overwrite = true;
+
+            // Add the root object to the list
+            array_unshift($propertyValues, array(
+                self::VALUE => $objectOrArray,
+                self::IS_REF => true,
+            ));
+
+            for ($i = count($propertyValues) - 1; $i >= 0; --$i) {
+                $objectOrArray = $propertyValues[$i][self::VALUE];
+
+                if ($overwrite) {
+                    if (!is_object($objectOrArray) && !is_array($objectOrArray)) {
+                        return false;
+                    }
+
+                    $property = $propertyPath->getElement($i);
+
+                    if ($propertyPath->isIndex($i)) {
+                        if (!$objectOrArray instanceof \ArrayAccess && !is_array($objectOrArray)) {
+                            return false;
+                        }
+                    } else {
+                        if (!$this->isPropertyWritable($objectOrArray, $property)) {
+                            return false;
+                        }
+                    }
+                }
+
+                $overwrite = !$propertyValues[$i][self::IS_REF];
+            }
+
+            return true;
+        } catch (NoSuchIndexException $e) {
+            return false;
+        } catch (NoSuchPropertyException $e) {
+            return false;
+        }
+    }
+
+    /**
      * Returns whether a property is writable in the given object.
      *
      * @param object $object   The object to write to
@@ -549,68 +614,6 @@ class PropertyAccessor implements PropertyAccessorInterface
 
         if (null !== $this->findAdderAndRemover($reflClass, $singulars)) {
             return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Camelizes a given string.
-     *
-     * @param  string $string Some string
-     *
-     * @return string The camelized version of the string
-     */
-    private function camelize($string)
-    {
-        return preg_replace_callback('/(^|_|\.)+(.)/', function ($match) { return ('.' === $match[1] ? '_' : '').strtoupper($match[2]); }, $string);
-    }
-
-    /**
-     * Searches for add and remove methods.
-     *
-     * @param \ReflectionClass $reflClass The reflection class for the given object
-     * @param array            $singulars The singular form of the property name or null
-     *
-     * @return array|null An array containing the adder and remover when found, null otherwise
-     */
-    private function findAdderAndRemover(\ReflectionClass $reflClass, array $singulars)
-    {
-        $exception = null;
-
-        foreach ($singulars as $singular) {
-            $addMethod = 'add'.$singular;
-            $removeMethod = 'remove'.$singular;
-
-            $addMethodFound = $this->isMethodAccessible($reflClass, $addMethod, 1);
-            $removeMethodFound = $this->isMethodAccessible($reflClass, $removeMethod, 1);
-
-            if ($addMethodFound && $removeMethodFound) {
-                return array($addMethod, $removeMethod);
-            }
-        }
-    }
-
-    /**
-     * Returns whether a method is public and has the number of required parameters.
-     *
-     * @param  \ReflectionClass $class      The class of the method
-     * @param  string           $methodName The method name
-     * @param  int              $parameters The number of parameters
-     *
-     * @return bool    Whether the method is public and has $parameters
-     *                                      required parameters
-     */
-    private function isMethodAccessible(\ReflectionClass $class, $methodName, $parameters)
-    {
-        if ($class->hasMethod($methodName)) {
-            $method = $class->getMethod($methodName);
-
-            if ($method->isPublic()
-                && $method->getNumberOfRequiredParameters() <= $parameters
-                && $method->getNumberOfParameters() >= $parameters) {
-                return true;
-            }
         }
 
         return false;

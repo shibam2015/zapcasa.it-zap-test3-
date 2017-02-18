@@ -33,6 +33,16 @@ class Boris {
   }
 
   /**
+   * Sets the Boris prompt text
+   *
+   * @param string $prompt
+   */
+  public function setPrompt($prompt)
+  {
+    $this->_prompt = $prompt;
+  }
+
+  /**
    * Add a new hook to run in the context of the REPL when it starts.
    *
    * @param mixed $hook
@@ -111,15 +121,6 @@ class Boris {
     }
 
     $this->_exports = array_merge($this->_exports, $local);
-  }
-
-  /**
-   * Sets the Boris prompt text
-   *
-   * @param string $prompt
-   */
-  public function setPrompt($prompt) {
-    $this->_prompt = $prompt;
   }
 
   /**

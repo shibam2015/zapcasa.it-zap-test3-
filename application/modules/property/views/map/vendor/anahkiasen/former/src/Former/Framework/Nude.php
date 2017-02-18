@@ -42,15 +42,6 @@ class Nude extends Framework implements FrameworkInterface
     return $classes;
   }
 
-  public function filterFieldClasses($classes)
-  {
-    return $classes;
-  }
-
-  ////////////////////////////////////////////////////////////////////
-  ///////////////////////////// ADD CLASSES //////////////////////////
-  ////////////////////////////////////////////////////////////////////
-
   public function getFieldClasses(Field $field, $classes = array())
   {
     $classes = $this->filterFieldClasses($classes);
@@ -61,6 +52,15 @@ class Nude extends Framework implements FrameworkInterface
     }
 
     return $field;
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  ///////////////////////////// ADD CLASSES //////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+  public function filterFieldClasses($classes)
+  {
+    return $classes;
   }
 
   public function getGroupClasses()

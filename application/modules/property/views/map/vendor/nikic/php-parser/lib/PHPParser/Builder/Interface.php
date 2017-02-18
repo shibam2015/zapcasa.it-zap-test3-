@@ -35,6 +35,22 @@ class PHPParser_Builder_Interface extends PHPParser_BuilderAbstract
     }
 
     /**
+     * Adds multiple statements.
+     *
+     * @param array $stmts The statements to add
+     *
+     * @return PHPParser_Builder_Class The builder instance (for fluid interface)
+     */
+    public function addStmts(array $stmts)
+    {
+        foreach ($stmts as $stmt) {
+            $this->addStmt($stmt);
+        }
+
+        return $this;
+    }
+
+    /**
      * Adds a statement.
      *
      * @param PHPParser_Node_Stmt|PHPParser_Builder $stmt The statement to add
@@ -58,21 +74,6 @@ class PHPParser_Builder_Interface extends PHPParser_BuilderAbstract
 
             default:
                 throw new LogicException(sprintf('Unexpected node of type "%s"', $type));
-        }
-
-        return $this;
-    }
-
-    /**
-     * Adds multiple statements.
-     *
-     * @param array $stmts The statements to add
-     *
-     * @return PHPParser_Builder_Class The builder instance (for fluid interface)
-     */
-    public function addStmts(array $stmts) {
-        foreach ($stmts as $stmt) {
-            $this->addStmt($stmt);
         }
 
         return $this;

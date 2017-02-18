@@ -101,29 +101,6 @@ class Profiler
     }
 
     /**
-     * Saves a Profile.
-     *
-     * @param Profile $profile A Profile instance
-     *
-     * @return bool
-     */
-    public function saveProfile(Profile $profile)
-    {
-        // late collect
-        foreach ($profile->getCollectors() as $collector) {
-            if ($collector instanceof LateDataCollectorInterface) {
-                $collector->lateCollect();
-            }
-        }
-
-        if (!($ret = $this->storage->write($profile)) && null !== $this->logger) {
-            $this->logger->warning('Unable to store the profiler information.');
-        }
-
-        return $ret;
-    }
-
-    /**
      * Purges all data from the storage.
      */
     public function purge()
@@ -164,6 +141,29 @@ class Profiler
     }
 
     /**
+     * Saves a Profile.
+     *
+     * @param Profile $profile A Profile instance
+     *
+     * @return bool
+     */
+    public function saveProfile(Profile $profile)
+    {
+        // late collect
+        foreach ($profile->getCollectors() as $collector) {
+            if ($collector instanceof LateDataCollectorInterface) {
+                $collector->lateCollect();
+            }
+        }
+
+        if (!($ret = $this->storage->write($profile)) && null !== $this->logger) {
+            $this->logger->warning('Unable to store the profiler information.');
+        }
+
+        return $ret;
+    }
+
+    /**
      * Finds profiler tokens for the given criteria.
      *
      * @param string $ip     The IP
@@ -180,6 +180,21 @@ class Profiler
     public function find($ip, $url, $limit, $method, $start, $end)
     {
         return $this->storage->find($ip, $url, $limit, $method, $this->getTimestamp($start), $this->getTimestamp($end));
+    }
+
+    private function getTimestamp($value)
+    {
+        if (null === $value || '' == $value) {
+            return;
+        }
+
+        try {
+            $value = new \DateTime(is_numeric($value) ? '@' . $value : $value);
+        } catch (\Exception $e) {
+            return;
+        }
+
+        return $value->getTimestamp();
     }
 
     /**
@@ -276,20 +291,5 @@ class Profiler
         }
 
         return $this->collectors[$name];
-    }
-
-    private function getTimestamp($value)
-    {
-        if (null === $value || '' == $value) {
-            return;
-        }
-
-        try {
-            $value = new \DateTime(is_numeric($value) ? '@'.$value : $value);
-        } catch (\Exception $e) {
-            return;
-        }
-
-        return $value->getTimestamp();
     }
 }

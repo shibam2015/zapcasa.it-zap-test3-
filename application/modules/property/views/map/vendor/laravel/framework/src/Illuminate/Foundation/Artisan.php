@@ -30,6 +30,18 @@ class Artisan {
 	}
 
 	/**
+	 * Dynamically pass all missing methods to console Artisan.
+	 *
+	 * @param  string $method
+	 * @param  array $parameters
+	 * @return mixed
+	 */
+	public function __call($method, $parameters)
+	{
+		return call_user_func_array(array($this->getArtisan(), $method), $parameters);
+	}
+
+	/**
 	 * Get the Artisan console instance.
 	 *
 	 * @return \Illuminate\Console\Application
@@ -43,18 +55,6 @@ class Artisan {
 		$this->artisan = ConsoleApplication::make($this->app);
 
 		return $this->artisan->boot();
-	}
-
-	/**
-	 * Dynamically pass all missing methods to console Artisan.
-	 *
-	 * @param  string  $method
-	 * @param  array   $parameters
-	 * @return mixed
-	 */
-	public function __call($method, $parameters)
-	{
-		return call_user_func_array(array($this->getArtisan(), $method), $parameters);
 	}
 
 }

@@ -37,19 +37,6 @@ class XCacheStore extends TaggableStore implements StoreInterface {
 	}
 
 	/**
-	 * Store an item in the cache for a given number of minutes.
-	 *
-	 * @param  string  $key
-	 * @param  mixed   $value
-	 * @param  int     $minutes
-	 * @return void
-	 */
-	public function put($key, $value, $minutes)
-	{
-		xcache_set($this->prefix.$key, $value, $minutes * 60);
-	}
-
-	/**
 	 * Increment the value of an item in the cache.
 	 *
 	 * @param  string  $key
@@ -58,7 +45,7 @@ class XCacheStore extends TaggableStore implements StoreInterface {
 	 */
 	public function increment($key, $value = 1)
 	{
-		return xcache_inc($this->prefix.$key, $value);
+		return xcache_inc($this->prefix . $key, $value);
 	}
 
 	/**
@@ -70,7 +57,7 @@ class XCacheStore extends TaggableStore implements StoreInterface {
 	 */
 	public function decrement($key, $value = 1)
 	{
-		return xcache_dec($this->prefix.$key, $value);
+		return xcache_dec($this->prefix . $key, $value);
 	}
 
 	/**
@@ -83,6 +70,19 @@ class XCacheStore extends TaggableStore implements StoreInterface {
 	public function forever($key, $value)
 	{
 		return $this->put($key, $value, 0);
+	}
+
+	/**
+	 * Store an item in the cache for a given number of minutes.
+	 *
+	 * @param  string  $key
+	 * @param  mixed   $value
+	 * @param  int $minutes
+	 * @return void
+	 */
+	public function put($key, $value, $minutes)
+	{
+		xcache_set($this->prefix . $key, $value, $minutes * 60);
 	}
 
 	/**

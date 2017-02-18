@@ -82,16 +82,6 @@ class BusinessAccount
     }
 
     /**
-     * Checks if the business account has a channel.
-     *
-     * @return boolean TRUE if the business account has a channel else FALSE.
-     */
-    public function hasChannel()
-    {
-        return $this->channel !== null;
-    }
-
-    /**
      * Sets the channel.
      *
      * @return string The channel.
@@ -134,5 +124,15 @@ class BusinessAccount
         $url .= sprintf('&signature=%s', str_replace(array('+', '/'), array('-', '_'), $signature));
 
         return $url;
+    }
+
+    /**
+     * Checks if the business account has a channel.
+     *
+     * @return boolean TRUE if the business account has a channel else FALSE.
+     */
+    public function hasChannel()
+    {
+        return $this->channel !== null;
     }
 }

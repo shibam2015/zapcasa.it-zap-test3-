@@ -44,33 +44,21 @@ class HtmlFormatter extends NormalizerFormatter
     }
 
     /**
-     * Creates an HTML table row
+     * Formats a set of log records.
      *
-     * @param  string $th Row header content
-     * @param  string $td Row standard cell content
-     * @return string
+     * @param  array $records A set of records to format
+     * @return mixed The formatted set of records
      */
-    private function addRow($th, $td = ' ')
+    public function formatBatch(array $records)
     {
-        $th = htmlspecialchars($th, ENT_NOQUOTES, 'UTF-8');
-        $td = '<pre>'.htmlspecialchars($td, ENT_NOQUOTES, 'UTF-8').'</pre>';
+        $message = '';
+        foreach ($records as $record) {
+            $message .= $this->format($record);
+        }
 
-        return "<tr style=\"padding: 4px;spacing: 0;text-align: left;\">\n<th style=\"background: #cccccc\" width=\"100px\">$th:</th>\n<td style=\"padding: 4px;spacing: 0;text-align: left;background: #eeeeee\">".$td."</td>\n</tr>";
+        return $message;
     }
 
-    /**
-     * Create a HTML h1 tag
-     *
-     * @param  string  $title Text to be in the h1
-     * @param  integer $level Error level
-     * @return string
-     */
-    private function addTitle($title, $level)
-    {
-        $title = htmlspecialchars($title, ENT_NOQUOTES, 'UTF-8');
-
-        return '<h1 style="background: '.$this->logLevels[$level].';color: #ffffff;padding: 5px;">'.$title.'</h1>';
-    }
     /**
      * Formats a log record.
      *
@@ -96,19 +84,32 @@ class HtmlFormatter extends NormalizerFormatter
     }
 
     /**
-     * Formats a set of log records.
+     * Create a HTML h1 tag
      *
-     * @param  array $records A set of records to format
-     * @return mixed The formatted set of records
+     * @param  string $title Text to be in the h1
+     * @param  integer $level Error level
+     * @return string
      */
-    public function formatBatch(array $records)
+    private function addTitle($title, $level)
     {
-        $message = '';
-        foreach ($records as $record) {
-            $message .= $this->format($record);
-        }
+        $title = htmlspecialchars($title, ENT_NOQUOTES, 'UTF-8');
 
-        return $message;
+        return '<h1 style="background: ' . $this->logLevels[$level] . ';color: #ffffff;padding: 5px;">' . $title . '</h1>';
+    }
+
+    /**
+     * Creates an HTML table row
+     *
+     * @param  string $th Row header content
+     * @param  string $td Row standard cell content
+     * @return string
+     */
+    private function addRow($th, $td = ' ')
+    {
+        $th = htmlspecialchars($th, ENT_NOQUOTES, 'UTF-8');
+        $td = '<pre>' . htmlspecialchars($td, ENT_NOQUOTES, 'UTF-8') . '</pre>';
+
+        return "<tr style=\"padding: 4px;spacing: 0;text-align: left;\">\n<th style=\"background: #cccccc\" width=\"100px\">$th:</th>\n<td style=\"padding: 4px;spacing: 0;text-align: left;background: #eeeeee\">" . $td . "</td>\n</tr>";
     }
 
     protected function convertToString($data)

@@ -40,16 +40,6 @@ class DebugClassLoader
     }
 
     /**
-     * Gets the wrapped class loader.
-     *
-     * @return object a class loader instance
-     */
-    public function getClassLoader()
-    {
-        return $this->classFinder;
-    }
-
-    /**
      * Replaces all autoloaders implementing a findFile method by a DebugClassLoader wrapper.
      */
     public static function enable()
@@ -91,6 +81,16 @@ class DebugClassLoader
 
             spl_autoload_register($function);
         }
+    }
+
+    /**
+     * Gets the wrapped class loader.
+     *
+     * @return object a class loader instance
+     */
+    public function getClassLoader()
+    {
+        return $this->classFinder;
     }
 
     /**

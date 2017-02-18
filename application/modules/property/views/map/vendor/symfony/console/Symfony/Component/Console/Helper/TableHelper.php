@@ -134,6 +134,136 @@ class TableHelper extends Helper
         return $this;
     }
 
+    /**
+     * Sets cell padding type.
+     *
+     * @param int $padType STR_PAD_*
+     *
+     * @return TableHelper
+     */
+    public function setPadType($padType)
+    {
+        $this->padType = $padType;
+
+        return $this;
+    }
+
+    /**
+     * Sets table border format.
+     *
+     * @param string $borderFormat
+     *
+     * @return TableHelper
+     */
+    public function setBorderFormat($borderFormat)
+    {
+        $this->borderFormat = $borderFormat;
+
+        return $this;
+    }
+
+    /**
+     * Sets row cell content format.
+     *
+     * @param string $cellRowContentFormat
+     *
+     * @return TableHelper
+     */
+    public function setCellRowContentFormat($cellRowContentFormat)
+    {
+        $this->cellRowContentFormat = $cellRowContentFormat;
+
+        return $this;
+    }
+
+    /**
+     * Sets row cell format.
+     *
+     * @param string $cellRowFormat
+     *
+     * @return TableHelper
+     */
+    public function setCellRowFormat($cellRowFormat)
+    {
+        $this->cellRowFormat = $cellRowFormat;
+
+        return $this;
+    }
+
+    /**
+     * Sets header cell format.
+     *
+     * @param string $cellHeaderFormat
+     *
+     * @return TableHelper
+     */
+    public function setCellHeaderFormat($cellHeaderFormat)
+    {
+        $this->cellHeaderFormat = $cellHeaderFormat;
+
+        return $this;
+    }
+
+    /**
+     * Sets crossing character.
+     *
+     * @param string $crossingChar
+     *
+     * @return TableHelper
+     */
+    public function setCrossingChar($crossingChar)
+    {
+        $this->crossingChar = $crossingChar;
+
+        return $this;
+    }
+
+    /**
+     * Sets vertical border character.
+     *
+     * @param string $verticalBorderChar
+     *
+     * @return TableHelper
+     */
+    public function setVerticalBorderChar($verticalBorderChar)
+    {
+        $this->verticalBorderChar = $verticalBorderChar;
+
+        return $this;
+    }
+
+    /**
+     * Sets horizontal border character.
+     *
+     * @param string $horizontalBorderChar
+     *
+     * @return TableHelper
+     */
+    public function setHorizontalBorderChar($horizontalBorderChar)
+    {
+        $this->horizontalBorderChar = $horizontalBorderChar;
+
+        return $this;
+    }
+
+    /**
+     * Sets padding character, used for cell padding.
+     *
+     * @param string $paddingChar
+     *
+     * @return TableHelper
+     */
+    public function setPaddingChar($paddingChar)
+    {
+        if (!$paddingChar) {
+            throw new \LogicException('The padding char must not be empty');
+        }
+
+        $this->paddingChar = $paddingChar;
+
+        return $this;
+    }
+
     public function setHeaders(array $headers)
     {
         $this->headers = array_values($headers);
@@ -195,136 +325,6 @@ class TableHelper extends Helper
     }
 
     /**
-     * Sets padding character, used for cell padding.
-     *
-     * @param string $paddingChar
-     *
-     * @return TableHelper
-     */
-    public function setPaddingChar($paddingChar)
-    {
-        if (!$paddingChar) {
-            throw new \LogicException('The padding char must not be empty');
-        }
-
-        $this->paddingChar = $paddingChar;
-
-        return $this;
-    }
-
-    /**
-     * Sets horizontal border character.
-     *
-     * @param string $horizontalBorderChar
-     *
-     * @return TableHelper
-     */
-    public function setHorizontalBorderChar($horizontalBorderChar)
-    {
-        $this->horizontalBorderChar = $horizontalBorderChar;
-
-        return $this;
-    }
-
-    /**
-     * Sets vertical border character.
-     *
-     * @param string $verticalBorderChar
-     *
-     * @return TableHelper
-     */
-    public function setVerticalBorderChar($verticalBorderChar)
-    {
-        $this->verticalBorderChar = $verticalBorderChar;
-
-        return $this;
-    }
-
-    /**
-     * Sets crossing character.
-     *
-     * @param string $crossingChar
-     *
-     * @return TableHelper
-     */
-    public function setCrossingChar($crossingChar)
-    {
-        $this->crossingChar = $crossingChar;
-
-        return $this;
-    }
-
-    /**
-     * Sets header cell format.
-     *
-     * @param string $cellHeaderFormat
-     *
-     * @return TableHelper
-     */
-    public function setCellHeaderFormat($cellHeaderFormat)
-    {
-        $this->cellHeaderFormat = $cellHeaderFormat;
-
-        return $this;
-    }
-
-    /**
-     * Sets row cell format.
-     *
-     * @param string $cellRowFormat
-     *
-     * @return TableHelper
-     */
-    public function setCellRowFormat($cellRowFormat)
-    {
-        $this->cellRowFormat = $cellRowFormat;
-
-        return $this;
-    }
-
-    /**
-     * Sets row cell content format.
-     *
-     * @param string $cellRowContentFormat
-     *
-     * @return TableHelper
-     */
-    public function setCellRowContentFormat($cellRowContentFormat)
-    {
-        $this->cellRowContentFormat = $cellRowContentFormat;
-
-        return $this;
-    }
-
-    /**
-     * Sets table border format.
-     *
-     * @param string $borderFormat
-     *
-     * @return TableHelper
-     */
-    public function setBorderFormat($borderFormat)
-    {
-        $this->borderFormat = $borderFormat;
-
-        return $this;
-    }
-
-    /**
-     * Sets cell padding type.
-     *
-     * @param int     $padType STR_PAD_*
-     *
-     * @return TableHelper
-     */
-    public function setPadType($padType)
-    {
-        $this->padType = $padType;
-
-        return $this;
-    }
-
-    /**
      * Renders table to output.
      *
      * Example:
@@ -378,60 +378,6 @@ class TableHelper extends Helper
         }
 
         $this->output->writeln(sprintf($this->borderFormat, $markup));
-    }
-
-    /**
-     * Renders vertical column separator.
-     */
-    private function renderColumnSeparator()
-    {
-        $this->output->write(sprintf($this->borderFormat, $this->verticalBorderChar));
-    }
-
-    /**
-     * Renders table row.
-     *
-     * Example: | 9971-5-0210-0 | A Tale of Two Cities  | Charles Dickens  |
-     *
-     * @param array  $row
-     * @param string $cellFormat
-     */
-    private function renderRow(array $row, $cellFormat)
-    {
-        if (empty($row)) {
-            return;
-        }
-
-        $this->renderColumnSeparator();
-        for ($column = 0, $count = $this->getNumberOfColumns(); $column < $count; $column++) {
-            $this->renderCell($row, $column, $cellFormat);
-            $this->renderColumnSeparator();
-        }
-        $this->output->writeln('');
-    }
-
-    /**
-     * Renders table cell with padding.
-     *
-     * @param array   $row
-     * @param int     $column
-     * @param string  $cellFormat
-     */
-    private function renderCell(array $row, $column, $cellFormat)
-    {
-        $cell = isset($row[$column]) ? $row[$column] : '';
-        $width = $this->getColumnWidth($column);
-
-        // str_pad won't work properly with multi-byte strings, we need to fix the padding
-        if (function_exists('mb_strlen') && false !== $encoding = mb_detect_encoding($cell)) {
-            $width += strlen($cell) - mb_strlen($cell, $encoding);
-        }
-
-        $width += $this->strlen($cell) - $this->computeLengthWithoutDecoration($cell);
-
-        $content = sprintf($this->cellRowContentFormat, $cell);
-
-        $this->output->write(sprintf($cellFormat, str_pad($content, $width, $this->paddingChar, $this->padType)));
     }
 
     /**
@@ -489,15 +435,6 @@ class TableHelper extends Helper
         return isset($row[$column]) ? $this->computeLengthWithoutDecoration($row[$column]) : 0;
     }
 
-    /**
-     * Called after rendering to cleanup cache data.
-     */
-    private function cleanup()
-    {
-        $this->columnWidths = array();
-        $this->numberOfColumns = null;
-    }
-
     private function computeLengthWithoutDecoration($string)
     {
         $formatter = $this->output->getFormatter();
@@ -508,6 +445,69 @@ class TableHelper extends Helper
         $formatter->setDecorated($isDecorated);
 
         return $this->strlen($string);
+    }
+
+    /**
+     * Renders table row.
+     *
+     * Example: | 9971-5-0210-0 | A Tale of Two Cities  | Charles Dickens  |
+     *
+     * @param array $row
+     * @param string $cellFormat
+     */
+    private function renderRow(array $row, $cellFormat)
+    {
+        if (empty($row)) {
+            return;
+        }
+
+        $this->renderColumnSeparator();
+        for ($column = 0, $count = $this->getNumberOfColumns(); $column < $count; $column++) {
+            $this->renderCell($row, $column, $cellFormat);
+            $this->renderColumnSeparator();
+        }
+        $this->output->writeln('');
+    }
+
+    /**
+     * Renders vertical column separator.
+     */
+    private function renderColumnSeparator()
+    {
+        $this->output->write(sprintf($this->borderFormat, $this->verticalBorderChar));
+    }
+
+    /**
+     * Renders table cell with padding.
+     *
+     * @param array $row
+     * @param int $column
+     * @param string $cellFormat
+     */
+    private function renderCell(array $row, $column, $cellFormat)
+    {
+        $cell = isset($row[$column]) ? $row[$column] : '';
+        $width = $this->getColumnWidth($column);
+
+        // str_pad won't work properly with multi-byte strings, we need to fix the padding
+        if (function_exists('mb_strlen') && false !== $encoding = mb_detect_encoding($cell)) {
+            $width += strlen($cell) - mb_strlen($cell, $encoding);
+        }
+
+        $width += $this->strlen($cell) - $this->computeLengthWithoutDecoration($cell);
+
+        $content = sprintf($this->cellRowContentFormat, $cell);
+
+        $this->output->write(sprintf($cellFormat, str_pad($content, $width, $this->paddingChar, $this->padType)));
+    }
+
+    /**
+     * Called after rendering to cleanup cache data.
+     */
+    private function cleanup()
+    {
+        $this->columnWidths = array();
+        $this->numberOfColumns = null;
     }
 
     /**

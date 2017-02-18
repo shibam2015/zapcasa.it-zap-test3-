@@ -24,8 +24,8 @@ class StreamHandler extends AbstractProcessingHandler
 {
     protected $stream;
     protected $url;
-    private $errorMessage;
     protected $filePermission;
+    private $errorMessage;
 
     /**
      * @param string  $stream

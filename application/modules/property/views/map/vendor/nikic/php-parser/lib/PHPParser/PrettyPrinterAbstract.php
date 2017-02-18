@@ -71,27 +71,27 @@ abstract class PHPParser_PrettyPrinterAbstract
     }
 
     /**
-     * Pretty prints an array of statements.
-     *
-     * @param PHPParser_Node[] $stmts Array of statements
-     *
-     * @return string Pretty printed statements
-     */
-    public function prettyPrint(array $stmts) {
-        $this->preprocessNodes($stmts);
-
-        return str_replace("\n" . $this->noIndentToken, "\n", $this->pStmts($stmts, false));
-    }
-
-    /**
      * Pretty prints an expression.
      *
      * @param PHPParser_Node_Expr $node Expression node
      *
      * @return string Pretty printed node
      */
-    public function prettyPrintExpr(PHPParser_Node_Expr $node) {
+    public function prettyPrintExpr(PHPParser_Node_Expr $node)
+    {
         return str_replace("\n" . $this->noIndentToken, "\n", $this->p($node));
+    }
+
+    /**
+     * Pretty prints a node.
+     *
+     * @param PHPParser_Node $node Node to be pretty printed
+     *
+     * @return string Pretty printed node
+     */
+    protected function p(PHPParser_Node $node)
+    {
+        return $this->{'p' . $node->getType()}($node);
     }
 
     /**
@@ -112,6 +112,20 @@ abstract class PHPParser_PrettyPrinterAbstract
         }
 
         return $p;
+    }
+
+    /**
+     * Pretty prints an array of statements.
+     *
+     * @param PHPParser_Node[] $stmts Array of statements
+     *
+     * @return string Pretty printed statements
+     */
+    public function prettyPrint(array $stmts)
+    {
+        $this->preprocessNodes($stmts);
+
+        return str_replace("\n" . $this->noIndentToken, "\n", $this->pStmts($stmts, false));
     }
 
     /**
@@ -156,15 +170,15 @@ abstract class PHPParser_PrettyPrinterAbstract
         }
     }
 
-    /**
-     * Pretty prints a node.
-     *
-     * @param PHPParser_Node $node Node to be pretty printed
-     *
-     * @return string Pretty printed node
-     */
-    protected function p(PHPParser_Node $node) {
-        return $this->{'p' . $node->getType()}($node);
+    protected function pComments(array $comments)
+    {
+        $result = '';
+
+        foreach ($comments as $comment) {
+            $result .= $comment->getReformattedText() . "\n";
+        }
+
+        return $result;
     }
 
     protected function pInfixOp($type, PHPParser_Node $leftNode, $operatorString, PHPParser_Node $rightNode) {
@@ -173,16 +187,6 @@ abstract class PHPParser_PrettyPrinterAbstract
         return $this->pPrec($leftNode, $precedence, $associativity, -1)
              . $operatorString
              . $this->pPrec($rightNode, $precedence, $associativity, 1);
-    }
-
-    protected function pPrefixOp($type, $operatorString, PHPParser_Node $node) {
-        list($precedence, $associativity) = $this->precedenceMap[$type];
-        return $operatorString . $this->pPrec($node, $precedence, $associativity, 1);
-    }
-
-    protected function pPostfixOp($type, PHPParser_Node $node, $operatorString) {
-        list($precedence, $associativity) = $this->precedenceMap[$type];
-        return $this->pPrec($node, $precedence, $associativity, -1) . $operatorString;
     }
 
     /**
@@ -211,6 +215,30 @@ abstract class PHPParser_PrettyPrinterAbstract
         return $this->{'p' . $type}($node);
     }
 
+    protected function pPrefixOp($type, $operatorString, PHPParser_Node $node)
+    {
+        list($precedence, $associativity) = $this->precedenceMap[$type];
+        return $operatorString . $this->pPrec($node, $precedence, $associativity, 1);
+    }
+
+    protected function pPostfixOp($type, PHPParser_Node $node, $operatorString)
+    {
+        list($precedence, $associativity) = $this->precedenceMap[$type];
+        return $this->pPrec($node, $precedence, $associativity, -1) . $operatorString;
+    }
+
+    /**
+     * Pretty prints an array of nodes and implodes the printed values with commas.
+     *
+     * @param PHPParser_Node[] $nodes Array of Nodes to be printed
+     *
+     * @return string Comma separated pretty printed nodes
+     */
+    protected function pCommaSeparated(array $nodes)
+    {
+        return $this->pImplode($nodes, ', ');
+    }
+
     /**
      * Pretty prints an array of nodes and implodes the printed values.
      *
@@ -229,17 +257,6 @@ abstract class PHPParser_PrettyPrinterAbstract
     }
 
     /**
-     * Pretty prints an array of nodes and implodes the printed values with commas.
-     *
-     * @param PHPParser_Node[] $nodes Array of Nodes to be printed
-     *
-     * @return string Comma separated pretty printed nodes
-     */
-    protected function pCommaSeparated(array $nodes) {
-        return $this->pImplode($nodes, ', ');
-    }
-
-    /**
      * Signals the pretty printer that a string shall not be indented.
      *
      * @param string $string Not to be indented string
@@ -248,15 +265,5 @@ abstract class PHPParser_PrettyPrinterAbstract
      */
     protected function pNoIndent($string) {
         return str_replace("\n", "\n" . $this->noIndentToken, $string);
-    }
-
-    protected function pComments(array $comments) {
-        $result = '';
-
-        foreach ($comments as $comment) {
-            $result .= $comment->getReformattedText() . "\n";
-        }
-
-        return $result;
     }
 }

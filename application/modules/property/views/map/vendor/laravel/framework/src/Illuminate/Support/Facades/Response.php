@@ -17,23 +17,10 @@ class Response {
 	protected static $macros = array();
 
 	/**
-	 * Return a new response from the application.
-	 *
-	 * @param  string  $content
-	 * @param  int     $status
-	 * @param  array   $headers
-	 * @return \Illuminate\Http\Response
-	 */
-	public static function make($content = '', $status = 200, array $headers = array())
-	{
-		return new IlluminateResponse($content, $status, $headers);
-	}
-
-	/**
 	 * Return a new view response from the application.
 	 *
-	 * @param  string  $view
-	 * @param  array   $data
+	 * @param  string $view
+	 * @param  array $data
 	 * @param  int     $status
 	 * @param  array   $headers
 	 * @return \Illuminate\Http\Response
@@ -43,6 +30,19 @@ class Response {
 		$app = Facade::getFacadeApplication();
 
 		return static::make($app['view']->make($view, $data), $status, $headers);
+	}
+
+	/**
+	 * Return a new response from the application.
+	 *
+	 * @param  string $content
+	 * @param  int     $status
+	 * @param  array   $headers
+	 * @return \Illuminate\Http\Response
+	 */
+	public static function make($content = '', $status = 200, array $headers = array())
+	{
+		return new IlluminateResponse($content, $status, $headers);
 	}
 
 	/**

@@ -43,6 +43,18 @@ class EloquentUserProvider implements UserProviderInterface {
 	}
 
 	/**
+	 * Create a new instance of the model.
+	 *
+	 * @return \Illuminate\Database\Eloquent\Model
+	 */
+	public function createModel()
+	{
+		$class = '\\' . ltrim($this->model, '\\');
+
+		return new $class;
+	}
+
+	/**
 	 * Retrieve a user by by their unique identifier and "remember me" token.
 	 *
 	 * @param  mixed  $identifier
@@ -106,18 +118,6 @@ class EloquentUserProvider implements UserProviderInterface {
 		$plain = $credentials['password'];
 
 		return $this->hasher->check($plain, $user->getAuthPassword());
-	}
-
-	/**
-	 * Create a new instance of the model.
-	 *
-	 * @return \Illuminate\Database\Eloquent\Model
-	 */
-	public function createModel()
-	{
-		$class = '\\'.ltrim($this->model, '\\');
-
-		return new $class;
 	}
 
 }

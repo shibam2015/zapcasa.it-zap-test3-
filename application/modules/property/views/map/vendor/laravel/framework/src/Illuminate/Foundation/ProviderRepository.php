@@ -86,21 +86,35 @@ class ProviderRepository {
 	}
 
 	/**
-	 * Register the load events for the given provider.
+	 * Load the service provider manifest JSON file.
 	 *
-	 * @param  \Illuminate\Foundation\Application  $app
-	 * @param  string  $provider
-	 * @param  array  $events
-	 * @return void
+	 * @return array
 	 */
-	protected function registerLoadEvents(Application $app, $provider, array $events)
+	public function loadManifest()
 	{
-		if (count($events) < 1) return;
+		$path = $this->manifestPath . '/services.json';
 
-		$app->make('events')->listen($events, function() use ($app, $provider)
+		// The service manifest is a file containing a JSON representation of every
+		// service provided by the application and whether its provider is using
+		// deferred loading or should be eagerly loaded on each request to us.
+		if ($this->files->exists($path))
 		{
-			$app->register($provider);
-		});
+			$manifest = json_decode($this->files->get($path), true);
+
+			return array_merge($this->default, $manifest);
+		}
+	}
+
+	/**
+	 * Determine if the manifest should be compiled.
+	 *
+	 * @param  array $manifest
+	 * @param  array $providers
+	 * @return bool
+	 */
+	public function shouldRecompile($manifest, $providers)
+	{
+		return is_null($manifest) || $manifest['providers'] != $providers;
 	}
 
 	/**
@@ -147,47 +161,28 @@ class ProviderRepository {
 	}
 
 	/**
+	 * Create a fresh manifest array.
+	 *
+	 * @param  array  $providers
+	 * @return array
+	 */
+	protected function freshManifest(array $providers)
+	{
+		list($eager, $deferred) = array(array(), array());
+
+		return compact('providers', 'eager', 'deferred');
+	}
+
+	/**
 	 * Create a new provider instance.
 	 *
-	 * @param  \Illuminate\Foundation\Application  $app
-	 * @param  string  $provider
+	 * @param  \Illuminate\Foundation\Application $app
+	 * @param  string $provider
 	 * @return \Illuminate\Support\ServiceProvider
 	 */
 	public function createProvider(Application $app, $provider)
 	{
 		return new $provider($app);
-	}
-
-	/**
-	 * Determine if the manifest should be compiled.
-	 *
-	 * @param  array  $manifest
-	 * @param  array  $providers
-	 * @return bool
-	 */
-	public function shouldRecompile($manifest, $providers)
-	{
-		return is_null($manifest) || $manifest['providers'] != $providers;
-	}
-
-	/**
-	 * Load the service provider manifest JSON file.
-	 *
-	 * @return array
-	 */
-	public function loadManifest()
-	{
-		$path = $this->manifestPath.'/services.json';
-
-		// The service manifest is a file containing a JSON representation of every
-		// service provided by the application and whether its provider is using
-		// deferred loading or should be eagerly loaded on each request to us.
-		if ($this->files->exists($path))
-		{
-			$manifest = json_decode($this->files->get($path), true);
-
-			return array_merge($this->default, $manifest);
-		}
 	}
 
 	/**
@@ -206,16 +201,20 @@ class ProviderRepository {
 	}
 
 	/**
-	 * Create a fresh manifest array.
+	 * Register the load events for the given provider.
 	 *
-	 * @param  array  $providers
-	 * @return array
+	 * @param  \Illuminate\Foundation\Application $app
+	 * @param  string $provider
+	 * @param  array $events
+	 * @return void
 	 */
-	protected function freshManifest(array $providers)
+	protected function registerLoadEvents(Application $app, $provider, array $events)
 	{
-		list($eager, $deferred) = array(array(), array());
+		if (count($events) < 1) return;
 
-		return compact('providers', 'eager', 'deferred');
+		$app->make('events')->listen($events, function () use ($app, $provider) {
+			$app->register($provider);
+		});
 	}
 
 	/**

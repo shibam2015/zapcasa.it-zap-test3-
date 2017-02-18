@@ -40,6 +40,16 @@ class LineFormatter extends NormalizerFormatter
         parent::__construct($dateFormat);
     }
 
+    public function formatBatch(array $records)
+    {
+        $message = '';
+        foreach ($records as $record) {
+            $message .= $this->format($record);
+        }
+
+        return $message;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -63,26 +73,13 @@ class LineFormatter extends NormalizerFormatter
         return $output;
     }
 
-    public function formatBatch(array $records)
+    protected function replaceNewlines($str)
     {
-        $message = '';
-        foreach ($records as $record) {
-            $message .= $this->format($record);
+        if ($this->allowInlineLineBreaks) {
+            return $str;
         }
 
-        return $message;
-    }
-
-    protected function normalizeException(Exception $e)
-    {
-        $previousText = '';
-        if ($previous = $e->getPrevious()) {
-            do {
-                $previousText .= ', '.get_class($previous).': '.$previous->getMessage().' at '.$previous->getFile().':'.$previous->getLine();
-            } while ($previous = $previous->getPrevious());
-        }
-
-        return '[object] ('.get_class($e).': '.$e->getMessage().' at '.$e->getFile().':'.$e->getLine().$previousText.')';
+        return preg_replace('{[\r\n]+}', ' ', $str);
     }
 
     protected function convertToString($data)
@@ -102,12 +99,15 @@ class LineFormatter extends NormalizerFormatter
         return str_replace('\\/', '/', @json_encode($data));
     }
 
-    protected function replaceNewlines($str)
+    protected function normalizeException(Exception $e)
     {
-        if ($this->allowInlineLineBreaks) {
-            return $str;
+        $previousText = '';
+        if ($previous = $e->getPrevious()) {
+            do {
+                $previousText .= ', ' . get_class($previous) . ': ' . $previous->getMessage() . ' at ' . $previous->getFile() . ':' . $previous->getLine();
+            } while ($previous = $previous->getPrevious());
         }
 
-        return preg_replace('{[\r\n]+}', ' ', $str);
+        return '[object] (' . get_class($e) . ': ' . $e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . $previousText . ')';
     }
 }

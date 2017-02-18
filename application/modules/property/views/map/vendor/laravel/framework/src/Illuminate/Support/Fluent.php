@@ -28,23 +28,6 @@ class Fluent implements ArrayAccess, ArrayableInterface, JsonableInterface {
 	}
 
 	/**
-	 * Get an attribute from the container.
-	 *
-	 * @param  string  $key
-	 * @param  mixed   $default
-	 * @return mixed
-	 */
-	public function get($key, $default = null)
-	{
-		if (array_key_exists($key, $this->attributes))
-		{
-			return $this->attributes[$key];
-		}
-
-		return value($default);
-	}
-
-	/**
 	 * Get the attributes from the container.
 	 *
 	 * @return array
@@ -55,6 +38,17 @@ class Fluent implements ArrayAccess, ArrayableInterface, JsonableInterface {
 	}
 
 	/**
+	 * Convert the Fluent instance to JSON.
+	 *
+	 * @param  int $options
+	 * @return string
+	 */
+	public function toJson($options = 0)
+	{
+		return json_encode($this->toArray(), $options);
+	}
+
+	/**
 	 * Convert the Fluent instance to an array.
 	 *
 	 * @return array
@@ -62,17 +56,6 @@ class Fluent implements ArrayAccess, ArrayableInterface, JsonableInterface {
 	public function toArray()
 	{
 		return $this->attributes;
-	}
-
-	/**
-	 * Convert the Fluent instance to JSON.
-	 *
-	 * @param  int  $options
-	 * @return string
-	 */
-	public function toJson($options = 0)
-	{
-		return json_encode($this->toArray(), $options);
 	}
 
 	/**
@@ -155,6 +138,22 @@ class Fluent implements ArrayAccess, ArrayableInterface, JsonableInterface {
 	public function __set($key, $value)
 	{
 		$this->attributes[$key] = $value;
+	}
+
+	/**
+	 * Get an attribute from the container.
+	 *
+	 * @param  string $key
+	 * @param  mixed $default
+	 * @return mixed
+	 */
+	public function get($key, $default = null)
+	{
+		if (array_key_exists($key, $this->attributes)) {
+			return $this->attributes[$key];
+		}
+
+		return value($default);
 	}
 
 	/**

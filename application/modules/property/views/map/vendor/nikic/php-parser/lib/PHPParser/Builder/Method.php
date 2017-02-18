@@ -106,6 +106,22 @@ class PHPParser_Builder_Method extends PHPParser_BuilderAbstract
     }
 
     /**
+     * Adds multiple parameters.
+     *
+     * @param array $params The parameters to add
+     *
+     * @return PHPParser_Builder_Method The builder instance (for fluid interface)
+     */
+    public function addParams(array $params)
+    {
+        foreach ($params as $param) {
+            $this->addParam($param);
+        }
+
+        return $this;
+    }
+
+    /**
      * Adds a parameter.
      *
      * @param PHPParser_Node_Param|PHPParser_Builder_Param $param The parameter to add
@@ -125,15 +141,16 @@ class PHPParser_Builder_Method extends PHPParser_BuilderAbstract
     }
 
     /**
-     * Adds multiple parameters.
+     * Adds multiple statements.
      *
-     * @param array $params The parameters to add
+     * @param array $stmts The statements to add
      *
      * @return PHPParser_Builder_Method The builder instance (for fluid interface)
      */
-    public function addParams(array $params) {
-        foreach ($params as $param) {
-            $this->addParam($param);
+    public function addStmts(array $stmts)
+    {
+        foreach ($stmts as $stmt) {
+            $this->addStmt($stmt);
         }
 
         return $this;
@@ -152,21 +169,6 @@ class PHPParser_Builder_Method extends PHPParser_BuilderAbstract
         }
 
         $this->stmts[] = $this->normalizeNode($stmt);
-
-        return $this;
-    }
-
-    /**
-     * Adds multiple statements.
-     *
-     * @param array $stmts The statements to add
-     *
-     * @return PHPParser_Builder_Method The builder instance (for fluid interface)
-     */
-    public function addStmts(array $stmts) {
-        foreach ($stmts as $stmt) {
-            $this->addStmt($stmt);
-        }
 
         return $this;
     }

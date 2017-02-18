@@ -66,28 +66,6 @@ class GeonamesProvider extends AbstractProvider implements LocaleAwareProviderIn
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function getReversedData(array $coordinates)
-    {
-        if (null === $this->username) {
-            throw new InvalidCredentialsException('No Username provided');
-        }
-
-        $query = sprintf(self::REVERSE_ENDPOINT_URL, $coordinates[0], $coordinates[1], $this->getMaxResults(), $this->username);
-
-        return $this->executeQuery($query);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getName()
-    {
-        return 'geonames';
-    }
-
-    /**
      * @param string $query
      *
      * @return array
@@ -146,5 +124,27 @@ class GeonamesProvider extends AbstractProvider implements LocaleAwareProviderIn
         }
 
         return $results;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getReversedData(array $coordinates)
+    {
+        if (null === $this->username) {
+            throw new InvalidCredentialsException('No Username provided');
+        }
+
+        $query = sprintf(self::REVERSE_ENDPOINT_URL, $coordinates[0], $coordinates[1], $this->getMaxResults(), $this->username);
+
+        return $this->executeQuery($query);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getName()
+    {
+        return 'geonames';
     }
 }

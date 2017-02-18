@@ -43,6 +43,20 @@ class JsonBuilder
     }
 
     /**
+     * Resets the builder.
+     *
+     * @return \Ivory\JsonBuilder\JsonBuilder The json builder.
+     */
+    public function reset()
+    {
+        $this->values = array();
+        $this->escapes = array();
+        $this->jsonEncodeOptions = 0;
+
+        return $this;
+    }
+
+    /**
      * Gets the json encode options.
      *
      * @return integer The json encode options.
@@ -144,20 +158,6 @@ class JsonBuilder
     {
         unset($this->values[$path]);
         unset($this->escapes[$path]);
-
-        return $this;
-    }
-
-    /**
-     * Resets the builder.
-     *
-     * @return \Ivory\JsonBuilder\JsonBuilder The json builder.
-     */
-    public function reset()
-    {
-        $this->values = array();
-        $this->escapes = array();
-        $this->jsonEncodeOptions = 0;
 
         return $this;
     }

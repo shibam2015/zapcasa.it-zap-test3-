@@ -89,26 +89,25 @@ class ControllerInspector {
 	}
 
 	/**
-	 * Get the routable data for an index method.
-	 *
-	 * @param  array   $data
-	 * @param  string  $prefix
-	 * @return array
-	 */
-	protected function getIndexData($data, $prefix)
-	{
-		return array('verb' => $data['verb'], 'plain' => $prefix, 'uri' => $prefix);
-	}
-
-	/**
 	 * Extract the verb from a controller action.
 	 *
-	 * @param  string  $name
+	 * @param  string $name
 	 * @return string
 	 */
 	public function getVerb($name)
 	{
 		return head(explode('_', snake_case($name)));
+	}
+
+	/**
+	 * Add wildcards to the given URI.
+	 *
+	 * @param  string $uri
+	 * @return string
+	 */
+	public function addUriWildcards($uri)
+	{
+		return $uri . '/{one?}/{two?}/{three?}/{four?}/{five?}';
 	}
 
 	/**
@@ -124,14 +123,15 @@ class ControllerInspector {
 	}
 
 	/**
-	 * Add wildcards to the given URI.
+	 * Get the routable data for an index method.
 	 *
-	 * @param  string  $uri
-	 * @return string
+	 * @param  array $data
+	 * @param  string $prefix
+	 * @return array
 	 */
-	public function addUriWildcards($uri)
+	protected function getIndexData($data, $prefix)
 	{
-		return $uri.'/{one?}/{two?}/{three?}/{four?}/{five?}';
+		return array('verb' => $data['verb'], 'plain' => $prefix, 'uri' => $prefix);
 	}
 
 }

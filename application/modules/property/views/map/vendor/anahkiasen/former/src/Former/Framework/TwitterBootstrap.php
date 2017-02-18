@@ -19,7 +19,14 @@ class TwitterBootstrap extends Framework implements FrameworkInterface
    * @var array
    */
   protected $availableTypes = array('horizontal', 'vertical', 'inline', 'search');
-
+  /**
+   * The field states available
+   *
+   * @var array
+   */
+  protected $states = array(
+      'success', 'warning', 'error', 'info',
+  );
   /**
    * The button types available
    *
@@ -29,7 +36,6 @@ class TwitterBootstrap extends Framework implements FrameworkInterface
     'large', 'small', 'mini', 'block',
     'danger', 'info', 'inverse', 'link', 'primary', 'success', 'warning'
   );
-
   /**
    * The field sizes available
    *
@@ -39,15 +45,6 @@ class TwitterBootstrap extends Framework implements FrameworkInterface
     'mini', 'small', 'medium', 'large', 'xlarge', 'xxlarge',
     'span1', 'span2', 'span3', 'span4', 'span5', 'span6', 'span7',
     'span8', 'span9', 'span10', 'span11', 'span12'
-  );
-
-  /**
-   * The field states available
-   *
-   * @var array
-   */
-  protected $states = array(
-    'success', 'warning', 'error', 'info',
   );
 
   /**
@@ -63,49 +60,6 @@ class TwitterBootstrap extends Framework implements FrameworkInterface
 
   ////////////////////////////////////////////////////////////////////
   /////////////////////////// FILTER ARRAYS //////////////////////////
-  ////////////////////////////////////////////////////////////////////
-
-  /**
-   * Filter buttons classes
-   *
-   * @param  array $classes An array of classes
-   *
-   * @return array A filtered array
-   */
-  public function filterButtonClasses($classes)
-  {
-    // Filter classes
-    // $classes = array_intersect($classes, $this->buttons);
-
-    // Prepend button type
-    $classes = $this->prependWith($classes, 'btn-');
-    $classes[] = 'btn';
-
-    return $classes;
-  }
-
-  /**
-   * Filter field classes
-   *
-   * @param  array $classes An array of classes
-   *
-   * @return array A filtered array
-   */
-  public function filterFieldClasses($classes)
-  {
-    // Filter classes
-    $classes = array_intersect($classes, $this->fields);
-
-    // Prepend field type
-    $classes = array_map(function ($class) {
-      return Str::startsWith($class, 'span') ? $class : 'input-'.$class;
-    }, $classes);
-
-    return $classes;
-  }
-
-  ////////////////////////////////////////////////////////////////////
-  ///////////////////////////// ADD CLASSES //////////////////////////
   ////////////////////////////////////////////////////////////////////
 
   /**
@@ -131,6 +85,49 @@ class TwitterBootstrap extends Framework implements FrameworkInterface
     }
 
     return $this->addClassesToField($field, $classes);
+  }
+
+  /**
+   * Filter buttons classes
+   *
+   * @param  array $classes An array of classes
+   *
+   * @return array A filtered array
+   */
+  public function filterButtonClasses($classes)
+  {
+    // Filter classes
+    // $classes = array_intersect($classes, $this->buttons);
+
+    // Prepend button type
+    $classes = $this->prependWith($classes, 'btn-');
+    $classes[] = 'btn';
+
+    return $classes;
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  ///////////////////////////// ADD CLASSES //////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+  /**
+   * Filter field classes
+   *
+   * @param  array $classes An array of classes
+   *
+   * @return array A filtered array
+   */
+  public function filterFieldClasses($classes)
+  {
+    // Filter classes
+    $classes = array_intersect($classes, $this->fields);
+
+    // Prepend field type
+    $classes = array_map(function ($class) {
+      return Str::startsWith($class, 'span') ? $class : 'input-'.$class;
+    }, $classes);
+
+    return $classes;
   }
 
   /**

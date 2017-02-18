@@ -54,26 +54,6 @@ class OIORestProvider extends AbstractProvider implements ProviderInterface
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function getReversedData(array $coordinates)
-    {
-        $query = sprintf(self::REVERSE_ENDPOINT_URL, $coordinates[0], $coordinates[1]);
-
-        $data = $this->executeQuery($query);
-
-        return array($this->getResultArray($data));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getName()
-    {
-        return 'oio_rest';
-    }
-
-    /**
      * @param string $query
      *
      * @return array
@@ -116,5 +96,25 @@ class OIORestProvider extends AbstractProvider implements ProviderInterface
             'countryCode'  => 'DK',
             'timezone'     => 'Europe/Copenhagen'
         ));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getReversedData(array $coordinates)
+    {
+        $query = sprintf(self::REVERSE_ENDPOINT_URL, $coordinates[0], $coordinates[1]);
+
+        $data = $this->executeQuery($query);
+
+        return array($this->getResultArray($data));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getName()
+    {
+        return 'oio_rest';
     }
 }

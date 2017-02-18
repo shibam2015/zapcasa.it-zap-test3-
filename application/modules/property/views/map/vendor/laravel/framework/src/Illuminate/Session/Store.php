@@ -80,6 +80,16 @@ class Store implements SessionInterface {
 	}
 
 	/**
+	 * Get a new, random session ID.
+	 *
+	 * @return string
+	 */
+	protected function generateSessionId()
+	{
+		return sha1(uniqid(true) . str_random(25) . microtime(true));
+	}
+
+	/**
 	 * {@inheritdoc}
 	 */
 	public function start()
@@ -121,19 +131,6 @@ class Store implements SessionInterface {
 	}
 
 	/**
-	 * Initialize a bag in storage if it doesn't exist.
-	 *
-	 * @param  \Symfony\Component\HttpFoundation\Session\SessionBagInterface  $bag
-	 * @return void
-	 */
-	protected function initializeLocalBag($bag)
-	{
-		$this->bagData[$bag->getStorageKey()] = $this->get($bag->getStorageKey(), array());
-
-		$this->forget($bag->getStorageKey());
-	}
-
-	/**
 	 * {@inheritdoc}
 	 */
 	public function getId()
@@ -150,13 +147,77 @@ class Store implements SessionInterface {
 	}
 
 	/**
-	 * Get a new, random session ID.
+	 * Initialize a bag in storage if it doesn't exist.
 	 *
-	 * @return string
+	 * @param  \Symfony\Component\HttpFoundation\Session\SessionBagInterface  $bag
+	 * @return void
 	 */
-	protected function generateSessionId()
+	protected function initializeLocalBag($bag)
 	{
-		return sha1(uniqid(true).str_random(25).microtime(true));
+		$this->bagData[$bag->getStorageKey()] = $this->get($bag->getStorageKey(), array());
+
+		$this->forget($bag->getStorageKey());
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function get($name, $default = null)
+	{
+		return array_get($this->attributes, $name, $default);
+	}
+
+	/**
+	 * Remove an item from the session.
+	 *
+	 * @param  string $key
+	 * @return void
+	 */
+	public function forget($key)
+	{
+		array_forget($this->attributes, $key);
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function has($name)
+	{
+		return !is_null($this->get($name));
+	}
+
+	/**
+	 * Regenerate the CSRF token value.
+	 *
+	 * @return void
+	 */
+	public function regenerateToken()
+	{
+		$this->put('_token', str_random(40));
+	}
+
+	/**
+	 * Put a key / value pair or array of key / value pairs in the session.
+	 *
+	 * @param  string|array $key
+	 * @param  mixed|null $value
+	 * @return void
+	 */
+	public function put($key, $value)
+	{
+		if (!is_array($key)) $key = array($key => $value);
+
+		foreach ($key as $arrayKey => $arrayValue) {
+			$this->set($arrayKey, $arrayValue);
+		}
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function set($name, $value)
+	{
+		array_set($this->attributes, $name, $value);
 	}
 
 	/**
@@ -250,22 +311,6 @@ class Store implements SessionInterface {
 	}
 
 	/**
-	 * {@inheritdoc}
-	 */
-	public function has($name)
-	{
-		return ! is_null($this->get($name));
-	}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function get($name, $default = null)
-	{
-		return array_get($this->attributes, $name, $default);
-	}
-
-	/**
 	 * Determine if the session contains old input.
 	 *
 	 * @param  string  $key
@@ -298,28 +343,30 @@ class Store implements SessionInterface {
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * Flash an input array to the session.
+	 *
+	 * @param  array $value
+	 * @return void
 	 */
-	public function set($name, $value)
+	public function flashInput(array $value)
 	{
-		array_set($this->attributes, $name, $value);
+		$this->flash('_old_input', $value);
 	}
 
 	/**
-	 * Put a key / value pair or array of key / value pairs in the session.
+	 * Flash a key / value pair to the session.
 	 *
-	 * @param  string|array  $key
-	 * @param  mixed|null  	 $value
+	 * @param  string $key
+	 * @param  mixed $value
 	 * @return void
 	 */
-	public function put($key, $value)
+	public function flash($key, $value)
 	{
-		if ( ! is_array($key)) $key = array($key => $value);
+		$this->put($key, $value);
 
-		foreach ($key as $arrayKey => $arrayValue)
-		{
-			$this->set($arrayKey, $arrayValue);
-		}
+		$this->push('flash.new', $key);
+
+		$this->removeFromOldFlashData(array($key));
 	}
 
 	/**
@@ -339,30 +386,14 @@ class Store implements SessionInterface {
 	}
 
 	/**
-	 * Flash a key / value pair to the session.
+	 * Remove the given keys from the old flash data.
 	 *
-	 * @param  string  $key
-	 * @param  mixed   $value
+	 * @param  array $keys
 	 * @return void
 	 */
-	public function flash($key, $value)
+	protected function removeFromOldFlashData(array $keys)
 	{
-		$this->put($key, $value);
-
-		$this->push('flash.new', $key);
-
-		$this->removeFromOldFlashData(array($key));
-	}
-
-	/**
-	 * Flash an input array to the session.
-	 *
-	 * @param  array  $value
-	 * @return void
-	 */
-	public function flashInput(array $value)
-	{
-		$this->flash('_old_input', $value);
+		$this->put('flash.old', array_diff($this->get('flash.old', array()), $keys));
 	}
 
 	/**
@@ -375,21 +406,6 @@ class Store implements SessionInterface {
 		$this->mergeNewFlashes($this->get('flash.old', array()));
 
 		$this->put('flash.old', array());
-	}
-
-	/**
-	 * Reflash a subset of the current flash data.
-	 *
-	 * @param  array|dynamic  $keys
-	 * @return void
-	 */
-	public function keep($keys = null)
-	{
-		$keys = is_array($keys) ? $keys : func_get_args();
-
-		$this->mergeNewFlashes($keys);
-
-		$this->removeFromOldFlashData($keys);
 	}
 
 	/**
@@ -406,14 +422,18 @@ class Store implements SessionInterface {
 	}
 
 	/**
-	 * Remove the given keys from the old flash data.
+	 * Reflash a subset of the current flash data.
 	 *
-	 * @param  array  $keys
+	 * @param  array|dynamic $keys
 	 * @return void
 	 */
-	protected function removeFromOldFlashData(array $keys)
+	public function keep($keys = null)
 	{
-		$this->put('flash.old', array_diff($this->get('flash.old', array()), $keys));
+		$keys = is_array($keys) ? $keys : func_get_args();
+
+		$this->mergeNewFlashes($keys);
+
+		$this->removeFromOldFlashData($keys);
 	}
 
 	/**
@@ -444,14 +464,13 @@ class Store implements SessionInterface {
 	}
 
 	/**
-	 * Remove an item from the session.
+	 * Remove all of the items from the session.
 	 *
-	 * @param  string  $key
 	 * @return void
 	 */
-	public function forget($key)
+	public function flush()
 	{
-		array_forget($this->attributes, $key);
+		$this->clear();
 	}
 
 	/**
@@ -465,16 +484,6 @@ class Store implements SessionInterface {
 		{
 			$bag->clear();
 		}
-	}
-
-	/**
-	 * Remove all of the items from the session.
-	 *
-	 * @return void
-	 */
-	public function flush()
-	{
-		$this->clear();
 	}
 
 	/**
@@ -528,9 +537,9 @@ class Store implements SessionInterface {
 	 *
 	 * @return string
 	 */
-	public function token()
+	public function getToken()
 	{
-		return $this->get('_token');
+		return $this->token();
 	}
 
 	/**
@@ -538,19 +547,9 @@ class Store implements SessionInterface {
 	 *
 	 * @return string
 	 */
-	public function getToken()
+	public function token()
 	{
-		return $this->token();
-	}
-
-	/**
-	 * Regenerate the CSRF token value.
-	 *
-	 * @return void
-	 */
-	public function regenerateToken()
-	{
-		$this->put('_token', str_random(40));
+		return $this->get('_token');
 	}
 
 	/**
@@ -561,16 +560,6 @@ class Store implements SessionInterface {
 	public function getHandler()
 	{
 		return $this->handler;
-	}
-
-	/**
-	 * Determine if the session handler needs a request.
-	 *
-	 * @return bool
-	 */
-	public function handlerNeedsRequest()
-	{
-		return $this->handler instanceof CookieSessionHandler;
 	}
 
 	/**
@@ -585,6 +574,16 @@ class Store implements SessionInterface {
 		{
 			$this->handler->setRequest($request);
 		}
+	}
+
+	/**
+	 * Determine if the session handler needs a request.
+	 *
+	 * @return bool
+	 */
+	public function handlerNeedsRequest()
+	{
+		return $this->handler instanceof CookieSessionHandler;
 	}
 
 }

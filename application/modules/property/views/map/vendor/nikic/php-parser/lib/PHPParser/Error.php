@@ -18,6 +18,20 @@ class PHPParser_Error extends RuntimeException
     }
 
     /**
+     * Updates the exception message after a change to rawMessage or rawLine.
+     */
+    protected function updateMessage()
+    {
+        $this->message = $this->rawMessage;
+
+        if (-1 === $this->rawLine) {
+            $this->message .= ' on unknown line';
+        } else {
+            $this->message .= ' on line ' . $this->rawLine;
+        }
+    }
+
+    /**
      * Gets the error message
      *
      * @return string Error message
@@ -53,18 +67,5 @@ class PHPParser_Error extends RuntimeException
     public function setRawLine($line) {
         $this->rawLine = (int) $line;
         $this->updateMessage();
-    }
-
-    /**
-     * Updates the exception message after a change to rawMessage or rawLine.
-     */
-    protected function updateMessage() {
-        $this->message = $this->rawMessage;
-
-        if (-1 === $this->rawLine) {
-            $this->message .= ' on unknown line';
-        } else {
-            $this->message .= ' on line ' . $this->rawLine;
-        }
     }
 }

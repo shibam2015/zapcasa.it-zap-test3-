@@ -18,17 +18,17 @@ abstract class AbstractResult implements \ArrayAccess
     /**
      * {@inheritDoc}
      */
-    public function offsetExists($offset)
+    public function offsetGet($offset)
     {
-        return property_exists($this, $offset) && null !== $this->$offset;
+        return $this->offsetExists($offset) ? $this->$offset : null;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function offsetGet($offset)
+    public function offsetExists($offset)
     {
-        return $this->offsetExists($offset) ? $this->$offset : null;
+        return property_exists($this, $offset) && null !== $this->$offset;
     }
 
     /**

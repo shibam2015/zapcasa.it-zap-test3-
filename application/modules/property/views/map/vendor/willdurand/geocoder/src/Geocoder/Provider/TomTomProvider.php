@@ -67,28 +67,6 @@ class TomTomProvider extends AbstractProvider implements LocaleAwareProviderInte
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function getReversedData(array $coordinates)
-    {
-        if (null === $this->apiKey) {
-            throw new InvalidCredentialsException('No Map API Key provided');
-        }
-
-        $query = sprintf(self::REVERSE_ENDPOINT_URL, $this->apiKey, $coordinates[0], $coordinates[1]);
-
-        return $this->executeQuery($query);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getName()
-    {
-        return 'tomtom';
-    }
-
-    /**
      * @param string $query
      *
      * @return array
@@ -155,5 +133,27 @@ class TomTomProvider extends AbstractProvider implements LocaleAwareProviderInte
             'country'     => isset($data->country) ? (string) $data->country : null,
             'countryCode' => isset($data->countryISO3) ? (string) $data->countryISO3 : null,
         ));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getReversedData(array $coordinates)
+    {
+        if (null === $this->apiKey) {
+            throw new InvalidCredentialsException('No Map API Key provided');
+        }
+
+        $query = sprintf(self::REVERSE_ENDPOINT_URL, $this->apiKey, $coordinates[0], $coordinates[1]);
+
+        return $this->executeQuery($query);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getName()
+    {
+        return 'tomtom';
     }
 }

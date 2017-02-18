@@ -156,6 +156,14 @@ class LiveValidation
   }
 
   /**
+   * Alias for match
+   */
+  public function regex($pattern)
+  {
+    return $this->match($pattern);
+  }
+
+  /**
    * Matches a pattern
    */
   public function match($pattern)
@@ -164,14 +172,6 @@ class LiveValidation
     $pattern = substr($pattern[0], 1, -1);
 
     $this->field->pattern($pattern);
-  }
-
-  /**
-   * Alias for match
-   */
-  public function regex($pattern)
-  {
-    return $this->match($pattern);
   }
 
   // Boundaries
@@ -198,11 +198,35 @@ class LiveValidation
   }
 
   /**
+   * Set a maximum value to a field
+   *
+   * @param integer $max
+   */
+  private function setMax($max)
+  {
+    $attribute = $this->field->isOfType('number') ? 'max' : 'maxlength';
+
+    $this->field->$attribute($max);
+  }
+
+  /**
    * Min value
    */
   public function min($min)
   {
     $this->setMin($min[0]);
+  }
+
+  /**
+   * Set a minimum value to a field
+   *
+   * @param integer $min
+   */
+  private function setMin($min)
+  {
+    $attribute = $this->field->isOfType('number') ? 'min' : 'minlength';
+
+    $this->field->$attribute($min);
   }
 
   /**
@@ -216,6 +240,17 @@ class LiveValidation
     $this->setMax($max);
   }
 
+  // Dates
+  ////////////////////////////////////////////////////////////////////
+
+  /**
+   * Set accept only images
+   */
+  public function image()
+  {
+    $this->mimes(array('jpg', 'png', 'gif', 'bmp'));
+  }
+
   /**
    * Set accepted mime types
    */
@@ -227,37 +262,6 @@ class LiveValidation
     }
 
     $this->field->accept($this->setAccepted($mimes));
-  }
-
-  /**
-   * Set accept only images
-   */
-  public function image()
-  {
-    $this->mimes(array('jpg', 'png', 'gif', 'bmp'));
-  }
-
-  // Dates
-  ////////////////////////////////////////////////////////////////////
-
-  /**
-   * Before a date
-   */
-  public function before($date)
-  {
-    list($format, $date) = $this->formatDate($date[0]);
-
-    $this->field->max(date($format, $date));
-  }
-
-  /**
-   * After a date
-   */
-  public function after($date)
-  {
-    list($format, $date) = $this->formatDate($date[0]);
-
-    $this->field->min(date($format, $date));
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -279,6 +283,16 @@ class LiveValidation
   }
 
   /**
+   * Before a date
+   */
+  public function before($date)
+  {
+    list($format, $date) = $this->formatDate($date[0]);
+
+    $this->field->max(date($format, $date));
+  }
+
+  /**
    * Format a date to a pattern
    *
    * @param  string $date The date
@@ -297,26 +311,12 @@ class LiveValidation
   }
 
   /**
-   * Set a maximum value to a field
-   *
-   * @param integer $max
+   * After a date
    */
-  private function setMax($max)
+  public function after($date)
   {
-    $attribute = $this->field->isOfType('number') ? 'max' : 'maxlength';
+    list($format, $date) = $this->formatDate($date[0]);
 
-    $this->field->$attribute($max);
-  }
-
-  /**
-   * Set a minimum value to a field
-   *
-   * @param integer $min
-   */
-  private function setMin($min)
-  {
-    $attribute = $this->field->isOfType('number') ? 'min' : 'minlength';
-
-    $this->field->$attribute($min);
+    $this->field->min(date($format, $date));
   }
 }

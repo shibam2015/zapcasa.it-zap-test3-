@@ -212,6 +212,27 @@ abstract class AnnotationClassLoader implements LoaderInterface
     }
 
     /**
+     * Gets the default route name for a class method.
+     *
+     * @param \ReflectionClass $class
+     * @param \ReflectionMethod $method
+     *
+     * @return string
+     */
+    protected function getDefaultRouteName(\ReflectionClass $class, \ReflectionMethod $method)
+    {
+        $name = strtolower(str_replace('\\', '_', $class->name) . '_' . $method->name);
+        if ($this->defaultRouteIndex > 0) {
+            $name .= '_' . $this->defaultRouteIndex;
+        }
+        $this->defaultRouteIndex++;
+
+        return $name;
+    }
+
+    abstract protected function configureRoute(Route $route, \ReflectionClass $class, \ReflectionMethod $method, $annot);
+
+    /**
      * {@inheritdoc}
      */
     public function supports($resource, $type = null)
@@ -232,25 +253,4 @@ abstract class AnnotationClassLoader implements LoaderInterface
     public function getResolver()
     {
     }
-
-    /**
-     * Gets the default route name for a class method.
-     *
-     * @param \ReflectionClass  $class
-     * @param \ReflectionMethod $method
-     *
-     * @return string
-     */
-    protected function getDefaultRouteName(\ReflectionClass $class, \ReflectionMethod $method)
-    {
-        $name = strtolower(str_replace('\\', '_', $class->name).'_'.$method->name);
-        if ($this->defaultRouteIndex > 0) {
-            $name .= '_'.$this->defaultRouteIndex;
-        }
-        $this->defaultRouteIndex++;
-
-        return $name;
-    }
-
-    abstract protected function configureRoute(Route $route, \ReflectionClass $class, \ReflectionMethod $method, $annot);
 }

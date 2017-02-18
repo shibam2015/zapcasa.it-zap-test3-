@@ -39,6 +39,25 @@ class AssetPublisher {
 	}
 
 	/**
+	 * Publish a given package's assets to the publish path.
+	 *
+	 * @param  string $package
+	 * @param  string $packagePath
+	 * @return bool
+	 */
+	public function publishPackage($package, $packagePath = null)
+	{
+		$packagePath = $packagePath ?: $this->packagePath;
+
+		// Once we have the package path we can just create the source and destination
+		// path and copy the directory from one to the other. The directory copy is
+		// recursive so all nested files and directories will get copied as well.
+		$source = $packagePath . "/{$package}/public";
+
+		return $this->publish($package, $source);
+	}
+
+	/**
 	 * Copy all assets from a given path to the publish path.
 	 *
 	 * @param  string  $name
@@ -59,25 +78,6 @@ class AssetPublisher {
 		}
 
 		return $success;
-	}
-
-	/**
-	 * Publish a given package's assets to the publish path.
-	 *
-	 * @param  string  $package
-	 * @param  string  $packagePath
-	 * @return bool
-	 */
-	public function publishPackage($package, $packagePath = null)
-	{
-		$packagePath = $packagePath ?: $this->packagePath;
-
-		// Once we have the package path we can just create the source and destination
-		// path and copy the directory from one to the other. The directory copy is
-		// recursive so all nested files and directories will get copied as well.
-		$source = $packagePath."/{$package}/public";
-
-		return $this->publish($package, $source);
 	}
 
 	/**

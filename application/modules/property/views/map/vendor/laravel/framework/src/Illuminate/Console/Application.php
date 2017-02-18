@@ -34,26 +34,6 @@ class Application extends \Symfony\Component\Console\Application {
 	}
 
 	/**
-	 * Create a new Console application.
-	 *
-	 * @param  \Illuminate\Foundation\Application  $app
-	 * @return \Illuminate\Console\Application
-	 */
-	public static function make($app)
-	{
-		$app->boot();
-
-		$console = with($console = new static('Laravel Framework', $app::VERSION))
-								->setLaravel($app)
-								->setExceptionHandler($app['exception'])
-								->setAutoExit(false);
-
-		$app->instance('artisan', $console);
-
-		return $console;
-	}
-
-	/**
 	 * Boot the Console application.
 	 *
 	 * @return \Illuminate\Console\Application
@@ -72,6 +52,26 @@ class Application extends \Symfony\Component\Console\Application {
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Create a new Console application.
+	 *
+	 * @param  \Illuminate\Foundation\Application $app
+	 * @return \Illuminate\Console\Application
+	 */
+	public static function make($app)
+	{
+		$app->boot();
+
+		$console = with($console = new static('Laravel Framework', $app::VERSION))
+			->setLaravel($app)
+			->setExceptionHandler($app['exception'])
+			->setAutoExit(false);
+
+		$app->instance('artisan', $console);
+
+		return $console;
 	}
 
 	/**
@@ -97,9 +97,36 @@ class Application extends \Symfony\Component\Console\Application {
 	}
 
 	/**
+	 * Resolve an array of commands through the application.
+	 *
+	 * @param  array|dynamic $commands
+	 * @return void
+	 */
+	public function resolveCommands($commands)
+	{
+		$commands = is_array($commands) ? $commands : func_get_args();
+
+		foreach ($commands as $command)
+		{
+			$this->resolve($command);
+		}
+	}
+
+	/**
+	 * Add a command, resolving through the application.
+	 *
+	 * @param  string  $command
+	 * @return \Symfony\Component\Console\Command\Command
+	 */
+	public function resolve($command)
+	{
+		return $this->add($this->laravel[$command]);
+	}
+
+	/**
 	 * Add a command to the console.
 	 *
-	 * @param  \Symfony\Component\Console\Command\Command  $command
+	 * @param  \Symfony\Component\Console\Command\Command $command
 	 * @return \Symfony\Component\Console\Command\Command
 	 */
 	public function add(SymfonyCommand $command)
@@ -115,65 +142,12 @@ class Application extends \Symfony\Component\Console\Application {
 	/**
 	 * Add the command to the parent instance.
 	 *
-	 * @param  \Symfony\Component\Console\Command\Command  $command
+	 * @param  \Symfony\Component\Console\Command\Command $command
 	 * @return \Symfony\Component\Console\Command\Command
 	 */
 	protected function addToParent(SymfonyCommand $command)
 	{
 		return parent::add($command);
-	}
-
-	/**
-	 * Add a command, resolving through the application.
-	 *
-	 * @param  string  $command
-	 * @return \Symfony\Component\Console\Command\Command
-	 */
-	public function resolve($command)
-	{
-		return $this->add($this->laravel[$command]);
-	}
-
-	/**
-	 * Resolve an array of commands through the application.
-	 *
-	 * @param  array|dynamic  $commands
-	 * @return void
-	 */
-	public function resolveCommands($commands)
-	{
-		$commands = is_array($commands) ? $commands : func_get_args();
-
-		foreach ($commands as $command)
-		{
-			$this->resolve($command);
-		}
-	}
-
-	/**
-	 * Get the default input definitions for the applications.
-	 *
-	 * @return \Symfony\Component\Console\Input\InputDefinition
-	 */
-	protected function getDefaultInputDefinition()
-	{
-		$definition = parent::getDefaultInputDefinition();
-
-		$definition->addOption($this->getEnvironmentOption());
-
-		return $definition;
-	}
-
-	/**
-	 * Get the global environment option for the definition.
-	 *
-	 * @return \Symfony\Component\Console\Input\InputOption
-	 */
-	protected function getEnvironmentOption()
-	{
-		$message = 'The environment the command should run under.';
-
-		return new InputOption('--env', null, InputOption::VALUE_OPTIONAL, $message);
 	}
 
 	/**
@@ -233,6 +207,32 @@ class Application extends \Symfony\Component\Console\Application {
 		parent::setAutoExit($boolean);
 
 		return $this;
+	}
+
+	/**
+	 * Get the default input definitions for the applications.
+	 *
+	 * @return \Symfony\Component\Console\Input\InputDefinition
+	 */
+	protected function getDefaultInputDefinition()
+	{
+		$definition = parent::getDefaultInputDefinition();
+
+		$definition->addOption($this->getEnvironmentOption());
+
+		return $definition;
+	}
+
+	/**
+	 * Get the global environment option for the definition.
+	 *
+	 * @return \Symfony\Component\Console\Input\InputOption
+	 */
+	protected function getEnvironmentOption()
+	{
+		$message = 'The environment the command should run under.';
+
+		return new InputOption('--env', null, InputOption::VALUE_OPTIONAL, $message);
 	}
 
 }

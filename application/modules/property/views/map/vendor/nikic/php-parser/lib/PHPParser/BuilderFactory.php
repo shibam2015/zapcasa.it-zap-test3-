@@ -12,28 +12,6 @@
 class PHPParser_BuilderFactory
 {
     /**
-     * Creates a class builder.
-     *
-     * @param string $name Name of the class
-     *
-     * @return PHPParser_Builder_Class The created class builder
-     */
-    protected function _class($name) {
-        return new PHPParser_Builder_Class($name);
-    }
-
-    /**
-     * Creates a interface builder.
-     *
-     * @param string $name Name of the interface
-     *
-     * @return PHPParser_Builder_Class The created interface builder
-     */
-    protected function _interface($name) {
-        return new PHPParser_Builder_Interface($name);
-    }
-
-    /**
      * Creates a method builder.
      *
      * @param string $name Name of the method
@@ -66,6 +44,39 @@ class PHPParser_BuilderFactory
         return new PHPParser_Builder_Property($name);
     }
 
+    public function __call($name, array $args)
+    {
+        if (method_exists($this, '_' . $name)) {
+            return call_user_func_array(array($this, '_' . $name), $args);
+        }
+
+        throw new LogicException(sprintf('Method "%s" does not exist', $name));
+    }
+
+    /**
+     * Creates a class builder.
+     *
+     * @param string $name Name of the class
+     *
+     * @return PHPParser_Builder_Class The created class builder
+     */
+    protected function _class($name)
+    {
+        return new PHPParser_Builder_Class($name);
+    }
+
+    /**
+     * Creates a interface builder.
+     *
+     * @param string $name Name of the interface
+     *
+     * @return PHPParser_Builder_Class The created interface builder
+     */
+    protected function _interface($name)
+    {
+        return new PHPParser_Builder_Interface($name);
+    }
+
     /**
      * Creates a function builder.
      *
@@ -75,13 +86,5 @@ class PHPParser_BuilderFactory
      */
     protected function _function($name) {
         return new PHPParser_Builder_Function($name);
-    }
-
-    public function __call($name, array $args) {
-        if (method_exists($this, '_' . $name)) {
-            return call_user_func_array(array($this, '_' . $name), $args);
-        }
-
-        throw new LogicException(sprintf('Method "%s" does not exist', $name));
     }
 }

@@ -67,28 +67,6 @@ class BingMapsProvider extends AbstractProvider implements LocaleAwareProviderIn
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function getReversedData(array $coordinates)
-    {
-        if (null === $this->apiKey) {
-            throw new InvalidCredentialsException('No API Key provided');
-        }
-
-        $query = sprintf(self::REVERSE_ENDPOINT_URL, $coordinates[0], $coordinates[1], $this->apiKey);
-
-        return $this->executeQuery($query);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getName()
-    {
-        return 'bing_maps';
-    }
-
-    /**
      * @param string $query
      *
      * @return array
@@ -151,5 +129,27 @@ class BingMapsProvider extends AbstractProvider implements LocaleAwareProviderIn
         }
 
         return $results;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getReversedData(array $coordinates)
+    {
+        if (null === $this->apiKey) {
+            throw new InvalidCredentialsException('No API Key provided');
+        }
+
+        $query = sprintf(self::REVERSE_ENDPOINT_URL, $coordinates[0], $coordinates[1], $this->apiKey);
+
+        return $this->executeQuery($query);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getName()
+    {
+        return 'bing_maps';
     }
 }

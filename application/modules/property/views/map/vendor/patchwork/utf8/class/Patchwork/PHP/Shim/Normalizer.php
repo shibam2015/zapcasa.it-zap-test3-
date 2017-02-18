@@ -73,6 +73,13 @@ class Normalizer
         else return self::decompose($s, $K);
     }
 
+    protected static function getData($file)
+    {
+        $file = __DIR__ . '/unidata/' . $file . '.ser';
+        if (file_exists($file)) return unserialize(file_get_contents($file));
+        else return false;
+    }
+
     protected static function recompose($s)
     {
         $ASCII = self::$ASCII;
@@ -284,12 +291,5 @@ class Normalizer
         }
 
         return $result;
-    }
-
-    protected static function getData($file)
-    {
-        $file = __DIR__ . '/unidata/' . $file . '.ser';
-        if (file_exists($file)) return unserialize(file_get_contents($file));
-        else return false;
     }
 }

@@ -61,6 +61,16 @@ class CompilerEngine extends PhpEngine {
 	}
 
 	/**
+	 * Get the compiler implementation.
+	 *
+	 * @return \Illuminate\View\Compilers\CompilerInterface
+	 */
+	public function getCompiler()
+	{
+		return $this->compiler;
+	}
+
+	/**
 	 * Handle a view exception.
 	 *
 	 * @param  \Exception  $e
@@ -84,16 +94,6 @@ class CompilerEngine extends PhpEngine {
 	protected function getMessage($e)
 	{
 		return $e->getMessage().' (View: '.realpath(last($this->lastCompiled)).')';
-	}
-
-	/**
-	 * Get the compiler implementation.
-	 *
-	 * @return \Illuminate\View\Compilers\CompilerInterface
-	 */
-	public function getCompiler()
-	{
-		return $this->compiler;
 	}
 
 }

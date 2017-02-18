@@ -29,6 +29,13 @@ class ResponseListener implements EventSubscriberInterface
         $this->charset = $charset;
     }
 
+    public static function getSubscribedEvents()
+    {
+        return array(
+            KernelEvents::RESPONSE => 'onKernelResponse',
+        );
+    }
+
     /**
      * Filters the Response.
      *
@@ -47,12 +54,5 @@ class ResponseListener implements EventSubscriberInterface
         }
 
         $response->prepare($event->getRequest());
-    }
-
-    public static function getSubscribedEvents()
-    {
-        return array(
-            KernelEvents::RESPONSE => 'onKernelResponse',
-        );
     }
 }

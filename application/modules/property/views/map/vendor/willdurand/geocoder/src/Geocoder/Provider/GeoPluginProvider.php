@@ -42,22 +42,6 @@ class GeoPluginProvider extends AbstractProvider implements ProviderInterface
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function getReversedData(array $coordinates)
-    {
-        throw new UnsupportedException('The GeoPluginProvider is not able to do reverse geocoding.');
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getName()
-    {
-        return 'geo_plugin';
-    }
-
-    /**
      * @param string $query
      *
      * @return array
@@ -91,5 +75,21 @@ class GeoPluginProvider extends AbstractProvider implements ProviderInterface
             'latitude'    => isset($data['geoplugin_latitude']) ? $data['geoplugin_latitude'] : null,
             'longitude'   => isset($data['geoplugin_longitude']) ? $data['geoplugin_longitude'] : null,
         )));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getReversedData(array $coordinates)
+    {
+        throw new UnsupportedException('The GeoPluginProvider is not able to do reverse geocoding.');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getName()
+    {
+        return 'geo_plugin';
     }
 }

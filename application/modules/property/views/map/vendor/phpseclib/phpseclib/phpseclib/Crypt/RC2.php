@@ -345,23 +345,6 @@ class Crypt_RC2 extends Crypt_Base
     }
 
     /**
-     * Sets the key length
-     *
-     * Valid key lengths are 1 to 1024.
-     * Calling this function after setting the key has no effect until the next
-     *  Crypt_RC2::setKey() call.
-     *
-     * @access public
-     * @param Integer $length in bits
-     */
-    function setKeyLength($length)
-    {
-        if ($length >= 1 && $length <= 1024) {
-            $this->default_key_length = $length;
-        }
-    }
-
-    /**
      * Sets the key.
      *
      * Keys can be of any length. RC2, itself, uses 1 to 1024 bit keys (eg.
@@ -414,6 +397,23 @@ class Crypt_RC2 extends Crypt_Base
         $l[0] = $this->invpitable[$l[0]];
         array_unshift($l, 'C*');
         parent::setKey(call_user_func_array('pack', $l));
+    }
+
+    /**
+     * Sets the key length
+     *
+     * Valid key lengths are 1 to 1024.
+     * Calling this function after setting the key has no effect until the next
+     *  Crypt_RC2::setKey() call.
+     *
+     * @access public
+     * @param Integer $length in bits
+     */
+    function setKeyLength($length)
+    {
+        if ($length >= 1 && $length <= 1024) {
+            $this->default_key_length = $length;
+        }
     }
 
     /**

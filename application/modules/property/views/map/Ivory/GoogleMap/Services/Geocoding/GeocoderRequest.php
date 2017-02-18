@@ -50,16 +50,6 @@ class GeocoderRequest
     }
 
     /**
-     * Checks if the geocoder request has an address.
-     *
-     * @return boolean TRUE if the geocoder request has an address else FALSE.
-     */
-    public function hasAddress()
-    {
-        return $this->address !== null;
-    }
-
-    /**
      * Gets the geocoder request address.
      *
      * @return string The geocoder request address.
@@ -83,16 +73,6 @@ class GeocoderRequest
         }
 
         $this->address = $address;
-    }
-
-    /**
-     * Checks if the geocoder request has a coordinate.
-     *
-     * @return boolean TRUE if the geocoder request has a coordinate else FALSE.
-     */
-    public function hasCoordinate()
-    {
-        return $this->coordinate !== null;
     }
 
     /**
@@ -141,13 +121,13 @@ class GeocoderRequest
     }
 
     /**
-     * Checks if the geocoder request has a bound.
+     * Checks if the geocoder request has a coordinate.
      *
-     * @return boolean TRUE if the geocoder request has a bound else FALSE.
+     * @return boolean TRUE if the geocoder request has a coordinate else FALSE.
      */
-    public function hasBound()
+    public function hasCoordinate()
     {
-        return $this->bound !== null;
+        return $this->coordinate !== null;
     }
 
     /**
@@ -216,6 +196,16 @@ class GeocoderRequest
         } else {
             throw GeocodingException::invalidGeocoderRequestBound();
         }
+    }
+
+    /**
+     * Checks if the geocoder request has a bound.
+     *
+     * @return boolean TRUE if the geocoder request has a bound else FALSE.
+     */
+    public function hasBound()
+    {
+        return $this->bound !== null;
     }
 
     /**
@@ -324,5 +314,15 @@ class GeocoderRequest
     public function isValid()
     {
         return $this->hasAddress() || $this->hasCoordinate();
+    }
+
+    /**
+     * Checks if the geocoder request has an address.
+     *
+     * @return boolean TRUE if the geocoder request has an address else FALSE.
+     */
+    public function hasAddress()
+    {
+        return $this->address !== null;
     }
 }

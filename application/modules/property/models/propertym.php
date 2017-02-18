@@ -5,7 +5,10 @@ class propertym extends CI_Model {
         parent::__construct();
 		ini_set('memory_limit', '-1'); 
     }
-	public function getProeprtiesByFilter($filters='',$startpoint,$perpage){		
+
+	public function getProeprtiesByFilter($filters = '', $startpoint, $perpage)
+	{
+
 		$for_business = $filters['for_business'];
 		$for_luxury = $filters['for_luxury'];		
 		//echo "<pre>"; print_r($filters);
@@ -165,7 +168,18 @@ class propertym extends CI_Model {
 		if($filters['balcony']!=''){
 			$where.=" AND zc_property_details.balcony='1'";
 		}
-
+		if (!isset($filters['TYPE']) || $filters['TYPE'] == '' || $filters['TYPE'] != 'WEEKLY') {
+			if ($filters['posting_time'] != '') {
+				$d = $filters['posting_time'];
+				$where .= " AND zc_property_details.posting_time=" . $d;
+			}
+		} else {
+			if ($filters['posting_time'] != '') {
+				$d = $filters['posting_time'];
+				$where .= " AND zc_property_details.posting_time " . $d;
+			}		
+		}
+		#echo $where;exit;
 		if($filters['location'] != ''){
 			$location = $filters['location'];
 			$street = $location;
@@ -1140,11 +1154,22 @@ class propertym extends CI_Model {
 
 	public function add_new_property_csv($new_data){
 		//$error="";
+		//echo '<pre>';print_r($new_data);
+		//$province=get_perticular_field_value('zc_region_master','province_code'," and `province_name` = '".$new_data['provience']."' group by Province_Code");
+		//echo $new_datas['provience'];exit;
 		foreach ($new_data as $new_datas) {
+			//echo '<pre>';print_r($new_datas);
+			$province_name = $new_datas['provience'];
+			//echo $province_name;exit;
+			$province = get_perticular_field_value('zc_region_master', 'province_name', " and province_code='" . $province_name . "'");
+			//echo $province;exit;
 			if(is_string($new_datas['provience']))
-				$new_datas['provience'] = get_perticular_field_value('zc_provience', 'provience_id', " AND " . ($_COOKIE['lang'] == 'english' ? "`provience_name`" : "`provience_name_it`") . " = '" . $new_datas['provience'] . "'");
+				$new_datas['provience'] = get_perticular_field_value('zc_provience', 'provience_id', " AND " . ($_COOKIE['lang'] == 'english' ? "`provience_name`" : "`provience_name_it`") . " = '" . $province . "'");
 			if(is_string($new_datas['city']))
 				$new_datas['city'] = get_perticular_field_value('zc_city', 'city_id', " AND " . ($_COOKIE['lang'] == 'english' ? "`city_name`" : "`city_name_it`") . " = '" . $new_datas['city'] . "'");
+			$time = date('Y-m-d');
+			$new_datas['posting_time'] = $time;
+			//echo '<pre>';print_r($new_datas);exit;
 			$this->db->insert('zc_property_details', $new_datas);
 		}
 		return 1;
@@ -2022,6 +2047,18 @@ class propertym extends CI_Model {
 	function update_save_rec($rec_option,$saved_id){
 		$up_sql="update  zc_save_search set rec_option='".$rec_option."' where saved_id='".$saved_id."'";
 		return $this->db->query($up_sql);
+	}
+
+	public function getUsers()
+	{
+		$sql = "select * from users where status = 1";
+		$row = $this->db->query($sql);
+		if ($row->num_rows() > 0) {
+			$result = $row->result();
+			return $result;
+		} else {
+			return 0;
+		}
 	}
 }
 ?>

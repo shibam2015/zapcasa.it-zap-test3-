@@ -23,6 +23,13 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 abstract class SessionListener implements EventSubscriberInterface
 {
+    public static function getSubscribedEvents()
+    {
+        return array(
+            KernelEvents::REQUEST => array('onKernelRequest', 128),
+        );
+    }
+
     public function onKernelRequest(GetResponseEvent $event)
     {
         if (HttpKernelInterface::MASTER_REQUEST !== $event->getRequestType()) {
@@ -36,13 +43,6 @@ abstract class SessionListener implements EventSubscriberInterface
         }
 
         $request->setSession($session);
-    }
-
-    public static function getSubscribedEvents()
-    {
-        return array(
-            KernelEvents::REQUEST => array('onKernelRequest', 128),
-        );
     }
 
     /**

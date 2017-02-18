@@ -54,6 +54,21 @@ class ConsoleOutput extends StreamOutput implements ConsoleOutputInterface
     }
 
     /**
+     * Returns true if current environment supports writing console output to
+     * STDOUT.
+     *
+     * IBM iSeries (OS400) exhibits character-encoding issues when writing to
+     * STDOUT and doesn't properly convert ASCII to EBCDIC, resulting in garbage
+     * output.
+     *
+     * @return bool
+     */
+    protected function hasStdoutSupport()
+    {
+        return ('OS400' != php_uname('s'));
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function setDecorated($decorated)
@@ -94,20 +109,5 @@ class ConsoleOutput extends StreamOutput implements ConsoleOutputInterface
     public function setErrorOutput(OutputInterface $error)
     {
         $this->stderr = $error;
-    }
-
-    /**
-     * Returns true if current environment supports writing console output to
-     * STDOUT.
-     *
-     * IBM iSeries (OS400) exhibits character-encoding issues when writing to
-     * STDOUT and doesn't properly convert ASCII to EBCDIC, resulting in garbage
-     * output.
-     *
-     * @return bool
-     */
-    protected function hasStdoutSupport()
-    {
-        return ('OS400' != php_uname('s'));
     }
 }

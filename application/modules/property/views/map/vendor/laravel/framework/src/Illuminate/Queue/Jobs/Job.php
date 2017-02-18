@@ -82,6 +82,26 @@ abstract class Job {
 	abstract public function getRawBody();
 
 	/**
+	 * Determine if job should be auto-deleted.
+	 *
+	 * @return bool
+	 */
+	public function autoDelete()
+	{
+		return isset($this->instance->delete);
+	}
+
+	/**
+	 * Get the name of the queue the job belongs to.
+	 *
+	 * @return string
+	 */
+	public function getQueue()
+	{
+		return $this->queue;
+	}
+
+	/**
 	 * Resolve and fire the job handler method.
 	 *
 	 * @param  array  $payload
@@ -94,17 +114,6 @@ abstract class Job {
 		$this->instance = $this->resolve($class);
 
 		$this->instance->{$method}($this, $payload['data']);
-	}
-
-	/**
-	 * Resolve the given job handler.
-	 *
-	 * @param  string  $class
-	 * @return mixed
-	 */
-	protected function resolve($class)
-	{
-		return $this->container->make($class);
 	}
 
 	/**
@@ -121,13 +130,14 @@ abstract class Job {
 	}
 
 	/**
-	 * Determine if job should be auto-deleted.
+	 * Resolve the given job handler.
 	 *
-	 * @return bool
+	 * @param  string $class
+	 * @return mixed
 	 */
-	public function autoDelete()
+	protected function resolve($class)
 	{
-		return isset($this->instance->delete);
+		return $this->container->make($class);
 	}
 
 	/**
@@ -146,16 +156,6 @@ abstract class Job {
 		{
 			return intval($delay);
 		}
-	}
-
-	/**
-	 * Get the name of the queue the job belongs to.
-	 *
-	 * @return string
-	 */
-	public function getQueue()
-	{
-		return $this->queue;
 	}
 
 }

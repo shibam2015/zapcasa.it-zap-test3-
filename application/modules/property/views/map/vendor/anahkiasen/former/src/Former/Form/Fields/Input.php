@@ -78,6 +78,40 @@ class Input extends Field
   ////////////////////////////////////////////////////////////////////
 
   /**
+   * Render a text element as a search element
+   */
+  private function asSearch()
+  {
+    $this->type = 'text';
+    $this->addClass('search-query');
+
+    return $this;
+  }
+
+  /**
+   * Renders a datalist
+   *
+   * @param string $id The datalist's id attribute
+   * @param array $values Its values
+   *
+   * @return string A <datalist> tag
+   */
+  private function createDatalist($id, $values)
+  {
+    $datalist = '<datalist id="' . $id . '">';
+    foreach ($values as $key => $value) {
+      $datalist .= '<option value="' . $value . '">' . $key . '</option>';
+    }
+    $datalist .= '</datalist>';
+
+    return $datalist;
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  /////////////////////////////// HELPERS ////////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+  /**
    * Adds a datalist to the current field
    *
    * @param  array  $datalist An array to use a source
@@ -111,39 +145,5 @@ class Input extends Field
     $this->max($max);
 
     return $this;
-  }
-
-  ////////////////////////////////////////////////////////////////////
-  /////////////////////////////// HELPERS ////////////////////////////
-  ////////////////////////////////////////////////////////////////////
-
-  /**
-   * Render a text element as a search element
-   */
-  private function asSearch()
-  {
-    $this->type = 'text';
-    $this->addClass('search-query');
-
-    return $this;
-  }
-
-  /**
-   * Renders a datalist
-   *
-   * @param string $id     The datalist's id attribute
-   * @param array  $values Its values
-   *
-   * @return string A <datalist> tag
-   */
-  private function createDatalist($id, $values)
-  {
-    $datalist = '<datalist id="' .$id. '">';
-      foreach ($values as $key => $value) {
-        $datalist .= '<option value="' .$value. '">' .$key. '</option>';
-      }
-    $datalist .= '</datalist>';
-
-    return $datalist;
   }
 }

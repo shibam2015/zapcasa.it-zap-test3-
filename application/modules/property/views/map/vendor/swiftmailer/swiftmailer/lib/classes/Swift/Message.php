@@ -160,33 +160,18 @@ class Swift_Message extends Swift_Mime_SimpleMessage
     }
     
     /**
-     * Write this message to a {@link Swift_InputByteStream}.
-     *
-     * @param Swift_InputByteStream $is
+     * save the message before any signature is applied
      */
-    public function toByteStream(Swift_InputByteStream $is)
+    protected function saveMessage()
     {
-        if (empty($this->headerSigners) && empty($this->bodySigners)) {
-            parent::toByteStream($is);
-            return;
+        $this->savedMessage = array('headers' => array());
+        $this->savedMessage['body'] = $this->getBody();
+        $this->savedMessage['children'] = $this->getChildren();
+        if (count($this->savedMessage['children']) > 0 && $this->getBody() != '') {
+            $this->setChildren(array_merge(array($this->_becomeMimePart()), $this->savedMessage['children']));
+            $this->setBody('');
         }
-        
-        $this->saveMessage();
-        
-        $this->doSign();
-        
-        parent::toByteStream($is);
-        
-        $this->restoreMessage();
-    	
     }
-    
-    public function __wakeup()
-    {
-        Swift_DependencyContainer::getInstance()->createDependenciesFor('mime.message');
-    }
-    
-    /* -- Protected Methods -- */
     
     /**
      * loops through signers and apply the signatures
@@ -198,35 +183,23 @@ class Swift_Message extends Swift_Mime_SimpleMessage
     		$this->saveHeaders($altered);
     		$signer->signMessage($this);
     	}
-    
+
     	foreach ($this->headerSigners as $signer) {
     		$altered = $signer->getAlteredHeaders();
     		$this->saveHeaders($altered);
     		$signer->reset();
-    
+
     		$signer->setHeaders($this->getHeaders());
-    
+
     		$signer->startBody();
     		$this->_bodyToByteStream($signer);
     		$signer->endBody();
-    
+
     		$signer->addSignature($this->getHeaders());
     	}
     }
-    
-    /**
-     * save the message before any signature is applied
-     */
-    protected function saveMessage()
-    {
-    	$this->savedMessage = array('headers'=> array());
-    	$this->savedMessage['body'] = $this->getBody();
-    	$this->savedMessage['children'] = $this->getChildren();
-    	if (count($this->savedMessage['children']) > 0 && $this->getBody() != '') {
-    		$this->setChildren(array_merge(array($this->_becomeMimePart()), $this->savedMessage['children']));
-    		$this->setBody('');
-    	}
-    }
+
+    /* -- Protected Methods -- */
     
     /**
      * save the original headers
@@ -236,25 +209,9 @@ class Swift_Message extends Swift_Mime_SimpleMessage
     {
     	foreach ($altered as $head) {
     		$lc = strtolower($head);
-    
+
     		if (!isset($this->savedMessage['headers'][$lc])) {
     			$this->savedMessage['headers'][$lc] = $this->getHeaders()->getAll($head);
-    		}
-    	}
-    }
-    
-    /**
-     * Remove or restore altered headers
-     */
-    protected function restoreHeaders()
-    {
-    	foreach ($this->savedMessage['headers'] as $name => $savedValue) {
-    		$headers = $this->getHeaders()->getAll($name);
-    
-    		foreach ($headers as $key => $value) {
-    			if (!isset($savedValue[$key])) {
-    				$this->getHeaders()->remove($name, $key);
-    			}
     		}
     	}
     }
@@ -264,10 +221,53 @@ class Swift_Message extends Swift_Mime_SimpleMessage
      */
     protected function restoreMessage()
     {
-    	$this->setBody($this->savedMessage['body']);
-    	$this->setChildren($this->savedMessage['children']);
+        $this->setBody($this->savedMessage['body']);
+        $this->setChildren($this->savedMessage['children']);
+
+        $this->restoreHeaders();
+        $this->savedMessage = array();
+    }
+
+    /**
+     * Remove or restore altered headers
+     */
+    protected function restoreHeaders()
+    {
+    	foreach ($this->savedMessage['headers'] as $name => $savedValue) {
+    		$headers = $this->getHeaders()->getAll($name);
+
+            foreach ($headers as $key => $value) {
+    			if (!isset($savedValue[$key])) {
+    				$this->getHeaders()->remove($name, $key);
+    			}
+    		}
+    	}
+    }
     
-    	$this->restoreHeaders();
-    	$this->savedMessage = array();
+    /**
+     * Write this message to a {@link Swift_InputByteStream}.
+     *
+     * @param Swift_InputByteStream $is
+     */
+    public function toByteStream(Swift_InputByteStream $is)
+    {
+        if (empty($this->headerSigners) && empty($this->bodySigners)) {
+            parent::toByteStream($is);
+            return;
+        }
+
+        $this->saveMessage();
+
+        $this->doSign();
+
+        parent::toByteStream($is);
+
+        $this->restoreMessage();
+
+    }
+
+    public function __wakeup()
+    {
+        Swift_DependencyContainer::getInstance()->createDependenciesFor('mime.message');
     }
 }

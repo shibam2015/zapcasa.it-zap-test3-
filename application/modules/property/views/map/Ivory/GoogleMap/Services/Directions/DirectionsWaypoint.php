@@ -29,16 +29,6 @@ class DirectionsWaypoint
     protected $stopover;
 
     /**
-     * Checks if the directions waypoint has a location.
-     *
-     * @return boolean TRUE if the directions waypoint has a location else FALSE.
-     */
-    public function hasLocation()
-    {
-        return $this->location !== null;
-    }
-
-    /**
      * Gets the directions waypoint location.
      *
      * @return string | \Ivory\GoogleMap\Base\Coordinate The directions waypoint location.
@@ -124,5 +114,15 @@ class DirectionsWaypoint
     public function isValid()
     {
         return $this->hasLocation();
+    }
+
+    /**
+     * Checks if the directions waypoint has a location.
+     *
+     * @return boolean TRUE if the directions waypoint has a location else FALSE.
+     */
+    public function hasLocation()
+    {
+        return $this->location !== null;
     }
 }

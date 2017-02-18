@@ -80,6 +80,21 @@ class BladeCompiler extends Compiler implements CompilerInterface {
 	}
 
 	/**
+	 * Compile the given Blade template contents.
+	 *
+	 * @param  string $value
+	 * @return string
+	 */
+	public function compileString($value)
+	{
+		foreach ($this->compilers as $compiler) {
+			$value = $this->{"compile{$compiler}"}($value);
+		}
+
+		return $value;
+	}
+
+	/**
 	 * Get the path currently being compiled.
 	 *
 	 * @return string
@@ -101,30 +116,61 @@ class BladeCompiler extends Compiler implements CompilerInterface {
 	}
 
 	/**
-	 * Compile the given Blade template contents.
-	 *
-	 * @param  string  $value
-	 * @return string
-	 */
-	public function compileString($value)
-	{
-		foreach ($this->compilers as $compiler)
-		{
-			$value = $this->{"compile{$compiler}"}($value);
-		}
-
-		return $value;
-	}
-
-	/**
 	 * Register a custom Blade compiler.
 	 *
-	 * @param  Closure  $compiler
+	 * @param  Closure $compiler
 	 * @return void
 	 */
 	public function extend(Closure $compiler)
 	{
 		$this->extensions[] = $compiler;
+	}
+
+	/**
+	 * Sets the escaped content tags used for the compiler.
+	 *
+	 * @param  string $openTag
+	 * @param  string $closeTag
+	 * @return void
+	 */
+	public function setEscapedContentTags($openTag, $closeTag)
+	{
+		$this->setContentTags($openTag, $closeTag, true);
+	}
+
+	/**
+	 * Gets the content tags used for the compiler.
+	 *
+	 * @return string
+	 */
+	public function getContentTags()
+	{
+		return $this->contentTags;
+	}
+
+	/**
+	 * Sets the content tags used for the compiler.
+	 *
+	 * @param  string $openTag
+	 * @param  string $closeTag
+	 * @param  bool $escaped
+	 * @return void
+	 */
+	public function setContentTags($openTag, $closeTag, $escaped = false)
+	{
+		$property = ($escaped === true) ? 'escapedTags' : 'contentTags';
+
+		$this->{$property} = array(preg_quote($openTag), preg_quote($closeTag));
+	}
+
+	/**
+	 * Gets the escaped content tags used for the compiler.
+	 *
+	 * @return string
+	 */
+	public function getEscapedContentTags()
+	{
+		return $this->escapedTags;
 	}
 
 	/**
@@ -185,6 +231,17 @@ class BladeCompiler extends Compiler implements CompilerInterface {
 	}
 
 	/**
+	 * Get the regular expression for a generic Blade function.
+	 *
+	 * @param  string $function
+	 * @return string
+	 */
+	public function createMatcher($function)
+	{
+		return '/(?<!\w)(\s*)@' . $function . '(\s*\(.*\))/';
+	}
+
+	/**
 	 * Compile Blade comments into valid PHP.
 	 *
 	 * @param  string  $value
@@ -216,26 +273,6 @@ class BladeCompiler extends Compiler implements CompilerInterface {
 	}
 
 	/**
-	 * Compile the "regular" echo statements.
-	 *
-	 * @param  string  $value
-	 * @return string
-	 */
-	protected function compileRegularEchos($value)
-	{
-		$me = $this;
-
-		$pattern = sprintf('/(@)?%s\s*(.+?)\s*%s/s', $this->contentTags[0], $this->contentTags[1]);
-
-		$callback = function($matches) use ($me)
-		{
-			return $matches[1] ? substr($matches[0], 1) : '<?php echo '.$me->compileEchoDefaults($matches[2]).'; ?>';
-		};
-
-		return preg_replace_callback($pattern, $callback, $value);
-	}
-
-	/**
 	 * Compile the escaped echo statements.
 	 *
 	 * @param  string  $value
@@ -249,7 +286,7 @@ class BladeCompiler extends Compiler implements CompilerInterface {
 
 		$callback = function($matches) use ($me)
 		{
-			return '<?php echo e('.$me->compileEchoDefaults($matches[1]).'); ?>';
+			return '<?php echo e(' . $me->compileEchoDefaults($matches[1]) . '); ?>';
 		};
 
 		return preg_replace_callback($pattern, $callback, $value);
@@ -264,6 +301,26 @@ class BladeCompiler extends Compiler implements CompilerInterface {
 	public function compileEchoDefaults($value)
 	{
 		return preg_replace('/^(?=\$)(.+?)(?:\s+or\s+)(.+?)$/s', 'isset($1) ? $1 : $2', $value);
+	}
+
+	/**
+	 * Compile the "regular" echo statements.
+	 *
+	 * @param  string $value
+	 * @return string
+	 */
+	protected function compileRegularEchos($value)
+	{
+		$me = $this;
+
+		$pattern = sprintf('/(@)?%s\s*(.+?)\s*%s/s', $this->contentTags[0], $this->contentTags[1]);
+
+		$callback = function($matches) use ($me)
+		{
+			return $matches[1] ? substr($matches[0], 1) : '<?php echo ' . $me->compileEchoDefaults($matches[2]) . '; ?>';
+		};
+
+		return preg_replace_callback($pattern, $callback, $value);
 	}
 
 	/**
@@ -306,6 +363,17 @@ class BladeCompiler extends Compiler implements CompilerInterface {
 	}
 
 	/**
+	 * Create a plain Blade matcher.
+	 *
+	 * @param  string $function
+	 * @return string
+	 */
+	public function createPlainMatcher($function)
+	{
+		return '/(?<!\w)(\s*)@' . $function . '(\s*)/';
+	}
+
+	/**
 	 * Compile Blade unless statements into valid PHP.
 	 *
 	 * @param  string  $value
@@ -344,6 +412,17 @@ class BladeCompiler extends Compiler implements CompilerInterface {
 		$replace = '$1<?php echo $__env->make$2, array_except(get_defined_vars(), array(\'__data\', \'__path\')))->render(); ?>';
 
 		return preg_replace($pattern, $replace, $value);
+	}
+
+	/**
+	 * Get the regular expression for a generic Blade function.
+	 *
+	 * @param  string $function
+	 * @return string
+	 */
+	public function createOpenMatcher($function)
+	{
+		return '/(?<!\w)(\s*)@' . $function . '(\s*\(.*)\)/';
 	}
 
 	/**
@@ -456,86 +535,6 @@ class BladeCompiler extends Compiler implements CompilerInterface {
 		$pattern = $this->createPlainMatcher('overwrite');
 
 		return preg_replace($pattern, '$1<?php $__env->stopSection(true); ?>$2', $value);
-	}
-
-	/**
-	 * Get the regular expression for a generic Blade function.
-	 *
-	 * @param  string  $function
-	 * @return string
-	 */
-	public function createMatcher($function)
-	{
-		return '/(?<!\w)(\s*)@'.$function.'(\s*\(.*\))/';
-	}
-
-	/**
-	 * Get the regular expression for a generic Blade function.
-	 *
-	 * @param  string  $function
-	 * @return string
-	 */
-	public function createOpenMatcher($function)
-	{
-		return '/(?<!\w)(\s*)@'.$function.'(\s*\(.*)\)/';
-	}
-
-	/**
-	 * Create a plain Blade matcher.
-	 *
-	 * @param  string  $function
-	 * @return string
-	 */
-	public function createPlainMatcher($function)
-	{
-		return '/(?<!\w)(\s*)@'.$function.'(\s*)/';
-	}
-
-	/**
-	 * Sets the content tags used for the compiler.
-	 *
-	 * @param  string  $openTag
-	 * @param  string  $closeTag
-	 * @param  bool    $escaped
-	 * @return void
-	 */
-	public function setContentTags($openTag, $closeTag, $escaped = false)
-	{
-		$property = ($escaped === true) ? 'escapedTags' : 'contentTags';
-
-		$this->{$property} = array(preg_quote($openTag), preg_quote($closeTag));
-	}
-
-	/**
-	 * Sets the escaped content tags used for the compiler.
-	 *
-	 * @param  string  $openTag
-	 * @param  string  $closeTag
-	 * @return void
-	 */
-	public function setEscapedContentTags($openTag, $closeTag)
-	{
-		$this->setContentTags($openTag, $closeTag, true);
-	}
-
-	/**
-	* Gets the content tags used for the compiler.
-	*
-	* @return string
-	*/
-	public function getContentTags()
-	{
-		return $this->contentTags;
-	}
-
-	/**
-	* Gets the escaped content tags used for the compiler.
-	*
-	* @return string
-	*/
-	public function getEscapedContentTags()
-	{
-		return $this->escapedTags;
 	}
 
 }

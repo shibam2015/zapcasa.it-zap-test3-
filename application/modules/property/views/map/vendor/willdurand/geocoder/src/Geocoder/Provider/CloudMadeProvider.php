@@ -66,28 +66,6 @@ class CloudMadeProvider extends AbstractProvider implements ProviderInterface
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function getReversedData(array $coordinates)
-    {
-        if (null === $this->apiKey) {
-            throw new InvalidCredentialsException('No API Key provided');
-        }
-
-        $query = sprintf(self::REVERSE_ENDPOINT_URL, $this->apiKey, $coordinates[0], $coordinates[1], $this->getMaxResults());
-
-        return $this->executeQuery($query);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getName()
-    {
-        return 'cloudmade';
-    }
-
-    /**
      * @param string $query
      *
      * @return array
@@ -158,5 +136,27 @@ class CloudMadeProvider extends AbstractProvider implements ProviderInterface
         }
 
         return $results;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getReversedData(array $coordinates)
+    {
+        if (null === $this->apiKey) {
+            throw new InvalidCredentialsException('No API Key provided');
+        }
+
+        $query = sprintf(self::REVERSE_ENDPOINT_URL, $this->apiKey, $coordinates[0], $coordinates[1], $this->getMaxResults());
+
+        return $this->executeQuery($query);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getName()
+    {
+        return 'cloudmade';
     }
 }

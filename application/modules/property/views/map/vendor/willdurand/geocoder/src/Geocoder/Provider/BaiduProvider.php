@@ -66,28 +66,6 @@ class BaiduProvider extends AbstractProvider implements ProviderInterface
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function getReversedData(array $coordinates)
-    {
-        if (null === $this->apiKey) {
-            throw new InvalidCredentialsException('No API Key provided');
-        }
-
-        $query = sprintf(self::REVERSE_ENDPOINT_URL, $this->apiKey, $coordinates[0], $coordinates[1]);
-
-        return $this->executeQuery($query);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getName()
-    {
-        return 'baidu';
-    }
-
-    /**
      * @param string $query
      *
      * @return array
@@ -120,5 +98,27 @@ class BaiduProvider extends AbstractProvider implements ProviderInterface
             'county'       => isset($data['result']['addressComponent']['province']) ? $data['result']['addressComponent']['province'] : null,
             'countyCode'   => isset($data['result']['cityCode']) ? $data['result']['cityCode'] : null,
         )));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getReversedData(array $coordinates)
+    {
+        if (null === $this->apiKey) {
+            throw new InvalidCredentialsException('No API Key provided');
+        }
+
+        $query = sprintf(self::REVERSE_ENDPOINT_URL, $this->apiKey, $coordinates[0], $coordinates[1]);
+
+        return $this->executeQuery($query);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getName()
+    {
+        return 'baidu';
     }
 }

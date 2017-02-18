@@ -66,6 +66,22 @@ class Link
     }
 
     /**
+     * Sets current \DOMNode instance.
+     *
+     * @param \DOMNode $node A \DOMNode instance
+     *
+     * @throws \LogicException If given node is not an anchor
+     */
+    protected function setNode(\DOMNode $node)
+    {
+        if ('a' !== $node->nodeName && 'area' !== $node->nodeName) {
+            throw new \LogicException(sprintf('Unable to click on a "%s" tag.', $node->nodeName));
+        }
+
+        $this->node = $node;
+    }
+
+    /**
      * Gets the method associated with this link.
      *
      * @return string The method
@@ -177,21 +193,5 @@ class Link
         }
 
         return implode('/', $output);
-    }
-
-    /**
-     * Sets current \DOMNode instance.
-     *
-     * @param \DOMNode $node A \DOMNode instance
-     *
-     * @throws \LogicException If given node is not an anchor
-     */
-    protected function setNode(\DOMNode $node)
-    {
-        if ('a' !== $node->nodeName && 'area' !== $node->nodeName) {
-            throw new \LogicException(sprintf('Unable to click on a "%s" tag.', $node->nodeName));
-        }
-
-        $this->node = $node;
     }
 }

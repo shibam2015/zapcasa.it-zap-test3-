@@ -74,6 +74,18 @@ class Button extends Field
   ////////////////////////////////////////////////////////////////////
 
   /**
+   * Hijack Former's Object model value method
+   *
+   * @param  string $value The new button text
+   */
+  public function value($value)
+  {
+    $this->value = Helpers::translate($value);
+
+    return $this;
+  }
+
+  /**
    * Check if the field is a button
    *
    * @return boolean
@@ -95,18 +107,6 @@ class Button extends Field
   {
     $icon = $this->app['former.framework']->createIcon($icon, $attributes);
     $this->value = $icon. ' ' .$this->value;
-
-    return $this;
-  }
-
-  /**
-   * Hijack Former's Object model value method
-   *
-   * @param  string $value The new button text
-   */
-  public function value($value)
-  {
-    $this->value = Helpers::translate($value);
 
     return $this;
   }

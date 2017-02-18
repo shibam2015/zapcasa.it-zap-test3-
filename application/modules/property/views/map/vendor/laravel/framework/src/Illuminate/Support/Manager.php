@@ -37,6 +37,42 @@ abstract class Manager {
 	}
 
 	/**
+	 * Register a custom driver creator Closure.
+	 *
+	 * @param  string $driver
+	 * @param  Closure $callback
+	 * @return \Illuminate\Support\Manager|static
+	 */
+	public function extend($driver, Closure $callback)
+	{
+		$this->customCreators[$driver] = $callback;
+
+		return $this;
+	}
+
+	/**
+	 * Get all of the created "drivers".
+	 *
+	 * @return array
+	 */
+	public function getDrivers()
+	{
+		return $this->drivers;
+	}
+
+	/**
+	 * Dynamically call the default driver instance.
+	 *
+	 * @param  string $method
+	 * @param  array $parameters
+	 * @return mixed
+	 */
+	public function __call($method, $parameters)
+	{
+		return call_user_func_array(array($this->driver(), $method), $parameters);
+	}
+
+	/**
 	 * Get a driver instance.
 	 *
 	 * @param  string  $driver
@@ -93,42 +129,6 @@ abstract class Manager {
 	protected function callCustomCreator($driver)
 	{
 		return $this->customCreators[$driver]($this->app);
-	}
-
-	/**
-	 * Register a custom driver creator Closure.
-	 *
-	 * @param  string   $driver
-	 * @param  Closure  $callback
-	 * @return \Illuminate\Support\Manager|static
-	 */
-	public function extend($driver, Closure $callback)
-	{
-		$this->customCreators[$driver] = $callback;
-
-		return $this;
-	}
-
-	/**
-	 * Get all of the created "drivers".
-	 *
-	 * @return array
-	 */
-	public function getDrivers()
-	{
-		return $this->drivers;
-	}
-
-	/**
-	 * Dynamically call the default driver instance.
-	 *
-	 * @param  string  $method
-	 * @param  array   $parameters
-	 * @return mixed
-	 */
-	public function __call($method, $parameters)
-	{
-		return call_user_func_array(array($this->driver(), $method), $parameters);
 	}
 
 }

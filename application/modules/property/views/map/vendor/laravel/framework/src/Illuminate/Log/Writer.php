@@ -57,23 +57,6 @@ class Writer {
 	}
 
 	/**
-	 * Call Monolog with the given method and parameters.
-	 *
-	 * @param  string  $method
-	 * @param  array  $parameters
-	 * @return mixed
-	 */
-	protected function callMonolog($method, $parameters)
-	{
-		if (is_array($parameters[0]))
-		{
-			$parameters[0] = json_encode($parameters[0]);
-		}
-
-		return call_user_func_array(array($this->monolog, $method), $parameters);
-	}
-
-	/**
 	 * Register a file log handler.
 	 *
 	 * @param  string  $path
@@ -85,23 +68,6 @@ class Writer {
 		$level = $this->parseLevel($level);
 
 		$this->monolog->pushHandler($handler = new StreamHandler($path, $level));
-
-		$handler->setFormatter(new LineFormatter(null, null, true));
-	}
-
-	/**
-	 * Register a daily file log handler.
-	 *
-	 * @param  string  $path
-	 * @param  int     $days
-	 * @param  string  $level
-	 * @return void
-	 */
-	public function useDailyFiles($path, $days = 0, $level = 'debug')
-	{
-		$level = $this->parseLevel($level);
-
-		$this->monolog->pushHandler($handler = new RotatingFileHandler($path, $days, $level));
 
 		$handler->setFormatter(new LineFormatter(null, null, true));
 	}
@@ -145,6 +111,23 @@ class Writer {
 			default:
 				throw new \InvalidArgumentException("Invalid log level.");
 		}
+	}
+
+	/**
+	 * Register a daily file log handler.
+	 *
+	 * @param  string $path
+	 * @param  int $days
+	 * @param  string $level
+	 * @return void
+	 */
+	public function useDailyFiles($path, $days = 0, $level = 'debug')
+	{
+		$level = $this->parseLevel($level);
+
+		$this->monolog->pushHandler($handler = new RotatingFileHandler($path, $days, $level));
+
+		$handler->setFormatter(new LineFormatter(null, null, true));
 	}
 
 	/**
@@ -198,24 +181,6 @@ class Writer {
 	}
 
 	/**
-	 * Fires a log event.
-	 *
-	 * @param  string  $level
-	 * @param  array   $parameters
-	 * @return void
-	 */
-	protected function fireLogEvent($level, $message, array $context = array())
-	{
-		// If the event dispatcher is set, we will pass along the parameters to the
-		// log listeners. These are useful for building profilers or other tools
-		// that aggregate all of the log messages for a given "request" cycle.
-		if (isset($this->dispatcher))
-		{
-			$this->dispatcher->fire('illuminate.log', compact('level', 'message', 'context'));
-		}
-	}
-
-	/**
 	 * Dynamically pass log calls into the writer.
 	 *
 	 * @param  dynamic (level, param, param)
@@ -249,6 +214,39 @@ class Writer {
 		}
 
 		throw new \BadMethodCallException("Method [$method] does not exist.");
+	}
+
+	/**
+	 * Call Monolog with the given method and parameters.
+	 *
+	 * @param  string $method
+	 * @param  array $parameters
+	 * @return mixed
+	 */
+	protected function callMonolog($method, $parameters)
+	{
+		if (is_array($parameters[0])) {
+			$parameters[0] = json_encode($parameters[0]);
+		}
+
+		return call_user_func_array(array($this->monolog, $method), $parameters);
+	}
+
+	/**
+	 * Fires a log event.
+	 *
+	 * @param  string $level
+	 * @param  array $parameters
+	 * @return void
+	 */
+	protected function fireLogEvent($level, $message, array $context = array())
+	{
+		// If the event dispatcher is set, we will pass along the parameters to the
+		// log listeners. These are useful for building profilers or other tools
+		// that aggregate all of the log messages for a given "request" cycle.
+		if (isset($this->dispatcher)) {
+			$this->dispatcher->fire('illuminate.log', compact('level', 'message', 'context'));
+		}
 	}
 
 }

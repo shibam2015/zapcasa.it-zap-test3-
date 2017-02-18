@@ -28,76 +28,66 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
 	 * @var string
 	 */
 	const VERSION = '4.1.30';
-
-	/**
-	 * Indicates if the application has "booted".
-	 *
-	 * @var bool
-	 */
-	protected $booted = false;
-
-	/**
-	 * The array of booting callbacks.
-	 *
-	 * @var array
-	 */
-	protected $bootingCallbacks = array();
-
-	/**
-	 * The array of booted callbacks.
-	 *
-	 * @var array
-	 */
-	protected $bootedCallbacks = array();
-
-	/**
-	 * The array of finish callbacks.
-	 *
-	 * @var array
-	 */
-	protected $finishCallbacks = array();
-
-	/**
-	 * The array of shutdown callbacks.
-	 *
-	 * @var array
-	 */
-	protected $shutdownCallbacks = array();
-
-	/**
-	 * All of the developer defined middlewares.
-	 *
-	 * @var array
-	 */
-	protected $middlewares = array();
-
-	/**
-	 * All of the registered service providers.
-	 *
-	 * @var array
-	 */
-	protected $serviceProviders = array();
-
-	/**
-	 * The names of the loaded service providers.
-	 *
-	 * @var array
-	 */
-	protected $loadedProviders = array();
-
-	/**
-	 * The deferred services and their providers.
-	 *
-	 * @var array
-	 */
-	protected $deferredServices = array();
-
 	/**
 	 * The request class used by the application.
 	 *
 	 * @var string
 	 */
 	protected static $requestClass = 'Illuminate\Http\Request';
+	/**
+	 * Indicates if the application has "booted".
+	 *
+	 * @var bool
+	 */
+	protected $booted = false;
+	/**
+	 * The array of booting callbacks.
+	 *
+	 * @var array
+	 */
+	protected $bootingCallbacks = array();
+	/**
+	 * The array of booted callbacks.
+	 *
+	 * @var array
+	 */
+	protected $bootedCallbacks = array();
+	/**
+	 * The array of finish callbacks.
+	 *
+	 * @var array
+	 */
+	protected $finishCallbacks = array();
+	/**
+	 * The array of shutdown callbacks.
+	 *
+	 * @var array
+	 */
+	protected $shutdownCallbacks = array();
+	/**
+	 * All of the developer defined middlewares.
+	 *
+	 * @var array
+	 */
+	protected $middlewares = array();
+	/**
+	 * All of the registered service providers.
+	 *
+	 * @var array
+	 */
+	protected $serviceProviders = array();
+	/**
+	 * The names of the loaded service providers.
+	 *
+	 * @var array
+	 */
+	protected $loadedProviders = array();
+	/**
+	 * The deferred services and their providers.
+	 *
+	 * @var array
+	 */
+	protected $deferredServices = array();
 
 	/**
 	 * Create a new Illuminate application instance.
@@ -115,16 +105,6 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
 	}
 
 	/**
-	 * Create a new request instance from the request class.
-	 *
-	 * @return \Illuminate\Http\Request
-	 */
-	protected function createNewRequest()
-	{
-		return forward_static_call(array(static::$requestClass, 'createFromGlobals'));
-	}
-
-	/**
 	 * Register the basic bindings into the container.
 	 *
 	 * @param  \Illuminate\Http\Request  $request
@@ -135,6 +115,16 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
 		$this->instance('request', $request);
 
 		$this->instance('Illuminate\Container\Container', $this);
+	}
+
+	/**
+	 * Create a new request instance from the request class.
+	 *
+	 * @return \Illuminate\Http\Request
+	 */
+	protected function createNewRequest()
+	{
+		return forward_static_call(array(static::$requestClass, 'createFromGlobals'));
 	}
 
 	/**
@@ -151,33 +141,37 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
 	}
 
 	/**
-	 * Register the exception service provider.
+	 * Register the default, but optional middlewares.
 	 *
 	 * @return void
 	 */
-	protected function registerExceptionProvider()
+	protected function registerBaseMiddlewares()
 	{
-		$this->register(new ExceptionServiceProvider($this));
+		$this->middleware('Illuminate\Http\FrameGuard');
 	}
 
 	/**
-	 * Register the routing service provider.
+	 * Add a HttpKernel middleware onto the stack.
 	 *
-	 * @return void
+	 * @param  string $class
+	 * @param  array $parameters
+	 * @return \Illuminate\Foundation\Application
 	 */
-	protected function registerRoutingProvider()
+	public function middleware($class, array $parameters = array())
 	{
-		$this->register(new RoutingServiceProvider($this));
+		$this->middlewares[] = compact('class', 'parameters');
+
+		return $this;
 	}
 
 	/**
-	 * Register the event service provider.
+	 * Get the application bootstrap file.
 	 *
-	 * @return void
+	 * @return string
 	 */
-	protected function registerEventProvider()
+	public static function getBootstrapFile()
 	{
-		$this->register(new EventServiceProvider($this));
+		return __DIR__ . '/start.php';
 	}
 
 	/**
@@ -197,16 +191,6 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
 		{
 			$this->instance("path.{$key}", realpath($value));
 		}
-	}
-
-	/**
-	 * Get the application bootstrap file.
-	 *
-	 * @return string
-	 */
-	public static function getBootstrapFile()
-	{
-		return __DIR__.'/start.php';
 	}
 
 	/**
@@ -273,16 +257,6 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
 	}
 
 	/**
-	 * Determine if we are running unit tests.
-	 *
-	 * @return bool
-	 */
-	public function runningUnitTests()
-	{
-		return $this['env'] == 'testing';
-	}
-
-	/**
 	 * Force register a service provider with the application.
 	 *
 	 * @param  \Illuminate\Support\ServiceProvider|string  $provider
@@ -292,92 +266,6 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
 	public function forgeRegister($provider, $options = array())
 	{
 		return $this->register($provider, $options, true);
-	}
-
-	/**
-	 * Register a service provider with the application.
-	 *
-	 * @param  \Illuminate\Support\ServiceProvider|string  $provider
-	 * @param  array  $options
-	 * @param  bool   $force
-	 * @return \Illuminate\Support\ServiceProvider
-	 */
-	public function register($provider, $options = array(), $force = false)
-	{
-		if ($registered = $this->getRegistered($provider) && ! $force)
-                                     return $registered;
-
-		// If the given "provider" is a string, we will resolve it, passing in the
-		// application instance automatically for the developer. This is simply
-		// a more convenient way of specifying your service provider classes.
-		if (is_string($provider))
-		{
-			$provider = $this->resolveProviderClass($provider);
-		}
-
-		$provider->register();
-
-		// Once we have registered the service we will iterate through the options
-		// and set each of them on the application so they will be available on
-		// the actual loading of the service objects and for developer usage.
-		foreach ($options as $key => $value)
-		{
-			$this[$key] = $value;
-		}
-
-		$this->markAsRegistered($provider);
-
-		// If the application has already booted, we will call this boot method on
-		// the provider class so it has an opportunity to do its boot logic and
-		// will be ready for any usage by the developer's application logics.
-		if ($this->booted) $provider->boot();
-
-		return $provider;
-	}
-
-	/**
-	 * Get the registered service provider instance if it exists.
-	 *
-	 * @param  \Illuminate\Support\ServiceProvider|string  $provider
-	 * @return \Illuminate\Support\ServiceProvider|null
-	 */
-	public function getRegistered($provider)
-	{
-		$name = is_string($provider) ? $provider : get_class($provider);
-
-		if (array_key_exists($name, $this->loadedProviders))
-		{
-			return array_first($this->serviceProviders, function($key, $value) use ($name)
-			{
-				return get_class($value) == $name;
-			});
-		}
-	}
-
-	/**
-	 * Resolve a service provider instance from the class name.
-	 *
-	 * @param  string  $provider
-	 * @return \Illuminate\Support\ServiceProvider
-	 */
-	public function resolveProviderClass($provider)
-	{
-		return new $provider($this);
-	}
-
-	/**
-	 * Mark the given provider as registered.
-	 *
-	 * @param  \Illuminate\Support\ServiceProvider
-	 * @return void
-	 */
-	protected function markAsRegistered($provider)
-	{
-		$this['events']->fire($class = get_class($provider), array($provider));
-
-		$this->serviceProviders[] = $provider;
-
-		$this->loadedProviders[$class] = true;
 	}
 
 	/**
@@ -443,6 +331,17 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
 	}
 
 	/**
+	 * Register a new boot listener.
+	 *
+	 * @param  mixed $callback
+	 * @return void
+	 */
+	public function booting($callback)
+	{
+		$this->bootingCallbacks[] = $callback;
+	}
+
+	/**
 	 * Resolve the given type from the container.
 	 *
 	 * (Overriding Container::make)
@@ -497,24 +396,6 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
 	}
 
 	/**
-	 * Register a "shutdown" callback.
-	 *
-	 * @param  callable  $callback
-	 * @return void
-	 */
-	public function shutdown($callback = null)
-	{
-		if (is_null($callback))
-		{
-			$this->fireAppCallbacks($this->shutdownCallbacks);
-		}
-		else
-		{
-			$this->shutdownCallbacks[] = $callback;
-		}
-	}
-
-	/**
 	 * Register a function for determining when to use array sessions.
 	 *
 	 * @param  \Closure  $callback
@@ -529,6 +410,19 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
 	}
 
 	/**
+	 * Register a new "booted" listener.
+	 *
+	 * @param  mixed $callback
+	 * @return void
+	 */
+	public function booted($callback)
+	{
+		$this->bootedCallbacks[] = $callback;
+
+		if ($this->isBooted()) $this->fireAppCallbacks(array($callback));
+	}
+
+	/**
 	 * Determine if the application has booted.
 	 *
 	 * @return bool
@@ -539,58 +433,15 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
 	}
 
 	/**
-	 * Boot the application's service providers.
+	 * Call the booting callbacks for the application.
 	 *
 	 * @return void
 	 */
-	public function boot()
+	protected function fireAppCallbacks(array $callbacks)
 	{
-		if ($this->booted) return;
-
-		array_walk($this->serviceProviders, function($p) { $p->boot(); });
-
-		$this->bootApplication();
-	}
-
-	/**
-	 * Boot the application and fire app callbacks.
-	 *
-	 * @return void
-	 */
-	protected function bootApplication()
-	{
-		// Once the application has booted we will also fire some "booted" callbacks
-		// for any listeners that need to do work after this initial booting gets
-		// finished. This is useful when ordering the boot-up processes we run.
-		$this->fireAppCallbacks($this->bootingCallbacks);
-
-		$this->booted = true;
-
-		$this->fireAppCallbacks($this->bootedCallbacks);
-	}
-
-	/**
-	 * Register a new boot listener.
-	 *
-	 * @param  mixed  $callback
-	 * @return void
-	 */
-	public function booting($callback)
-	{
-		$this->bootingCallbacks[] = $callback;
-	}
-
-	/**
-	 * Register a new "booted" listener.
-	 *
-	 * @param  mixed  $callback
-	 * @return void
-	 */
-	public function booted($callback)
-	{
-		$this->bootedCallbacks[] = $callback;
-
-		if ($this->isBooted()) $this->fireAppCallbacks(array($callback));
+		foreach ($callbacks as $callback) {
+			call_user_func($callback, $this);
+		}
 	}
 
 	/**
@@ -648,30 +499,6 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
 	}
 
 	/**
-	 * Register the default, but optional middlewares.
-	 *
-	 * @return void
-	 */
-	protected function registerBaseMiddlewares()
-	{
-		$this->middleware('Illuminate\Http\FrameGuard');
-	}
-
-	/**
-	 * Add a HttpKernel middleware onto the stack.
-	 *
-	 * @param  string  $class
-	 * @param  array  $parameters
-	 * @return \Illuminate\Foundation\Application
-	 */
-	public function middleware($class, array $parameters = array())
-	{
-		$this->middlewares[] = compact('class', 'parameters');
-
-		return $this;
-	}
-
-	/**
 	 * Remove a custom middleware from the application.
 	 *
 	 * @param  string  $class
@@ -716,6 +543,52 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
 	}
 
 	/**
+	 * Refresh the bound request instance in the container.
+	 *
+	 * @param  \Illuminate\Http\Request $request
+	 * @return void
+	 */
+	protected function refreshRequest(Request $request)
+	{
+		$this->instance('request', $request);
+
+		Facade::clearResolvedInstance('request');
+	}
+
+	/**
+	 * Boot the application's service providers.
+	 *
+	 * @return void
+	 */
+	public function boot()
+	{
+		if ($this->booted) return;
+
+		array_walk($this->serviceProviders, function ($p) {
+			$p->boot();
+		});
+
+		$this->bootApplication();
+	}
+
+	/**
+	 * Boot the application and fire app callbacks.
+	 *
+	 * @return void
+	 */
+	protected function bootApplication()
+	{
+		// Once the application has booted we will also fire some "booted" callbacks
+		// for any listeners that need to do work after this initial booting gets
+		// finished. This is useful when ordering the boot-up processes we run.
+		$this->fireAppCallbacks($this->bootingCallbacks);
+
+		$this->booted = true;
+
+		$this->fireAppCallbacks($this->bootedCallbacks);
+	}
+
+	/**
 	 * Handle the given request and get the response.
 	 *
 	 * @param  \Illuminate\Http\Request  $request
@@ -739,58 +612,36 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
 	}
 
 	/**
-	 * Terminate the request and send the response to the browser.
+	 * Determine if the application is currently down for maintenance.
 	 *
-	 * @param  \Symfony\Component\HttpFoundation\Request  $request
-	 * @param  \Symfony\Component\HttpFoundation\Response  $response
-	 * @return void
+	 * @return bool
 	 */
-	public function terminate(SymfonyRequest $request, SymfonyResponse $response)
+	public function isDownForMaintenance()
 	{
-		$this->callFinishCallbacks($request, $response);
-
-		$this->shutdown();
+		return file_exists($this['path.storage'] . '/meta/down');
 	}
 
 	/**
-	 * Refresh the bound request instance in the container.
+	 * Prepare the given value as a Response object.
 	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return void
+	 * @param  mixed $value
+	 * @return \Symfony\Component\HttpFoundation\Response
 	 */
-	protected function refreshRequest(Request $request)
+	public function prepareResponse($value)
 	{
-		$this->instance('request', $request);
+		if (!$value instanceof SymfonyResponse) $value = new Response($value);
 
-		Facade::clearResolvedInstance('request');
+		return $value->prepare($this['request']);
 	}
 
 	/**
-	 * Call the "finish" callbacks assigned to the application.
+	 * Determine if we are running unit tests.
 	 *
-	 * @param  \Symfony\Component\HttpFoundation\Request  $request
-	 * @param  \Symfony\Component\HttpFoundation\Response  $response
-	 * @return void
+	 * @return bool
 	 */
-	public function callFinishCallbacks(SymfonyRequest $request, SymfonyResponse $response)
+	public function runningUnitTests()
 	{
-		foreach ($this->finishCallbacks as $callback)
-		{
-			call_user_func($callback, $request, $response);
-		}
-	}
-
-	/**
-	 * Call the booting callbacks for the application.
-	 *
-	 * @return void
-	 */
-	protected function fireAppCallbacks(array $callbacks)
-	{
-		foreach ($callbacks as $callback)
-		{
-			call_user_func($callback, $this);
-		}
+		return $this['env'] == 'testing';
 	}
 
 	/**
@@ -810,16 +661,46 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
 	}
 
 	/**
-	 * Prepare the given value as a Response object.
+	 * Terminate the request and send the response to the browser.
 	 *
-	 * @param  mixed  $value
-	 * @return \Symfony\Component\HttpFoundation\Response
+	 * @param  \Symfony\Component\HttpFoundation\Request $request
+	 * @param  \Symfony\Component\HttpFoundation\Response $response
+	 * @return void
 	 */
-	public function prepareResponse($value)
+	public function terminate(SymfonyRequest $request, SymfonyResponse $response)
 	{
-		if ( ! $value instanceof SymfonyResponse) $value = new Response($value);
+		$this->callFinishCallbacks($request, $response);
 
-		return $value->prepare($this['request']);
+		$this->shutdown();
+	}
+
+	/**
+	 * Call the "finish" callbacks assigned to the application.
+	 *
+	 * @param  \Symfony\Component\HttpFoundation\Request $request
+	 * @param  \Symfony\Component\HttpFoundation\Response $response
+	 * @return void
+	 */
+	public function callFinishCallbacks(SymfonyRequest $request, SymfonyResponse $response)
+	{
+		foreach ($this->finishCallbacks as $callback) {
+			call_user_func($callback, $request, $response);
+		}
+	}
+
+	/**
+	 * Register a "shutdown" callback.
+	 *
+	 * @param  callable $callback
+	 * @return void
+	 */
+	public function shutdown($callback = null)
+	{
+		if (is_null($callback)) {
+			$this->fireAppCallbacks($this->shutdownCallbacks);
+		} else {
+			$this->shutdownCallbacks[] = $callback;
+		}
 	}
 
 	/**
@@ -830,16 +711,6 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
 	public function readyForResponses()
 	{
 		return $this->booted;
-	}
-
-	/**
-	 * Determine if the application is currently down for maintenance.
-	 *
-	 * @return bool
-	 */
-	public function isDownForMaintenance()
-	{
-		return file_exists($this['path.storage'].'/meta/down');
 	}
 
 	/**
@@ -991,19 +862,6 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
 	}
 
 	/**
-	 * Get or set the request class for the application.
-	 *
-	 * @param  string  $class
-	 * @return string
-	 */
-	public static function requestClass($class = null)
-	{
-		if ( ! is_null($class)) static::$requestClass = $class;
-
-		return static::$requestClass;
-	}
-
-	/**
 	 * Set the application request for the console environment.
 	 *
 	 * @return void
@@ -1027,6 +885,19 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
 	public static function onRequest($method, $parameters = array())
 	{
 		return forward_static_call_array(array(static::requestClass(), $method), $parameters);
+	}
+
+	/**
+	 * Get or set the request class for the application.
+	 *
+	 * @param  string $class
+	 * @return string
+	 */
+	public static function requestClass($class = null)
+	{
+		if (!is_null($class)) static::$requestClass = $class;
+
+		return static::$requestClass;
 	}
 
 	/**
@@ -1123,6 +994,118 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
 	public function __set($key, $value)
 	{
 		$this[$key] = $value;
+	}
+
+	/**
+	 * Register the exception service provider.
+	 *
+	 * @return void
+	 */
+	protected function registerExceptionProvider()
+	{
+		$this->register(new ExceptionServiceProvider($this));
+	}
+
+	/**
+	 * Register a service provider with the application.
+	 *
+	 * @param  \Illuminate\Support\ServiceProvider|string $provider
+	 * @param  array $options
+	 * @param  bool $force
+	 * @return \Illuminate\Support\ServiceProvider
+	 */
+	public function register($provider, $options = array(), $force = false)
+	{
+		if ($registered = $this->getRegistered($provider) && !$force)
+			return $registered;
+
+		// If the given "provider" is a string, we will resolve it, passing in the
+		// application instance automatically for the developer. This is simply
+		// a more convenient way of specifying your service provider classes.
+		if (is_string($provider)) {
+			$provider = $this->resolveProviderClass($provider);
+		}
+
+		$provider->register();
+
+		// Once we have registered the service we will iterate through the options
+		// and set each of them on the application so they will be available on
+		// the actual loading of the service objects and for developer usage.
+		foreach ($options as $key => $value) {
+			$this[$key] = $value;
+		}
+
+		$this->markAsRegistered($provider);
+
+		// If the application has already booted, we will call this boot method on
+		// the provider class so it has an opportunity to do its boot logic and
+		// will be ready for any usage by the developer's application logics.
+		if ($this->booted) $provider->boot();
+
+		return $provider;
+	}
+
+	/**
+	 * Get the registered service provider instance if it exists.
+	 *
+	 * @param  \Illuminate\Support\ServiceProvider|string $provider
+	 * @return \Illuminate\Support\ServiceProvider|null
+	 */
+	public function getRegistered($provider)
+	{
+		$name = is_string($provider) ? $provider : get_class($provider);
+
+		if (array_key_exists($name, $this->loadedProviders)) {
+			return array_first($this->serviceProviders, function ($key, $value) use ($name) {
+				return get_class($value) == $name;
+			});
+		}
+	}
+
+	/**
+	 * Resolve a service provider instance from the class name.
+	 *
+	 * @param  string $provider
+	 * @return \Illuminate\Support\ServiceProvider
+	 */
+	public function resolveProviderClass($provider)
+	{
+		return new $provider($this);
+	}
+
+	/**
+	 * Mark the given provider as registered.
+	 *
+	 * @param  \Illuminate\Support\ServiceProvider
+	 * @return void
+	 */
+	protected function markAsRegistered($provider)
+	{
+		$this['events']->fire($class = get_class($provider), array($provider));
+
+		$this->serviceProviders[] = $provider;
+
+		$this->loadedProviders[$class] = true;
+	}
+
+	/**
+	 * Register the routing service provider.
+	 *
+	 * @return void
+	 */
+	protected function registerRoutingProvider()
+	{
+		$this->register(new RoutingServiceProvider($this));
+	}
+
+	/**
+	 * Register the event service provider.
+	 *
+	 * @return void
+	 */
+	protected function registerEventProvider()
+	{
+		$this->register(new EventServiceProvider($this));
 	}
 
 }

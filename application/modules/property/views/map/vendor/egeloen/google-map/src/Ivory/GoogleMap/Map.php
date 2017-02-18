@@ -337,24 +337,6 @@ class Map extends AbstractJavascriptVariableAsset
     }
 
     /**
-     * Checks if the map option exists.
-     *
-     * @param string $mapOption The map option.
-     *
-     * @throws \Ivory\GoogleMap\Exception\MapException If the map option is not valid.
-     *
-     * @return boolean TRUE if the map option exists else FALSE.
-     */
-    public function hasMapOption($mapOption)
-    {
-        if (!is_string($mapOption)) {
-            throw MapException::invalidMapOption();
-        }
-
-        return isset($this->mapOptions[$mapOption]);
-    }
-
-    /**
      * Gets the map options
      *
      * @return array The map options.
@@ -377,6 +359,23 @@ class Map extends AbstractJavascriptVariableAsset
     }
 
     /**
+     * Sets a specific map option
+     *
+     * @param string $mapOption The map option.
+     * @param mixed $value The map option value.
+     *
+     * @throws \Ivory\GoogleMap\Exception\MapException If the map option is not valid.
+     */
+    public function setMapOption($mapOption, $value)
+    {
+        if (!is_string($mapOption)) {
+            throw MapException::invalidMapOption();
+        }
+
+        $this->mapOptions[$mapOption] = $value;
+    }
+
+    /**
      * Gets a specific map option.
      *
      * @param string $mapOption The map option.
@@ -395,20 +394,21 @@ class Map extends AbstractJavascriptVariableAsset
     }
 
     /**
-     * Sets a specific map option
+     * Checks if the map option exists.
      *
      * @param string $mapOption The map option.
-     * @param mixed  $value     The map option value.
      *
      * @throws \Ivory\GoogleMap\Exception\MapException If the map option is not valid.
+     *
+     * @return boolean TRUE if the map option exists else FALSE.
      */
-    public function setMapOption($mapOption, $value)
+    public function hasMapOption($mapOption)
     {
         if (!is_string($mapOption)) {
             throw MapException::invalidMapOption();
         }
 
-        $this->mapOptions[$mapOption] = $value;
+        return isset($this->mapOptions[$mapOption]);
     }
 
     /**
@@ -425,24 +425,6 @@ class Map extends AbstractJavascriptVariableAsset
         }
 
         unset($this->mapOptions[$mapOption]);
-    }
-
-    /**
-     * Checks if the stylesheet option exists.
-     *
-     * @param string $stylesheetOption The stylesheet option.
-     *
-     * @throws \Ivory\GoogleMap\Exception\MapException If the stylesheet option is not valid.
-     *
-     * @return boolean TRUE if the stylesheet option exists else FALSE.
-     */
-    public function hasStylesheetOption($stylesheetOption)
-    {
-        if (!is_string($stylesheetOption)) {
-            throw MapException::invalidStylesheetOption();
-        }
-
-        return isset($this->stylesheetOptions[$stylesheetOption]);
     }
 
     /**
@@ -468,6 +450,23 @@ class Map extends AbstractJavascriptVariableAsset
     }
 
     /**
+     * Sets a specific stylesheet option.
+     *
+     * @param string $stylesheetOption The stylesheet option.
+     * @param mixed $value The stylesheet option value.
+     *
+     * @throws \Ivory\GoogleMap\Exception\MapException If the stylesheet option is not valid.
+     */
+    public function setStylesheetOption($stylesheetOption, $value)
+    {
+        if (!is_string($stylesheetOption)) {
+            throw MapException::invalidStylesheetOption();
+        }
+
+        $this->stylesheetOptions[$stylesheetOption] = $value;
+    }
+
+    /**
      * Gets a specific stylesheet option.
      *
      * @param string $stylesheetOption  The stylesheet option.
@@ -486,20 +485,21 @@ class Map extends AbstractJavascriptVariableAsset
     }
 
     /**
-     * Sets a specific stylesheet option.
+     * Checks if the stylesheet option exists.
      *
      * @param string $stylesheetOption The stylesheet option.
-     * @param mixed  $value            The stylesheet option value.
      *
      * @throws \Ivory\GoogleMap\Exception\MapException If the stylesheet option is not valid.
+     *
+     * @return boolean TRUE if the stylesheet option exists else FALSE.
      */
-    public function setStylesheetOption($stylesheetOption, $value)
+    public function hasStylesheetOption($stylesheetOption)
     {
         if (!is_string($stylesheetOption)) {
             throw MapException::invalidStylesheetOption();
         }
 
-        $this->stylesheetOptions[$stylesheetOption] = $value;
+        return isset($this->stylesheetOptions[$stylesheetOption]);
     }
 
     /**

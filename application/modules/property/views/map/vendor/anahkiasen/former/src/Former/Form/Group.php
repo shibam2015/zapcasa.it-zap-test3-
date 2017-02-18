@@ -15,74 +15,65 @@ use Illuminate\Support\Str;
 class Group extends Tag
 {
   /**
+   * Whether a custom group is opened or not
+   *
+   * @var boolean
+   */
+  public static $opened = false;
+  /**
    * The Container
    *
    * @var Container
    */
   protected $app;
-
   /**
    * The current state of the group
    *
    * @var string
    */
   protected $state = null;
-
   /**
    * Whether the field should be displayed raw or not
    *
    * @var boolean
    */
   protected $raw = false;
-
   /**
    * The group label
    *
    * @var Element
    */
   protected $label;
-
   /**
    * The group help
    *
    * @var string
    */
   protected $help = null;
-
   /**
    * An array of elements to preprend the field
    *
    * @var array
    */
   protected $prepend = array();
-
   /**
    * An array of elements to append the field
    *
    * @var array
    */
   protected $append = array();
-
   /**
    * The field validations to be checked for errors
    *
    * @var array
    */
   protected $validations = array();
-
   /**
    * The group's element
    *
    * @var string
    */
   protected $element = 'div';
-
-  /**
-   * Whether a custom group is opened or not
-   *
-   * @var boolean
-   */
-  public static $opened = false;
 
   ////////////////////////////////////////////////////////////////////
   /////////////////////////// CORE METHODS ///////////////////////////
@@ -150,6 +141,62 @@ class Group extends Tag
   }
 
   /**
+   * Get the errors for the group
+   *
+   * @return string
+   */
+  public function getErrors()
+  {
+    $errors = '';
+
+    if (!self::$opened) {
+
+      // for non-custom groups, normal error handling applies
+      $errors = $this->app['former']->getErrors();
+
+    } elseif (!empty($this->validations)) {
+
+      // error handling only when validations specified for custom groups
+      foreach ($this->validations as $validation) {
+        $errors .= $this->app['former']->getErrors($validation);
+      }
+    }
+
+    return $errors;
+  }
+
+  /**
+   * Set the state of the group
+   *
+   * @param  string $state A Bootstrap state class
+   */
+  public function state($state)
+  {
+    // Filter state
+    $state = $this->app['former.framework']->filterState($state);
+
+    $this->state = $state;
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  //////////////////////////// FIELD METHODS /////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+  /**
+   * Get the formatted group label
+   *
+   * @return string
+   */
+  public function getFormattedLabel()
+  {
+    if (!$this->label) {
+      return false;
+    }
+
+    return $this->label->addClass($this->app['former.framework']->getLabelClasses());
+  }
+
+  /**
    * Set the contents of the current group
    *
    * @param string $contents The group contents
@@ -159,6 +206,24 @@ class Group extends Tag
   public function contents($contents)
   {
     return $this->wrap($contents, $this->getFormattedLabel());
+  }
+
+  /**
+   * Wraps content in a group
+   *
+   * @param mixed $contents The content
+   * @param string $label The label to add
+   *
+   * @return string A group
+   */
+  public function wrap($contents, $label = null)
+  {
+    $group = $this->open();
+    $group .= $label;
+    $group .= $this->app['former.framework']->wrapField($contents);
+    $group .= $this->close();
+
+    return $group;
   }
 
   /**
@@ -176,31 +241,25 @@ class Group extends Tag
     return $this->wrap($field, $label);
   }
 
-  ////////////////////////////////////////////////////////////////////
-  //////////////////////////// FIELD METHODS /////////////////////////
-  ////////////////////////////////////////////////////////////////////
-
   /**
-   * Set the state of the group
+   * Prints out the current label
    *
-   * @param  string $state A Bootstrap state class
+   * @param  string $field The field to create a label for
+   * @return string        A <label> tag
    */
-  public function state($state)
+  protected function getLabel($field = null)
   {
-    // Filter state
-    $state = $this->app['former.framework']->filterState($state);
+    // Don't create a label if none exist
+    if (!$field or !$this->label) {
+      return null;
+    }
 
-    $this->state = $state;
-  }
+    // Wrap label in framework classes
+    $this->label->addClass($this->app['former.framework']->getLabelClasses());
+    $this->label = $this->app['former.framework']->createLabelOf($field, $this->label);
+    $this->label = $this->app['former.framework']->wrapLabel($this->label);
 
-  /**
-   * Set a class on the Group
-   *
-   * @param string $class The class to add
-   */
-  public function addGroupClass($class)
-  {
-    $this->addClass($class);
+    return $this->label;
   }
 
   /**
@@ -218,19 +277,57 @@ class Group extends Tag
     $this->label = $label;
   }
 
+  ////////////////////////////////////////////////////////////////////
+  ///////////////////////////// HELP BLOCKS //////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
   /**
-   * Get the formatted group label
+   * Format the field with prepended/appended elements
    *
-   * @return string
+   * @param  Field $field The field to format
+   * @return string        Field plus supplementary elements
    */
-  public function getFormattedLabel()
+  protected function prependAppend($field)
   {
-    if (!$this->label) {
-      return false;
+    if (!$this->prepend and !$this->append) {
+      return $field->render();
     }
 
-    return $this->label->addClass($this->app['former.framework']->getLabelClasses());
+    return $this->app['former.framework']->prependAppend($field, $this->prepend, $this->append);
   }
+
+  /**
+   * Prints out the current help
+   *
+   * @return string A .help-block or .help-inline
+   */
+  protected function getHelp()
+  {
+    $inline = array_get($this->help, 'inline');
+    $block = array_get($this->help, 'block');
+
+    // Replace help text with error if any found
+    $errors = $this->app['former']->getErrors();
+    if ($errors and $this->app['former']->getOption('error_messages')) {
+      $inline = $this->app['former.framework']->createHelp($errors);
+    }
+
+    return join(null, array($inline, $block));
+  }
+
+  /**
+   * Set a class on the Group
+   *
+   * @param string $class The class to add
+   */
+  public function addGroupClass($class)
+  {
+    $this->addClass($class);
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  ///////////////////////// PREPEND/APPEND METHODS ///////////////////
+  ////////////////////////////////////////////////////////////////////
 
   /**
    * Disables the control group for the current field
@@ -249,10 +346,6 @@ class Group extends Tag
   {
     return (bool) $this->raw;
   }
-
-  ////////////////////////////////////////////////////////////////////
-  ///////////////////////////// HELP BLOCKS //////////////////////////
-  ////////////////////////////////////////////////////////////////////
 
   /**
    * Alias for inlineHelp
@@ -281,6 +374,10 @@ class Group extends Tag
     $this->help['inline'] = $this->app['former.framework']->createHelp($help, $attributes);
   }
 
+  ////////////////////////////////////////////////////////////////////
+  //////////////////////////////// HELPERS ///////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
   /**
    * Add an block help
    *
@@ -302,26 +399,6 @@ class Group extends Tag
     $this->help['block'] = $this->app['former.framework']->createBlockHelp($help, $attributes);
   }
 
-  ////////////////////////////////////////////////////////////////////
-  ///////////////////////// PREPEND/APPEND METHODS ///////////////////
-  ////////////////////////////////////////////////////////////////////
-
-  /**
-   * Prepend elements to the field
-   */
-  public function prepend()
-  {
-    $this->placeAround(func_get_args(), 'prepend');
-  }
-
-  /**
-   * Append elements to the field
-   */
-  public function append()
-  {
-    $this->placeAround(func_get_args(), 'append');
-  }
-
   /**
    * Prepends an icon to a field
    *
@@ -336,10 +413,33 @@ class Group extends Tag
   }
 
   /**
+   * Prepend elements to the field
+   */
+  public function prepend()
+  {
+    $this->placeAround(func_get_args(), 'prepend');
+  }
+
+  /**
+   * Place elements around the field
+   *
+   * @param  array $items An array of items to place
+   * @param  string $place Where they should end up (prepend|append)
+   */
+  protected function placeAround($items, $place)
+  {
+    // Iterate over the items and place them where they should
+    foreach ((array)$items as $item) {
+      $item = $this->app['former.framework']->placeAround($item);
+      $this->{$place}[] = $item;
+    }
+  }
+
+  /**
    * Append an icon to a field
    *
-   * @param string $icon       The icon to prepend
-   * @param array  $attributes Its attributes
+   * @param string $icon The icon to prepend
+   * @param array $attributes Its attributes
    */
   public function appendIcon($icon, $attributes = array(), $iconSettings = array())
   {
@@ -348,120 +448,11 @@ class Group extends Tag
     $this->append($icon);
   }
 
-  ////////////////////////////////////////////////////////////////////
-  //////////////////////////////// HELPERS ///////////////////////////
-  ////////////////////////////////////////////////////////////////////
-
   /**
-   * Get the errors for the group
-   *
-   * @return string
+   * Append elements to the field
    */
-  public function getErrors()
+  public function append()
   {
-    $errors = '';
-
-    if (!self::$opened) {
-
-      // for non-custom groups, normal error handling applies
-      $errors = $this->app['former']->getErrors();
-
-    } elseif (!empty($this->validations)) {
-
-      // error handling only when validations specified for custom groups
-      foreach ($this->validations as $validation) {
-        $errors .= $this->app['former']->getErrors($validation);
-      }
-    }
-
-    return $errors;
-  }
-
-  /**
-   * Wraps content in a group
-   *
-   * @param mixed  $contents The content
-   * @param string $label    The label to add
-   *
-   * @return string A group
-   */
-  public function wrap($contents, $label = null)
-  {
-    $group = $this->open();
-      $group .= $label;
-      $group .= $this->app['former.framework']->wrapField($contents);
-    $group .= $this->close();
-
-    return $group;
-  }
-
-  /**
-   * Prints out the current label
-   *
-   * @param  string $field The field to create a label for
-   * @return string        A <label> tag
-   */
-  protected function getLabel($field = null)
-  {
-    // Don't create a label if none exist
-    if (!$field or !$this->label) {
-      return null;
-    }
-
-    // Wrap label in framework classes
-    $this->label->addClass($this->app['former.framework']->getLabelClasses());
-    $this->label = $this->app['former.framework']->createLabelOf($field, $this->label);
-    $this->label = $this->app['former.framework']->wrapLabel($this->label);
-
-    return $this->label;
-  }
-
-  /**
-   * Prints out the current help
-   *
-   * @return string A .help-block or .help-inline
-   */
-  protected function getHelp()
-  {
-    $inline = array_get($this->help, 'inline');
-    $block  = array_get($this->help, 'block');
-
-    // Replace help text with error if any found
-    $errors = $this->app['former']->getErrors();
-    if ($errors and $this->app['former']->getOption('error_messages')) {
-      $inline = $this->app['former.framework']->createHelp($errors);
-    }
-
-    return join(null, array($inline, $block));
-  }
-
-  /**
-   * Format the field with prepended/appended elements
-   *
-   * @param  Field  $field The field to format
-   * @return string        Field plus supplementary elements
-   */
-  protected function prependAppend($field)
-  {
-    if (!$this->prepend and !$this->append) {
-      return $field->render();
-    }
-
-    return $this->app['former.framework']->prependAppend($field, $this->prepend, $this->append);
-  }
-
-  /**
-   * Place elements around the field
-   *
-   * @param  array  $items An array of items to place
-   * @param  string $place Where they should end up (prepend|append)
-   */
-  protected function placeAround($items, $place)
-  {
-    // Iterate over the items and place them where they should
-    foreach ((array) $items as $item) {
-      $item = $this->app['former.framework']->placeAround($item);
-      $this->{$place}[] = $item;
-    }
+    $this->placeAround(func_get_args(), 'append');
   }
 }

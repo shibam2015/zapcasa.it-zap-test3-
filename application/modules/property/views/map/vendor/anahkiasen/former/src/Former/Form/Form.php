@@ -13,74 +13,65 @@ use Illuminate\Support\Str;
 class Form extends FormerObject
 {
   /**
+   * Whether a form is opened or not
+   *
+   * @var boolean
+   */
+  protected static $opened = false;
+  /**
    * The IoC Container
    *
    * @var Container
    */
   protected $app;
-
   /**
    * The URL generator
    *
    * @var UrlGenerator
    */
   protected $url;
-
   /**
    * The Populator
    *
    * @var Populator
    */
   protected $populator;
-
   /**
    * The Form type
    *
    * @var string
    */
   protected $type = null;
-
   /**
    * The destination of the current form
    *
    * @var string
    */
   protected $action;
-
   /**
    * The form method
    *
    * @var string
    */
   protected $method;
-
   /**
    * Whether the form should be secured or not
    *
    * @var boolean
    */
   protected $secure;
-
   /**
    * The form element
    *
    * @var string
    */
   protected $element = 'form';
-
   /**
    * A list of injected properties
    *
    * @var array
    */
   protected $injectedProperties = array('method', 'action');
-
-  /**
-   * Whether a form is opened or not
-   *
-   * @var boolean
-   */
-  protected static $opened = false;
 
   ////////////////////////////////////////////////////////////////////
   /////////////////////////// CORE METHODS ///////////////////////////
@@ -101,6 +92,16 @@ class Form extends FormerObject
     $this->app->singleton('former.form.framework', function ($app) {
       return clone $app['former.framework'];
     });
+  }
+
+  /**
+   * Whether a form is currently opened or not
+   *
+   * @return boolean
+   */
+  public static function hasInstanceOpened()
+  {
+    return static::$opened;
   }
 
   /**
@@ -145,40 +146,8 @@ class Form extends FormerObject
     return $this;
   }
 
-  /**
-   * Closes a Form
-   *
-   * @return string A closing <form> tag
-   */
-  public function close()
-  {
-    static::$opened = false;
-
-    // Add token if necessary
-    $closing = '</form>';
-    if ($this->method != 'GET') {
-      $closing = $this->app['former']->token().$closing;
-    }
-
-    return $closing;
-  }
-
   ////////////////////////////////////////////////////////////////////
   //////////////////////////// STATIC HELPERS ////////////////////////
-  ////////////////////////////////////////////////////////////////////
-
-  /**
-   * Whether a form is currently opened or not
-   *
-   * @return boolean
-   */
-  public static function hasInstanceOpened()
-  {
-    return static::$opened;
-  }
-
-  ////////////////////////////////////////////////////////////////////
-  /////////////////////////////// SETTER /////////////////////////////
   ////////////////////////////////////////////////////////////////////
 
   /**
@@ -193,16 +162,70 @@ class Form extends FormerObject
     return $this;
   }
 
-  /**
-   * Change the form's method
-   *
-   * @param  string $method The method to use
-   */
-  public function method($method)
-  {
-    $this->method = strtoupper($method);
+  ////////////////////////////////////////////////////////////////////
+  /////////////////////////////// SETTER /////////////////////////////
+  ////////////////////////////////////////////////////////////////////
 
-    return $this;
+  /**
+   * Apply various parameters according to form type
+   *
+   * @param  string $type The original form type provided
+   * @return string The final form type
+   */
+  private function applyType($type)
+  {
+    // If classic form
+    if ($type == 'open') {
+      return $this->app['former']->getOption('default_form_type');
+    }
+
+    // Look for HTTPS form
+    if (Str::contains($type, 'secure')) {
+      $type = str_replace('secure', '', $type);
+      $this->secure = true;
+    }
+
+    // Look for file form
+    if (Str::contains($type, 'for_files')) {
+      $type = str_replace('for_files', '', $type);
+      $this->attributes['enctype'] = 'multipart/form-data';
+    }
+
+    // Calculate form type
+    $type = str_replace('open', '', $type);
+    $type = trim($type, '_');
+
+    // If raw form
+    if ($type == 'raw') {
+      $this->app->bind('former.form.framework', function ($app) {
+        return $app['former']->getFrameworkInstance('Nude');
+      });
+    }
+
+    // Use default form type if the one provided is invalid
+    if ($type !== 'raw' and !in_array($type, $this->app['former.form.framework']->availableTypes())) {
+      $type = $this->app['former']->getOption('default_form_type');
+    }
+
+    return $type;
+  }
+
+  /**
+   * Closes a Form
+   *
+   * @return string A closing <form> tag
+   */
+  public function close()
+  {
+    static::$opened = false;
+
+    // Add token if necessary
+    $closing = '</form>';
+    if ($this->method != 'GET') {
+      $closing = $this->app['former']->token() . $closing;
+    }
+
+    return $closing;
   }
 
   /**
@@ -237,6 +260,59 @@ class Form extends FormerObject
 
     return $this;
   }
+
+  /**
+   * Find the method of a route by its _uses or name
+   *
+   * @param  string $name
+   *
+   * @return string
+   */
+  protected function findRouteMethod($name)
+  {
+    if (!$this->app->bound('router')) {
+      return;
+    }
+
+    // Get string by name
+    if (!Str::contains($name, '@')) {
+      $routes = $this->app['router']->getRoutes();
+      $route = method_exists($routes, 'getByName') ? $routes->getByName($name) : $routes->get($name);
+
+      // Get string by uses
+    } else {
+      foreach ($this->app['router']->getRoutes() as $route) {
+        $routeUses = method_exists($route, 'getOption') ? $route->getOption('_uses') : array_get($route->getAction(), 'controller');
+        if ($action = $routeUses) {
+          if ($action == $name) {
+            break;
+          }
+        }
+      }
+    }
+
+    // Get method
+    $methods = method_exists($route, 'getMethods') ? $route->getMethods() : $route->methods();
+    $method = array_get($methods, 0);
+
+    return $method;
+  }
+
+  /**
+   * Change the form's method
+   *
+   * @param  string $method The method to use
+   */
+  public function method($method)
+  {
+    $this->method = strtoupper($method);
+
+    return $this;
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  ////////////////////////// PUBLIC HELPERS //////////////////////////
+  ////////////////////////////////////////////////////////////////////
 
   /**
    * Change the form's action to a controller method
@@ -282,10 +358,6 @@ class Form extends FormerObject
     return $this->open().$spoof;
   }
 
-  ////////////////////////////////////////////////////////////////////
-  ////////////////////////// PUBLIC HELPERS //////////////////////////
-  ////////////////////////////////////////////////////////////////////
-
   /**
    * Alias for $this->app['former']->withRules
    */
@@ -295,6 +367,10 @@ class Form extends FormerObject
 
     return $this;
   }
+
+  ////////////////////////////////////////////////////////////////////
+  ////////////////////////////// HELPERS /////////////////////////////
+  ////////////////////////////////////////////////////////////////////
 
   /**
    * Populate a form with specific values
@@ -316,90 +392,5 @@ class Form extends FormerObject
   public function getPopulator()
   {
     return $this->populator;
-  }
-
-  ////////////////////////////////////////////////////////////////////
-  ////////////////////////////// HELPERS /////////////////////////////
-  ////////////////////////////////////////////////////////////////////
-
-  /**
-   * Find the method of a route by its _uses or name
-   *
-   * @param  string $name
-   *
-   * @return string
-   */
-  protected function findRouteMethod($name)
-  {
-    if (!$this->app->bound('router')) {
-      return;
-    }
-
-    // Get string by name
-    if (!Str::contains($name, '@')) {
-      $routes = $this->app['router']->getRoutes();
-      $route = method_exists($routes, 'getByName') ? $routes->getByName($name) : $routes->get($name);
-
-    // Get string by uses
-    } else {
-      foreach ($this->app['router']->getRoutes() as $route) {
-        $routeUses = method_exists($route, 'getOption') ? $route->getOption('_uses') : array_get($route->getAction(), 'controller');
-        if ($action = $routeUses) {
-          if ($action == $name) {
-            break;
-          }
-        }
-      }
-    }
-
-    // Get method
-    $methods = method_exists($route, 'getMethods') ? $route->getMethods() : $route->methods();
-    $method  = array_get($methods, 0);
-
-    return $method;
-  }
-
-  /**
-   * Apply various parameters according to form type
-   *
-   * @param  string $type The original form type provided
-   * @return string The final form type
-   */
-  private function applyType($type)
-  {
-    // If classic form
-    if ($type == 'open') {
-      return $this->app['former']->getOption('default_form_type');
-    }
-
-    // Look for HTTPS form
-    if (Str::contains($type, 'secure')) {
-      $type = str_replace('secure', '', $type);
-      $this->secure = true;
-    }
-
-    // Look for file form
-    if (Str::contains($type, 'for_files')) {
-      $type = str_replace('for_files', '', $type);
-      $this->attributes['enctype'] = 'multipart/form-data';
-    }
-
-    // Calculate form type
-    $type = str_replace('open', '', $type);
-    $type = trim($type, '_');
-
-    // If raw form
-    if ($type == 'raw') {
-      $this->app->bind('former.form.framework', function ($app) {
-        return $app['former']->getFrameworkInstance('Nude');
-      });
-    }
-
-    // Use default form type if the one provided is invalid
-    if ($type !== 'raw' and !in_array($type, $this->app['former.form.framework']->availableTypes())) {
-      $type = $this->app['former']->getOption('default_form_type');
-    }
-
-    return $type;
   }
 }

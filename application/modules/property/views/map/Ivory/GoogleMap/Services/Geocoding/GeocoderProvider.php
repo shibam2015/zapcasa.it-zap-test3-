@@ -60,6 +60,135 @@ class GeocoderProvider extends AbstractProvider implements ProviderInterface
     }
 
     /**
+     * Gets the xml parser.
+     *
+     * @return \Ivory\GoogleMap\Services\Utils\XmlParser The xml parser.
+     */
+    public function getXmlParser()
+    {
+        return $this->xmlParser;
+    }
+
+    /**
+     * Sets the xml parser.
+     *
+     * @param \Ivory\GoogleMap\Services\Geocoding\XmlParser $xmlParser The xml parser.
+     */
+    public function setXmlParser(XmlParser $xmlParser)
+    {
+        $this->xmlParser = $xmlParser;
+    }
+
+    /**
+     * Gets the business account.
+     *
+     * @return \Ivory\GoogleMap\Services\BusinessAccount The business account.
+     */
+    public function getBusinessAccount()
+    {
+        return $this->businessAccount;
+    }
+
+    /**
+     * Sets the business account.
+     *
+     * @param \Ivory\GoogleMap\Services\BusinessAccount $businessAccount The business account.
+     */
+    public function setBusinessAccount(BusinessAccount $businessAccount = null)
+    {
+        $this->businessAccount = $businessAccount;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getReversedData(array $coordinates)
+    {
+        $request = new GeocoderRequest();
+        $request->setCoordinate($coordinates[0], $coordinates[1]);
+
+        return $this->getGeocodedData($request);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @throws \Ivory\GoogleMap\Exception\GeocodingException If the request is not valid.
+     */
+    public function getGeocodedData($request)
+    {
+        if (is_string($request)) {
+            $geocoderRequest = new GeocoderRequest();
+            $geocoderRequest->setAddress($request);
+        } elseif ($request instanceof GeocoderRequest) {
+            $geocoderRequest = $request;
+        } else {
+            throw GeocodingException::invalidGeocoderProviderRequestArguments();
+        }
+
+        if (!$geocoderRequest->isValid()) {
+            throw GeocodingException::invalidGeocoderProviderRequest();
+        }
+
+        $url = $this->generateUrl($geocoderRequest);
+        $response = $this->getAdapter()->getContent($url);
+
+        if ($response === null) {
+            throw GeocodingException::invalidServiceResult();
+        }
+
+        $normalizedResponse = $this->parse($response);
+
+        return $this->buildGeocoderResponse($normalizedResponse);
+    }
+
+    /**
+     * Generates geocoding URL according to the request.
+     *
+     * @param \Ivory\GoogleMap\Services\Geocoding\GeocoderRequest $geocoderRequest The geocoder request.
+     *
+     * @return string The generated URL.
+     */
+    protected function generateUrl(GeocoderRequest $geocoderRequest)
+    {
+        $httpQuery = array();
+
+        if ($geocoderRequest->hasAddress()) {
+            $httpQuery['address'] = $geocoderRequest->getAddress();
+        } else {
+            $httpQuery['latlng'] = sprintf(
+                '%s,%s',
+                $geocoderRequest->getCoordinate()->getLatitude(),
+                $geocoderRequest->getCoordinate()->getLongitude()
+            );
+        }
+
+        if ($geocoderRequest->hasBound()) {
+            $httpQuery['bound'] = sprintf(
+                '%s,%s|%s,%s',
+                $geocoderRequest->getBound()->getSouthWest()->getLatitude(),
+                $geocoderRequest->getBound()->getSouthWest()->getLongitude(),
+                $geocoderRequest->getBound()->getNorthEast()->getLatitude(),
+                $geocoderRequest->getBound()->getNorthEast()->getLongitude()
+            );
+        }
+
+        if ($geocoderRequest->hasRegion()) {
+            $httpQuery['region'] = $geocoderRequest->getRegion();
+        }
+
+        if ($geocoderRequest->hasLanguage()) {
+            $httpQuery['language'] = $geocoderRequest->getLanguage();
+        }
+
+        $httpQuery['sensor'] = $geocoderRequest->hasSensor() ? 'true' : 'false';
+
+        $url = sprintf('%s/%s?%s', $this->getUrl(), $this->getFormat(), http_build_query($httpQuery));
+
+        return $this->signUrl($url);
+    }
+
+    /**
      * Gets the service url according to the https flag.
      *
      * @return string The service url.
@@ -142,153 +271,6 @@ class GeocoderProvider extends AbstractProvider implements ProviderInterface
     }
 
     /**
-     * Gets the xml parser.
-     *
-     * @return \Ivory\GoogleMap\Services\Utils\XmlParser The xml parser.
-     */
-    public function getXmlParser()
-    {
-        return $this->xmlParser;
-    }
-
-    /**
-     * Sets the xml parser.
-     *
-     * @param \Ivory\GoogleMap\Services\Geocoding\XmlParser $xmlParser The xml parser.
-     */
-    public function setXmlParser(XmlParser $xmlParser)
-    {
-        $this->xmlParser = $xmlParser;
-    }
-
-    /**
-     * Checks if the geocoder provider has a business account.
-     *
-     * @return boolean TRUE if the geocoder provider has a business account else FALSE.
-     */
-    public function hasBusinessAccount()
-    {
-        return $this->businessAccount !== null;
-    }
-
-    /**
-     * Gets the business account.
-     *
-     * @return \Ivory\GoogleMap\Services\BusinessAccount The business account.
-     */
-    public function getBusinessAccount()
-    {
-        return $this->businessAccount;
-    }
-
-    /**
-     * Sets the business account.
-     *
-     * @param \Ivory\GoogleMap\Services\BusinessAccount $businessAccount The business account.
-     */
-    public function setBusinessAccount(BusinessAccount $businessAccount = null)
-    {
-        $this->businessAccount = $businessAccount;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @throws \Ivory\GoogleMap\Exception\GeocodingException If the request is not valid.
-     */
-    public function getGeocodedData($request)
-    {
-        if (is_string($request)) {
-            $geocoderRequest = new GeocoderRequest();
-            $geocoderRequest->setAddress($request);
-        } elseif ($request instanceof GeocoderRequest) {
-            $geocoderRequest = $request;
-        } else {
-            throw GeocodingException::invalidGeocoderProviderRequestArguments();
-        }
-
-        if (!$geocoderRequest->isValid()) {
-            throw GeocodingException::invalidGeocoderProviderRequest();
-        }
-
-        $url = $this->generateUrl($geocoderRequest);
-        $response = $this->getAdapter()->getContent($url);
-
-        if ($response === null) {
-            throw GeocodingException::invalidServiceResult();
-        }
-
-        $normalizedResponse = $this->parse($response);
-
-        return $this->buildGeocoderResponse($normalizedResponse);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getReversedData(array $coordinates)
-    {
-        $request = new GeocoderRequest();
-        $request->setCoordinate($coordinates[0], $coordinates[1]);
-
-        return $this->getGeocodedData($request);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'ivory_google_map';
-    }
-
-    /**
-     * Generates geocoding URL according to the request.
-     *
-     * @param \Ivory\GoogleMap\Services\Geocoding\GeocoderRequest $geocoderRequest The geocoder request.
-     *
-     * @return string The generated URL.
-     */
-    protected function generateUrl(GeocoderRequest $geocoderRequest)
-    {
-        $httpQuery = array();
-
-        if ($geocoderRequest->hasAddress()) {
-            $httpQuery['address'] = $geocoderRequest->getAddress();
-        } else {
-            $httpQuery['latlng'] = sprintf(
-                '%s,%s',
-                $geocoderRequest->getCoordinate()->getLatitude(),
-                $geocoderRequest->getCoordinate()->getLongitude()
-            );
-        }
-
-        if ($geocoderRequest->hasBound()) {
-            $httpQuery['bound'] = sprintf(
-                '%s,%s|%s,%s',
-                $geocoderRequest->getBound()->getSouthWest()->getLatitude(),
-                $geocoderRequest->getBound()->getSouthWest()->getLongitude(),
-                $geocoderRequest->getBound()->getNorthEast()->getLatitude(),
-                $geocoderRequest->getBound()->getNorthEast()->getLongitude()
-            );
-        }
-
-        if ($geocoderRequest->hasRegion()) {
-            $httpQuery['region'] = $geocoderRequest->getRegion();
-        }
-
-        if ($geocoderRequest->hasLanguage()) {
-            $httpQuery['language'] = $geocoderRequest->getLanguage();
-        }
-
-        $httpQuery['sensor'] = $geocoderRequest->hasSensor() ? 'true' : 'false';
-
-        $url = sprintf('%s/%s?%s', $this->getUrl(), $this->getFormat(), http_build_query($httpQuery));
-
-        return $this->signUrl($url);
-    }
-
-    /**
      * Sign an url for business account.
      *
      * @param string $url The url.
@@ -302,6 +284,16 @@ class GeocoderProvider extends AbstractProvider implements ProviderInterface
         }
 
         return $this->businessAccount->signUrl($url);
+    }
+
+    /**
+     * Checks if the geocoder provider has a business account.
+     *
+     * @return boolean TRUE if the geocoder provider has a business account else FALSE.
+     */
+    public function hasBusinessAccount()
+    {
+        return $this->businessAccount !== null;
     }
 
     /**
@@ -452,5 +444,13 @@ class GeocoderProvider extends AbstractProvider implements ProviderInterface
         }
 
         return new GeocoderGeometry($location, $locationType, $viewport, $bound);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        return 'ivory_google_map';
     }
 }

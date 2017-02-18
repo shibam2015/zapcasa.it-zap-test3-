@@ -37,31 +37,6 @@ abstract class Presenter {
 	}
 
 	/**
-	 * Get HTML wrapper for a page link.
-	 *
-	 * @param  string  $url
-	 * @param  int  $page
-	 * @return string
-	 */
-	abstract public function getPageLinkWrapper($url, $page);
-
-	/**
-	 * Get HTML wrapper for disabled text.
-	 *
-	 * @param  string  $text
-	 * @return string
-	 */
-	abstract public function getDisabledTextWrapper($text);
-
-	/**
-	 * Get HTML wrapper for active text.
-	 *
-	 * @param  string  $text
-	 * @return string
-	 */
-	abstract public function getActivePageWrapper($text);
-
-	/**
 	 * Render the Pagination contents.
 	 *
 	 * @return string
@@ -113,6 +88,36 @@ abstract class Presenter {
 	}
 
 	/**
+	 * Get HTML wrapper for active text.
+	 *
+	 * @param  string $text
+	 * @return string
+	 */
+	abstract public function getActivePageWrapper($text);
+
+	/**
+	 * Create a pagination slider link.
+	 *
+	 * @param  mixed $page
+	 * @return string
+	 */
+	public function getLink($page)
+	{
+		$url = $this->paginator->getUrl($page);
+
+		return $this->getPageLinkWrapper($url, $page);
+	}
+
+	/**
+	 * Get HTML wrapper for a page link.
+	 *
+	 * @param  string $url
+	 * @param  int $page
+	 * @return string
+	 */
+	abstract public function getPageLinkWrapper($url, $page);
+
+	/**
 	 * Create a pagination slider link window.
 	 *
 	 * @return string
@@ -155,14 +160,34 @@ abstract class Presenter {
 	}
 
 	/**
-	 * Get the page range for the current page window.
+	 * Create the ending cap of a pagination slider.
 	 *
 	 * @return string
 	 */
-	public function getAdjacentRange()
+	public function getFinish()
 	{
-		return $this->getPageRange($this->currentPage - 3, $this->currentPage + 3);
+		$content = $this->getPageRange($this->lastPage - 1, $this->lastPage);
+
+		return $this->getDots() . $content;
 	}
+
+	/**
+	 * Get a pagination "dot" element.
+	 *
+	 * @return string
+	 */
+	public function getDots()
+	{
+		return $this->getDisabledTextWrapper("...");
+	}
+
+	/**
+	 * Get HTML wrapper for disabled text.
+	 *
+	 * @param  string $text
+	 * @return string
+	 */
+	abstract public function getDisabledTextWrapper($text);
 
 	/**
 	 * Create the beginning leader of a pagination slider.
@@ -175,15 +200,13 @@ abstract class Presenter {
 	}
 
 	/**
-	 * Create the ending cap of a pagination slider.
+	 * Get the page range for the current page window.
 	 *
 	 * @return string
 	 */
-	public function getFinish()
+	public function getAdjacentRange()
 	{
-		$content = $this->getPageRange($this->lastPage - 1, $this->lastPage);
-
-		return $this->getDots().$content;
+		return $this->getPageRange($this->currentPage - 3, $this->currentPage + 3);
 	}
 
 	/**
@@ -230,29 +253,6 @@ abstract class Presenter {
 
 			return $this->getPageLinkWrapper($url, $text);
 		}
-	}
-
-	/**
-	 * Get a pagination "dot" element.
-	 *
-	 * @return string
-	 */
-	public function getDots()
-	{
-		return $this->getDisabledTextWrapper("...");
-	}
-
-	/**
-	 * Create a pagination slider link.
-	 *
-	 * @param  mixed   $page
-	 * @return string
-	 */
-	public function getLink($page)
-	{
-		$url = $this->paginator->getUrl($page);
-
-		return $this->getPageLinkWrapper($url, $page);
 	}
 
 	/**

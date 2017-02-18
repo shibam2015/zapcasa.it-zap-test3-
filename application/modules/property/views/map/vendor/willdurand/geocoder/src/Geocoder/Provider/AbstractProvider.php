@@ -92,16 +92,6 @@ abstract class AbstractProvider
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function setMaxResults($maxResults)
-    {
-        $this->maxResults = $maxResults;
-
-        return $this;
-    }
-
-    /**
      * Returns the maximum of wished results.
      *
      * @return integer
@@ -109,6 +99,16 @@ abstract class AbstractProvider
     public function getMaxResults()
     {
         return $this->maxResults;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setMaxResults($maxResults)
+    {
+        $this->maxResults = $maxResults;
+
+        return $this;
     }
 
     /**

@@ -135,16 +135,6 @@ class DistanceMatrixRequest
     }
 
     /**
-     * Checks if the distance matrix request has destinations.
-     *
-     * @return boolean TRUE if the distance matrix request has a destination else FALSE.
-     */
-    public function hasDestinations()
-    {
-        return !empty($this->destinations);
-    }
-
-    /**
      * Gets the distance matrix request destinations
      *
      * @return array The distance matrix request destination.
@@ -199,16 +189,6 @@ class DistanceMatrixRequest
         } else {
             throw DistanceMatrixException::invalidDistanceMatrixRequestDestination();
         }
-    }
-
-    /**
-     * Checks if the distance matrix request has origins.
-     *
-     * @return boolean TRUE if the distance matrix request has origins else FALSE.
-     */
-    public function hasOrigins()
-    {
-        return !empty($this->origins);
     }
 
     /**
@@ -448,5 +428,25 @@ class DistanceMatrixRequest
     public function isValid()
     {
         return $this->hasDestinations() && $this->hasOrigins();
+    }
+
+    /**
+     * Checks if the distance matrix request has destinations.
+     *
+     * @return boolean TRUE if the distance matrix request has a destination else FALSE.
+     */
+    public function hasDestinations()
+    {
+        return !empty($this->destinations);
+    }
+
+    /**
+     * Checks if the distance matrix request has origins.
+     *
+     * @return boolean TRUE if the distance matrix request has origins else FALSE.
+     */
+    public function hasOrigins()
+    {
+        return !empty($this->origins);
     }
 }

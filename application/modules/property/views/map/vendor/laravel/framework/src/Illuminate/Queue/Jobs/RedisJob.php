@@ -57,6 +57,19 @@ class RedisJob extends Job {
 	}
 
 	/**
+	 * Release the job back into the queue.
+	 *
+	 * @param  int $delay
+	 * @return void
+	 */
+	public function release($delay = 0)
+	{
+		$this->delete();
+
+		$this->redis->release($this->queue, $this->job, $delay, $this->attempts() + 1);
+	}
+
+	/**
 	 * Delete the job from the queue.
 	 *
 	 * @return void
@@ -66,19 +79,6 @@ class RedisJob extends Job {
 		parent::delete();
 
 		$this->redis->deleteReserved($this->queue, $this->job);
-	}
-
-	/**
-	 * Release the job back into the queue.
-	 *
-	 * @param  int   $delay
-	 * @return void
-	 */
-	public function release($delay = 0)
-	{
-		$this->delete();
-
-		$this->redis->release($this->queue, $this->job, $delay, $this->attempts() + 1);
 	}
 
 	/**

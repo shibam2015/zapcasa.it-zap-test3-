@@ -44,12 +44,32 @@ abstract class PHPParser_NodeAbstract implements PHPParser_Node, IteratorAggrega
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function &getAttribute($key, $default = null)
+    {
+        if (!array_key_exists($key, $this->attributes)) {
+            return $default;
+        } else {
+            return $this->attributes[$key];
+        }
+    }
+
+    /**
      * Sets line the node started in.
      *
      * @param int $line Line
      */
     public function setLine($line) {
         $this->setAttribute('startLine', (int) $line);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setAttribute($key, $value)
+    {
+        $this->attributes[$key] = $value;
     }
 
     /**
@@ -76,26 +96,8 @@ abstract class PHPParser_NodeAbstract implements PHPParser_Node, IteratorAggrega
     /**
      * {@inheritDoc}
      */
-    public function setAttribute($key, $value) {
-        $this->attributes[$key] = $value;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function hasAttribute($key) {
         return array_key_exists($key, $this->attributes);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function &getAttribute($key, $default = null) {
-        if (!array_key_exists($key, $this->attributes)) {
-            return $default;
-        } else {
-            return $this->attributes[$key];
-        }
     }
 
     /**

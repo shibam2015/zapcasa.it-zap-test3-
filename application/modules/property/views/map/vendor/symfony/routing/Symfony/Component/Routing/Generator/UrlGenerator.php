@@ -96,17 +96,17 @@ class UrlGenerator implements UrlGeneratorInterface, ConfigurableRequirementsInt
     /**
      * {@inheritdoc}
      */
-    public function setContext(RequestContext $context)
+    public function getContext()
     {
-        $this->context = $context;
+        return $this->context;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getContext()
+    public function setContext(RequestContext $context)
     {
-        return $this->context;
+        $this->context = $context;
     }
 
     /**

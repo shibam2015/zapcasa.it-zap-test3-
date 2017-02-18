@@ -51,6 +51,14 @@ class Pbkdf2PasswordEncoder extends BasePasswordEncoder
 
     /**
      * {@inheritdoc}
+     */
+    public function isPasswordValid($encoded, $raw, $salt)
+    {
+        return !$this->isPasswordTooLong($raw) && $this->comparePasswords($encoded, $this->encodePassword($raw, $salt));
+    }
+
+    /**
+     * {@inheritdoc}
      *
      * @throws \LogicException when the algorithm is not supported
      */
@@ -71,14 +79,6 @@ class Pbkdf2PasswordEncoder extends BasePasswordEncoder
         }
 
         return $this->encodeHashAsBase64 ? base64_encode($digest) : bin2hex($digest);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isPasswordValid($encoded, $raw, $salt)
-    {
-        return !$this->isPasswordTooLong($raw) && $this->comparePasswords($encoded, $this->encodePassword($raw, $salt));
     }
 
     private function hashPbkdf2($algorithm, $password, $salt, $iterations, $length = 0)

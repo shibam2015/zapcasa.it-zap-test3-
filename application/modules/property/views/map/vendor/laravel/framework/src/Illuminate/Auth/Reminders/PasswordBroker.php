@@ -126,6 +126,27 @@ class PasswordBroker {
 	}
 
 	/**
+	 * Get the user for the given credentials.
+	 *
+	 * @param  array $credentials
+	 * @return \Illuminate\Auth\Reminders\RemindableInterface
+	 *
+	 * @throws \UnexpectedValueException
+	 */
+	public function getUser(array $credentials)
+	{
+		$credentials = array_except($credentials, array('token'));
+
+		$user = $this->users->retrieveByCredentials($credentials);
+
+		if ($user && !$user instanceof RemindableInterface) {
+			throw new \UnexpectedValueException("User must implement Remindable interface.");
+		}
+
+		return $user;
+	}
+
+	/**
 	 * Send the password reminder e-mail.
 	 *
 	 * @param  \Illuminate\Auth\Reminders\RemindableInterface  $user
@@ -206,17 +227,6 @@ class PasswordBroker {
 	}
 
 	/**
-	 * Set a custom password validator.
-	 *
-	 * @param  \Closure  $callback
-	 * @return void
-	 */
-	public function validator(Closure $callback)
-	{
-		$this->passwordValidator = $callback;
-	}
-
-	/**
 	 * Determine if the passwords match for the request.
 	 *
 	 * @param  array  $credentials
@@ -250,25 +260,14 @@ class PasswordBroker {
 	}
 
 	/**
-	 * Get the user for the given credentials.
+	 * Set a custom password validator.
 	 *
-	 * @param  array  $credentials
-	 * @return \Illuminate\Auth\Reminders\RemindableInterface
-	 *
-	 * @throws \UnexpectedValueException
+	 * @param  \Closure $callback
+	 * @return void
 	 */
-	public function getUser(array $credentials)
+	public function validator(Closure $callback)
 	{
-		$credentials = array_except($credentials, array('token'));
-
-		$user = $this->users->retrieveByCredentials($credentials);
-
-		if ($user && ! $user instanceof RemindableInterface)
-		{
-			throw new \UnexpectedValueException("User must implement Remindable interface.");
-		}
-
-		return $user;
+		$this->passwordValidator = $callback;
 	}
 
 	/**

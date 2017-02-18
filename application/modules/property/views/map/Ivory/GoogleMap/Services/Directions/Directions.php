@@ -175,52 +175,6 @@ class Directions extends AbstractService
     }
 
     /**
-     * Parses & normalizes the directions API result response.
-     *
-     * @param string $response The directions API response.
-     *
-     * @return \stdClass The parsed & normalized directions response.
-     */
-    protected function parse($response)
-    {
-        if ($this->format === 'json') {
-            return $this->parseJSON($response);
-        }
-
-        return $this->parseXML($response);
-    }
-
-    /**
-     * Parses & normalizes a JSON directions API result response.
-     *
-     * @param string $response The directions API JSON response.
-     *
-     * @return \stdClass The parsed & normalized directions response.
-     */
-    protected function parseJSON($response)
-    {
-        return json_decode($response);
-    }
-
-    /**
-     * Parses & normalizes an XML directions API result response.
-     *
-     * @param string $response The directions API XML response.
-     *
-     * @return \stdClass The parsed & normalized directions response.
-     */
-    protected function parseXML($response)
-    {
-        $rules = array(
-            'leg'   => 'legs',
-            'route' => 'routes',
-            'step'  => 'steps',
-        );
-
-        return $this->xmlParser->parse($response, $rules);
-    }
-
-    /**
      * Builds the directions response according to the normalized directions API results.
      *
      * @param \stdClass $directionsResponse The normalied directions response.
@@ -402,5 +356,51 @@ class Directions extends AbstractService
             $startLocation,
             $travelMode
         );
+    }
+
+    /**
+     * Parses & normalizes the directions API result response.
+     *
+     * @param string $response The directions API response.
+     *
+     * @return \stdClass The parsed & normalized directions response.
+     */
+    protected function parse($response)
+    {
+        if ($this->format === 'json') {
+            return $this->parseJSON($response);
+        }
+
+        return $this->parseXML($response);
+    }
+
+    /**
+     * Parses & normalizes a JSON directions API result response.
+     *
+     * @param string $response The directions API JSON response.
+     *
+     * @return \stdClass The parsed & normalized directions response.
+     */
+    protected function parseJSON($response)
+    {
+        return json_decode($response);
+    }
+
+    /**
+     * Parses & normalizes an XML directions API result response.
+     *
+     * @param string $response The directions API XML response.
+     *
+     * @return \stdClass The parsed & normalized directions response.
+     */
+    protected function parseXML($response)
+    {
+        $rules = array(
+            'leg' => 'legs',
+            'route' => 'routes',
+            'step' => 'steps',
+        );
+
+        return $this->xmlParser->parse($response, $rules);
     }
 }

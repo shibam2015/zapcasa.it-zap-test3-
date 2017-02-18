@@ -69,6 +69,18 @@ class Swift_Transport_MailTransport implements Swift_Transport
     }
 
     /**
+     * Get the additional parameters used on the mail() function.
+     *
+     * This string is formatted for sprintf() where %s is the sender address.
+     *
+     * @return string
+     */
+    public function getExtraParams()
+    {
+        return $this->_extraParams;
+    }
+
+    /**
      * Set the additional parameters used on the mail() function.
      *
      * This string is formatted for sprintf() where %s is the sender address.
@@ -82,18 +94,6 @@ class Swift_Transport_MailTransport implements Swift_Transport
         $this->_extraParams = $params;
 
         return $this;
-    }
-
-    /**
-     * Get the additional parameters used on the mail() function.
-     *
-     * This string is formatted for sprintf() where %s is the sender address.
-     *
-     * @return string
-     */
-    public function getExtraParams()
-    {
-        return $this->_extraParams;
     }
 
     /**
@@ -197,18 +197,6 @@ class Swift_Transport_MailTransport implements Swift_Transport
         return $count;
     }
 
-    /**
-     * Register a plugin.
-     *
-     * @param Swift_Events_EventListener $plugin
-     */
-    public function registerPlugin(Swift_Events_EventListener $plugin)
-    {
-        $this->_eventDispatcher->bindEventListener($plugin);
-    }
-
-    // -- Private methods
-
     /** Determine the best-use reverse path for this message */
     private function _getReversePath(Swift_Mime_Message $message)
     {
@@ -227,5 +215,17 @@ class Swift_Transport_MailTransport implements Swift_Transport
         }
 
         return $path;
+    }
+
+    // -- Private methods
+
+    /**
+     * Register a plugin.
+     *
+     * @param Swift_Events_EventListener $plugin
+     */
+    public function registerPlugin(Swift_Events_EventListener $plugin)
+    {
+        $this->_eventDispatcher->bindEventListener($plugin);
     }
 }

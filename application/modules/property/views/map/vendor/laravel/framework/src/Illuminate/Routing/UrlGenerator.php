@@ -72,16 +72,6 @@ class UrlGenerator {
 	}
 
 	/**
-	 * Get the URL for the previous request.
-	 *
-	 * @return string
-	 */
-	public function previous()
-	{
-		return $this->to($this->request->headers->get('referer'));
-	}
-
-	/**
 	 * Generate a absolute URL to the given path.
 	 *
 	 * @param  string  $path
@@ -111,6 +101,73 @@ class UrlGenerator {
 	}
 
 	/**
+	 * Determine if the given path is a valid URL.
+	 *
+	 * @param  string $path
+	 * @return bool
+	 */
+	public function isValidUrl($path)
+	{
+		if (starts_with($path, array('#', '//', 'mailto:', 'tel:'))) return true;
+
+		return filter_var($path, FILTER_VALIDATE_URL) !== false;
+	}
+
+	/**
+	 * Get the scheme for a raw URL.
+	 *
+	 * @param  bool $secure
+	 * @return string
+	 */
+	protected function getScheme($secure)
+	{
+		if (is_null($secure)) {
+			return $this->request->getScheme() . '://';
+		} else {
+			return $secure ? 'https://' : 'http://';
+		}
+	}
+
+	/**
+	 * Get the base URL for the request.
+	 *
+	 * @param  string $scheme
+	 * @param  string $root
+	 * @return string
+	 */
+	protected function getRootUrl($scheme, $root = null)
+	{
+		$root = $root ?: $this->request->root();
+
+		$start = starts_with($root, 'http://') ? 'http://' : 'https://';
+
+		return preg_replace('~' . $start . '~', $scheme, $root, 1);
+	}
+
+	/**
+	 * Format the given URL segments into a single URL.
+	 *
+	 * @param  string $root
+	 * @param  string $path
+	 * @param  string $tail
+	 * @return string
+	 */
+	protected function trimUrl($root, $path, $tail = '')
+	{
+		return trim($root . '/' . trim($path . '/' . $tail, '/'), '/');
+	}
+
+	/**
+	 * Get the URL for the previous request.
+	 *
+	 * @return string
+	 */
+	public function previous()
+	{
+		return $this->to($this->request->headers->get('referer'));
+	}
+
+	/**
 	 * Generate a secure, absolute URL to the given path.
 	 *
 	 * @param  string  $path
@@ -120,6 +177,17 @@ class UrlGenerator {
 	public function secure($path, $parameters = array())
 	{
 		return $this->to($path, $parameters, true);
+	}
+
+	/**
+	 * Generate a URL to a secure asset.
+	 *
+	 * @param  string $path
+	 * @return string
+	 */
+	public function secureAsset($path)
+	{
+		return $this->asset($path, true);
 	}
 
 	/**
@@ -155,32 +223,16 @@ class UrlGenerator {
 	}
 
 	/**
-	 * Generate a URL to a secure asset.
+	 * Get the URL to a controller action.
 	 *
-	 * @param  string  $path
+	 * @param  string $action
+	 * @param  mixed $parameters
+	 * @param  bool $absolute
 	 * @return string
 	 */
-	public function secureAsset($path)
+	public function action($action, $parameters = array(), $absolute = true)
 	{
-		return $this->asset($path, true);
-	}
-
-	/**
-	 * Get the scheme for a raw URL.
-	 *
-	 * @param  bool    $secure
-	 * @return string
-	 */
-	protected function getScheme($secure)
-	{
-		if (is_null($secure))
-		{
-			return $this->request->getScheme().'://';
-		}
-		else
-		{
-			return $secure ? 'https://' : 'http://';
-		}
+		return $this->route($action, $parameters, $absolute, $this->routes->getByAction($action));
 	}
 
 	/**
@@ -231,106 +283,6 @@ class UrlGenerator {
 	}
 
 	/**
-	 * Replace the parameters on the root path.
-	 *
-	 * @param  \Illuminate\Routing\Route  $route
-	 * @param  string  $domain
-	 * @param  array  $parameters
-	 * @return string
-	 */
-	protected function replaceRoot($route, $domain, &$parameters)
-	{
-		return $this->replaceRouteParameters($this->getRouteRoot($route, $domain), $parameters);
-	}
-
-	/**
-	 * Replace all of the wildcard parameters for a route path.
-	 *
-	 * @param  string  $path
-	 * @param  array  $parameters
-	 * @return string
-	 */
-	protected function replaceRouteParameters($path, array &$parameters)
-	{
-		if (count($parameters))
-		{
-			$path = preg_replace_sub(
-				'/\{.*?\}/', $parameters, $this->replaceNamedParameters($path, $parameters)
-			);
-		}
-
-		return trim(preg_replace('/\{.*?\?\}/', '', $path), '/');
-	}
-
-	/**
-	 * Replace all of the named parameters in the path.
-	 *
-	 * @param  string  $path
-	 * @param  array  $parameters
-	 * @return string
-	 */
-	protected function replaceNamedParameters($path, &$parameters)
-	{
-		return preg_replace_callback('/\{(.*?)\??\}/', function($m) use (&$parameters)
-		{
-			return isset($parameters[$m[1]]) ? array_pull($parameters, $m[1]) : $m[0];
-
-		}, $path);
-	}
-
-	/**
-	 * Get the query string for a given route.
-	 *
-	 * @param  array  $parameters
-	 * @return string
-	 */
-	protected function getRouteQueryString(array $parameters)
-	{
-		// First we will get all of the string parameters that are remaining after we
-		// have replaced the route wildcards. We'll then build a query string from
-		// these string parameters then use it as a starting point for the rest.
-		if (count($parameters) == 0) return '';
-
-		$query = http_build_query(
-			$keyed = $this->getStringParameters($parameters)
-		);
-
-		// Lastly, if there are still parameters remaining, we will fetch the numeric
-		// parameters that are in the array and add them to the query string or we
-		// will make the initial query string if it wasn't started with strings.
-		if (count($keyed) < count($parameters))
-		{
-			$query .= '&'.implode(
-				'&', $this->getNumericParameters($parameters)
-			);
-		}
-
-		return '?'.trim($query, '&');
-	}
-
-	/**
-	 * Get the string parameters from a given list.
-	 *
-	 * @param  array  $parameters
-	 * @return array
-	 */
-	protected function getStringParameters(array $parameters)
-	{
-		return array_where($parameters, function($k, $v) { return is_string($k); });
-	}
-
-	/**
-	 * Get the numeric parameters from a given list.
-	 *
-	 * @param  array  $parameters
-	 * @return array
-	 */
-	protected function getNumericParameters(array $parameters)
-	{
-		return array_where($parameters, function($k, $v) { return is_numeric($k); });
-	}
-
-	/**
 	 * Get the formatted domain for a given route.
 	 *
 	 * @param  \Illuminate\Routing\Route  $route
@@ -355,17 +307,6 @@ class UrlGenerator {
 	}
 
 	/**
-	 * Get the domain and scheme for the route.
-	 *
-	 * @param  \Illuminate\Routing\Route  $route
-	 * @return string
-	 */
-	protected function getDomainAndScheme($route)
-	{
-		return $this->getRouteScheme($route).$route->domain();
-	}
-
-	/**
 	 * Add the port to the domain if necessary.
 	 *
 	 * @param  string  $domain
@@ -384,15 +325,14 @@ class UrlGenerator {
 	}
 
 	/**
-	 * Get the root of the route URL.
+	 * Get the domain and scheme for the route.
 	 *
 	 * @param  \Illuminate\Routing\Route  $route
-	 * @param  string  $domain
 	 * @return string
 	 */
-	protected function getRouteRoot($route, $domain)
+	protected function getDomainAndScheme($route)
 	{
-		return $this->getRootUrl($this->getRouteScheme($route), $domain);
+		return $this->getRouteScheme($route) . $route->domain();
 	}
 
 	/**
@@ -418,58 +358,116 @@ class UrlGenerator {
 	}
 
 	/**
-	 * Get the URL to a controller action.
+	 * Replace the parameters on the root path.
 	 *
-	 * @param  string  $action
-	 * @param  mixed   $parameters
-	 * @param  bool    $absolute
+	 * @param  \Illuminate\Routing\Route $route
+	 * @param  string $domain
+	 * @param  array $parameters
 	 * @return string
 	 */
-	public function action($action, $parameters = array(), $absolute = true)
+	protected function replaceRoot($route, $domain, &$parameters)
 	{
-		return $this->route($action, $parameters, $absolute, $this->routes->getByAction($action));
+		return $this->replaceRouteParameters($this->getRouteRoot($route, $domain), $parameters);
 	}
 
 	/**
-	 * Get the base URL for the request.
+	 * Replace all of the wildcard parameters for a route path.
 	 *
-	 * @param  string  $scheme
-	 * @param  string  $root
+	 * @param  string $path
+	 * @param  array $parameters
 	 * @return string
 	 */
-	protected function getRootUrl($scheme, $root = null)
+	protected function replaceRouteParameters($path, array &$parameters)
 	{
-		$root = $root ?: $this->request->root();
+		if (count($parameters)) {
+			$path = preg_replace_sub(
+				'/\{.*?\}/', $parameters, $this->replaceNamedParameters($path, $parameters)
+			);
+		}
 
-		$start = starts_with($root, 'http://') ? 'http://' : 'https://';
-
-		return preg_replace('~'.$start.'~', $scheme, $root, 1);
+		return trim(preg_replace('/\{.*?\?\}/', '', $path), '/');
 	}
 
 	/**
-	 * Determine if the given path is a valid URL.
+	 * Replace all of the named parameters in the path.
 	 *
 	 * @param  string  $path
-	 * @return bool
+	 * @param  array $parameters
+	 * @return string
 	 */
-	public function isValidUrl($path)
+	protected function replaceNamedParameters($path, &$parameters)
 	{
-		if (starts_with($path, array('#', '//', 'mailto:', 'tel:'))) return true;
+		return preg_replace_callback('/\{(.*?)\??\}/', function ($m) use (&$parameters) {
+			return isset($parameters[$m[1]]) ? array_pull($parameters, $m[1]) : $m[0];
 
-		return filter_var($path, FILTER_VALIDATE_URL) !== false;
+		}, $path);
 	}
 
 	/**
-	 * Format the given URL segments into a single URL.
+	 * Get the root of the route URL.
 	 *
-	 * @param  string  $root
-	 * @param  string  $path
-	 * @param  string  $tail
+	 * @param  \Illuminate\Routing\Route $route
+	 * @param  string $domain
 	 * @return string
 	 */
-	protected function trimUrl($root, $path, $tail = '')
+	protected function getRouteRoot($route, $domain)
 	{
-		return trim($root.'/'.trim($path.'/'.$tail, '/'), '/');
+		return $this->getRootUrl($this->getRouteScheme($route), $domain);
+	}
+
+	/**
+	 * Get the query string for a given route.
+	 *
+	 * @param  array $parameters
+	 * @return string
+	 */
+	protected function getRouteQueryString(array $parameters)
+	{
+		// First we will get all of the string parameters that are remaining after we
+		// have replaced the route wildcards. We'll then build a query string from
+		// these string parameters then use it as a starting point for the rest.
+		if (count($parameters) == 0) return '';
+
+		$query = http_build_query(
+			$keyed = $this->getStringParameters($parameters)
+		);
+
+		// Lastly, if there are still parameters remaining, we will fetch the numeric
+		// parameters that are in the array and add them to the query string or we
+		// will make the initial query string if it wasn't started with strings.
+		if (count($keyed) < count($parameters)) {
+			$query .= '&' . implode(
+					'&', $this->getNumericParameters($parameters)
+				);
+		}
+
+		return '?' . trim($query, '&');
+	}
+
+	/**
+	 * Get the string parameters from a given list.
+	 *
+	 * @param  array $parameters
+	 * @return array
+	 */
+	protected function getStringParameters(array $parameters)
+	{
+		return array_where($parameters, function ($k, $v) {
+			return is_string($k);
+		});
+	}
+
+	/**
+	 * Get the numeric parameters from a given list.
+	 *
+	 * @param  array $parameters
+	 * @return array
+	 */
+	protected function getNumericParameters(array $parameters)
+	{
+		return array_where($parameters, function ($k, $v) {
+			return is_numeric($k);
+		});
 	}
 
 	/**

@@ -41,6 +41,34 @@ class TailCommand extends Command {
 	}
 
 	/**
+	 * Get the path to the Laravel log file.
+	 *
+	 * @param  string $connection
+	 * @return string
+	 */
+	protected function getPath($connection)
+	{
+		if ($this->option('path')) return $this->option('path');
+
+		if (is_null($connection)) {
+			return base_path() . '/app/storage/logs/laravel.log';
+		} else {
+			return $this->getRoot($connection) . '/app/storage/logs/laravel.log';
+		}
+	}
+
+	/**
+	 * Get the path to the Laravel install root.
+	 *
+	 * @param  string $connection
+	 * @return string
+	 */
+	protected function getRoot($connection)
+	{
+		return $this->laravel['config']['remote.connections.' . $connection . '.root'];
+	}
+
+	/**
 	 * Tail the given log file for the connection.
 	 *
 	 * @param  string  $path
@@ -105,37 +133,6 @@ class TailCommand extends Command {
 	protected function getRemote($connection)
 	{
 		return $this->laravel['remote']->connection($connection);
-	}
-
-	/**
-	 * Get the path to the Laravel log file.
-	 *
-	 * @param  string  $connection
-	 * @return string
-	 */
-	protected function getPath($connection)
-	{
-		if ($this->option('path')) return $this->option('path');
-
-		if (is_null($connection))
-		{
-			return base_path().'/app/storage/logs/laravel.log';
-		}
-		else
-		{
-			return $this->getRoot($connection).'/app/storage/logs/laravel.log';
-		}
-	}
-
-	/**
-	 * Get the path to the Laravel install root.
-	 *
-	 * @param  string  $connection
-	 * @return string
-	 */
-	protected function getRoot($connection)
-	{
-		return $this->laravel['config']['remote.connections.'.$connection.'.root'];
 	}
 
 	/**

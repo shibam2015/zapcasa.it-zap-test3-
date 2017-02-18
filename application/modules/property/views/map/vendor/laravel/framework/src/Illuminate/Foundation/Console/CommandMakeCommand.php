@@ -54,6 +54,22 @@ class CommandMakeCommand extends Command {
 	}
 
 	/**
+	 * Get the path where the command should be stored.
+	 *
+	 * @return string
+	 */
+	protected function getPath()
+	{
+		$path = $this->input->getOption('path');
+
+		if (is_null($path)) {
+			return $this->laravel['path'] . '/commands';
+		} else {
+			return $this->laravel['path.base'] . '/' . $path;
+		}
+	}
+
+	/**
 	 * Write the finished command file to disk.
 	 *
 	 * @param  string  $file
@@ -107,25 +123,6 @@ class CommandMakeCommand extends Command {
 		else
 		{
 			return str_replace('{{namespace}}', '', $stub);
-		}
-	}
-
-	/**
-	 * Get the path where the command should be stored.
-	 *
-	 * @return string
-	 */
-	protected function getPath()
-	{
-		$path = $this->input->getOption('path');
-
-		if (is_null($path))
-		{
-			return $this->laravel['path'].'/commands';
-		}
-		else
-		{
-			return $this->laravel['path.base'].'/'.$path;
 		}
 	}
 

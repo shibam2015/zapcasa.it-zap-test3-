@@ -21,16 +21,6 @@ abstract class Helper implements HelperInterface
     protected $helperSet = null;
 
     /**
-     * Sets the helper set associated with this helper.
-     *
-     * @param HelperSet $helperSet A HelperSet instance
-     */
-    public function setHelperSet(HelperSet $helperSet = null)
-    {
-        $this->helperSet = $helperSet;
-    }
-
-    /**
      * Gets the helper set associated with this helper.
      *
      * @return HelperSet A HelperSet instance
@@ -38,6 +28,16 @@ abstract class Helper implements HelperInterface
     public function getHelperSet()
     {
         return $this->helperSet;
+    }
+
+    /**
+     * Sets the helper set associated with this helper.
+     *
+     * @param HelperSet $helperSet A HelperSet instance
+     */
+    public function setHelperSet(HelperSet $helperSet = null)
+    {
+        $this->helperSet = $helperSet;
     }
 
     /**

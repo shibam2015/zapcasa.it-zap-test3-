@@ -99,6 +99,22 @@ abstract class ServiceProvider {
 	}
 
 	/**
+	 * Determine the namespace for a package.
+	 *
+	 * @param  string $package
+	 * @param  string $namespace
+	 * @return string
+	 */
+	protected function getPackageNamespace($package, $namespace)
+	{
+		if (is_null($namespace)) {
+			list($vendor, $namespace) = explode('/', $package);
+		}
+
+		return $namespace;
+	}
+
+	/**
 	 * Guess the package path for the provider.
 	 *
 	 * @return string
@@ -111,20 +127,14 @@ abstract class ServiceProvider {
 	}
 
 	/**
-	 * Determine the namespace for a package.
+	 * Get the application package view path.
 	 *
 	 * @param  string  $package
-	 * @param  string  $namespace
 	 * @return string
 	 */
-	protected function getPackageNamespace($package, $namespace)
+	protected function getAppViewPath($package)
 	{
-		if (is_null($namespace))
-		{
-			list($vendor, $namespace) = explode('/', $package);
-		}
-
-		return $namespace;
+		return $this->app['path'] . "/views/packages/{$package}";
 	}
 
 	/**
@@ -146,17 +156,6 @@ abstract class ServiceProvider {
 		{
 			$artisan->resolveCommands($commands);
 		});
-	}
-
-	/**
-	 * Get the application package view path.
-	 *
-	 * @param  string  $package
-	 * @return string
-	 */
-	protected function getAppViewPath($package)
-	{
-		return $this->app['path']."/views/packages/{$package}";
 	}
 
 	/**

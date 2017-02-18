@@ -16,21 +16,11 @@ class CategoryHelpers {
     }
 
     /**
-     * Get languages
+	 * Get link for map
      */
-    public static function getLanguages() {
-		$languages = File::directories(app_path() . '/lang/');
-		$aLanguages = array();
-
-		foreach($languages as $language)
-		{
-			$language_abbr = str_replace('\\', '/', str_replace(app_path() . '/lang', '', (string)$language));
-			$language_abbr = trim($language_abbr, '/');
-			$language_file = include $language . '/map.php';
-			$full_language = $language_file['language'];
-			$aLanguages[$language_abbr] = $full_language;
-		}
-		return $aLanguages;
+	public static function getLink($category_id)
+	{
+		return url('/map?m=' . Crypt::encrypt('id=' . $category_id));
     }
 
     /**
@@ -52,6 +42,25 @@ class CategoryHelpers {
 
 		return ($format_value) ? $language : $language;
     }*/
+	/**
+	 * Get languages
+	 */
+	public static function getLanguages()
+	{
+		$languages = File::directories(app_path() . '/lang/');
+		$aLanguages = array();
+
+		foreach ($languages as $language) {
+			$language_abbr = str_replace('\\', '/', str_replace(app_path() . '/lang', '', (string)$language));
+			$language_abbr = trim($language_abbr, '/');
+			$language_file = include $language . '/map.php';
+			$full_language = $language_file['language'];
+			$aLanguages[$language_abbr] = $full_language;
+		}
+		return $aLanguages;
+	}
+
+
 	public static function getMarker($marker = '', $format_value = false, $category_id = 0) {
 		$path = '/assets/img/markers';
 		$default_marker = '/-custom/MapMarker_Marker_Inside_Pink.png';
@@ -70,14 +79,6 @@ class CategoryHelpers {
 			$marker = $default_marker;
 		}
 		return ($format_value) ? $marker : url($path . $marker);
-    }
-
-
-    /**
-     * Get link for map
-     */
-    public static function getLink($category_id) {
-		return url('/map?m=' . Crypt::encrypt('id=' . $category_id));
     }
 
     /**

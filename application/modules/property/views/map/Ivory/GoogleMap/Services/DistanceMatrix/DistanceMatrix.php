@@ -148,53 +148,6 @@ class DistanceMatrix extends AbstractService
     }
 
     /**
-     * Parses & normalizes the distance matrix API result response.
-     *
-     * @param string $response The distance matrix API response.
-     *
-     * @return \stdClass The parsed & normalized distance matrix response.
-     */
-    protected function parse($response)
-    {
-        if ($this->format === 'json') {
-            return $this->parseJSON($response);
-        }
-
-        return $this->parseXML($response);
-    }
-
-    /**
-     * Parses & normalizes a JSON distance matrix API result response.
-     *
-     * @param string $response The distance matrix API JSON response.
-     *
-     * @return \stdClass The parsed & normalized distance matrix response.
-     */
-    protected function parseJSON($response)
-    {
-        return json_decode($response);
-    }
-
-    /**
-     * Parses & normalizes an XML distance matrix API result response.
-     *
-     * @param string $response The distance matrix API XML response.
-     *
-     * @return \stdClass The parsed & normalized distance matrix response.
-     */
-    protected function parseXML($response)
-    {
-        $rules = array(
-            'destination_address' => 'destination_addresses',
-            'element'             => 'elements',
-            'origin_address'      => 'origin_addresses',
-            'row'                 => 'rows',
-        );
-
-        return $this->xmlParser->parse($response, $rules);
-    }
-
-    /**
      * Builds the distance matrix response according to the normalized distance matrix API results.
      *
      * @param \stdClass $distanceMatrixResponse The normalized distance matrix response.
@@ -266,5 +219,52 @@ class DistanceMatrix extends AbstractService
         }
 
         return new DistanceMatrixResponseElement($status, $distance, $duration);
+    }
+
+    /**
+     * Parses & normalizes the distance matrix API result response.
+     *
+     * @param string $response The distance matrix API response.
+     *
+     * @return \stdClass The parsed & normalized distance matrix response.
+     */
+    protected function parse($response)
+    {
+        if ($this->format === 'json') {
+            return $this->parseJSON($response);
+        }
+
+        return $this->parseXML($response);
+    }
+
+    /**
+     * Parses & normalizes a JSON distance matrix API result response.
+     *
+     * @param string $response The distance matrix API JSON response.
+     *
+     * @return \stdClass The parsed & normalized distance matrix response.
+     */
+    protected function parseJSON($response)
+    {
+        return json_decode($response);
+    }
+
+    /**
+     * Parses & normalizes an XML distance matrix API result response.
+     *
+     * @param string $response The distance matrix API XML response.
+     *
+     * @return \stdClass The parsed & normalized distance matrix response.
+     */
+    protected function parseXML($response)
+    {
+        $rules = array(
+            'destination_address' => 'destination_addresses',
+            'element' => 'elements',
+            'origin_address' => 'origin_addresses',
+            'row' => 'rows',
+        );
+
+        return $this->xmlParser->parse($response, $rules);
     }
 }

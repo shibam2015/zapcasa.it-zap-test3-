@@ -52,6 +52,38 @@ class Guard implements HttpKernelInterface {
 	}
 
 	/**
+	 * Encrypt the cookies on an outgoing response.
+	 *
+	 * @param  \Symfony\Component\HttpFoundation\Response $response
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
+	protected function encrypt(Response $response)
+	{
+		foreach ($response->headers->getCookies() as $key => $c) {
+			$encrypted = $this->encrypter->encrypt($c->getValue());
+
+			$response->headers->setCookie($this->duplicate($c, $encrypted));
+		}
+
+		return $response;
+	}
+
+	/**
+	 * Duplicate a cookie with a new value.
+	 *
+	 * @param  \Symfony\Component\HttpFoundation\Cookie $cookie
+	 * @param  mixed $value
+	 * @return \Symfony\Component\HttpFoundation\Cookie
+	 */
+	protected function duplicate(Cookie $c, $value)
+	{
+		return new Cookie(
+			$c->getName(), $value, $c->getExpiresTime(), $c->getPath(),
+			$c->getDomain(), $c->isSecure(), $c->isHttpOnly()
+		);
+	}
+
+	/**
 	 * Decrypt the cookies on the request.
 	 *
 	 * @param  \Symfony\Component\HttpFoundation\Request  $request
@@ -103,39 +135,6 @@ class Guard implements HttpKernelInterface {
 		}
 
 		return $decrypted;
-	}
-
-	/**
-	 * Encrypt the cookies on an outgoing response.
-	 *
-	 * @param  \Symfony\Component\HttpFoundation\Response  $response
-	 * @return \Symfony\Component\HttpFoundation\Response
-	 */
-	protected function encrypt(Response $response)
-	{
-		foreach ($response->headers->getCookies() as $key => $c)
-		{
-			$encrypted = $this->encrypter->encrypt($c->getValue());
-
-			$response->headers->setCookie($this->duplicate($c, $encrypted));
-		}
-
-		return $response;
-	}
-
-	/**
-	 * Duplicate a cookie with a new value.
-	 *
-	 * @param  \Symfony\Component\HttpFoundation\Cookie  $cookie
-	 * @param  mixed  $value
-	 * @return \Symfony\Component\HttpFoundation\Cookie
-	 */
-	protected function duplicate(Cookie $c, $value)
-	{
-		return new Cookie(
-			$c->getName(), $value, $c->getExpiresTime(), $c->getPath(),
-			$c->getDomain(), $c->isSecure(), $c->isHttpOnly()
-		);
 	}
 
 }

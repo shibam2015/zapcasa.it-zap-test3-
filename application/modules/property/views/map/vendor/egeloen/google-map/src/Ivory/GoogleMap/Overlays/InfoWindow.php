@@ -88,6 +88,43 @@ class InfoWindow extends AbstractOptionsAsset implements ExtendableInterface
     }
 
     /**
+     * Sets the pixel offset.
+     *
+     * Available prototypes:
+     *  - function setPixelOffset(Ivory\GoogleMap\Base\Size $scaledSize)
+     *  - function setPixelOffset(double $width, double $height, string $widthUnit = null, string $heightUnit = null)
+     *
+     * @throws \Ivory\GoogleMap\Exception\OverlayException If the pixel offset is not valid (prototypes).
+     */
+    public function setPixelOffset()
+    {
+        $args = func_get_args();
+
+        if (isset($args[0]) && ($args[0] instanceof Size)) {
+            $this->pixedOffset = $args[0];
+        } elseif ((isset($args[0]) && is_numeric($args[0])) && (isset($args[1]) && is_numeric($args[1]))) {
+            if ($this->pixedOffset === null) {
+                $this->pixedOffset = new Size();
+            }
+
+            $this->pixedOffset->setWidth($args[0]);
+            $this->pixedOffset->setHeight($args[1]);
+
+            if (isset($args[2]) && is_string($args[2])) {
+                $this->pixedOffset->setWidthUnit($args[2]);
+            }
+
+            if (isset($args[3]) && is_string($args[3])) {
+                $this->pixedOffset->setHeightUnit($args[3]);
+            }
+        } elseif (!isset($args[0])) {
+            $this->pixedOffset = null;
+        } else {
+            throw OverlayException::invalidInfoWindowPixelOffset();
+        }
+    }
+
+    /**
      * Gets the infow window position.
      *
      * @return \Ivory\GoogleMap\Base\Coordinate The info window position.
@@ -148,43 +185,6 @@ class InfoWindow extends AbstractOptionsAsset implements ExtendableInterface
     public function getPixelOffset()
     {
         return $this->pixedOffset;
-    }
-
-    /**
-     * Sets the pixel offset.
-     *
-     * Available prototypes:
-     *  - function setPixelOffset(Ivory\GoogleMap\Base\Size $scaledSize)
-     *  - function setPixelOffset(double $width, double $height, string $widthUnit = null, string $heightUnit = null)
-     *
-     * @throws \Ivory\GoogleMap\Exception\OverlayException If the pixel offset is not valid (prototypes).
-     */
-    public function setPixelOffset()
-    {
-        $args = func_get_args();
-
-        if (isset($args[0]) && ($args[0] instanceof Size)) {
-            $this->pixedOffset = $args[0];
-        } elseif ((isset($args[0]) && is_numeric($args[0])) && (isset($args[1]) && is_numeric($args[1]))) {
-            if ($this->pixedOffset === null) {
-                $this->pixedOffset = new Size();
-            }
-
-            $this->pixedOffset->setWidth($args[0]);
-            $this->pixedOffset->setHeight($args[1]);
-
-            if (isset($args[2]) && is_string($args[2])) {
-                $this->pixedOffset->setWidthUnit($args[2]);
-            }
-
-            if (isset($args[3]) && is_string($args[3])) {
-                $this->pixedOffset->setHeightUnit($args[3]);
-            }
-        } elseif (!isset($args[0])) {
-            $this->pixedOffset = null;
-        } else {
-            throw OverlayException::invalidInfoWindowPixelOffset();
-        }
     }
 
     /**

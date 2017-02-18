@@ -71,6 +71,31 @@ class DatabaseReminderRepository implements ReminderRepositoryInterface {
 	}
 
 	/**
+	 * Create a new token for the user.
+	 *
+	 * @param  \Illuminate\Auth\Reminders\RemindableInterface $user
+	 * @return string
+	 */
+	public function createNewToken(RemindableInterface $user)
+	{
+		$email = $user->getReminderEmail();
+
+		$value = str_shuffle(sha1($email . spl_object_hash($this) . microtime(true)));
+
+		return hash_hmac('sha1', $value, $this->hashKey);
+	}
+
+	/**
+	 * Begin a new database query against the table.
+	 *
+	 * @return \Illuminate\Database\Query\Builder
+	 */
+	protected function getTable()
+	{
+		return $this->connection->table($this->table);
+	}
+
+	/**
 	 * Build the record payload for the table.
 	 *
 	 * @param  string  $email
@@ -142,31 +167,6 @@ class DatabaseReminderRepository implements ReminderRepositoryInterface {
 		$expired = Carbon::now()->subSeconds($this->expires);
 
 		$this->getTable()->where('created_at', '<', $expired)->delete();
-	}
-
-	/**
-	 * Create a new token for the user.
-	 *
-	 * @param  \Illuminate\Auth\Reminders\RemindableInterface  $user
-	 * @return string
-	 */
-	public function createNewToken(RemindableInterface $user)
-	{
-		$email = $user->getReminderEmail();
-
-		$value = str_shuffle(sha1($email.spl_object_hash($this).microtime(true)));
-
-		return hash_hmac('sha1', $value, $this->hashKey);
-	}
-
-	/**
-	 * Begin a new database query against the table.
-	 *
-	 * @return \Illuminate\Database\Query\Builder
-	 */
-	protected function getTable()
-	{
-		return $this->connection->table($this->table);
 	}
 
 	/**

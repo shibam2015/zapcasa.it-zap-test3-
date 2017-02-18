@@ -98,6 +98,21 @@ class MigrationServiceProvider extends ServiceProvider {
 	}
 
 	/**
+	 * Get the services provided by the provider.
+	 *
+	 * @return array
+	 */
+	public function provides()
+	{
+		return array(
+			'migrator', 'migration.repository', 'command.migrate',
+			'command.migrate.rollback', 'command.migrate.reset',
+			'command.migrate.refresh', 'command.migrate.install',
+			'migration.creator', 'command.migrate.make',
+		);
+	}
+
+	/**
 	 * Register the "migrate" migration command.
 	 *
 	 * @return void
@@ -187,21 +202,6 @@ class MigrationServiceProvider extends ServiceProvider {
 
 			return new MigrateMakeCommand($creator, $packagePath);
 		});
-	}
-
-	/**
-	 * Get the services provided by the provider.
-	 *
-	 * @return array
-	 */
-	public function provides()
-	{
-		return array(
-			'migrator', 'migration.repository', 'command.migrate',
-			'command.migrate.rollback', 'command.migrate.reset',
-			'command.migrate.refresh', 'command.migrate.install',
-			'migration.creator', 'command.migrate.make',
-		);
 	}
 
 }

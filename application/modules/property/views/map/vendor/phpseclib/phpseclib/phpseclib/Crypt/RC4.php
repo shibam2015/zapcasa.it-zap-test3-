@@ -237,54 +237,6 @@ class Crypt_RC4 extends Crypt_Base
     }
 
     /**
-     * Decrypts a message.
-     *
-     * $this->decrypt($this->encrypt($plaintext)) == $this->encrypt($this->encrypt($plaintext)).
-     * At least if the continuous buffer is disabled.
-     *
-     * @see Crypt_Base::encrypt()
-     * @see Crypt_RC4::_crypt()
-     * @access public
-     * @param String $ciphertext
-     * @return String $plaintext
-     */
-    function decrypt($ciphertext)
-    {
-        if ($this->engine == CRYPT_MODE_MCRYPT) {
-            return parent::decrypt($ciphertext);
-        }
-        return $this->_crypt($ciphertext, CRYPT_RC4_DECRYPT);
-    }
-
-
-    /**
-     * Setup the key (expansion)
-     *
-     * @see Crypt_Base::_setupKey()
-     * @access private
-     */
-    function _setupKey()
-    {
-        $key = $this->key;
-        $keyLength = strlen($key);
-        $keyStream = range(0, 255);
-        $j = 0;
-        for ($i = 0; $i < 256; $i++) {
-            $j = ($j + $keyStream[$i] + ord($key[$i % $keyLength])) & 255;
-            $temp = $keyStream[$i];
-            $keyStream[$i] = $keyStream[$j];
-            $keyStream[$j] = $temp;
-        }
-
-        $this->stream = array();
-        $this->stream[CRYPT_RC4_DECRYPT] = $this->stream[CRYPT_RC4_ENCRYPT] = array(
-            0, // index $i
-            0, // index $j
-            $keyStream
-        );
-    }
-
-    /**
      * Encrypts or decrypts a message.
      *
      * @see Crypt_RC4::encrypt()
@@ -325,5 +277,52 @@ class Crypt_RC4 extends Crypt_Base
         }
 
         return $text;
+    }
+
+    /**
+     * Decrypts a message.
+     *
+     * $this->decrypt($this->encrypt($plaintext)) == $this->encrypt($this->encrypt($plaintext)).
+     * At least if the continuous buffer is disabled.
+     *
+     * @see Crypt_Base::encrypt()
+     * @see Crypt_RC4::_crypt()
+     * @access public
+     * @param String $ciphertext
+     * @return String $plaintext
+     */
+    function decrypt($ciphertext)
+    {
+        if ($this->engine == CRYPT_MODE_MCRYPT) {
+            return parent::decrypt($ciphertext);
+        }
+        return $this->_crypt($ciphertext, CRYPT_RC4_DECRYPT);
+    }
+
+    /**
+     * Setup the key (expansion)
+     *
+     * @see Crypt_Base::_setupKey()
+     * @access private
+     */
+    function _setupKey()
+    {
+        $key = $this->key;
+        $keyLength = strlen($key);
+        $keyStream = range(0, 255);
+        $j = 0;
+        for ($i = 0; $i < 256; $i++) {
+            $j = ($j + $keyStream[$i] + ord($key[$i % $keyLength])) & 255;
+            $temp = $keyStream[$i];
+            $keyStream[$i] = $keyStream[$j];
+            $keyStream[$j] = $temp;
+        }
+
+        $this->stream = array();
+        $this->stream[CRYPT_RC4_DECRYPT] = $this->stream[CRYPT_RC4_ENCRYPT] = array(
+            0, // index $i
+            0, // index $j
+            $keyStream
+        );
     }
 }

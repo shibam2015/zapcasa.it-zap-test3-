@@ -72,19 +72,6 @@ class WorkbenchMakeCommand extends Command {
 	}
 
 	/**
-	 * Call the composer update routine on the path.
-	 *
-	 * @param  string  $path
-	 * @return void
-	 */
-	protected function callComposerUpdate($path)
-	{
-		chdir($path);
-
-		passthru('composer install --dev');
-	}
-
-	/**
 	 * Build the package details from user input.
 	 *
 	 * @return \Illuminate\Workbench\Package
@@ -108,6 +95,19 @@ class WorkbenchMakeCommand extends Command {
 		$package = $this->argument('package');
 
 		return array_map('studly_case', explode('/', $package, 2));
+	}
+
+	/**
+	 * Call the composer update routine on the path.
+	 *
+	 * @param  string $path
+	 * @return void
+	 */
+	protected function callComposerUpdate($path)
+	{
+		chdir($path);
+
+		passthru('composer install --dev');
 	}
 
 	/**

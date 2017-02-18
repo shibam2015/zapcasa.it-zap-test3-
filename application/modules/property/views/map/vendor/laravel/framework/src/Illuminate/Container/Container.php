@@ -59,36 +59,18 @@ class Container implements ArrayAccess {
 	protected $globalResolvingCallbacks = array();
 
 	/**
-	 * Determine if a given string is resolvable.
+	 * Register a binding if it hasn't already been registered.
 	 *
-	 * @param  string  $abstract
-	 * @return bool
+	 * @param  string $abstract
+	 * @param  Closure|string|null $concrete
+	 * @param  bool $shared
+	 * @return void
 	 */
-	protected function resolvable($abstract)
+	public function bindIf($abstract, $concrete = null, $shared = false)
 	{
-		return $this->bound($abstract) || $this->isAlias($abstract);
-	}
-
-	/**
-	 * Determine if the given abstract type has been bound.
-	 *
-	 * @param  string  $abstract
-	 * @return bool
-	 */
-	public function bound($abstract)
-	{
-		return isset($this[$abstract]) || isset($this->instances[$abstract]);
-	}
-
-	/**
-	 * Determine if a given string is an alias.
-	 *
-	 * @param  string  $name
-	 * @return bool
-	 */
-	public function isAlias($name)
-	{
-		return isset($this->aliases[$name]);
+		if (!$this->bound($abstract)) {
+			$this->bind($abstract, $concrete, $shared);
+		}
 	}
 
 	/**
@@ -143,168 +125,14 @@ class Container implements ArrayAccess {
 	}
 
 	/**
-	 * Get the Closure to be used when building a type.
+	 * Extract the type and alias from a given definition.
 	 *
-	 * @param  string  $abstract
-	 * @param  string  $concrete
-	 * @return \Closure
+	 * @param  array $definition
+	 * @return array
 	 */
-	protected function getClosure($abstract, $concrete)
+	protected function extractAlias(array $definition)
 	{
-		return function($c, $parameters = array()) use ($abstract, $concrete)
-		{
-			$method = ($abstract == $concrete) ? 'build' : 'make';
-
-			return $c->$method($concrete, $parameters);
-		};
-	}
-
-	/**
-	 * Register a binding if it hasn't already been registered.
-	 *
-	 * @param  string               $abstract
-	 * @param  Closure|string|null  $concrete
-	 * @param  bool                 $shared
-	 * @return void
-	 */
-	public function bindIf($abstract, $concrete = null, $shared = false)
-	{
-		if ( ! $this->bound($abstract))
-		{
-			$this->bind($abstract, $concrete, $shared);
-		}
-	}
-
-	/**
-	 * Register a shared binding in the container.
-	 *
-	 * @param  string               $abstract
-	 * @param  Closure|string|null  $concrete
-	 * @return void
-	 */
-	public function singleton($abstract, $concrete = null)
-	{
-		return $this->bind($abstract, $concrete, true);
-	}
-
-	/**
-	 * Wrap a Closure such that it is shared.
-	 *
-	 * @param  Closure  $closure
-	 * @return Closure
-	 */
-	public function share(Closure $closure)
-	{
-		return function($container) use ($closure)
-		{
-			// We'll simply declare a static variable within the Closures and if it has
-			// not been set we will execute the given Closures to resolve this value
-			// and return it back to these consumers of the method as an instance.
-			static $object;
-
-			if (is_null($object))
-			{
-				$object = $closure($container);
-			}
-
-			return $object;
-		};
-	}
-
-	/**
-	 * Bind a shared Closure into the container.
-	 *
-	 * @param  string  $abstract
-	 * @param  \Closure  $closure
-	 * @return void
-	 */
-	public function bindShared($abstract, Closure $closure)
-	{
-		return $this->bind($abstract, $this->share($closure), true);
-	}
-
-	/**
-	 * "Extend" an abstract type in the container.
-	 *
-	 * @param  string   $abstract
-	 * @param  Closure  $closure
-	 * @return void
-	 *
-	 * @throws \InvalidArgumentException
-	 */
-	public function extend($abstract, Closure $closure)
-	{
-		if ( ! isset($this->bindings[$abstract]))
-		{
-			throw new \InvalidArgumentException("Type {$abstract} is not bound.");
-		}
-
-		if (isset($this->instances[$abstract]))
-		{
-			$this->instances[$abstract] = $closure($this->instances[$abstract], $this);
-
-			$this->rebound($abstract);
-		}
-		else
-		{
-			$extender = $this->getExtender($abstract, $closure);
-
-			$this->bind($abstract, $extender, $this->isShared($abstract));
-		}
-	}
-
-	/**
-	 * Get an extender Closure for resolving a type.
-	 *
-	 * @param  string  $abstract
-	 * @param  \Closure  $closure
-	 * @return \Closure
-	 */
-	protected function getExtender($abstract, Closure $closure)
-	{
-		// To "extend" a binding, we will grab the old "resolver" Closure and pass it
-		// into a new one. The old resolver will be called first and the result is
-		// handed off to the "new" resolver, along with this container instance.
-		$resolver = $this->bindings[$abstract]['concrete'];
-
-		return function($container) use ($resolver, $closure)
-		{
-			return $closure($resolver($container), $container);
-		};
-	}
-
-	/**
-	 * Register an existing instance as shared in the container.
-	 *
-	 * @param  string  $abstract
-	 * @param  mixed   $instance
-	 * @return void
-	 */
-	public function instance($abstract, $instance)
-	{
-		// First, we will extract the alias from the abstract if it is an array so we
-		// are using the correct name when binding the type. If we get an alias it
-		// will be registered with the container so we can resolve it out later.
-		if (is_array($abstract))
-		{
-			list($abstract, $alias) = $this->extractAlias($abstract);
-
-			$this->alias($abstract, $alias);
-		}
-
-		unset($this->aliases[$abstract]);
-
-		// We'll check to determine if this type has been bound before, and if it has
-		// we will fire the rebound callbacks registered with the container and it
-		// can be updated with consuming classes that have gotten resolved here.
-		$bound = $this->bound($abstract);
-
-		$this->instances[$abstract] = $instance;
-
-		if ($bound)
-		{
-			$this->rebound($abstract);
-		}
+		return array(key($definition), current($definition));
 	}
 
 	/**
@@ -320,44 +148,33 @@ class Container implements ArrayAccess {
 	}
 
 	/**
-	 * Extract the type and alias from a given definition.
+	 * Drop all of the stale instances and aliases.
 	 *
-	 * @param  array  $definition
-	 * @return array
+	 * @param  string  $abstract
+	 * @return void
 	 */
-	protected function extractAlias(array $definition)
+	protected function dropStaleInstances($abstract)
 	{
-		return array(key($definition), current($definition));
+		unset($this->instances[$abstract]);
+
+		unset($this->aliases[$abstract]);
 	}
 
 	/**
-	 * Bind a new callback to an abstract's rebind event.
+	 * Get the Closure to be used when building a type.
 	 *
 	 * @param  string  $abstract
-	 * @param  \Closure  $callback
-	 * @return mixed
+	 * @param  string $concrete
+	 * @return \Closure
 	 */
-	public function rebinding($abstract, Closure $callback)
+	protected function getClosure($abstract, $concrete)
 	{
-		$this->reboundCallbacks[$abstract][] = $callback;
-
-		if ($this->bound($abstract)) return $this->make($abstract);
-	}
-
-	/**
-	 * Refresh an instance on the given target and method.
-	 *
-	 * @param  string  $abstract
-	 * @param  mixed  $target
-	 * @param  string  $method
-	 * @return mixed
-	 */
-	public function refresh($abstract, $target, $method)
-	{
-		return $this->rebinding($abstract, function($app, $instance) use ($target, $method)
+		return function ($c, $parameters = array()) use ($abstract, $concrete)
 		{
-			$target->{$method}($instance);
-		});
+			$method = ($abstract == $concrete) ? 'build' : 'make';
+
+			return $c->$method($concrete, $parameters);
+		};
 	}
 
 	/**
@@ -373,24 +190,6 @@ class Container implements ArrayAccess {
 		foreach ($this->getReboundCallbacks($abstract) as $callback)
 		{
 			call_user_func($callback, $this, $instance);
-		}
-	}
-
-	/**
-	 * Get the rebound callbacks for a given type.
-	 *
-	 * @param  string  $abstract
-	 * @return array
-	 */
-	protected function getReboundCallbacks($abstract)
-	{
-		if (isset($this->reboundCallbacks[$abstract]))
-		{
-			return $this->reboundCallbacks[$abstract];
-		}
-		else
-		{
-			return array();
 		}
 	}
 
@@ -443,6 +242,17 @@ class Container implements ArrayAccess {
 	}
 
 	/**
+	 * Get the alias for an abstract if available.
+	 *
+	 * @param  string $abstract
+	 * @return string
+	 */
+	protected function getAlias($abstract)
+	{
+		return isset($this->aliases[$abstract]) ? $this->aliases[$abstract] : $abstract;
+	}
+
+	/**
 	 * Get the concrete type for a given abstract.
 	 *
 	 * @param  string  $abstract
@@ -477,6 +287,18 @@ class Container implements ArrayAccess {
 	protected function missingLeadingSlash($abstract)
 	{
 		return is_string($abstract) && strpos($abstract, '\\') !== 0;
+	}
+
+	/**
+	 * Determine if the given concrete is buildable.
+	 *
+	 * @param  mixed $concrete
+	 * @param  string $abstract
+	 * @return bool
+	 */
+	protected function isBuildable($concrete, $abstract)
+	{
+		return $concrete === $abstract || $concrete instanceof Closure;
 	}
 
 	/**
@@ -534,6 +356,27 @@ class Container implements ArrayAccess {
 		);
 
 		return $reflector->newInstanceArgs($instances);
+	}
+
+	/**
+	 * If extra parameters are passed by numeric ID, rekey them by argument name.
+	 *
+	 * @param  array $dependencies
+	 * @param  array $parameters
+	 * @param  array
+	 * @return array
+	 */
+	protected function keyParametersByArgument(array $dependencies, array $parameters)
+	{
+		foreach ($parameters as $key => $value) {
+			if (is_numeric($key)) {
+				unset($parameters[$key]);
+
+				$parameters[$dependencies[$key]->name] = $value;
+			}
+		}
+
+		return $parameters;
 	}
 
 	/**
@@ -625,49 +468,21 @@ class Container implements ArrayAccess {
 	}
 
 	/**
-	 * If extra parameters are passed by numeric ID, rekey them by argument name.
+	 * Determine if a given type is shared.
 	 *
-	 * @param  array  $dependencies
-	 * @param  array  $parameters
-	 * @param  array
-	 * @return array
+	 * @param  string $abstract
+	 * @return bool
 	 */
-	protected function keyParametersByArgument(array $dependencies, array $parameters)
+	public function isShared($abstract)
 	{
-		foreach ($parameters as $key => $value)
+		if (isset($this->bindings[$abstract]['shared']))
 		{
-			if (is_numeric($key))
-			{
-				unset($parameters[$key]);
-
-				$parameters[$dependencies[$key]->name] = $value;
-			}
+			$shared = $this->bindings[$abstract]['shared'];
+		} else {
+			$shared = false;
 		}
 
-		return $parameters;
-	}
-
-	/**
-	 * Register a new resolving callback.
-	 *
-	 * @param  string  $abstract
-	 * @param  \Closure  $callback
-	 * @return void
-	 */
-	public function resolving($abstract, Closure $callback)
-	{
-		$this->resolvingCallbacks[$abstract][] = $callback;
-	}
-
-	/**
-	 * Register a new resolving callback for all types.
-	 *
-	 * @param  \Closure  $callback
-	 * @return void
-	 */
-	public function resolvingAny(Closure $callback)
-	{
-		$this->globalResolvingCallbacks[] = $callback;
+		return isset($this->instances[$abstract]) || $shared === true;
 	}
 
 	/**
@@ -701,46 +516,196 @@ class Container implements ArrayAccess {
 	}
 
 	/**
-	 * Determine if a given type is shared.
+	 * Get the rebound callbacks for a given type.
 	 *
 	 * @param  string  $abstract
-	 * @return bool
+	 * @return array
 	 */
-	public function isShared($abstract)
+	protected function getReboundCallbacks($abstract)
 	{
-		if (isset($this->bindings[$abstract]['shared']))
+		if (isset($this->reboundCallbacks[$abstract]))
 		{
-			$shared = $this->bindings[$abstract]['shared'];
+			return $this->reboundCallbacks[$abstract];
 		}
 		else
 		{
-			$shared = false;
+			return array();
+		}
+	}
+
+	/**
+	 * Register a shared binding in the container.
+	 *
+	 * @param  string $abstract
+	 * @param  Closure|string|null $concrete
+	 * @return void
+	 */
+	public function singleton($abstract, $concrete = null)
+	{
+		return $this->bind($abstract, $concrete, true);
+	}
+
+	/**
+	 * Bind a shared Closure into the container.
+	 *
+	 * @param  string  $abstract
+	 * @param  \Closure $closure
+	 * @return void
+	 */
+	public function bindShared($abstract, Closure $closure)
+	{
+		return $this->bind($abstract, $this->share($closure), true);
+	}
+
+	/**
+	 * Wrap a Closure such that it is shared.
+	 *
+	 * @param  Closure $closure
+	 * @return Closure
+	 */
+	public function share(Closure $closure)
+	{
+		return function ($container) use ($closure) {
+			// We'll simply declare a static variable within the Closures and if it has
+			// not been set we will execute the given Closures to resolve this value
+			// and return it back to these consumers of the method as an instance.
+			static $object;
+
+			if (is_null($object)) {
+				$object = $closure($container);
+			}
+
+			return $object;
+		};
+	}
+
+	/**
+	 * "Extend" an abstract type in the container.
+	 *
+	 * @param  string $abstract
+	 * @param  Closure $closure
+	 * @return void
+	 *
+	 * @throws \InvalidArgumentException
+	 */
+	public function extend($abstract, Closure $closure)
+	{
+		if (!isset($this->bindings[$abstract])) {
+			throw new \InvalidArgumentException("Type {$abstract} is not bound.");
 		}
 
-		return isset($this->instances[$abstract]) || $shared === true;
+		if (isset($this->instances[$abstract])) {
+			$this->instances[$abstract] = $closure($this->instances[$abstract], $this);
+
+			$this->rebound($abstract);
+		} else {
+			$extender = $this->getExtender($abstract, $closure);
+
+			$this->bind($abstract, $extender, $this->isShared($abstract));
+		}
 	}
 
 	/**
-	 * Determine if the given concrete is buildable.
+	 * Get an extender Closure for resolving a type.
 	 *
-	 * @param  mixed   $concrete
 	 * @param  string  $abstract
-	 * @return bool
+	 * @param  \Closure $closure
+	 * @return \Closure
 	 */
-	protected function isBuildable($concrete, $abstract)
+	protected function getExtender($abstract, Closure $closure)
 	{
-		return $concrete === $abstract || $concrete instanceof Closure;
+		// To "extend" a binding, we will grab the old "resolver" Closure and pass it
+		// into a new one. The old resolver will be called first and the result is
+		// handed off to the "new" resolver, along with this container instance.
+		$resolver = $this->bindings[$abstract]['concrete'];
+
+		return function ($container) use ($resolver, $closure) {
+			return $closure($resolver($container), $container);
+		};
 	}
 
 	/**
-	 * Get the alias for an abstract if available.
+	 * Register an existing instance as shared in the container.
 	 *
-	 * @param  string  $abstract
-	 * @return string
+	 * @param  string $abstract
+	 * @param  mixed $instance
+	 * @return void
 	 */
-	protected function getAlias($abstract)
+	public function instance($abstract, $instance)
 	{
-		return isset($this->aliases[$abstract]) ? $this->aliases[$abstract] : $abstract;
+		// First, we will extract the alias from the abstract if it is an array so we
+		// are using the correct name when binding the type. If we get an alias it
+		// will be registered with the container so we can resolve it out later.
+		if (is_array($abstract)) {
+			list($abstract, $alias) = $this->extractAlias($abstract);
+
+			$this->alias($abstract, $alias);
+		}
+
+		unset($this->aliases[$abstract]);
+
+		// We'll check to determine if this type has been bound before, and if it has
+		// we will fire the rebound callbacks registered with the container and it
+		// can be updated with consuming classes that have gotten resolved here.
+		$bound = $this->bound($abstract);
+
+		$this->instances[$abstract] = $instance;
+
+		if ($bound) {
+			$this->rebound($abstract);
+		}
+	}
+
+	/**
+	 * Refresh an instance on the given target and method.
+	 *
+	 * @param  string $abstract
+	 * @param  mixed $target
+	 * @param  string $method
+	 * @return mixed
+	 */
+	public function refresh($abstract, $target, $method)
+	{
+		return $this->rebinding($abstract, function ($app, $instance) use ($target, $method) {
+			$target->{$method}($instance);
+		});
+	}
+
+	/**
+	 * Bind a new callback to an abstract's rebind event.
+	 *
+	 * @param  string $abstract
+	 * @param  \Closure $callback
+	 * @return mixed
+	 */
+	public function rebinding($abstract, Closure $callback)
+	{
+		$this->reboundCallbacks[$abstract][] = $callback;
+
+		if ($this->bound($abstract)) return $this->make($abstract);
+	}
+
+	/**
+	 * Register a new resolving callback.
+	 *
+	 * @param  string $abstract
+	 * @param  \Closure $callback
+	 * @return void
+	 */
+	public function resolving($abstract, Closure $callback)
+	{
+		$this->resolvingCallbacks[$abstract][] = $callback;
+	}
+
+	/**
+	 * Register a new resolving callback for all types.
+	 *
+	 * @param  \Closure $callback
+	 * @return void
+	 */
+	public function resolvingAny(Closure $callback)
+	{
+		$this->globalResolvingCallbacks[] = $callback;
 	}
 
 	/**
@@ -751,19 +716,6 @@ class Container implements ArrayAccess {
 	public function getBindings()
 	{
 		return $this->bindings;
-	}
-
-	/**
-	 * Drop all of the stale instances and aliases.
-	 *
-	 * @param  string  $abstract
-	 * @return void
-	 */
-	protected function dropStaleInstances($abstract)
-	{
-		unset($this->instances[$abstract]);
-
-		unset($this->aliases[$abstract]);
 	}
 
 	/**
@@ -843,6 +795,39 @@ class Container implements ArrayAccess {
 		unset($this->bindings[$key]);
 
 		unset($this->instances[$key]);
+	}
+
+	/**
+	 * Determine if a given string is resolvable.
+	 *
+	 * @param  string $abstract
+	 * @return bool
+	 */
+	protected function resolvable($abstract)
+	{
+		return $this->bound($abstract) || $this->isAlias($abstract);
+	}
+
+	/**
+	 * Determine if the given abstract type has been bound.
+	 *
+	 * @param  string $abstract
+	 * @return bool
+	 */
+	public function bound($abstract)
+	{
+		return isset($this[$abstract]) || isset($this->instances[$abstract]);
+	}
+
+	/**
+	 * Determine if a given string is an alias.
+	 *
+	 * @param  string $name
+	 * @return bool
+	 */
+	public function isAlias($name)
+	{
+		return isset($this->aliases[$name]);
 	}
 
 }

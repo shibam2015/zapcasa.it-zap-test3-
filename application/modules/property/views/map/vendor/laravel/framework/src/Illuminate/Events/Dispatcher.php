@@ -51,41 +51,6 @@ class Dispatcher {
 	}
 
 	/**
-	 * Register an event listener with the dispatcher.
-	 *
-	 * @param  string|array  $event
-	 * @param  mixed   $listener
-	 * @param  int     $priority
-	 * @return void
-	 */
-	public function listen($events, $listener, $priority = 0)
-	{
-		foreach ((array) $events as $event)
-		{
-			if (str_contains($event, '*'))
-			{
-				return $this->setupWildcardListen($event, $listener);
-			}
-
-			$this->listeners[$event][$priority][] = $this->makeListener($listener);
-
-			unset($this->sorted[$event]);
-		}
-	}
-
-	/**
-	 * Setup a wildcard listener callback.
-	 *
-	 * @param  string  $event
-	 * @param  mixed   $listener
-	 * @return void
-	 */
-	protected function setupWildcardListen($event, $listener)
-	{
-		$this->wildcards[$event][] = $this->makeListener($listener);
-	}
-
-	/**
 	 * Determine if a given event has listeners.
 	 *
 	 * @param  string  $eventName
@@ -114,65 +79,80 @@ class Dispatcher {
 	}
 
 	/**
-	 * Register an event subscriber with the dispatcher.
+	 * Register an event listener with the dispatcher.
 	 *
-	 * @param  string  $subscriber
+	 * @param  string|array $event
+	 * @param  mixed $listener
+	 * @param  int $priority
 	 * @return void
 	 */
-	public function subscribe($subscriber)
+	public function listen($events, $listener, $priority = 0)
 	{
-		$subscriber = $this->resolveSubscriber($subscriber);
+		foreach ((array)$events as $event) {
+			if (str_contains($event, '*')) {
+				return $this->setupWildcardListen($event, $listener);
+			}
 
-		$subscriber->subscribe($this);
+			$this->listeners[$event][$priority][] = $this->makeListener($listener);
+
+			unset($this->sorted[$event]);
+		}
 	}
 
 	/**
-	 * Resolve the subscriber instance.
+	 * Setup a wildcard listener callback.
 	 *
-	 * @param  mixed  $subscriber
+	 * @param  string  $event
+	 * @param  mixed $listener
+	 * @return void
+	 */
+	protected function setupWildcardListen($event, $listener)
+	{
+		$this->wildcards[$event][] = $this->makeListener($listener);
+	}
+
+	/**
+	 * Register an event listener with the dispatcher.
+	 *
+	 * @param  mixed $listener
 	 * @return mixed
 	 */
-	protected function resolveSubscriber($subscriber)
+	public function makeListener($listener)
 	{
-		if (is_string($subscriber))
-		{
-			return $this->container->make($subscriber);
+		if (is_string($listener)) {
+			$listener = $this->createClassListener($listener);
 		}
 
-		return $subscriber;
+		return $listener;
 	}
 
 	/**
-	 * Fire an event until the first non-null response is returned.
+	 * Create a class based listener using the IoC container.
 	 *
-	 * @param  string  $event
-	 * @param  array   $payload
-	 * @return mixed
+	 * @param  mixed $listener
+	 * @return \Closure
 	 */
-	public function until($event, $payload = array())
+	public function createClassListener($listener)
 	{
-		return $this->fire($event, $payload, true);
-	}
+		$container = $this->container;
 
-	/**
-	 * Flush a set of queued events.
-	 *
-	 * @param  string  $event
-	 * @return void
-	 */
-	public function flush($event)
-	{
-		$this->fire($event.'_queue');
-	}
+		return function () use ($listener, $container) {
+			// If the listener has an @ sign, we will assume it is being used to delimit
+			// the class name from the handle method name. This allows for handlers
+			// to run multiple handler methods in a single class for convenience.
+			$segments = explode('@', $listener);
 
-	/**
-	 * Get the event that is currently firing.
-	 *
-	 * @return string
-	 */
-	public function firing()
-	{
-		return last($this->firing);
+			$method = count($segments) == 2 ? $segments[1] : 'handle';
+
+			$callable = array($container->make($segments[0]), $method);
+
+			// We will make a callable of the listener instance and a method that should
+			// be called on that instance, then we will pass in the arguments that we
+			// received in this method into this listener class instance's methods.
+			$data = func_get_args();
+
+			return call_user_func_array($callable, $data);
+		};
 	}
 
 	/**
@@ -279,49 +259,65 @@ class Dispatcher {
 	}
 
 	/**
-	 * Register an event listener with the dispatcher.
+	 * Register an event subscriber with the dispatcher.
 	 *
-	 * @param  mixed   $listener
-	 * @return mixed
+	 * @param  string $subscriber
+	 * @return void
 	 */
-	public function makeListener($listener)
+	public function subscribe($subscriber)
 	{
-		if (is_string($listener))
-		{
-			$listener = $this->createClassListener($listener);
-		}
+		$subscriber = $this->resolveSubscriber($subscriber);
 
-		return $listener;
+		$subscriber->subscribe($this);
 	}
 
 	/**
-	 * Create a class based listener using the IoC container.
+	 * Resolve the subscriber instance.
 	 *
-	 * @param  mixed    $listener
-	 * @return \Closure
+	 * @param  mixed $subscriber
+	 * @return mixed
 	 */
-	public function createClassListener($listener)
+	protected function resolveSubscriber($subscriber)
 	{
-		$container = $this->container;
-
-		return function() use ($listener, $container)
+		if (is_string($subscriber))
 		{
-			// If the listener has an @ sign, we will assume it is being used to delimit
-			// the class name from the handle method name. This allows for handlers
-			// to run multiple handler methods in a single class for convenience.
-			$segments = explode('@', $listener);
+			return $this->container->make($subscriber);
+		}
 
-			$method = count($segments) == 2 ? $segments[1] : 'handle';
+		return $subscriber;
+	}
 
-			$callable = array($container->make($segments[0]), $method);
+	/**
+	 * Fire an event until the first non-null response is returned.
+	 *
+	 * @param  string $event
+	 * @param  array $payload
+	 * @return mixed
+	 */
+	public function until($event, $payload = array())
+	{
+		return $this->fire($event, $payload, true);
+	}
 
-			// We will make a callable of the listener instance and a method that should
-			// be called on that instance, then we will pass in the arguments that we
-			// received in this method into this listener class instance's methods.
-			$data = func_get_args();
+	/**
+	 * Flush a set of queued events.
+	 *
+	 * @param  string $event
+	 * @return void
+	 */
+	public function flush($event)
+	{
+		$this->fire($event . '_queue');
+	}
 
-			return call_user_func_array($callable, $data);
-		};
+	/**
+	 * Get the event that is currently firing.
+	 *
+	 * @return string
+	 */
+	public function firing()
+	{
+		return last($this->firing);
 	}
 
 	/**

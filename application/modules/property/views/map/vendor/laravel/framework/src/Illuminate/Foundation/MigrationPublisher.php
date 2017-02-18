@@ -70,6 +70,23 @@ class MigrationPublisher {
 	}
 
 	/**
+	 * Get the file list from the source directory.
+	 *
+	 * @param  string $source
+	 * @return array
+	 */
+	protected function getPackageMigrations($source)
+	{
+		$files = array_filter($this->files->files($source), function ($file) {
+			return !starts_with($file, '.');
+		});
+
+		sort($files);
+
+		return $files;
+	}
+
+	/**
 	 * Determine if the migration is already published.
 	 *
 	 * @param  string  $migration
@@ -97,24 +114,6 @@ class MigrationPublisher {
 			return substr(basename($file), 18);
 
 		}, $this->files->files($destination));
-	}
-
-	/**
-	 * Get the file list from the source directory.
-	 *
-	 * @param  string  $source
-	 * @return array
-	 */
-	protected function getPackageMigrations($source)
-	{
-		$files = array_filter($this->files->files($source), function($file)
-		{
-			return ! starts_with($file, '.');
-		});
-
-		sort($files);
-
-		return $files;
 	}
 
 	/**

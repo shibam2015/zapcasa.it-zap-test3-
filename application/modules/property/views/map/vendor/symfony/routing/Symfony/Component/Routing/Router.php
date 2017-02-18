@@ -171,13 +171,9 @@ class Router implements RouterInterface, RequestMatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function getRouteCollection()
+    public function getContext()
     {
-        if (null === $this->collection) {
-            $this->collection = $this->loader->load($this->resource, $this->options['resource_type']);
-        }
-
-        return $this->collection;
+        return $this->context;
     }
 
     /**
@@ -193,44 +189,6 @@ class Router implements RouterInterface, RequestMatcherInterface
         if (null !== $this->generator) {
             $this->getGenerator()->setContext($context);
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getContext()
-    {
-        return $this->context;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH)
-    {
-        return $this->getGenerator()->generate($name, $parameters, $referenceType);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function match($pathinfo)
-    {
-        return $this->getMatcher()->match($pathinfo);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function matchRequest(Request $request)
-    {
-        $matcher = $this->getMatcher();
-        if (!$matcher instanceof RequestMatcherInterface) {
-            // fallback to the default UrlMatcherInterface
-            return $matcher->match($request->getPathInfo());
-        }
-
-        return $matcher->matchRequest($request);
     }
 
     /**
@@ -264,6 +222,26 @@ class Router implements RouterInterface, RequestMatcherInterface
         require_once $cache;
 
         return $this->matcher = new $class($this->context);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRouteCollection()
+    {
+        if (null === $this->collection) {
+            $this->collection = $this->loader->load($this->resource, $this->options['resource_type']);
+        }
+
+        return $this->collection;
+    }
+
+    /**
+     * @return MatcherDumperInterface
+     */
+    protected function getMatcherDumperInstance()
+    {
+        return new $this->options['matcher_dumper_class']($this->getRouteCollection());
     }
 
     /**
@@ -314,10 +292,32 @@ class Router implements RouterInterface, RequestMatcherInterface
     }
 
     /**
-     * @return MatcherDumperInterface
+     * {@inheritdoc}
      */
-    protected function getMatcherDumperInstance()
+    public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH)
     {
-        return new $this->options['matcher_dumper_class']($this->getRouteCollection());
+        return $this->getGenerator()->generate($name, $parameters, $referenceType);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function match($pathinfo)
+    {
+        return $this->getMatcher()->match($pathinfo);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function matchRequest(Request $request)
+    {
+        $matcher = $this->getMatcher();
+        if (!$matcher instanceof RequestMatcherInterface) {
+            // fallback to the default UrlMatcherInterface
+            return $matcher->match($request->getPathInfo());
+        }
+
+        return $matcher->matchRequest($request);
     }
 }

@@ -75,15 +75,22 @@ class MarkerClusterHelper implements MarkerClusterHelperInterface
     }
 
     /**
-     * Checks if the marker cluster helper has a specific helper.
+     * Sets a specific marker cluster helper.
      *
      * @param string $name The marker cluster type.
-     *
-     * @return \Ivory\GoogleMap\Helper\Overlays\MarkerCluster\MarkerClusterHelperInterface The marker cluster helper.
+     * @param \Ivory\GoogleMap\Helper\Overlays\MarkerCluster\MarkerClusterHelperInterface $helper The marker cluster helper.
      */
-    public function hasHelper($name)
+    public function setHelper($name, MarkerClusterHelperInterface $helper = null)
     {
-        return isset($this->helpers[$name]);
+        $this->helpers[$name] = $helper;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function render(MarkerCluster $markerCluster, Map $map)
+    {
+        return $this->getHelper($markerCluster->getType())->render($markerCluster, $map);
     }
 
     /**
@@ -105,22 +112,15 @@ class MarkerClusterHelper implements MarkerClusterHelperInterface
     }
 
     /**
-     * Sets a specific marker cluster helper.
+     * Checks if the marker cluster helper has a specific helper.
      *
-     * @param string                                                                      $name   The marker cluster type.
-     * @param \Ivory\GoogleMap\Helper\Overlays\MarkerCluster\MarkerClusterHelperInterface $helper The marker cluster helper.
+     * @param string $name The marker cluster type.
+     *
+     * @return \Ivory\GoogleMap\Helper\Overlays\MarkerCluster\MarkerClusterHelperInterface The marker cluster helper.
      */
-    public function setHelper($name, MarkerClusterHelperInterface $helper = null)
+    public function hasHelper($name)
     {
-        $this->helpers[$name] = $helper;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function render(MarkerCluster $markerCluster, Map $map)
-    {
-        return $this->getHelper($markerCluster->getType())->render($markerCluster, $map);
+        return isset($this->helpers[$name]);
     }
 
     /**

@@ -56,26 +56,6 @@ class AssetPublishCommand extends Command {
 	}
 
 	/**
-	 * Publish the assets for a given package name.
-	 *
-	 * @param  string  $package
-	 * @return void
-	 */
-	protected function publishAssets($package)
-	{
-		if ( ! is_null($path = $this->getPath()))
-		{
-			$this->assets->publish($package, $path);
-		}
-		else
-		{
-			$this->assets->publishPackage($package);
-		}
-
-		$this->output->writeln('<info>Assets published for package:</info> '.$package);
-	}
-
-	/**
 	 * Get the name of the package being published.
 	 *
 	 * @return array
@@ -111,6 +91,23 @@ class AssetPublishCommand extends Command {
 		}
 
 		return $packages;
+	}
+
+	/**
+	 * Publish the assets for a given package name.
+	 *
+	 * @param  string $package
+	 * @return void
+	 */
+	protected function publishAssets($package)
+	{
+		if (!is_null($path = $this->getPath())) {
+			$this->assets->publish($package, $path);
+		} else {
+			$this->assets->publishPackage($package);
+		}
+
+		$this->output->writeln('<info>Assets published for package:</info> ' . $package);
 	}
 
 	/**

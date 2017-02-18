@@ -90,6 +90,16 @@ class OptimizeCommand extends Command {
 	}
 
 	/**
+	 * Register the pre-compiler command instance with Artisan.
+	 *
+	 * @return void
+	 */
+	protected function registerClassPreloaderCommand()
+	{
+		$this->getApplication()->add(new PreCompileCommand);
+	}
+
+	/**
 	 * Get the classes that should be combined and compiled.
 	 *
 	 * @return array
@@ -101,16 +111,6 @@ class OptimizeCommand extends Command {
 		$core = require __DIR__.'/Optimize/config.php';
 
 		return array_merge($core, $this->laravel['config']['compile']);
-	}
-
-	/**
-	 * Register the pre-compiler command instance with Artisan.
-	 *
-	 * @return void
-	 */
-	protected function registerClassPreloaderCommand()
-	{
-		$this->getApplication()->add(new PreCompileCommand);
 	}
 
 	/**

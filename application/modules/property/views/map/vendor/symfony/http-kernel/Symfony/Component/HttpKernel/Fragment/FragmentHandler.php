@@ -116,6 +116,11 @@ class FragmentHandler
         return $this->deliver($this->renderers[$renderer]->render($uri, $request, $options));
     }
 
+    private function getRequest()
+    {
+        return $this->requestStack ? $this->requestStack->getCurrentRequest() : $this->request;
+    }
+
     /**
      * Delivers the Response as a string.
      *
@@ -139,10 +144,5 @@ class FragmentHandler
         }
 
         $response->sendContent();
-    }
-
-    private function getRequest()
-    {
-        return $this->requestStack ? $this->requestStack->getCurrentRequest() : $this->request;
     }
 }

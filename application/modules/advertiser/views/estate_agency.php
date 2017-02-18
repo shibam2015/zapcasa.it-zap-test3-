@@ -1,273 +1,43 @@
-<?php $this->load->view("_include/meta"); ?>
-
-
+<?php $this->load->view("inc/header"); ?>
 <style>
-   #wrapper { position: relative; }
-   #over_map { left: 404px; position: absolute; top: 155px; z-index: 99; }
-   #over_map_learge {  
-    position: absolute;
-    top: 115px;
-    z-index: 99; }
-	 .nicescroll-rails{
-		display:none; 
-	 }
+	.nicescroll-rails {
+		display: none;
+	}
 
-   #map_canvas {
-	   transition: all 2s;
-   }
-   
-</style>
-<script type="text/javascript">
-$(document).ready(function() {	
-	$('#nav li').hover(function() {
-		$('ul', this).slideDown(200);
-		$(this).children('a:first').addClass("hov");
-	}, function() {
-		$('ul', this).slideUp(100);
-		$(this).children('a:first').removeClass("hov");		
-	});
-});
-</script>
-<!---<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=<?= MAP_KEY ?>"></script>-->
-<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/map.css?nocache=289671982568" type="text/css"/>
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?= MAP_KEY ?>">
-</script>
-
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/label.js"></script>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/represent-map.js"></script>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/markerclusterer.js"></script>
-    <script>
-	
-/*function initialize() {
-  var mapOptions = {
-    zoom: 4,
-    center: new google.maps.LatLng(-33, 151),
-    panControl: false,
-    zoomControl: false,
-    scaleControl: true
-  }
-  var map = new google.maps.Map(document.getElementById('map-canvas'),
-                                mapOptions);
-	var map = new google.maps.Map(document.getElementById('map-canvas1'),
-                                mapOptions);							
-								
-}
-
-google.maps.event.addDomListener(window, 'load', initialize);*/
-
-
-
-/*function initialize() {
-
-	var mapOptions = {
-    zoom: 4,
-    center: new google.maps.LatLng(-25.363882, 131.044922),
-		zoomControl: true,
-  };
-  var mapProp = {
-  zoom: 7,
-    center: new google.maps.LatLng(-25.363882, 131.044922),
-	 zoomControl: false,
-};
-
-	var map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
-	// var map2 = new google.maps.Map(document.getElementById("map_canvas"),mapProp);
-
-
-	  
-  var marker = new google.maps.Marker({
-    position: map.getCenter(),
-    map: map,
-    title: 'Click to zoom'
-  });
-
-  google.maps.event.addListener(map, 'center_changed', function() {
-    // 3 seconds after the center of the map has changed, pan back to the
-    // marker.
-    window.setTimeout(function() {
-      map.panTo(marker.getPosition());
-    }, 3000);
-  });
-
-  google.maps.event.addListener(marker, 'click', function() {
-    map.setZoom(8);
-    map.setCenter(marker.getPosition());
-  });
-  
-}
-
- google.maps.event.addDomListener(window, 'load', initialize);*/
-
-
-
-    </script>
-<script type="text/javascript">
-	var WebRoot = '<?php echo base_url(); ?>';
-	var centerZoom = 4;
-	var centerLatitude = <?php echo(!empty($GoogleMapMarkers)?$GoogleMapMarkers[0]['latitude']:'41.500000'); ?>;
-	var centerLongitude = <?php echo(!empty($GoogleMapMarkers)?$GoogleMapMarkers[0]['longitude']:'21.500000'); ?>;
-	var map;
-	var infowindow = null;
-	var gmarkers = [];
-	var markerTitles = [];
-	var highestZIndex = 0;
-	var agent = "default";
-	var zoomControl = true;
-	var MarkerDraggable = false;
-	var DrawCircleAroundMarker = false;
-	var CircleMapRadius = 3.10685596;
-	var geocoder;
-	var markerTitles = [];
-	// markers array: name, type (icon), lat, long, description, uri, address
-	GoogleMapMarkers = new Array();
-	<?php
-    if(!empty($GoogleMapMarkers)){
-        $gMi = 0;
-        foreach($GoogleMapMarkers as $gM){
-    ?>
-	GoogleMapMarkers.push(["<?php echo $gM['proptitle']; ?>", "<?php echo $gM['hackerspace']; ?>", <?php echo $gM['latitude']; ?>, <?php echo $gM['longitude']; ?>, "<?php echo $gM['proaddress']; ?>", "<?php echo $gM['propurl']; ?>", '<?php echo $gM['proprice']; ?>', "<?php echo $gM['proimg']; ?>"]);
-	markerTitles[<?php echo $gMi; ?>] = "<?php echo $gM['proptitle']; ?>";
-	<?php
-        $gMi++;
-        }
-    }
-    ?>
-
-</script>
-
-
-<script type="text/javascript">
-$(function(){
-	$(window).scroll(function(){
-		var scrollTop = $(document).scrollTop();
-		//var searchListHeight = $('.searchresult_box').height();
-		//$('.topbluebar').html(scrollTop);
-		/*if(scrollTop >= 40 && scrollTop <= 1385){
-			$('.map-cont').css({
-				position : 'fixed',
-				top : '120px',
-				width : '32.7%',
-			});
-		} else {
-			$('.map-cont').css({
-				position : 'relative',
-				top : '1335px',
-				width : '100%',
-			});
-			if(scrollTop < 40){
-				$('.map-cont').removeAttr('style');
-			}
-		}*/
-	});
-});
-$(document).ready(function()
+	.fullScreen
 {
-	
-	<?php /*?>$("#showcase").awShowcase(
-	{
-		content_width:			464,
-		content_height:			376,
-		fit_to_parent:			false,
-		auto:					false,
-		interval:				3000,
-		continuous:				false,
-		loading:				true,
-		tooltip_width:			200,
-		tooltip_icon_width:		32,
-		tooltip_icon_height:	32,
-		tooltip_offsetx:		18,
-		tooltip_offsety:		0,
-		arrows:				false,
-		buttons:				true,
-		btn_numbers:			true,
-		keybord_keys:			true,<?php */?>
-//		mousetrace:				false, /* Trace x and y coordinates for the mouse */
-//		pauseonover:			true,
-//		stoponclick:			true,
-//		transition:				'vslide', /* hslide/vslide/fade */
-//		transition_delay:		500,
-//		transition_speed:		500,
-//		show_caption:			'onhover', /* onload/onhover/show */
-//		thumbnails:				true,
-//		thumbnails_position:	'outside-last', /* outside-last/outside-first/inside-last/inside-first */
-//		thumbnails_direction:	'vertical', /* vertical/horizontal */
-//		thumbnails_slidex:		0, /* 0 = auto / 1 = slide one thumbnail / 2 = slide two thumbnails / etc. */
-//		dynamic_height:			false, /* For dynamic height to work in webkit you need to set the width and height of images in the source. Usually works to only set the dimension of the first slide in the showcase. */
-//		speed_change:			true, /* Set to true to prevent users from swithing more then one slide at once. */
-//		viewline:				false /* If set to true content_width, thumbnails, transition and dynamic_height will be disabled. As for dynamic height you need to set the width and height of images in the source. */
-//	});
-	
-});
-</script>
+		width: 100% !important;
+		z-index: 100 !important;
+		height: 450px !important;
+		transition: all 2s;
+	}
 
-</head>
-
-<body class="noJS">
-<script>
-var bodyTag = document.getElementsByTagName("body")[0];
-bodyTag.className = bodyTag.className.replace("noJS", "hasJS");
-</script>
-<!------ Header part ------------->
-<div class="fixed_header">
-<div class="topbluebar"></div>
-<div class="main">
-<?php $this->load->view("_include/header"); ?>    
-</div>
-<?php
- 	$this->load->view("_include/login_user"); 
- ?> 
- 
-</div>
-<!------ banner part 
-<div class="insidepage_banner">
-	<div class="main">
-    	<h2>Real Estate for <font style="font-weight:bold;">Jobs</font> & <font style="font-weight:bold;">Housing</font></h2>
-    </div>
-</div>
-------------->
-<!------ body part ------------->
-
+	#map_canvas {
+		transition: all 2s;
+	}
+</style>
 <div class="main main_searchpage">
 	<div id="breadcrumb" class="fk-lbreadbcrumb newvd">
-    	<span><a href="<?php echo base_url();?>"><?php echo $this->lang->line('advertise_list_home');?></a></span> >  
-		<span>
-			<a href="<?php echo base_url().'advertiser/search?location=&name=&advertiser_type=all';?>">
-				<?php echo $this->lang->line('advertise_details_advertisers');?>
-			</a>
-		</span> >
-        <span style="text-transform:capitalize;">
+		<span><a href="<?php echo base_url(); ?>"><?php echo $this->lang->line('advertise_list_home'); ?></a></span>
+		&gt;
+		<span><a
+				href="<?php echo base_url(); ?>advertiser/search?location=&name=&advertiser_type=all"><?php echo $this->lang->line('advertiser_title_details'); ?></a></span>
 		<?php
-		switch($area){
-			case 'North-west':
-				$areabreadCrumb = $this->lang->line('footer_northwest_agencies');
-				break;
-			case 'North-east':
-				$areabreadCrumb = $this->lang->line('footer_northeast_agencies');
-				break;
-			case 'Center':
-				$areabreadCrumb = $this->lang->line('footer_central_agencies');
-				break;
-			case 'South':
-				$areabreadCrumb = $this->lang->line('footer_south_agencies');
-				break;
-			case 'Islands':
-				$areabreadCrumb = $this->lang->line('footer_islands_agencies');
-				break;
-			default:
-				$areabreadCrumb = $this->lang->line('footer_northwest_agencies');
-				break;			
+		if (count($_GET) == 1 && $_GET['advertiser_type'] == 'all') {
+
+		} else {
+			?>
+			&gt; <span><?php echo $this->lang->line('advertise_list_search_result');?></span>
+		<?php
 		}
 		?>
-			<a href="<?php echo base_url().'advertiser/agency_search_by_area/'.$area; ?>"><?php echo $areabreadCrumb; ?></a>
-		</span> >
-		<span><?php echo $this->lang->line('advertise_list_search_result');?></span>
-    </div>
-	<!--<h2 class="pagetitle">Registration</h2>-->
+	</div>
 	<div class="refinesearch">
         <?php $this->load->view("_include/search_header_advertiser"); ?>
     </div>
-    <h2 class="searchfound"><?php echo $this->lang->line('advertise_list_rentals');?> <font style="font-size:12px; font-weight:normal;"><?php echo $total_row;?> <?php echo $this->lang->line('advertise_list_results');?></font> 
-    	<?php /*?>
+	<h2 class="searchfound"><?php echo $this->lang->line('advertise_list_rentals'); ?> <font
+			style="font-size:12px; font-weight:normal;"><?php echo $total_row; ?> <?php echo $this->lang->line('advertise_list_results'); ?></font>
+		<?php /*?>
     	<span class="post_brn"><a href="#"><?php echo $this->lang->line('advertise_list_post_your_property');?> <font><?php echo $this->lang->line('advertise_list_free');?></font></a></span> */ ?>
     
 	    	<span class="post_brn">
@@ -301,54 +71,48 @@ bodyTag.className = bodyTag.className.replace("noJS", "hasJS");
     
     </h2>
 
-
 	<!-- <div class="rightmap_area"><img src="images/map_small.jpg" ></div>-->
-
-
 	<div class="rightmap_area" id="map_canvas" style="width:445px;height:367px;border:solid 1px #DDDDDD;"></div>
-
 	<div class="searchresult_box searchresult_box2" style="height:660px ! important;overflow:hidden;">
-      <div style="width:100%;overflow:auto;height:620px !important;overflow:auto;">
-    <!--<div id="paginationdemo" class="demo">
-	  <div id="p1" class="pagedemo _current">-->
-        <ul>
+		<div style="width:100%;overflow:auto;height:620px !important;overflow:auto;">
+			<!--<div id="paginationdemo" class="demo">
+				<div id="p1" class="pagedemo _current">-->
+			<ul>
+				<?php
+				if (!empty($advertiser_lists) && $advertiser_lists != 0) {
 
-			<?php
-			$GoogleMapMarkers = array();
-			$l = 1;
-		if(count($advertiser_lists)!=0)
-		{
-			$alt = 0;
-			$gMapCounter = 0;
-          foreach($advertiser_lists as $advertiser_list)
-		  {
 
-			  // echo "<pre>";
-			  // print_r($advertiser_list);
-			  $link=base_url().'advertiser/advertiser_details/'.$advertiser_list['user_id'];
-			  
-			  $user_pref = get_all_preference_by_user("zc_user_preference",$where=" AND user_id=".$advertiser_list['user_id']);
+					$alt = 0;
+					$gMapCounter = 0;
+					foreach ($advertiser_lists as $arrAdv) {
+						//echo "<pre>";
+						// print_r($arrAdv);exit;
+						$advertiserGeoAddress = "";
+						$link = base_url() . 'advertiser/advertiser_details/' . $arrAdv['user_id'];
+
+						$user_pref = get_all_preference_by_user("zc_user_preference", $where = " AND user_id=" . $arrAdv['user_id']);
 			  
 			  $business_name = "";
 			  $user_type = "";
 			  $nameForBusiness = "";
-			  if($advertiser_list['user_type']=='3') {
-			  	$business_name = ucfirst($advertiser_list['company_name']);
+						if ($arrAdv['user_type'] == '3') {
+							$business_name = ucfirst($arrAdv['company_name']);
 			  	$user_type = $this->lang->line('advertise_list_advertiser_agency');
-			  	$nameForBusiness = ucfirst($advertiser_list['business_name']);
+							$nameForBusiness = ucfirst($arrAdv['business_name']);
 			  } else {
-			  	$business_name = ucfirst($advertiser_list['first_name']) ." " .ucfirst($advertiser_list['last_name']);
+							$business_name = ucfirst($arrAdv['first_name']) . " " . ucfirst($arrAdv['last_name']);
 			  	$user_type = $this->lang->line('advertise_list_advertiser_owner');
 			  }
-			  
-			 if( count($user_pref) > 0 ) {
-			 	if( isset( $user_pref[0]['invisible'] ) && ( $user_pref[0]['invisible'] == 0) ) { 		
-		?>
-	        	<li>
-	            	<div class="listingImg">
+						// echo "<pre>";
+						//print_r($business_name);
+
+
+						?>
+						<li>
+							<div class="listingImg">
 	                	<a href="<?php echo $link;?>">
 	                    <?php
-	                    	$user_image=$advertiser_list['file_1'];
+						$user_image = $arrAdv['file_1'];
 							if($user_image!='') {
 						?>
 	                    		<img src="<?php echo base_url();?>assets/uploads/thumb_92_82/<?php echo $user_image; ?>" alt="<?php echo $business_name; ?>">
@@ -358,39 +122,43 @@ bodyTag.className = bodyTag.className.replace("noJS", "hasJS");
 								
 							<?php
 							} else {
-	                     ?> 
-	                     		<img src="<?php echo base_url();?>assets/images/no_prof.png" alt="<?php echo $business_name; ?>" <?php if( $advertiser_list['user_type']=='2') { ?> style="max-width: 170px; max-height: 100px;" <?php } else { ?>width="102px" height="68px;" <?php }?> > 
-								
-						<?php
+	                     ?>
+								<img src="<?php echo base_url(); ?>assets/images/no_prof.png"
+									 alt="<?php echo $business_name; ?>" <?php if ($arrAdv['user_type'] == '2') { ?> style="max-width: 170px; max-height: 100px;" <?php } else { ?>width="102px" height="68px;" <?php } ?> >
+
+							<?php
 							}
 	                     ?>
 						 <div class="listingShw" style="background-size:108px;"></div>
 	                    </a>	                	
 	                </div>
-	                <div class="listingContent">
-					<h2 style="padding: 0 0 5px;" ><a href="<?php echo $link;?>"><?php echo $business_name;?></a></h2>
+							<div class="listingContent">
+								<h2 style="padding: 0 0 5px;"><a href="<?php echo $link;?>"
+																 onMouseOver="goToMarker('<?php echo $gMapCounter; ?>')"
+																 onMouseOut="markerListMouseOut('<?php echo $gMapCounter; ?>')"><?php echo $business_name;?></a>
+								</h2>
 
-						<h2 class="hackerspace">
-							<a href="<?php echo base_url() . $first_segment . '/' . $prop_det_url; ?>"
-							   onMouseOver="goToMarker('<?php echo $gMapCounter; ?>')"
-							   onMouseOut="markerListMouseOut('<?php echo $gMapCounter; ?>')">
-								<!--<?php echo $business_name; ?>-->
-							</a>
-						</h2>
-	                    <?php if( $user_pref[0]['my_address_display'] == 0 ) {  ?>
+
+								<?php if( $user_pref[0]['my_address_display'] == 0 ) {  ?>
 		                    <div class="listAddress">
 		                    	<?php if( $nameForBusiness != "" ) {?><p style="font-weight: bold;color: #000000;" ><?php echo $nameForBusiness; ?></p><?php } ?>
 								<h4>
-									<?php $st_name1=get_perticular_field_value('zc_region_master','province_code'," and `province_name` LIKE '%".$advertiser_list['province']."%' group by province_code");?>
-							  		<?php 
-							  			if( $advertiser_list['street_address'] ) { echo $advertiser_list['street_address']; }
-							  			if( $advertiser_list['street_no'] ) { echo ', '.$advertiser_list['street_no']; }
-							  			if( $advertiser_list['zip'] ) { echo ' - '.$advertiser_list['zip']; }
-							  			if($advertiser_list['city']){
-											if(!strpos($advertiser_list['city'], "'")===false){
-												$city_name=get_perticular_field_value('zc_city',($_COOKIE['lang']=='english'?"city_name":"city_name_it")," and `city_name` = '".str_replace("'","\\\''",stripslashes($advertiser_list['city']))."' OR `city_name_it` = '".str_replace("'","\\\''",stripslashes($advertiser_list['city']))."'");
+									<?php $st_name1 = get_perticular_field_value('zc_region_master', 'province_code', " and `province_name` LIKE '%" . $arrAdv['province'] . "%' group by province_code"); ?>
+							  		<?php
+									if ($arrAdv['street_address']) {
+										echo $arrAdv['street_address'];
+									}
+									if ($arrAdv['street_no']) {
+										echo ', ' . $arrAdv['street_no'];
+									}
+									if ($arrAdv['zip']) {
+										echo ' - ' . $arrAdv['zip'];
+									}
+									if ($arrAdv['city']) {
+										if (!strpos($arrAdv['city'], "'") === false) {
+											$city_name = get_perticular_field_value('zc_city', ($_COOKIE['lang'] == 'english' ? "city_name" : "city_name_it"), " and `city_name` = '" . str_replace("'", "\\\''", stripslashes($arrAdv['city'])) . "' OR `city_name_it` = '" . str_replace("'", "\\\''", stripslashes($arrAdv['city'])) . "'");
 											}else{
-												$city_name=get_perticular_field_value('zc_city',($_COOKIE['lang']=='english'?"city_name":"city_name_it")," and `city_name` = '".$advertiser_list['city']."' OR `city_name_it` = '".$advertiser_list['city']."'");
+											$city_name = get_perticular_field_value('zc_city', ($_COOKIE['lang'] == 'english' ? "city_name" : "city_name_it"), " and `city_name` = '" . $arrAdv['city'] . "' OR `city_name_it` = '" . $arrAdv['city'] . "'");
 											}
 											echo ' '.stripslashes($city_name);
 										}
@@ -402,110 +170,159 @@ bodyTag.className = bodyTag.className.replace("noJS", "hasJS");
 						<?php } ?>	
 	                    <div class="propFeatures">
 							<h3><?php echo $this->lang->line('advertise_list_property_post'); ?>  <font
-									style="color:#ED6B1F"><?php echo get_perticular_count('zc_property_details', " and property_post_by='" . $advertiser_list['user_id'] . "'and 	property_status ='2'and property_approval ='1'"); ?></font>
+									style="color:#ED6B1F"><?php echo get_perticular_count('zc_property_details', " and property_post_by='" . $arrAdv['user_id'] . "'and 	property_status ='2'and property_approval ='1'"); ?></font>
 							</h3></div>
 	                </div>
 	            </li>
 
-					<?php
-					//Finding Property Title Here.
-					if (isset($_COOKIE['lang']) && ($_COOKIE['lang'] == "english")) {
-						//$name = get_perticular_field_value('zc_contract_types', 'name', " and contract_id='" . $property_details[0]['contract_id'] . "'");
-						// $typology_name = get_perticular_field_value('zc_typologies', 'name', " and status='active' and typology_id='" . $property_details[0]['typology'] . "'");
-						// $city_name = get_perticular_field_value('zc_city', 'city_name', " and city_id='" . $user_details[0]['city'] . "'");
-						$province_code = get_perticular_field_value('zc_region_master', 'province_code', " and city='" . mysql_real_escape_string($advertiser_list->city) . "'");
+						<?php
 
-						$proptitle = stripslashes($advertiser_list->first_name) . '&nbsp' . stripslashes($advertiser_list->last_name) . " in " . $advertiser_list->city . ", " . $province_code;
-					} else {
-						// $name_it = get_perticular_field_value('zc_contract_types', 'name_it', " and contract_id='" . //$property_details[0]['contract_id'] . "'");
-						//$typology_name = get_perticular_field_value('zc_typologies', 'name_it', " and status='active' and typology_id='" . $property_details[0]['typology'] . "'");
-						// $city_name = get_perticular_field_value('zc_city', 'city_name_it', " and city_id='" . $property_details[0]['city'] . "'");
-						$province_code = get_perticular_field_value('zc_region_master', 'province_code', " and city='" . mysql_real_escape_string($advertiser_list->city) . "'");
-
-						$proptitle = stripslashes($advertiser_list->first_name) . '&nbsp' . stripslashes($advertiser_list->last_name) . " in " . $advertiser_list->city . ", " . $province_code;
+						if ($_COOKIE['lang'] == "it") {
+							if (!strpos($arrAdv['city'], "'") === false) {
+								$ShowingCityName = get_perticular_field_value('zc_region_master', 'city_it', " and (city = '" . str_replace("'", "\\\'", $arrAdv['city']) . "' OR city_it = '" . str_replace("'", "\\\'", $arrAdv['city']) . "') group by province_code");
+							} else {
+								$ShowingCityName = get_perticular_field_value('zc_region_master', 'city_it', " and (city = '" . $arrAdv['city'] . "' OR city_it = '" . $arrAdv['city'] . "') group by province_code");
 					}
-
-					//Finding Property Image Here.
-					// $propertyImage = base_url() . "assets/images/no_prof.png";
-					/*$image_path = $user_details[0]['file_1'];
-                    if ($image_path != "") {
-                        $propertyImage = base_url() . "assets/uploads/thumb_92_82/" . $image_path;
-                    }*/
-					//FInding Property Address Here.
-					// $Company_name = $advertiser_list[0]['company_name'];
-					$propertyShowingAddress = '';
-					//$propertyAddress = ($advertiser_list[0]['area'] != '' ? $advertiser_list[0]['area'] . ' - ' : '');
-					$propertyAddress .= ($advertiser_list->street_address != '' ? $advertiser_list->street_address . ', ' : '');
-					$propertyAddress .= ($advertiser_list->street_no != '' ? $advertiser_list->street_no : '');
+							//
+							if (!strpos($arrAdv['province'], "'") === false) {
+								$ShowingProvinceCode = get_perticular_field_value('zc_region_master', 'province_code', " and (province_name = '" . str_replace("'", "\\\'", $arrAdv['province']) . "' OR province_name_it = '" . str_replace("'", "\\\'", $arrAdv['province']) . "') group by province_code");
+							} else {
+								$ShowingProvinceCode = get_perticular_field_value('zc_region_master', 'province_code', " and (province_name = '" . $arrAdv['province'] . "' OR province_name_it = '" . $arrAdv['province'] . "') group by province_code");
+							}
+						} else {
+							if (!strpos($arrAdv['province'], "'") === false) {
+								$ShowingCityName = get_perticular_field_value('zc_region_master', 'city', " and (city = '" . str_replace("'", "\\\'", $arrAdv['city']) . "' OR city_it = '" . str_replace("'", "\\\'", $arrAdv['city']) . "') group by province_code");
+							} else {
+								$ShowingCityName = get_perticular_field_value('zc_region_master', 'city', " and (city = '" . $arrAdv['city'] . "' OR city_it = '" . $arrAdv['city'] . "') group by province_code");
+							}
+							//
+							if (!strpos($arrAdv['province'], "'") === false) {
+								$ShowingProvinceCode = get_perticular_field_value('zc_region_master', 'province_code', " and (province_name = '" . str_replace("'", "\\\'", $arrAdv['province']) . "' OR province_name_it = '" . str_replace("'", "\\\'", $arrAdv['province']) . "') group by province_code");
+							} else {
+								$ShowingProvinceCode = get_perticular_field_value('zc_region_master', 'province_code', " and (province_name = '" . $arrAdv['province'] . "' OR province_name_it = '" . $arrAdv['province'] . "') group by province_code");
+							}
+						}
+						#echo "=================== > ".$ShowingCityName
+						if ($arrAdv['street_address']) {
+							$advertiserAddress .= stripslashes($arrAdv['street_address']);
+						}
+						if ($arrAdv['street_no']) {
+							$advertiserAddress .= ', ' . stripslashes($arrAdv['street_no']);
+						}
+						if ($arrAdv['zip']) {
+							$advertiserAddress .= ' - ' . $arrAdv['zip'];
+						}
+						if ($ShowingCityName != "") {
+							$advertiserAddress .= ' ' . stripslashes($ShowingCityName);
+						}
+						if ($ShowingProvinceCode != "") {
+							$advertiserAddress .= ' - ' . $ShowingProvinceCode;
+						}
+						$propertyAddress .= ($arrAdv['street_address'] != '' ? $arrAdv['street_address'] . ', ' : '');
+						$propertyAddress .= ($arrAdv['street_no'] != '' ? $arrAdv['street_no'] : '');
 					$propertyShowingAddress .= $propertyAddress . ', ' . $city_name . ', ' . $province_code;
-					$propertyAddress .= ($advertiser_list->zip != '' ? ' - ' . $advertiser_list->zip : '');
-					$propertyShowingAddress .= ($advertiser_list->zip != '' ? ' - ' . $advertiser_list->zip : '');
+						$propertyAddress .= ($arrAdv['zip'] != '' ? ' - ' . $arrAdv['zip'] : '');
+						$propertyShowingAddress .= ($arrAdv['zip'] != '' ? ' - ' . $arrAdv['zip'] : '');
 
-					$GoogleMapMarkers[$gMapCounter] = array(
-						'proptitle' => $proptitle,
-						'hackerspace' => 'marker',
-						'latitude' => ($advertiser_list->latitude == '0' ? '42.500000' : $advertiser_list->latitude),
-						'longitude' => ($advertiser_list->longitude == '0' ? '21.500000' : $advertiser_list->longitude),
-						'proaddress' => $propertyAddress,
-						//'propurl' => base_url().$first_segment.'/'.$prop_det_url,
-						//'proprice' => '<font style="color:#ED6B1F">'.$propertyPrice.'</font>',
-						'proimg' => $propertyImage
-					);
-					$gMapCounter++;
+						$advertiserGeoAddress .= stripslashes($ShowingCityName) . ', ' . $ShowingProvinceCode . ', ' . $arrAdv->zip . ', Italy';
+						$lat_lng_array = getLangLat($advertiserGeoAddress);
+						$GoogleMapMarkersLatitude = $lat_lng_array->lat;
+						$GoogleMapMarkersLongitude = $lat_lng_array->lng;
+						if ($arrAdv['file_1'] == "")
+							$img = base_url() . 'assets/images/no_prof.png';
+						else
+							$img = base_url() . 'assets/uploads/thumb_92_82/' . $arrAdv['file_1'];
+						$alt++;
+						if ($alt > 1) {
+							$alt = 0;
 				}
-		  	}		
-		  }
-		  ?>
-            <div class="clear"></div>	  
-	<?php  
-		}
-		else
-		{
-			?>
-            <div class="no_record_search"> <?php echo $this->lang->line('advertise_list_sorry_no_record_found');?></div>
-            <?php
-		}
-			?>
-            
-        </ul>
-       <!--</div>
-       <div id="p2" class="pagedemo" style="display:none;">Page 2</div>
-       <div id="demo5"></div>
-     </div>-->
-     </div>
-                  <!--pagenation-->
-        <?php if(isset($links)){echo '<div class="inbox_delete_pagination_rht" style="margin-right:2px;">'.$links.'</div>'; } ?>
-        <div class="clear"></div>	  
-    </div>
-    <!--<div class="rightmap_area">
-		<div class="map-cont">
-        	<iframe width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.co.in/?ie=UTF8&amp;ll=22.309426,88.582764&amp;spn=1.79388,2.688904&amp;t=m&amp;z=9&amp;output=embed"></iframe>
-        </div>    
-    </div>-->
-  
-    <?php 
-	$google_adsence = get_perticular_field_value('zc_settings','meta_value'," and meta_name='google_adsence'"); 
-	if( isset($google_adsence) && ( count($google_adsence) > 0 ) ) {
-?>
+						$GoogleMapMarkers[$gMapCounter] = array(
+							'proptitle' => $business_name,
+							'hackerspace' => 'markers',
+							'latitude' => ($arrAdv['latitude'] == '0' ? $GoogleMapMarkersLatitude : $arrAdv['latitude']),
+							'longitude' => ($arrAdv['longitude'] == '0' ? $GoogleMapMarkersLongitude : $arrAdv['longitude']),
+							'proaddress' => $propertyAddress,
+							'propurl' => $link,
+							'proprice' => null,
+							'proimg' => $img,
+						);
+						$gMapCounter++;
+					}
+		?>
+					<div class="clear"></div>
+				<?php
+				} else {
+					?>
+					<div
+						class="no_record_search"> <?php echo $this->lang->line('advertise_list_sorry_no_record_found');?></div>
+				<?php
+				}
+				?>
+			</ul>
+			<!--</div>
+                <div id="p2" class="pagedemo" style="display:none;">Page 2</div>
+                <div id="demo5"></div>
+            </div>-->
+		</div>
+		<div style="float: right; width: 100%; border-top: 1px solid #EEEEEE;">
+			<fieldset id="inputs">
+				<?php echo $pagination; ?>
+			</fieldset>
+		</div>
+		<div class="clear"></div>
+	</div>
+	<?php /*
+		<div class="google_ad"><img src="<?php echo base_url()?>assets/images/google_ad_300x250.jpg" ></div>
+		*/ ?>
+	<?php
+	$google_adsence = get_perticular_field_value('zc_settings', 'meta_value', " and meta_name='google_adsence'");
+	if (isset($google_adsence) && (count($google_adsence) > 0)) {
+		?>
 		<div class="google_ad">
-			<!-- 
-				<img src="<?php echo base_url()?>asset/images/google_ad_300x250.jpg" >
-			 -->
-		<?php 
+			<?php
 			echo "<pre>";
 			print_r($google_adsence);
-		?>
+			?>
 		</div>
 	<?php } ?>
+
 </div>
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/map.css?nocache=289671982568" type="text/css"/>
+	<script src="https://maps.googleapis.com/maps/api/js?key=<?= MAP_KEY ?>"></script>
+	<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/label.js"></script>
+	<script type="text/javascript">
+		var WebRoot = '<?php echo base_url(); ?>';
+		var centerZoom = 4;
+		var centerLatitude = <?php echo(!empty($GoogleMapMarkers)?$GoogleMapMarkers[0]['latitude']:'41.500000'); ?>;
+		var centerLongitude = <?php echo(!empty($GoogleMapMarkers)?$GoogleMapMarkers[0]['longitude']:'21.500000'); ?>;
+		var map;
+		var infowindow = null;
+		var gmarkers = [];
+		var markerTitles = [];
+		var highestZIndex = 0;
+		var agent = "default";
+		var zoomControl = true;
+		var MarkerDraggable = false;
+		var DrawCircleAroundMarker = false;
+		var CircleMapRadius = 750;
+		var geocoder;
+		var markerTitles = [];
+		// markers array: name, type (icon), lat, long, description, uri, address
+		GoogleMapMarkers = new Array();
+		<?php
+        if(!empty($GoogleMapMarkers)){
+            $gMi = 0;
+            foreach($GoogleMapMarkers as $gM){
+        ?>
+		GoogleMapMarkers.push(["<?php echo $gM['proptitle']; ?>", "<?php echo $gM['hackerspace']; ?>", <?php echo $gM['latitude']; ?>, <?php echo $gM['longitude']; ?>, "<?php echo $gM['proaddress']; ?>", "<?php echo $gM['propurl']; ?>", '<?php echo $gM['proprice']; ?>', "<?php echo $gM['proimg']; ?>"]);
+		markerTitles[<?php echo $gMi; ?>] = "<?php echo $gM['proptitle']; ?>";
+		<?php
+            $gMi++;
+            }
+        }
+        ?>
 
-
-<!------ footer part ------------->
-
-<?php $this->load->view("_include/footer_search");?>
-<!------- pagination js ----------------->
-
-
-</body>
-</html>
-
+	</script>
+	<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/represent-map.js"></script>
+	<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/markerclusterer.js"></script>
+<?php $this->load->view("inc/footer"); ?>

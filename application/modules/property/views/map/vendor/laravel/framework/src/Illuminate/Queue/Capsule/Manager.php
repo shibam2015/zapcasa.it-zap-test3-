@@ -87,6 +87,20 @@ class Manager {
     }
 
     /**
+     * Push a new job onto the queue.
+     *
+     * @param  string $job
+     * @param  mixed $data
+     * @param  string $queue
+     * @param  string $connection
+     * @return mixed
+     */
+    public static function push($job, $data = '', $queue = null, $connection = null)
+    {
+        return static::$instance->connection($connection)->push($job, $data, $queue);
+    }
+
+    /**
      * Get a connection instance from the global manager.
      *
      * @param  string  $connection
@@ -98,17 +112,14 @@ class Manager {
     }
 
     /**
-     * Push a new job onto the queue.
+     * Get a registered connection instance.
      *
-     * @param  string  $job
-     * @param  mixed   $data
-     * @param  string  $queue
-     * @param  string  $connection
-     * @return mixed
+     * @param  string $name
+     * @return \Illuminate\Queue\QueueInterface
      */
-    public static function push($job, $data = '', $queue = null, $connection = null)
+    public function getConnection($name = null)
     {
-        return static::$instance->connection($connection)->push($job, $data, $queue);
+        return $this->manager->connection($name);
     }
 
     /**
@@ -141,14 +152,15 @@ class Manager {
     }
 
     /**
-     * Get a registered connection instance.
+     * Dynamically pass methods to the default connection.
      *
-     * @param  string  $name
-     * @return \Illuminate\Queue\QueueInterface
+     * @param  string $method
+     * @param  array $parameters
+     * @return mixed
      */
-    public function getConnection($name = null)
+    public static function __callStatic($method, $parameters)
     {
-        return $this->manager->connection($name);
+        return call_user_func_array(array(static::connection(), $method), $parameters);
     }
 
     /**
@@ -214,18 +226,6 @@ class Manager {
     public function __call($method, $parameters)
     {
         return call_user_func_array(array($this->manager, $method), $parameters);
-    }
-
-    /**
-     * Dynamically pass methods to the default connection.
-     *
-     * @param  string  $method
-     * @param  array   $parameters
-     * @return mixed
-     */
-    public static function __callStatic($method, $parameters)
-    {
-        return call_user_func_array(array(static::connection(), $method), $parameters);
     }
 
 }

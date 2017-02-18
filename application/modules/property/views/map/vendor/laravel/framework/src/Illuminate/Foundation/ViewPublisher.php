@@ -39,22 +39,6 @@ class ViewPublisher {
 	}
 
 	/**
-	 * Publish view files from a given path.
-	 *
-	 * @param  string  $package
-	 * @param  string  $source
-	 * @return void
-	 */
-	public function publish($package, $source)
-	{
-		$destination = $this->publishPath."/packages/{$package}";
-
-		$this->makeDestination($destination);
-
-		return $this->files->copyDirectory($source, $destination);
-	}
-
-	/**
 	 * Publish the view files for a package.
 	 *
 	 * @param  string  $package
@@ -87,6 +71,22 @@ class ViewPublisher {
 		}
 
 		return $source;
+	}
+
+	/**
+	 * Publish view files from a given path.
+	 *
+	 * @param  string $package
+	 * @param  string $source
+	 * @return void
+	 */
+	public function publish($package, $source)
+	{
+		$destination = $this->publishPath . "/packages/{$package}";
+
+		$this->makeDestination($destination);
+
+		return $this->files->copyDirectory($source, $destination);
 	}
 
 	/**

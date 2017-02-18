@@ -558,6 +558,100 @@ class Net_SSH1
     }
 
     /**
+     * Define Array
+     *
+     * Takes any number of arrays whose indices are integers and whose values are strings and defines a bunch of
+     * named constants from it, using the value as the name of the constant and the index as the value of the constant.
+     * If any of the constants that would be defined already exists, none of the constants will be defined.
+     *
+     * @param Array $array
+     * @access private
+     */
+    function _define_array()
+    {
+        $args = func_get_args();
+        foreach ($args as $arg) {
+            foreach ($arg as $key => $value) {
+                if (!defined($value)) {
+                    define($value, $key);
+                } else {
+                    break 2;
+                }
+            }
+        }
+    }
+
+    /**
+     * Login
+     *
+     * @param String $username
+     * @param optional String $password
+     * @return Boolean
+     * @access public
+     */
+    function login($username, $password = '')
+    {
+        if (!($this->bitmap & NET_SSH1_MASK_CONSTRUCTOR)) {
+            $this->bitmap |= NET_SSH1_MASK_CONSTRUCTOR;
+            if (!$this->_connect()) {
+                return false;
+            }
+        }
+
+        if (!($this->bitmap & NET_SSH1_MASK_CONNECTED)) {
+            return false;
+        }
+
+        $data = pack('CNa*', NET_SSH1_CMSG_USER, strlen($username), $username);
+
+        if (!$this->_send_binary_packet($data)) {
+            user_error('Error sending SSH_CMSG_USER');
+            return false;
+        }
+
+        $response = $this->_get_binary_packet();
+
+        if ($response === true) {
+            return false;
+        }
+        if ($response[NET_SSH1_RESPONSE_TYPE] == NET_SSH1_SMSG_SUCCESS) {
+            $this->bitmap |= NET_SSH1_MASK_LOGIN;
+            return true;
+        } else if ($response[NET_SSH1_RESPONSE_TYPE] != NET_SSH1_SMSG_FAILURE) {
+            user_error('Expected SSH_SMSG_SUCCESS or SSH_SMSG_FAILURE');
+            return false;
+        }
+
+        $data = pack('CNa*', NET_SSH1_CMSG_AUTH_PASSWORD, strlen($password), $password);
+
+        if (!$this->_send_binary_packet($data)) {
+            user_error('Error sending SSH_CMSG_AUTH_PASSWORD');
+            return false;
+        }
+
+        // remove the username and password from the last logged packet
+        if (defined('NET_SSH1_LOGGING') && NET_SSH1_LOGGING == NET_SSH1_LOG_COMPLEX) {
+            $data = pack('CNa*', NET_SSH1_CMSG_AUTH_PASSWORD, strlen('password'), 'password');
+            $this->message_log[count($this->message_log) - 1] = $data;
+        }
+
+        $response = $this->_get_binary_packet();
+
+        if ($response === true) {
+            return false;
+        }
+        if ($response[NET_SSH1_RESPONSE_TYPE] == NET_SSH1_SMSG_SUCCESS) {
+            $this->bitmap |= NET_SSH1_MASK_LOGIN;
+            return true;
+        } else if ($response[NET_SSH1_RESPONSE_TYPE] == NET_SSH1_SMSG_FAILURE) {
+            return false;
+        } else {
+            user_error('Expected SSH_SMSG_SUCCESS or SSH_SMSG_FAILURE');
+            return false;
+        }
+    }
+
+    /**
      * Connect to an SSHv1 server
      *
      * @return Boolean
@@ -725,367 +819,118 @@ class Net_SSH1
     }
 
     /**
-     * Login
+     * Logs data packets
      *
-     * @param String $username
-     * @param optional String $password
-     * @return Boolean
-     * @access public
+     * Makes sure that only the last 1MB worth of packets will be logged
+     *
+     * @param String $data
+     * @access private
      */
-    function login($username, $password = '')
+    function _append_log($protocol_flags, $message)
     {
-        if (!($this->bitmap & NET_SSH1_MASK_CONSTRUCTOR)) {
-            $this->bitmap |= NET_SSH1_MASK_CONSTRUCTOR;
-            if (!$this->_connect()) {
-                return false;
-            }
-        }
-
-        if (!($this->bitmap & NET_SSH1_MASK_CONNECTED)) {
-            return false;
-        }
-
-        $data = pack('CNa*', NET_SSH1_CMSG_USER, strlen($username), $username);
-
-        if (!$this->_send_binary_packet($data)) {
-            user_error('Error sending SSH_CMSG_USER');
-            return false;
-        }
-
-        $response = $this->_get_binary_packet();
-
-        if ($response === true) {
-            return false;
-        }
-        if ($response[NET_SSH1_RESPONSE_TYPE] == NET_SSH1_SMSG_SUCCESS) {
-            $this->bitmap |= NET_SSH1_MASK_LOGIN;
-            return true;
-        } else if ($response[NET_SSH1_RESPONSE_TYPE] != NET_SSH1_SMSG_FAILURE) {
-            user_error('Expected SSH_SMSG_SUCCESS or SSH_SMSG_FAILURE');
-            return false;
-        }
-
-        $data = pack('CNa*', NET_SSH1_CMSG_AUTH_PASSWORD, strlen($password), $password);
-
-        if (!$this->_send_binary_packet($data)) {
-            user_error('Error sending SSH_CMSG_AUTH_PASSWORD');
-            return false;
-        }
-
-        // remove the username and password from the last logged packet
-        if (defined('NET_SSH1_LOGGING') && NET_SSH1_LOGGING == NET_SSH1_LOG_COMPLEX) {
-            $data = pack('CNa*', NET_SSH1_CMSG_AUTH_PASSWORD, strlen('password'), 'password');
-            $this->message_log[count($this->message_log) - 1] = $data;
-        }
-
-        $response = $this->_get_binary_packet();
-
-        if ($response === true) {
-            return false;
-        }
-        if ($response[NET_SSH1_RESPONSE_TYPE] == NET_SSH1_SMSG_SUCCESS) {
-            $this->bitmap |= NET_SSH1_MASK_LOGIN;
-            return true;
-        } else if ($response[NET_SSH1_RESPONSE_TYPE] == NET_SSH1_SMSG_FAILURE) {
-            return false;
-        } else {
-            user_error('Expected SSH_SMSG_SUCCESS or SSH_SMSG_FAILURE');
-            return false;
+        switch (NET_SSH1_LOGGING) {
+            // useful for benchmarks
+            case NET_SSH1_LOG_SIMPLE:
+                $this->protocol_flags_log[] = $protocol_flags;
+                break;
+            // the most useful log for SSH1
+            case NET_SSH1_LOG_COMPLEX:
+                $this->protocol_flags_log[] = $protocol_flags;
+                $this->_string_shift($message);
+                $this->log_size += strlen($message);
+                $this->message_log[] = $message;
+                while ($this->log_size > NET_SSH1_LOG_MAX_SIZE) {
+                    $this->log_size -= strlen(array_shift($this->message_log));
+                    array_shift($this->protocol_flags_log);
+                }
+                break;
+            // dump the output out realtime; packets may be interspersed with non packets,
+            // passwords won't be filtered out and select other packets may not be correctly
+            // identified
+            case NET_SSH1_LOG_REALTIME:
+                echo "<pre>\r\n" . $this->_format_log(array($message), array($protocol_flags)) . "\r\n</pre>\r\n";
+                @flush();
+                @ob_flush();
+                break;
+            // basically the same thing as NET_SSH1_LOG_REALTIME with the caveat that NET_SSH1_LOG_REALTIME_FILE
+            // needs to be defined and that the resultant log file will be capped out at NET_SSH1_LOG_MAX_SIZE.
+            // the earliest part of the log file is denoted by the first <<< START >>> and is not going to necessarily
+            // at the beginning of the file
+            case NET_SSH1_LOG_REALTIME_FILE:
+                if (!isset($this->realtime_log_file)) {
+                    // PHP doesn't seem to like using constants in fopen()
+                    $filename = NET_SSH1_LOG_REALTIME_FILE;
+                    $fp = fopen($filename, 'w');
+                    $this->realtime_log_file = $fp;
+                }
+                if (!is_resource($this->realtime_log_file)) {
+                    break;
+                }
+                $entry = $this->_format_log(array($message), array($protocol_flags));
+                if ($this->realtime_log_wrap) {
+                    $temp = "<<< START >>>\r\n";
+                    $entry .= $temp;
+                    fseek($this->realtime_log_file, ftell($this->realtime_log_file) - strlen($temp));
+                }
+                $this->realtime_log_size += strlen($entry);
+                if ($this->realtime_log_size > NET_SSH1_LOG_MAX_SIZE) {
+                    fseek($this->realtime_log_file, 0);
+                    $this->realtime_log_size = strlen($entry);
+                    $this->realtime_log_wrap = true;
+                }
+                fputs($this->realtime_log_file, $entry);
         }
     }
 
     /**
-     * Set Timeout
+     * String Shift
      *
-     * $ssh->exec('ping 127.0.0.1'); on a Linux host will never return and will run indefinitely.  setTimeout() makes it so it'll timeout.
-     * Setting $timeout to false or 0 will mean there is no timeout.
+     * Inspired by array_shift
      *
-     * @param Mixed $timeout
+     * @param String $string
+     * @param optional Integer $index
+     * @return String
+     * @access private
      */
-    function setTimeout($timeout)
+    function _string_shift(&$string, $index = 1)
     {
-        $this->timeout = $this->curTimeout = $timeout;
+        $substr = substr($string, 0, $index);
+        $string = substr($string, $index);
+        return $substr;
     }
 
     /**
-     * Executes a command on a non-interactive shell, returns the output, and quits.
+     * Formats a log for printing
      *
-     * An SSH1 server will close the connection after a command has been executed on a non-interactive shell.  SSH2
-     * servers don't, however, this isn't an SSH2 client.  The way this works, on the server, is by initiating a
-     * shell with the -s option, as discussed in the following links:
-     *
-     * {@link http://www.faqs.org/docs/bashman/bashref_65.html http://www.faqs.org/docs/bashman/bashref_65.html}
-     * {@link http://www.faqs.org/docs/bashman/bashref_62.html http://www.faqs.org/docs/bashman/bashref_62.html}
-     *
-     * To execute further commands, a new Net_SSH1 object will need to be created.
-     *
-     * Returns false on failure and the output, otherwise.
-     *
-     * @see Net_SSH1::interactiveRead()
-     * @see Net_SSH1::interactiveWrite()
-     * @param String $cmd
-     * @return mixed
-     * @access public
+     * @param Array $message_log
+     * @param Array $message_number_log
+     * @access private
+     * @return String
      */
-    function exec($cmd, $block = true)
+    function _format_log($message_log, $message_number_log)
     {
-        if (!($this->bitmap & NET_SSH1_MASK_LOGIN)) {
-            user_error('Operation disallowed prior to login()');
-            return false;
-        }
-
-        $data = pack('CNa*', NET_SSH1_CMSG_EXEC_CMD, strlen($cmd), $cmd);
-
-        if (!$this->_send_binary_packet($data)) {
-            user_error('Error sending SSH_CMSG_EXEC_CMD');
-            return false;
-        }
-
-        if (!$block) {
-            return true;
-        }
-
         $output = '';
-        $response = $this->_get_binary_packet();
-
-        if ($response !== false) {
+        for ($i = 0; $i < count($message_log); $i++) {
+            $output .= $message_number_log[$i] . "\r\n";
+            $current_log = $message_log[$i];
+            $j = 0;
             do {
-                $output.= substr($response[NET_SSH1_RESPONSE_DATA], 4);
-                $response = $this->_get_binary_packet();
-            } while (is_array($response) && $response[NET_SSH1_RESPONSE_TYPE] != NET_SSH1_SMSG_EXITSTATUS);
+                if (strlen($current_log)) {
+                    $output .= str_pad(dechex($j), 7, '0', STR_PAD_LEFT) . '0  ';
+                }
+                $fragment = $this->_string_shift($current_log, $this->log_short_width);
+                $hex = substr(preg_replace_callback('#.#s', array($this, '_format_log_helper'), $fragment), strlen($this->log_boundary));
+                // replace non ASCII printable characters with dots
+                // http://en.wikipedia.org/wiki/ASCII#ASCII_printable_characters
+                // also replace < with a . since < messes up the output on web browsers
+                $raw = preg_replace('#[^\x20-\x7E]|<#', '.', $fragment);
+                $output .= str_pad($hex, $this->log_long_width - $this->log_short_width, ' ') . $raw . "\r\n";
+                $j++;
+            } while (strlen($current_log));
+            $output .= "\r\n";
         }
-
-        $data = pack('C', NET_SSH1_CMSG_EXIT_CONFIRMATION);
-
-        // i don't think it's really all that important if this packet gets sent or not.
-        $this->_send_binary_packet($data);
-
-        fclose($this->fsock);
-
-        // reset the execution bitmap - a new Net_SSH1 object needs to be created.
-        $this->bitmap = 0;
 
         return $output;
-    }
-
-    /**
-     * Creates an interactive shell
-     *
-     * @see Net_SSH1::interactiveRead()
-     * @see Net_SSH1::interactiveWrite()
-     * @return Boolean
-     * @access private
-     */
-    function _initShell()
-    {
-        // connect using the sample parameters in protocol-1.5.txt.
-        // according to wikipedia.org's entry on text terminals, "the fundamental type of application running on a text
-        // terminal is a command line interpreter or shell".  thus, opening a terminal session to run the shell.
-        $data = pack('CNa*N4C', NET_SSH1_CMSG_REQUEST_PTY, strlen('vt100'), 'vt100', 24, 80, 0, 0, NET_SSH1_TTY_OP_END);
-
-        if (!$this->_send_binary_packet($data)) {
-            user_error('Error sending SSH_CMSG_REQUEST_PTY');
-            return false;
-        }
-
-        $response = $this->_get_binary_packet();
-
-        if ($response === true) {
-            return false;
-        }
-        if ($response[NET_SSH1_RESPONSE_TYPE] != NET_SSH1_SMSG_SUCCESS) {
-            user_error('Expected SSH_SMSG_SUCCESS');
-            return false;
-        }
-
-        $data = pack('C', NET_SSH1_CMSG_EXEC_SHELL);
-
-        if (!$this->_send_binary_packet($data)) {
-            user_error('Error sending SSH_CMSG_EXEC_SHELL');
-            return false;
-        }
-
-        $this->bitmap |= NET_SSH1_MASK_SHELL;
-
-        //stream_set_blocking($this->fsock, 0);
-
-        return true;
-    }
-
-    /**
-     * Inputs a command into an interactive shell.
-     *
-     * @see Net_SSH1::interactiveWrite()
-     * @param String $cmd
-     * @return Boolean
-     * @access public
-     */
-    function write($cmd)
-    {
-        return $this->interactiveWrite($cmd);
-    }
-
-    /**
-     * Returns the output of an interactive shell when there's a match for $expect
-     *
-     * $expect can take the form of a string literal or, if $mode == NET_SSH1_READ_REGEX,
-     * a regular expression.
-     *
-     * @see Net_SSH1::write()
-     * @param String $expect
-     * @param Integer $mode
-     * @return Boolean
-     * @access public
-     */
-    function read($expect, $mode = NET_SSH1_READ_SIMPLE)
-    {
-        if (!($this->bitmap & NET_SSH1_MASK_LOGIN)) {
-            user_error('Operation disallowed prior to login()');
-            return false;
-        }
-
-        if (!($this->bitmap & NET_SSH1_MASK_SHELL) && !$this->_initShell()) {
-            user_error('Unable to initiate an interactive shell session');
-            return false;
-        }
-
-        $match = $expect;
-        while (true) {
-            if ($mode == NET_SSH1_READ_REGEX) {
-                preg_match($expect, $this->interactiveBuffer, $matches);
-                $match = isset($matches[0]) ? $matches[0] : '';
-            }
-            $pos = strlen($match) ? strpos($this->interactiveBuffer, $match) : false;
-            if ($pos !== false) {
-                return $this->_string_shift($this->interactiveBuffer, $pos + strlen($match));
-            }
-            $response = $this->_get_binary_packet();
-
-            if ($response === true) {
-                return $this->_string_shift($this->interactiveBuffer, strlen($this->interactiveBuffer));
-            }
-            $this->interactiveBuffer.= substr($response[NET_SSH1_RESPONSE_DATA], 4);
-        }
-    }
-
-    /**
-     * Inputs a command into an interactive shell.
-     *
-     * @see Net_SSH1::interactiveRead()
-     * @param String $cmd
-     * @return Boolean
-     * @access public
-     */
-    function interactiveWrite($cmd)
-    {
-        if (!($this->bitmap & NET_SSH1_MASK_LOGIN)) {
-            user_error('Operation disallowed prior to login()');
-            return false;
-        }
-
-        if (!($this->bitmap & NET_SSH1_MASK_SHELL) && !$this->_initShell()) {
-            user_error('Unable to initiate an interactive shell session');
-            return false;
-        }
-
-        $data = pack('CNa*', NET_SSH1_CMSG_STDIN_DATA, strlen($cmd), $cmd);
-
-        if (!$this->_send_binary_packet($data)) {
-            user_error('Error sending SSH_CMSG_STDIN');
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Returns the output of an interactive shell when no more output is available.
-     *
-     * Requires PHP 4.3.0 or later due to the use of the stream_select() function.  If you see stuff like
-     * "^[[00m", you're seeing ANSI escape codes.  According to
-     * {@link http://support.microsoft.com/kb/101875 How to Enable ANSI.SYS in a Command Window}, "Windows NT
-     * does not support ANSI escape sequences in Win32 Console applications", so if you're a Windows user,
-     * there's not going to be much recourse.
-     *
-     * @see Net_SSH1::interactiveRead()
-     * @return String
-     * @access public
-     */
-    function interactiveRead()
-    {
-        if (!($this->bitmap & NET_SSH1_MASK_LOGIN)) {
-            user_error('Operation disallowed prior to login()');
-            return false;
-        }
-
-        if (!($this->bitmap & NET_SSH1_MASK_SHELL) && !$this->_initShell()) {
-            user_error('Unable to initiate an interactive shell session');
-            return false;
-        }
-
-        $read = array($this->fsock);
-        $write = $except = null;
-        if (stream_select($read, $write, $except, 0)) {
-            $response = $this->_get_binary_packet();
-            return substr($response[NET_SSH1_RESPONSE_DATA], 4);
-        } else {
-            return '';
-        }
-    }
-
-    /**
-     * Disconnect
-     *
-     * @access public
-     */
-    function disconnect()
-    {
-        $this->_disconnect();
-    }
-
-    /**
-     * Destructor.
-     *
-     * Will be called, automatically, if you're supporting just PHP5.  If you're supporting PHP4, you'll need to call
-     * disconnect().
-     *
-     * @access public
-     */
-    function __destruct()
-    {
-        $this->_disconnect();
-    }
-
-    /**
-     * Disconnect
-     *
-     * @param String $msg
-     * @access private
-     */
-    function _disconnect($msg = 'Client Quit')
-    {
-        if ($this->bitmap) {
-            $data = pack('C', NET_SSH1_CMSG_EOF);
-            $this->_send_binary_packet($data);
-            /*
-            $response = $this->_get_binary_packet();
-            if ($response === true) {
-                $response = array(NET_SSH1_RESPONSE_TYPE => -1);
-            }
-            switch ($response[NET_SSH1_RESPONSE_TYPE]) {
-                case NET_SSH1_SMSG_EXITSTATUS:
-                    $data = pack('C', NET_SSH1_CMSG_EXIT_CONFIRMATION);
-                    break;
-                default:
-                    $data = pack('CNa*', NET_SSH1_MSG_DISCONNECT, strlen($msg), $msg);
-            }
-            */
-            $data = pack('CNa*', NET_SSH1_MSG_DISCONNECT, strlen($msg), $msg);
-
-            $this->_send_binary_packet($data);
-            fclose($this->fsock);
-            $this->bitmap = 0;
-        }
     }
 
     /**
@@ -1164,6 +1009,61 @@ class Net_SSH1
             NET_SSH1_RESPONSE_TYPE => $type,
             NET_SSH1_RESPONSE_DATA => $data
         );
+    }
+
+    /**
+     * RSA Encrypt
+     *
+     * Returns mod(pow($m, $e), $n), where $n should be the product of two (large) primes $p and $q and where $e
+     * should be a number with the property that gcd($e, ($p - 1) * ($q - 1)) == 1.  Could just make anything that
+     * calls this call modexp, instead, but I think this makes things clearer, maybe...
+     *
+     * @see Net_SSH1::Net_SSH1()
+     * @param Math_BigInteger $m
+     * @param Array $key
+     * @return Math_BigInteger
+     * @access private
+     */
+    function _rsa_crypt($m, $key)
+    {
+        /*
+        if (!class_exists('Crypt_RSA')) {
+            include_once 'Crypt/RSA.php';
+        }
+
+        $rsa = new Crypt_RSA();
+        $rsa->loadKey($key, CRYPT_RSA_PUBLIC_FORMAT_RAW);
+        $rsa->setEncryptionMode(CRYPT_RSA_ENCRYPTION_PKCS1);
+        return $rsa->encrypt($m);
+        */
+
+        // To quote from protocol-1.5.txt:
+        // The most significant byte (which is only partial as the value must be
+        // less than the public modulus, which is never a power of two) is zero.
+        //
+        // The next byte contains the value 2 (which stands for public-key
+        // encrypted data in the PKCS standard [PKCS#1]).  Then, there are non-
+        // zero random bytes to fill any unused space, a zero byte, and the data
+        // to be encrypted in the least significant bytes, the last byte of the
+        // data in the least significant byte.
+
+        // Presumably the part of PKCS#1 they're refering to is "Section 7.2.1 Encryption Operation",
+        // under "7.2 RSAES-PKCS1-v1.5" and "7 Encryption schemes" of the following URL:
+        // ftp://ftp.rsasecurity.com/pub/pkcs/pkcs-1/pkcs-1v2-1.pdf
+        $modulus = $key[1]->toBytes();
+        $length = strlen($modulus) - strlen($m) - 3;
+        $random = '';
+        while (strlen($random) != $length) {
+            $block = crypt_random_string($length - strlen($random));
+            $block = str_replace("\x00", '', $block);
+            $random .= $block;
+        }
+        $temp = chr(0) . chr(2) . $random . chr(0) . $m;
+
+        $m = new Math_BigInteger($temp, 256);
+        $m = $m->modPow($key[0], $key[1]);
+
+        return $m->toBytes();
     }
 
     /**
@@ -1312,99 +1212,297 @@ class Net_SSH1
     }
 
     /**
-     * String Shift
+     * Set Timeout
      *
-     * Inspired by array_shift
+     * $ssh->exec('ping 127.0.0.1'); on a Linux host will never return and will run indefinitely.  setTimeout() makes it so it'll timeout.
+     * Setting $timeout to false or 0 will mean there is no timeout.
      *
-     * @param String $string
-     * @param optional Integer $index
-     * @return String
-     * @access private
+     * @param Mixed $timeout
      */
-    function _string_shift(&$string, $index = 1)
+    function setTimeout($timeout)
     {
-        $substr = substr($string, 0, $index);
-        $string = substr($string, $index);
-        return $substr;
+        $this->timeout = $this->curTimeout = $timeout;
     }
 
     /**
-     * RSA Encrypt
+     * Executes a command on a non-interactive shell, returns the output, and quits.
      *
-     * Returns mod(pow($m, $e), $n), where $n should be the product of two (large) primes $p and $q and where $e
-     * should be a number with the property that gcd($e, ($p - 1) * ($q - 1)) == 1.  Could just make anything that
-     * calls this call modexp, instead, but I think this makes things clearer, maybe...
+     * An SSH1 server will close the connection after a command has been executed on a non-interactive shell.  SSH2
+     * servers don't, however, this isn't an SSH2 client.  The way this works, on the server, is by initiating a
+     * shell with the -s option, as discussed in the following links:
      *
-     * @see Net_SSH1::Net_SSH1()
-     * @param Math_BigInteger $m
-     * @param Array $key
-     * @return Math_BigInteger
-     * @access private
+     * {@link http://www.faqs.org/docs/bashman/bashref_65.html http://www.faqs.org/docs/bashman/bashref_65.html}
+     * {@link http://www.faqs.org/docs/bashman/bashref_62.html http://www.faqs.org/docs/bashman/bashref_62.html}
+     *
+     * To execute further commands, a new Net_SSH1 object will need to be created.
+     *
+     * Returns false on failure and the output, otherwise.
+     *
+     * @see Net_SSH1::interactiveRead()
+     * @see Net_SSH1::interactiveWrite()
+     * @param String $cmd
+     * @return mixed
+     * @access public
      */
-    function _rsa_crypt($m, $key)
+    function exec($cmd, $block = true)
     {
-        /*
-        if (!class_exists('Crypt_RSA')) {
-            include_once 'Crypt/RSA.php';
+        if (!($this->bitmap & NET_SSH1_MASK_LOGIN)) {
+            user_error('Operation disallowed prior to login()');
+            return false;
         }
 
-        $rsa = new Crypt_RSA();
-        $rsa->loadKey($key, CRYPT_RSA_PUBLIC_FORMAT_RAW);
-        $rsa->setEncryptionMode(CRYPT_RSA_ENCRYPTION_PKCS1);
-        return $rsa->encrypt($m);
-        */
+        $data = pack('CNa*', NET_SSH1_CMSG_EXEC_CMD, strlen($cmd), $cmd);
 
-        // To quote from protocol-1.5.txt:
-        // The most significant byte (which is only partial as the value must be
-        // less than the public modulus, which is never a power of two) is zero.
-        //
-        // The next byte contains the value 2 (which stands for public-key
-        // encrypted data in the PKCS standard [PKCS#1]).  Then, there are non-
-        // zero random bytes to fill any unused space, a zero byte, and the data
-        // to be encrypted in the least significant bytes, the last byte of the
-        // data in the least significant byte.
-
-        // Presumably the part of PKCS#1 they're refering to is "Section 7.2.1 Encryption Operation",
-        // under "7.2 RSAES-PKCS1-v1.5" and "7 Encryption schemes" of the following URL:
-        // ftp://ftp.rsasecurity.com/pub/pkcs/pkcs-1/pkcs-1v2-1.pdf
-        $modulus = $key[1]->toBytes();
-        $length = strlen($modulus) - strlen($m) - 3;
-        $random = '';
-        while (strlen($random) != $length) {
-            $block = crypt_random_string($length - strlen($random));
-            $block = str_replace("\x00", '', $block);
-            $random.= $block;
+        if (!$this->_send_binary_packet($data)) {
+            user_error('Error sending SSH_CMSG_EXEC_CMD');
+            return false;
         }
-        $temp = chr(0) . chr(2) . $random . chr(0) . $m;
 
-        $m = new Math_BigInteger($temp, 256);
-        $m = $m->modPow($key[0], $key[1]);
+        if (!$block) {
+            return true;
+        }
 
-        return $m->toBytes();
+        $output = '';
+        $response = $this->_get_binary_packet();
+
+        if ($response !== false) {
+            do {
+                $output .= substr($response[NET_SSH1_RESPONSE_DATA], 4);
+                $response = $this->_get_binary_packet();
+            } while (is_array($response) && $response[NET_SSH1_RESPONSE_TYPE] != NET_SSH1_SMSG_EXITSTATUS);
+        }
+
+        $data = pack('C', NET_SSH1_CMSG_EXIT_CONFIRMATION);
+
+        // i don't think it's really all that important if this packet gets sent or not.
+        $this->_send_binary_packet($data);
+
+        fclose($this->fsock);
+
+        // reset the execution bitmap - a new Net_SSH1 object needs to be created.
+        $this->bitmap = 0;
+
+        return $output;
     }
 
     /**
-     * Define Array
+     * Inputs a command into an interactive shell.
      *
-     * Takes any number of arrays whose indices are integers and whose values are strings and defines a bunch of
-     * named constants from it, using the value as the name of the constant and the index as the value of the constant.
-     * If any of the constants that would be defined already exists, none of the constants will be defined.
+     * @see Net_SSH1::interactiveWrite()
+     * @param String $cmd
+     * @return Boolean
+     * @access public
+     */
+    function write($cmd)
+    {
+        return $this->interactiveWrite($cmd);
+    }
+
+    /**
+     * Inputs a command into an interactive shell.
      *
-     * @param Array $array
+     * @see Net_SSH1::interactiveRead()
+     * @param String $cmd
+     * @return Boolean
+     * @access public
+     */
+    function interactiveWrite($cmd)
+    {
+        if (!($this->bitmap & NET_SSH1_MASK_LOGIN)) {
+            user_error('Operation disallowed prior to login()');
+            return false;
+        }
+
+        if (!($this->bitmap & NET_SSH1_MASK_SHELL) && !$this->_initShell()) {
+            user_error('Unable to initiate an interactive shell session');
+            return false;
+        }
+
+        $data = pack('CNa*', NET_SSH1_CMSG_STDIN_DATA, strlen($cmd), $cmd);
+
+        if (!$this->_send_binary_packet($data)) {
+            user_error('Error sending SSH_CMSG_STDIN');
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Creates an interactive shell
+     *
+     * @see Net_SSH1::interactiveRead()
+     * @see Net_SSH1::interactiveWrite()
+     * @return Boolean
      * @access private
      */
-    function _define_array()
+    function _initShell()
     {
-        $args = func_get_args();
-        foreach ($args as $arg) {
-            foreach ($arg as $key=>$value) {
-                if (!defined($value)) {
-                    define($value, $key);
-                } else {
-                    break 2;
-                }
+        // connect using the sample parameters in protocol-1.5.txt.
+        // according to wikipedia.org's entry on text terminals, "the fundamental type of application running on a text
+        // terminal is a command line interpreter or shell".  thus, opening a terminal session to run the shell.
+        $data = pack('CNa*N4C', NET_SSH1_CMSG_REQUEST_PTY, strlen('vt100'), 'vt100', 24, 80, 0, 0, NET_SSH1_TTY_OP_END);
+
+        if (!$this->_send_binary_packet($data)) {
+            user_error('Error sending SSH_CMSG_REQUEST_PTY');
+            return false;
+        }
+
+        $response = $this->_get_binary_packet();
+
+        if ($response === true) {
+            return false;
+        }
+        if ($response[NET_SSH1_RESPONSE_TYPE] != NET_SSH1_SMSG_SUCCESS) {
+            user_error('Expected SSH_SMSG_SUCCESS');
+            return false;
+        }
+
+        $data = pack('C', NET_SSH1_CMSG_EXEC_SHELL);
+
+        if (!$this->_send_binary_packet($data)) {
+            user_error('Error sending SSH_CMSG_EXEC_SHELL');
+            return false;
+        }
+
+        $this->bitmap |= NET_SSH1_MASK_SHELL;
+
+        //stream_set_blocking($this->fsock, 0);
+
+        return true;
+    }
+
+    /**
+     * Returns the output of an interactive shell when there's a match for $expect
+     *
+     * $expect can take the form of a string literal or, if $mode == NET_SSH1_READ_REGEX,
+     * a regular expression.
+     *
+     * @see Net_SSH1::write()
+     * @param String $expect
+     * @param Integer $mode
+     * @return Boolean
+     * @access public
+     */
+    function read($expect, $mode = NET_SSH1_READ_SIMPLE)
+    {
+        if (!($this->bitmap & NET_SSH1_MASK_LOGIN)) {
+            user_error('Operation disallowed prior to login()');
+            return false;
+        }
+
+        if (!($this->bitmap & NET_SSH1_MASK_SHELL) && !$this->_initShell()) {
+            user_error('Unable to initiate an interactive shell session');
+            return false;
+        }
+
+        $match = $expect;
+        while (true) {
+            if ($mode == NET_SSH1_READ_REGEX) {
+                preg_match($expect, $this->interactiveBuffer, $matches);
+                $match = isset($matches[0]) ? $matches[0] : '';
             }
+            $pos = strlen($match) ? strpos($this->interactiveBuffer, $match) : false;
+            if ($pos !== false) {
+                return $this->_string_shift($this->interactiveBuffer, $pos + strlen($match));
+            }
+            $response = $this->_get_binary_packet();
+
+            if ($response === true) {
+                return $this->_string_shift($this->interactiveBuffer, strlen($this->interactiveBuffer));
+            }
+            $this->interactiveBuffer .= substr($response[NET_SSH1_RESPONSE_DATA], 4);
         }
+    }
+
+    /**
+     * Returns the output of an interactive shell when no more output is available.
+     *
+     * Requires PHP 4.3.0 or later due to the use of the stream_select() function.  If you see stuff like
+     * "^[[00m", you're seeing ANSI escape codes.  According to
+     * {@link http://support.microsoft.com/kb/101875 How to Enable ANSI.SYS in a Command Window}, "Windows NT
+     * does not support ANSI escape sequences in Win32 Console applications", so if you're a Windows user,
+     * there's not going to be much recourse.
+     *
+     * @see Net_SSH1::interactiveRead()
+     * @return String
+     * @access public
+     */
+    function interactiveRead()
+    {
+        if (!($this->bitmap & NET_SSH1_MASK_LOGIN)) {
+            user_error('Operation disallowed prior to login()');
+            return false;
+        }
+
+        if (!($this->bitmap & NET_SSH1_MASK_SHELL) && !$this->_initShell()) {
+            user_error('Unable to initiate an interactive shell session');
+            return false;
+        }
+
+        $read = array($this->fsock);
+        $write = $except = null;
+        if (stream_select($read, $write, $except, 0)) {
+            $response = $this->_get_binary_packet();
+            return substr($response[NET_SSH1_RESPONSE_DATA], 4);
+        } else {
+            return '';
+        }
+    }
+
+    /**
+     * Disconnect
+     *
+     * @access public
+     */
+    function disconnect()
+    {
+        $this->_disconnect();
+    }
+
+    /**
+     * Disconnect
+     *
+     * @param String $msg
+     * @access private
+     */
+    function _disconnect($msg = 'Client Quit')
+    {
+        if ($this->bitmap) {
+            $data = pack('C', NET_SSH1_CMSG_EOF);
+            $this->_send_binary_packet($data);
+            /*
+            $response = $this->_get_binary_packet();
+            if ($response === true) {
+                $response = array(NET_SSH1_RESPONSE_TYPE => -1);
+            }
+            switch ($response[NET_SSH1_RESPONSE_TYPE]) {
+                case NET_SSH1_SMSG_EXITSTATUS:
+                    $data = pack('C', NET_SSH1_CMSG_EXIT_CONFIRMATION);
+                    break;
+                default:
+                    $data = pack('CNa*', NET_SSH1_MSG_DISCONNECT, strlen($msg), $msg);
+            }
+            */
+            $data = pack('CNa*', NET_SSH1_MSG_DISCONNECT, strlen($msg), $msg);
+
+            $this->_send_binary_packet($data);
+            fclose($this->fsock);
+            $this->bitmap = 0;
+        }
+    }
+
+    /**
+     * Destructor.
+     *
+     * Will be called, automatically, if you're supporting just PHP5.  If you're supporting PHP4, you'll need to call
+     * disconnect().
+     *
+     * @access public
+     */
+    function __destruct()
+    {
+        $this->_disconnect();
     }
 
     /**
@@ -1431,40 +1529,6 @@ class Net_SSH1
             default:
                 return false;
         }
-    }
-
-    /**
-     * Formats a log for printing
-     *
-     * @param Array $message_log
-     * @param Array $message_number_log
-     * @access private
-     * @return String
-     */
-    function _format_log($message_log, $message_number_log)
-    {
-        $output = '';
-        for ($i = 0; $i < count($message_log); $i++) {
-            $output.= $message_number_log[$i] . "\r\n";
-            $current_log = $message_log[$i];
-            $j = 0;
-            do {
-                if (strlen($current_log)) {
-                    $output.= str_pad(dechex($j), 7, '0', STR_PAD_LEFT) . '0  ';
-                }
-                $fragment = $this->_string_shift($current_log, $this->log_short_width);
-                $hex = substr(preg_replace_callback('#.#s', array($this, '_format_log_helper'), $fragment), strlen($this->log_boundary));
-                // replace non ASCII printable characters with dots
-                // http://en.wikipedia.org/wiki/ASCII#ASCII_printable_characters
-                // also replace < with a . since < messes up the output on web browsers
-                $raw = preg_replace('#[^\x20-\x7E]|<#', '.', $fragment);
-                $output.= str_pad($hex, $this->log_long_width - $this->log_short_width, ' ') . $raw . "\r\n";
-                $j++;
-            } while (strlen($current_log));
-            $output.= "\r\n";
-        }
-
-        return $output;
     }
 
     /**
@@ -1582,69 +1646,5 @@ class Net_SSH1
     function getServerIdentification()
     {
         return rtrim($this->server_identification);
-    }
-
-    /**
-     * Logs data packets
-     *
-     * Makes sure that only the last 1MB worth of packets will be logged
-     *
-     * @param String $data
-     * @access private
-     */
-    function _append_log($protocol_flags, $message)
-    {
-        switch (NET_SSH1_LOGGING) {
-            // useful for benchmarks
-            case NET_SSH1_LOG_SIMPLE:
-                $this->protocol_flags_log[] = $protocol_flags;
-                break;
-            // the most useful log for SSH1
-            case NET_SSH1_LOG_COMPLEX:
-                $this->protocol_flags_log[] = $protocol_flags;
-                $this->_string_shift($message);
-                $this->log_size+= strlen($message);
-                $this->message_log[] = $message;
-                while ($this->log_size > NET_SSH1_LOG_MAX_SIZE) {
-                    $this->log_size-= strlen(array_shift($this->message_log));
-                    array_shift($this->protocol_flags_log);
-                }
-                break;
-            // dump the output out realtime; packets may be interspersed with non packets,
-            // passwords won't be filtered out and select other packets may not be correctly
-            // identified
-            case NET_SSH1_LOG_REALTIME:
-                echo "<pre>\r\n" . $this->_format_log(array($message), array($protocol_flags)) . "\r\n</pre>\r\n";
-                @flush();
-                @ob_flush();
-                break;
-            // basically the same thing as NET_SSH1_LOG_REALTIME with the caveat that NET_SSH1_LOG_REALTIME_FILE
-            // needs to be defined and that the resultant log file will be capped out at NET_SSH1_LOG_MAX_SIZE.
-            // the earliest part of the log file is denoted by the first <<< START >>> and is not going to necessarily
-            // at the beginning of the file
-            case NET_SSH1_LOG_REALTIME_FILE:
-                if (!isset($this->realtime_log_file)) {
-                    // PHP doesn't seem to like using constants in fopen()
-                    $filename = NET_SSH1_LOG_REALTIME_FILE;
-                    $fp = fopen($filename, 'w');
-                    $this->realtime_log_file = $fp;
-                }
-                if (!is_resource($this->realtime_log_file)) {
-                    break;
-                }
-                $entry = $this->_format_log(array($message), array($protocol_flags));
-                if ($this->realtime_log_wrap) {
-                    $temp = "<<< START >>>\r\n";
-                    $entry.= $temp;
-                    fseek($this->realtime_log_file, ftell($this->realtime_log_file) - strlen($temp));
-                }
-                $this->realtime_log_size+= strlen($entry);
-                if ($this->realtime_log_size > NET_SSH1_LOG_MAX_SIZE) {
-                    fseek($this->realtime_log_file, 0);
-                    $this->realtime_log_size = strlen($entry);
-                    $this->realtime_log_wrap = true;
-                }
-                fputs($this->realtime_log_file, $entry);
-        }
     }
 }

@@ -9,33 +9,37 @@ use HtmlObject\Element;
 abstract class Tag extends TreeObject
 {
   /**
+   * The base configuration inherited by classes
+   *
+   * @var array
+   */
+  public static $config = array(
+      'doctype' => 'html',
+  );
+  /**
    * The element name
    *
    * @var string
    */
   protected $element;
-
   /**
    * The object's value
    *
    * @var string|null|Tag
    */
   protected $value;
-
   /**
    * The object's attribute
    *
    * @var array
    */
   protected $attributes = array();
-
   /**
    * Whether the element is self closing
    *
    * @var boolean
    */
   protected $isSelfClosing = false;
-
   /**
    * Whether the current tag is opened or not
    *
@@ -43,6 +47,7 @@ abstract class Tag extends TreeObject
    */
   protected $isOpened = false;
 
+  // Configuration options ----------------------------------------- /
   /**
    * A list of class properties to be added to attributes
    *
@@ -50,34 +55,9 @@ abstract class Tag extends TreeObject
    */
   protected $injectedProperties = array('value');
 
-  // Configuration options ----------------------------------------- /
-
-  /**
-   * The base configuration inherited by classes
-   *
-   * @var array
-   */
-  public static $config = array(
-    'doctype' => 'html',
-  );
-
   ////////////////////////////////////////////////////////////////////
   //////////////////////////// CORE METHODS //////////////////////////
   ////////////////////////////////////////////////////////////////////
-
-  /**
-   * Set up a new tag
-   *
-   * @param string $element    Its element
-   * @param string $value      Its value
-   * @param array  $attributes Its attributes
-   */
-  protected function setTag($element, $value = null, $attributes = array())
-  {
-    $this->setValue($value);
-    $this->setElement($element);
-    $this->replaceAttributes($attributes);
-  }
 
   /**
    * Wrap the Element in another element
@@ -103,6 +83,21 @@ abstract class Tag extends TreeObject
   public function __toString()
   {
     return $this->render();
+  }
+
+  /**
+   * Default rendering method
+   *
+   * @return string
+   */
+  public function render()
+  {
+    // If it's a self closing tag
+    if ($this->isSelfClosing) {
+      return $this->open();
+    }
+
+    return $this->open() . $this->getContent() . $this->close();
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -134,41 +129,35 @@ abstract class Tag extends TreeObject
   }
 
   /**
-   * Open the tag tree on a particular child
+   * Return an array of protected properties to bind as attributes
    *
-   * @param string $onChild The child's key
-   *
-   * @return string
+   * @return array
    */
-  public function openOn($onChildren)
+  protected function injectProperties()
   {
-    $onChildren = explode('.', $onChildren);
-    $element  = $this->open();
-    $element .= $this->value;
-    $subject  = $this;
+    $properties = array();
 
-    foreach ($onChildren as $onChild) {
-     foreach ($subject->getChildren() as $childName => $child) {
-        if ($childName != $onChild) $element .= $child;
-        else {
-          $subject  = $child;
-          $element .= $child->open();
-          break;
-        }
-      }
+    foreach ($this->injectedProperties as $property) {
+      if (!isset($this->$property)) continue;
+
+      $properties[$property] = $this->$property;
     }
 
-    return $element;
+    return $properties;
   }
 
   /**
-   * Check if the tag is opened
+   * Get the preferred way to close a tag
    *
-   * @return boolean
+   * @return string
    */
-  public function isOpened()
+  protected function getTagCloser()
   {
-    return $this->isOpened;
+    if ($this->isSelfClosing and static::$config['doctype'] == 'xhtml') {
+      return ' />';
+    }
+
+    return '>';
   }
 
   /**
@@ -184,6 +173,23 @@ abstract class Tag extends TreeObject
     }
 
     return $value.$this->renderChildren();
+  }
+
+  /**
+   * Get all the children as a string
+   *
+   * @return string
+   */
+  protected function renderChildren()
+  {
+    $children = $this->children;
+    foreach ($children as $key => $child) {
+      if ($child instanceof Tag) {
+        $children[$key] = $child->render();
+      }
+    }
+
+    return implode($children);
   }
 
   /**
@@ -215,37 +221,46 @@ abstract class Tag extends TreeObject
   }
 
   /**
-   * Default rendering method
+   * Open the tag tree on a particular child
+   *
+   * @param string $onChild The child's key
    *
    * @return string
    */
-  public function render()
+  public function openOn($onChildren)
   {
-    // If it's a self closing tag
-    if ($this->isSelfClosing) {
-      return $this->open();
+    $onChildren = explode('.', $onChildren);
+    $element = $this->open();
+    $element .= $this->value;
+    $subject = $this;
+
+    foreach ($onChildren as $onChild) {
+      foreach ($subject->getChildren() as $childName => $child) {
+        if ($childName != $onChild) $element .= $child;
+        else {
+          $subject = $child;
+          $element .= $child->open();
+          break;
+        }
+      }
     }
 
-    return $this->open().$this->getContent().$this->close();
-  }
-
-  /**
-   * Get the preferred way to close a tag
-   *
-   * @return string
-   */
-  protected function getTagCloser()
-  {
-    if ($this->isSelfClosing and static::$config['doctype'] == 'xhtml') {
-      return ' />';
-    }
-
-    return '>';
+    return $element;
   }
 
   ////////////////////////////////////////////////////////////////////
   /////////////////////////// MAGIC METHODS //////////////////////////
   ////////////////////////////////////////////////////////////////////
+
+  /**
+   * Check if the tag is opened
+   *
+   * @return boolean
+   */
+  public function isOpened()
+  {
+    return $this->isOpened;
+  }
 
   /**
    * Dynamically set attributes
@@ -262,19 +277,6 @@ abstract class Tag extends TreeObject
     // Get value and set it
     $value = Helpers::arrayGet($parameters, 0, 'true');
     $this->$method = $value;
-
-    return $this;
-  }
-
-  /**
-   * Dynamically set an attribute
-   *
-   * @param string $attribute The attribute
-   * @param string $value     Its value
-   */
-  public function __set($attribute, $value)
-  {
-    $this->attributes[$attribute] = $value;
 
     return $this;
   }
@@ -306,26 +308,15 @@ abstract class Tag extends TreeObject
   ////////////////////////////////////////////////////////////////////
 
   /**
-   * Changes the Tag's element
+   * Dynamically set an attribute
    *
-   * @param string $element
+   * @param string $attribute The attribute
+   * @param string $value Its value
    */
-  public function setElement($element)
+  public function __set($attribute, $value)
   {
-    $this->element = $element;
+    $this->attributes[$attribute] = $value;
 
-    return $this;
-  }
-
-  /**
-   * Change the object's value
-   *
-   * @param string $value
-   */
-  public function setValue($value)
-  {
-    if (is_array($value)) $this->nestChildren($value);
-    else $this->value = $value;
     return $this;
   }
 
@@ -352,42 +343,15 @@ abstract class Tag extends TreeObject
   }
 
   /**
-   * Get all the children as a string
+   * Change the object's value
    *
-   * @return string
+   * @param string $value
    */
-  protected function renderChildren()
+  public function setValue($value)
   {
-    $children = $this->children;
-    foreach ($children as $key => $child) {
-      if ($child instanceof Tag) {
-        $children[$key] = $child->render();
-      }
-    }
-
-    return implode($children);
-  }
-
-  ////////////////////////////////////////////////////////////////////
-  //////////////////////////// ATTRIBUTES ////////////////////////////
-  ////////////////////////////////////////////////////////////////////
-
-  /**
-   * Return an array of protected properties to bind as attributes
-   *
-   * @return array
-   */
-  protected function injectProperties()
-  {
-    $properties = array();
-
-    foreach ($this->injectedProperties as $property) {
-      if (!isset($this->$property)) continue;
-
-      $properties[$property] = $this->$property;
-    }
-
-    return $properties;
+    if (is_array($value)) $this->nestChildren($value);
+    else $this->value = $value;
+    return $this;
   }
 
   /**
@@ -403,6 +367,20 @@ abstract class Tag extends TreeObject
     return $this;
   }
 
+  ////////////////////////////////////////////////////////////////////
+  //////////////////////////// ATTRIBUTES ////////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+  /**
+   * Get all attributes
+   *
+   * @return array
+   */
+  public function getAttributes()
+  {
+    return $this->attributes;
+  }
+
   /**
    * Set a bunch of parameters at once
    *
@@ -415,16 +393,6 @@ abstract class Tag extends TreeObject
     $this->attributes = array_merge($this->attributes, (array) $attributes);
 
     return $this;
-  }
-
-  /**
-   * Get all attributes
-   *
-   * @return array
-   */
-  public function getAttributes()
-  {
-    return $this->attributes;
   }
 
   /**
@@ -451,20 +419,6 @@ abstract class Tag extends TreeObject
     if (array_key_exists($attribute, $this->attributes)) {
       unset($this->attributes[$attribute]);
     }
-
-    return $this;
-  }
-
-  /**
-   * Replace all attributes with the provided array
-   *
-   * @param array $attributes The attributes to replace with
-   *
-   * @return Tag
-   */
-  public function replaceAttributes($attributes)
-  {
-    $this->attributes = (array) $attributes;
 
     return $this;
   }
@@ -512,6 +466,46 @@ abstract class Tag extends TreeObject
     }
 
     $this->attributes['class'] = implode(' ', $thisClasses);
+
+    return $this;
+  }
+
+  /**
+   * Set up a new tag
+   *
+   * @param string $element Its element
+   * @param string $value Its value
+   * @param array $attributes Its attributes
+   */
+  protected function setTag($element, $value = null, $attributes = array())
+  {
+    $this->setValue($value);
+    $this->setElement($element);
+    $this->replaceAttributes($attributes);
+  }
+
+  /**
+   * Changes the Tag's element
+   *
+   * @param string $element
+   */
+  public function setElement($element)
+  {
+    $this->element = $element;
+
+    return $this;
+  }
+
+  /**
+   * Replace all attributes with the provided array
+   *
+   * @param array $attributes The attributes to replace with
+   *
+   * @return Tag
+   */
+  public function replaceAttributes($attributes)
+  {
+    $this->attributes = (array)$attributes;
 
     return $this;
   }

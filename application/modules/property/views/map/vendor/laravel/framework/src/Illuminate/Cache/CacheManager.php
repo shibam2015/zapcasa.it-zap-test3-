@@ -5,6 +5,38 @@ use Illuminate\Support\Manager;
 class CacheManager extends Manager {
 
 	/**
+	 * Set the cache "prefix" value.
+	 *
+	 * @param  string $name
+	 * @return void
+	 */
+	public function setPrefix($name)
+	{
+		$this->app['config']['cache.prefix'] = $name;
+	}
+
+	/**
+	 * Get the default cache driver name.
+	 *
+	 * @return string
+	 */
+	public function getDefaultDriver()
+	{
+		return $this->app['config']['cache.driver'];
+	}
+
+	/**
+	 * Set the default cache driver name.
+	 *
+	 * @param  string $name
+	 * @return void
+	 */
+	public function setDefaultDriver($name)
+	{
+		$this->app['config']['cache.driver'] = $name;
+	}
+
+	/**
 	 * Create an instance of the APC cache driver.
 	 *
 	 * @return \Illuminate\Cache\ApcStore
@@ -12,6 +44,27 @@ class CacheManager extends Manager {
 	protected function createApcDriver()
 	{
 		return $this->repository(new ApcStore(new ApcWrapper, $this->getPrefix()));
+	}
+
+	/**
+	 * Create a new cache repository with the given implementation.
+	 *
+	 * @param  \Illuminate\Cache\StoreInterface $store
+	 * @return \Illuminate\Cache\Repository
+	 */
+	protected function repository(StoreInterface $store)
+	{
+		return new Repository($store);
+	}
+
+	/**
+	 * Get the cache "prefix" value.
+	 *
+	 * @return string
+	 */
+	public function getPrefix()
+	{
+		return $this->app['config']['cache.prefix'];
 	}
 
 	/**
@@ -113,59 +166,6 @@ class CacheManager extends Manager {
 		$connection = $this->app['config']['cache.connection'];
 
 		return $this->app['db']->connection($connection);
-	}
-
-	/**
-	 * Get the cache "prefix" value.
-	 *
-	 * @return string
-	 */
-	public function getPrefix()
-	{
-		return $this->app['config']['cache.prefix'];
-	}
-
-	/**
-	 * Set the cache "prefix" value.
-	 *
-	 * @param  string  $name
-	 * @return void
-	 */
-	public function setPrefix($name)
-	{
-		$this->app['config']['cache.prefix'] = $name;
-	}
-
-	/**
-	 * Create a new cache repository with the given implementation.
-	 *
-	 * @param  \Illuminate\Cache\StoreInterface  $store
-	 * @return \Illuminate\Cache\Repository
-	 */
-	protected function repository(StoreInterface $store)
-	{
-		return new Repository($store);
-	}
-
-	/**
-	 * Get the default cache driver name.
-	 *
-	 * @return string
-	 */
-	public function getDefaultDriver()
-	{
-		return $this->app['config']['cache.driver'];
-	}
-
-	/**
-	 * Set the default cache driver name.
-	 *
-	 * @param  string  $name
-	 * @return void
-	 */
-	public function setDefaultDriver($name)
-	{
-		$this->app['config']['cache.driver'] = $name;
 	}
 
 }

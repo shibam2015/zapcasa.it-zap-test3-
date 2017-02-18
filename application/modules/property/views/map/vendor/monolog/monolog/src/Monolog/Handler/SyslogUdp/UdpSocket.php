@@ -31,16 +31,6 @@ class UdpSocket
         }
     }
 
-    public function close()
-    {
-        socket_close($this->socket);
-    }
-
-    protected function send($chunk)
-    {
-        socket_sendto($this->socket, $chunk, strlen($chunk), $flags = 0, $this->ip, $this->port);
-    }
-
     protected function splitLineIfNessesary($line, $header)
     {
         if ($this->shouldSplitLine($line, $header)) {
@@ -58,5 +48,15 @@ class UdpSocket
     protected function shouldSplitLine($remaining, $header)
     {
         return strlen($header.$remaining) > self::DATAGRAM_MAX_LENGTH;
+    }
+
+    protected function send($chunk)
+    {
+        socket_sendto($this->socket, $chunk, strlen($chunk), $flags = 0, $this->ip, $this->port);
+    }
+
+    public function close()
+    {
+        socket_close($this->socket);
     }
 }

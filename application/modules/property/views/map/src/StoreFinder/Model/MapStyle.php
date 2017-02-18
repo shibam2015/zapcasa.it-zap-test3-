@@ -6,9 +6,9 @@ use Eloquent;
 Class MapStyle extends Eloquent
 {
 
+    public $timestamps = false;
     protected $table='map_styles';
 	protected $softDelete  = false;
-    public $timestamps = false;
 
     public function category()
     {

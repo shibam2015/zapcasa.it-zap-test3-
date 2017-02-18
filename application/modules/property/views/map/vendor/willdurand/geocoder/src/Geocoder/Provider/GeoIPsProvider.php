@@ -82,22 +82,6 @@ class GeoIPsProvider extends AbstractProvider implements ProviderInterface
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function getReversedData(array $coordinates)
-    {
-        throw new UnsupportedException('The GeoIPsProvider is not able to do reverse geocoding.');
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getName()
-    {
-        return 'geo_ips';
-    }
-
-    /**
      * @param  string $query
      * @return array
      */
@@ -176,5 +160,21 @@ class GeoIPsProvider extends AbstractProvider implements ProviderInterface
         ));
 
         return $locations;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getReversedData(array $coordinates)
+    {
+        throw new UnsupportedException('The GeoIPsProvider is not able to do reverse geocoding.');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getName()
+    {
+        return 'geo_ips';
     }
 }

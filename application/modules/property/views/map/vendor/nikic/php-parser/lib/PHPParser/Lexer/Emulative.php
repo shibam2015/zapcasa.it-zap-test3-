@@ -93,16 +93,7 @@ class PHPParser_Lexer_Emulative extends PHPParser_Lexer
      * 'x' tokens. So the result of the encoding will look like this:
      * ~__EMU__NOWDOC__{HEX(START_TOKEN)}x{HEX(CONTENT)}x{HEX(END_TOKEN)}~
      */
-    public function encodeNowdocCallback(array $matches) {
-        return '~__EMU__NOWDOC__'
-                . bin2hex($matches[1]) . 'x' . bin2hex($matches[3]) . 'x' . bin2hex($matches[4])
-                . '__~';
-    }
 
-    /*
-     * Replaces the ~__EMU__...~ sequences with real tokens or their original
-     * value.
-     */
     protected function postprocessTokens() {
         // we need to manually iterate and manage a count because we'll change
         // the tokens array on the way
@@ -159,9 +150,22 @@ class PHPParser_Lexer_Emulative extends PHPParser_Lexer
     }
 
     /*
+     * Replaces the ~__EMU__...~ sequences with real tokens or their original
+     * value.
+     */
+
+    public function encodeNowdocCallback(array $matches)
+    {
+        return '~__EMU__NOWDOC__'
+        . bin2hex($matches[1]) . 'x' . bin2hex($matches[3]) . 'x' . bin2hex($matches[4])
+        . '__~';
+    }
+
+    /*
      * This method is a callback for restoring EMU sequences in
      * multichar tokens (like strings) to their original value.
      */
+
     public function restoreContentCallback(array $matches) {
         if ('BINARY' === $matches[1]) {
             return $matches[2];

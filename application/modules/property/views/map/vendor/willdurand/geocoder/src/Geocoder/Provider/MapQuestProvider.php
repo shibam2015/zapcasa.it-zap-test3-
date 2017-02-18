@@ -67,28 +67,6 @@ class MapQuestProvider extends AbstractProvider implements ProviderInterface
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function getReversedData(array $coordinates)
-    {
-        if (null === $this->apiKey) {
-            throw new InvalidCredentialsException('No API Key provided.');
-        }
-
-        $query = sprintf(self::REVERSE_ENDPOINT_URL, $this->apiKey, $coordinates[0], $coordinates[1]);
-
-        return $this->executeQuery($query);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getName()
-    {
-        return 'map_quest';
-    }
-
-    /**
      * @param string $query
      *
      * @return array
@@ -129,5 +107,27 @@ class MapQuestProvider extends AbstractProvider implements ProviderInterface
         }
 
         return $results;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getReversedData(array $coordinates)
+    {
+        if (null === $this->apiKey) {
+            throw new InvalidCredentialsException('No API Key provided.');
+        }
+
+        $query = sprintf(self::REVERSE_ENDPOINT_URL, $this->apiKey, $coordinates[0], $coordinates[1]);
+
+        return $this->executeQuery($query);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getName()
+    {
+        return 'map_quest';
     }
 }

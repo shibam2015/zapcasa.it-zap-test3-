@@ -19,7 +19,14 @@ class ZurbFoundation4 extends Framework implements FrameworkInterface
    * @var array
    */
   protected $availableTypes = array('horizontal', 'vertical');
-
+  /**
+   * The field states available
+   *
+   * @var array
+   */
+  protected $states = array(
+      'error',
+  );
   /**
    * The button types available
    *
@@ -28,7 +35,6 @@ class ZurbFoundation4 extends Framework implements FrameworkInterface
   private $buttons = array(
     'tiny', 'small', 'medium', 'large', 'success', 'radius', 'round', 'disabled', 'prefix', 'postfix',
   );
-
   /**
    * The field sizes available
    * Zurb Foundation 4 does not apply sizes to the form element, but to the wrapper div
@@ -36,15 +42,6 @@ class ZurbFoundation4 extends Framework implements FrameworkInterface
    * @var array
    */
   private $fields = array();
-
-  /**
-   * The field states available
-   *
-   * @var array
-   */
-  protected $states = array(
-    'error',
-  );
 
   /**
    * Create a new ZurbFoundation instance
@@ -61,47 +58,6 @@ class ZurbFoundation4 extends Framework implements FrameworkInterface
   /////////////////////////// FILTER ARRAYS //////////////////////////
   ////////////////////////////////////////////////////////////////////
 
-  public function filterButtonClasses($classes)
-  {
-    // Filter classes
-    $classes = array_intersect($classes, $this->buttons);
-    $classes[] = 'button';
-
-    return $classes;
-  }
-
-  public function filterFieldClasses($classes)
-  {
-    return null;
-  }
-
-  ////////////////////////////////////////////////////////////////////
-  ///////////////////// EXPOSE FRAMEWORK SPECIFICS ///////////////////
-  ////////////////////////////////////////////////////////////////////
-
-  protected function setFieldWidths($labelWidths)
-  {
-    $labelWidthClass = $fieldWidthClass = $fieldOffsetClass = '';
-
-    $viewports = $this->getFrameworkOption('viewports');
-
-    foreach ($labelWidths as $viewport => $columns) {
-      if ($viewport) {
-        $labelWidthClass .= $viewports[$viewport].'-'.$columns.' ';
-        $fieldWidthClass .= $viewports[$viewport].'-'.(12-$columns).' ';
-        $fieldOffsetClass .= $viewports[$viewport].'-offset-'.$columns.' ';
-      }
-    }
-
-    $this->labelWidth = $labelWidthClass . 'columns';
-    $this->fieldWidth = $fieldWidthClass . 'columns';
-    $this->fieldOffset = $fieldOffsetClass . 'columns';
-  }
-
-  ////////////////////////////////////////////////////////////////////
-  ///////////////////////////// ADD CLASSES //////////////////////////
-  ////////////////////////////////////////////////////////////////////
-
   public function getFieldClasses(Field $field, $classes = array())
   {
     if ($field->isButton()) {
@@ -112,6 +68,28 @@ class ZurbFoundation4 extends Framework implements FrameworkInterface
 
     return $this->addClassesToField($field, $classes);
   }
+
+  public function filterButtonClasses($classes)
+  {
+    // Filter classes
+    $classes = array_intersect($classes, $this->buttons);
+    $classes[] = 'button';
+
+    return $classes;
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  ///////////////////// EXPOSE FRAMEWORK SPECIFICS ///////////////////
+  ////////////////////////////////////////////////////////////////////
+
+  public function filterFieldClasses($classes)
+  {
+    return null;
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  ///////////////////////////// ADD CLASSES //////////////////////////
+  ////////////////////////////////////////////////////////////////////
 
   public function getGroupClasses()
   {
@@ -152,14 +130,14 @@ class ZurbFoundation4 extends Framework implements FrameworkInterface
     return null;
   }
 
-  ////////////////////////////////////////////////////////////////////
-  //////////////////////////// RENDER BLOCKS /////////////////////////
-  ////////////////////////////////////////////////////////////////////
-
   public function createHelp($text, $attributes = '')
   {
     return Element::create('small', $text, $attributes);
   }
+
+  ////////////////////////////////////////////////////////////////////
+  //////////////////////////// RENDER BLOCKS /////////////////////////
+  ////////////////////////////////////////////////////////////////////
 
   /**
    * Render a disabled field
@@ -175,10 +153,6 @@ class ZurbFoundation4 extends Framework implements FrameworkInterface
     return Input::create('text', $field->getName(), $field->getValue(), $field->getAttributes());
   }
 
-  ////////////////////////////////////////////////////////////////////
-  //////////////////////////// WRAP BLOCKS ///////////////////////////
-  ////////////////////////////////////////////////////////////////////
-
   /**
    * Wrap an item to be prepended or appended to the current field.
    * For Zurb we return the item and handle the wrapping in prependAppend
@@ -192,6 +166,10 @@ class ZurbFoundation4 extends Framework implements FrameworkInterface
   {
     return $item;
   }
+
+  ////////////////////////////////////////////////////////////////////
+  //////////////////////////// WRAP BLOCKS ///////////////////////////
+  ////////////////////////////////////////////////////////////////////
 
   /**
    * Wrap a field with prepended and appended items
@@ -260,6 +238,25 @@ class ZurbFoundation4 extends Framework implements FrameworkInterface
   public function wrapActions($actions)
   {
       return $actions;
+  }
+
+  protected function setFieldWidths($labelWidths)
+  {
+    $labelWidthClass = $fieldWidthClass = $fieldOffsetClass = '';
+
+    $viewports = $this->getFrameworkOption('viewports');
+
+    foreach ($labelWidths as $viewport => $columns) {
+      if ($viewport) {
+        $labelWidthClass .= $viewports[$viewport] . '-' . $columns . ' ';
+        $fieldWidthClass .= $viewports[$viewport] . '-' . (12 - $columns) . ' ';
+        $fieldOffsetClass .= $viewports[$viewport] . '-offset-' . $columns . ' ';
+      }
+    }
+
+    $this->labelWidth = $labelWidthClass . 'columns';
+    $this->fieldWidth = $fieldWidthClass . 'columns';
+    $this->fieldOffset = $fieldOffsetClass . 'columns';
   }
 
 }

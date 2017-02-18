@@ -33,25 +33,6 @@ class RoleHierarchy implements RoleHierarchyInterface
         $this->buildRoleMap();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getReachableRoles(array $roles)
-    {
-        $reachableRoles = $roles;
-        foreach ($roles as $role) {
-            if (!isset($this->map[$role->getRole()])) {
-                continue;
-            }
-
-            foreach ($this->map[$role->getRole()] as $r) {
-                $reachableRoles[] = new Role($r);
-            }
-        }
-
-        return $reachableRoles;
-    }
-
     private function buildRoleMap()
     {
         $this->map = array();
@@ -69,5 +50,24 @@ class RoleHierarchy implements RoleHierarchyInterface
                 $additionalRoles = array_merge($additionalRoles, array_diff($this->hierarchy[$role], $visited));
             }
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getReachableRoles(array $roles)
+    {
+        $reachableRoles = $roles;
+        foreach ($roles as $role) {
+            if (!isset($this->map[$role->getRole()])) {
+                continue;
+            }
+
+            foreach ($this->map[$role->getRole()] as $r) {
+                $reachableRoles[] = new Role($r);
+            }
+        }
+
+        return $reachableRoles;
     }
 }

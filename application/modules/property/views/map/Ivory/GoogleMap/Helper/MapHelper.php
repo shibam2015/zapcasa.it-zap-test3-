@@ -806,42 +806,6 @@ class MapHelper extends AbstractHelper
     }
 
     /**
-     * Gets the map extension helpers.
-     *
-     * @return array The map extension helpers.
-     */
-    public function getExtensionHelpers()
-    {
-        return $this->extensionHelpers;
-    }
-
-    /**
-     * Sets the map extension helpers.
-     *
-     * @param array $extensionHelpers The map extension helpers.
-     */
-    public function setExtensionHelpers(array $extensionHelpers)
-    {
-        $this->extensionHelpers = array();
-
-        foreach ($extensionHelpers as $name => $extensionHelper) {
-            $this->setExtensionHelper($name, $extensionHelper);
-        }
-    }
-
-    /**
-     * Checks if the map helper has a specific extension helper.
-     *
-     * @param string $name The extension helper name.
-     *
-     * @return boolean TRUE if the map helper has a specific extension helper else FALSE.
-     */
-    public function hasExtensionHelper($name)
-    {
-        return isset($this->extensionHelpers[$name]);
-    }
-
-    /**
      * Gets a specific extension helper.
      *
      * @param string $name The extension helper name.
@@ -857,6 +821,18 @@ class MapHelper extends AbstractHelper
         }
 
         return $this->extensionHelpers[$name];
+    }
+
+    /**
+     * Checks if the map helper has a specific extension helper.
+     *
+     * @param string $name The extension helper name.
+     *
+     * @return boolean TRUE if the map helper has a specific extension helper else FALSE.
+     */
+    public function hasExtensionHelper($name)
+    {
+        return isset($this->extensionHelpers[$name]);
     }
 
     /**
@@ -990,6 +966,30 @@ class MapHelper extends AbstractHelper
     }
 
     /**
+     * Gets the map extension helpers.
+     *
+     * @return array The map extension helpers.
+     */
+    public function getExtensionHelpers()
+    {
+        return $this->extensionHelpers;
+    }
+
+    /**
+     * Sets the map extension helpers.
+     *
+     * @param array $extensionHelpers The map extension helpers.
+     */
+    public function setExtensionHelpers(array $extensionHelpers)
+    {
+        $this->extensionHelpers = array();
+
+        foreach ($extensionHelpers as $name => $extensionHelper) {
+            $this->setExtensionHelper($name, $extensionHelper);
+        }
+    }
+
+    /**
      * Renders JS code just before the generated one.
      *
      * @param \Ivory\GoogleMap\Map $map The map.
@@ -1002,24 +1002,6 @@ class MapHelper extends AbstractHelper
 
         foreach ($this->getExtensionHelpers() as $extension) {
             $output[] = $extension->renderBefore($map);
-        }
-
-        return implode('', $output);
-    }
-
-    /**
-     * Renders JS code just after the generated one.
-     *
-     * @param \Ivory\GoogleMap\Map $map The map.
-     *
-     * @return string The JS output.
-     */
-    public function renderJsAfter(Map $map)
-    {
-        $output = array();
-
-        foreach (array_reverse($this->getExtensionHelpers()) as $extension) {
-            $output[] = $extension->renderAfter($map);
         }
 
         return implode('', $output);
@@ -1138,6 +1120,100 @@ class MapHelper extends AbstractHelper
     }
 
     /**
+     * Computes the coordinates of a map.
+     *
+     * @param \Ivory\GoogleMap\Map $map The map.
+     *
+     * @return array The computed coordinated.
+     */
+    protected function computeCoordinates(Map $map)
+    {
+        $coordinates = array();
+
+        if (!$map->isAutoZoom() && !in_array($map->getCenter(), $coordinates)) {
+            $coordinates[] = $map->getCenter();
+        }
+
+        foreach ($this->computeBounds($map) as $bound) {
+            if (!$bound->hasExtends() && $bound->hasCoordinates()) {
+                if (!in_array($bound->getSouthWest(), $coordinates)) {
+                    $coordinates[] = $bound->getSouthWest();
+                }
+
+                if (!in_array($bound->getNorthEast(), $coordinates)) {
+                    $coordinates[] = $bound->getNorthEast();
+                }
+            }
+        }
+
+        foreach ($map->getCircles() as $circle) {
+            if (!in_array($circle->getCenter(), $coordinates)) {
+                $coordinates[] = $circle->getCenter();
+            }
+        }
+
+        foreach ($map->getInfoWindows() as $infoWindow) {
+            if (!in_array($infoWindow->getPosition(), $coordinates)) {
+                $coordinates[] = $infoWindow->getPosition();
+            }
+        }
+
+        foreach ($map->getMarkers() as $marker) {
+            if (!in_array($marker->getPosition(), $coordinates)) {
+                $coordinates[] = $marker->getPosition();
+            }
+        }
+
+        foreach ($map->getPolygons() as $polygon) {
+            foreach ($polygon->getCoordinates() as $polygonCoordinate) {
+                if (!in_array($polygonCoordinate, $coordinates)) {
+                    $coordinates[] = $polygonCoordinate;
+                }
+            }
+        }
+
+        foreach ($map->getPolylines() as $polyline) {
+            foreach ($polyline->getCoordinates() as $polylineCoordinate) {
+                if (!in_array($polylineCoordinate, $coordinates)) {
+                    $coordinates[] = $polylineCoordinate;
+                }
+            }
+        }
+
+        return $coordinates;
+    }
+
+    /**
+     * Computes the bounds of a map.
+     *
+     * @param \Ivory\GoogleMap\Map $map The map.
+     *
+     * @return array The computed bounds.
+     */
+    protected function computeBounds(Map $map)
+    {
+        $bounds = array();
+
+        if ($map->isAutoZoom() && !in_array($map->getBound(), $bounds)) {
+            $bounds[] = $map->getBound();
+        }
+
+        foreach ($map->getGroundOverlays() as $groundOverlay) {
+            if (!in_array($groundOverlay->getBound(), $bounds)) {
+                $bounds[] = $groundOverlay->getBound();
+            }
+        }
+
+        foreach ($map->getRectangles() as $rectangle) {
+            if (!in_array($rectangle->getBound(), $bounds)) {
+                $bounds[] = $rectangle->getBound();
+            }
+        }
+
+        return $bounds;
+    }
+
+    /**
      * Renders the javascript container bounds.
      *
      * @param \Ivory\GoogleMap\Map $map The map.
@@ -1184,6 +1260,42 @@ class MapHelper extends AbstractHelper
     }
 
     /**
+     * Computes the points of a map.
+     *
+     * @param \Ivory\GoogleMap\Map $map The map.
+     *
+     * @return array The computed points.
+     */
+    protected function computePoints(Map $map)
+    {
+        $points = array();
+
+        foreach ($map->getMarkers() as $marker) {
+            if ($marker->hasIcon()) {
+                if ($marker->getIcon()->hasAnchor() && !in_array($marker->getIcon()->getAnchor(), $points)) {
+                    $points[] = $marker->getIcon()->getAnchor();
+                }
+
+                if ($marker->getIcon()->hasOrigin() && !in_array($marker->getIcon()->getOrigin(), $points)) {
+                    $points[] = $marker->getIcon()->getOrigin();
+                }
+            }
+
+            if ($marker->hasShadow()) {
+                if ($marker->getShadow()->hasAnchor() && !in_array($marker->getShadow()->getAnchor(), $points)) {
+                    $points[] = $marker->getShadow()->getAnchor();
+                }
+
+                if ($marker->getShadow()->hasOrigin() && !in_array($marker->getShadow()->getOrigin(), $points)) {
+                    $points[] = $marker->getShadow()->getOrigin();
+                }
+            }
+        }
+
+        return $points;
+    }
+
+    /**
      * Renders the javascript container sizes.
      *
      * @param \Ivory\GoogleMap\Map $map The map.
@@ -1207,6 +1319,68 @@ class MapHelper extends AbstractHelper
     }
 
     /**
+     * Computes the sizes of a map.
+     *
+     * @param \Ivory\GoogleMap\Map $map The map.
+     *
+     * @return array The computed sizes.
+     */
+    protected function computeSizes(Map $map)
+    {
+        $sizes = array();
+
+        foreach (array_merge($map->getInfoWindows(), $this->computeMarkerInfoWindows($map)) as $infoWindow) {
+            if ($infoWindow->hasPixelOffset() && !in_array($infoWindow->getPixelOffset(), $sizes)) {
+                $sizes[] = $infoWindow->getPixelOffset();
+            }
+        }
+
+        foreach ($map->getMarkers() as $marker) {
+            if ($marker->hasIcon()) {
+                if ($marker->getIcon()->hasSize() && !in_array($marker->getIcon()->getSize(), $sizes)) {
+                    $sizes[] = $marker->getIcon()->getSize();
+                }
+
+                if ($marker->getIcon()->hasScaledSize() && !in_array($marker->getIcon()->getScaledSize(), $sizes)) {
+                    $sizes[] = $marker->getIcon()->getScaledSize();
+                }
+            }
+
+            if ($marker->hasShadow()) {
+                if ($marker->getShadow()->hasSize() && !in_array($marker->getShadow()->getSize(), $sizes)) {
+                    $sizes[] = $marker->getShadow()->getSize();
+                }
+
+                if ($marker->getShadow()->hasScaledSize() && !in_array($marker->getShadow()->getScaledSize(), $sizes)) {
+                    $sizes[] = $marker->getShadow()->getScaledSize();
+                }
+            }
+        }
+
+        return $sizes;
+    }
+
+    /**
+     * Computes the marker info windows of a map.
+     *
+     * @param \Ivory\GoogleMap\Map $map The map.
+     *
+     * @return array The computed marker info windows.
+     */
+    protected function computeMarkerInfoWindows(Map $map)
+    {
+        $infoWinfows = array();
+
+        foreach ($map->getMarkers() as $marker) {
+            if ($marker->hasInfoWindow() && !in_array($marker->getInfoWindow(), $infoWinfows)) {
+                $infoWinfows[] = $marker->getInfoWindow();
+            }
+        }
+
+        return $infoWinfows;
+    }
+
+    /**
      * Renders the javascript container map.
      *
      * @param \Ivory\GoogleMap\Map $map The map.
@@ -1216,6 +1390,97 @@ class MapHelper extends AbstractHelper
     public function renderJsContainerMap(Map $map)
     {
         return sprintf('%s.map = %s', $this->getJsContainerName($map), $this->renderMap($map));
+    }
+
+    /**
+     * Renders the map.
+     *
+     * @param \Ivory\GoogleMap\Map $map The map.
+     *
+     * @return string The JS output.
+     */
+    public function renderMap(Map $map)
+    {
+        $mapTypeId = $map->getMapOption('mapTypeId');
+        $map->removeMapOption('mapTypeId');
+
+        $this->jsonBuilder
+            ->reset()
+            ->setValue('[mapTypeId]', $this->mapTypeIdHelper->render($mapTypeId), false);
+
+        $this->renderMapControls($map);
+
+        if ($map->isAutoZoom()) {
+            $map->removeMapOption('zoom');
+        }
+
+        $this->jsonBuilder->setValues($map->getMapOptions());
+
+        return sprintf(
+            '%s = new google.maps.Map(document.getElementById("%s"), %s);' . PHP_EOL,
+            $map->getJavascriptVariable(),
+            $map->getHtmlContainerId(),
+            $this->jsonBuilder->build()
+        );
+    }
+
+    /**
+     * Renders the map controls in the json builder.
+     *
+     * @param \Ivory\GoogleMap\Map $map The map.
+     */
+    protected function renderMapControls(Map $map)
+    {
+        $controlNames = array(
+            'MapTypeControl',
+            'OverviewMapControl',
+            'PanControl',
+            'RotateControl',
+            'ScaleControl',
+            'StreetViewControl',
+            'ZoomControl',
+        );
+
+        foreach ($controlNames as $controlName) {
+            $controlHelper = lcfirst($controlName) . 'Helper';
+            $this->renderMapControl($map, $controlName, $this->$controlHelper);
+        }
+    }
+
+    /**
+     * Renders a map control in the json builder.
+     *
+     * @param \Ivory\GoogleMap\Map $map The map.
+     * @param string $controlName The control name.
+     * @param mixed $controlHelper The control helper.
+     */
+    protected function renderMapControl(Map $map, $controlName, $controlHelper)
+    {
+        $lcFirstControlName = lcfirst($controlName);
+
+        if (!$map->hasMapOption($lcFirstControlName)) {
+            return;
+        }
+
+        $this->jsonBuilder->setValue(
+            sprintf('[%s]', $lcFirstControlName),
+            (bool)$map->getMapOption($lcFirstControlName)
+        );
+
+        if ($map->getMapOption($lcFirstControlName)) {
+            $hasControlMethod = 'has' . $controlName;
+            if ($map->$hasControlMethod()) {
+                $getControlMethod = 'get' . $controlName;
+
+                $this->jsonBuilder->setValue(
+                    sprintf('[%sOptions]', $lcFirstControlName),
+                    $controlHelper->render($map->$getControlMethod()),
+                    false
+                );
+            }
+        }
+
+        $map->removeMapOption($lcFirstControlName);
     }
 
     /**
@@ -1426,6 +1691,30 @@ class MapHelper extends AbstractHelper
     }
 
     /**
+     * Computes the marker images of a map.
+     *
+     * @param \Ivory\GoogleMap\Map $map The map.
+     *
+     * @return array The computed marker images.
+     */
+    protected function computeMarkerImages(Map $map)
+    {
+        $markerImages = array();
+
+        foreach ($map->getMarkers() as $marker) {
+            if ($marker->hasIcon() && !in_array($marker->getIcon(), $markerImages)) {
+                $markerImages[] = $marker->getIcon();
+            }
+
+            if ($marker->hasShadow() && !in_array($marker->getShadow(), $markerImages)) {
+                $markerImages[] = $marker->getShadow();
+            }
+        }
+
+        return $markerImages;
+    }
+
+    /**
      * Renders the javascript container marker shapes.
      *
      * @param \Ivory\GoogleMap\Map $map The map.
@@ -1446,6 +1735,26 @@ class MapHelper extends AbstractHelper
         }
 
         return implode('', $output);
+    }
+
+    /**
+     * Computes the marker shapes of a map.
+     *
+     * @param \Ivory\GoogleMap\Map $map The map.
+     *
+     * @return array The computed marker shapes.
+     */
+    protected function computeMarkerShapes(Map $map)
+    {
+        $markerShapes = array();
+
+        foreach ($map->getMarkers() as $marker) {
+            if ($marker->hasShape() && !in_array($marker->getShape(), $markerShapes)) {
+                $markerShapes[] = $marker->getShape();
+            }
+        }
+
+        return $markerShapes;
     }
 
     /**
@@ -1577,34 +1886,18 @@ class MapHelper extends AbstractHelper
     }
 
     /**
-     * Renders the map.
+     * Renders the map bound.
      *
      * @param \Ivory\GoogleMap\Map $map The map.
      *
      * @return string The JS output.
      */
-    public function renderMap(Map $map)
+    public function renderMapBound(Map $map)
     {
-        $mapTypeId = $map->getMapOption('mapTypeId');
-        $map->removeMapOption('mapTypeId');
-
-        $this->jsonBuilder
-            ->reset()
-            ->setValue('[mapTypeId]', $this->mapTypeIdHelper->render($mapTypeId), false);
-
-        $this->renderMapControls($map);
-
-        if ($map->isAutoZoom()) {
-            $map->removeMapOption('zoom');
-        }
-
-        $this->jsonBuilder->setValues($map->getMapOptions());
-
         return sprintf(
-            '%s = new google.maps.Map(document.getElementById("%s"), %s);'.PHP_EOL,
+            '%s.fitBounds(%s);' . PHP_EOL,
             $map->getJavascriptVariable(),
-            $map->getHtmlContainerId(),
-            $this->jsonBuilder->build()
+            $map->getBound()->getJavascriptVariable()
         );
     }
 
@@ -1625,313 +1918,20 @@ class MapHelper extends AbstractHelper
     }
 
     /**
-     * Renders the map bound.
+     * Renders JS code just after the generated one.
      *
      * @param \Ivory\GoogleMap\Map $map The map.
      *
      * @return string The JS output.
      */
-    public function renderMapBound(Map $map)
+    public function renderJsAfter(Map $map)
     {
-        return sprintf(
-            '%s.fitBounds(%s);'.PHP_EOL,
-            $map->getJavascriptVariable(),
-            $map->getBound()->getJavascriptVariable()
-        );
-    }
+        $output = array();
 
-    /**
-     * Computes the coordinates of a map.
-     *
-     * @param \Ivory\GoogleMap\Map $map The map.
-     *
-     * @return array The computed coordinated.
-     */
-    protected function computeCoordinates(Map $map)
-    {
-        $coordinates = array();
-
-        if (!$map->isAutoZoom() && !in_array($map->getCenter(), $coordinates)) {
-            $coordinates[] = $map->getCenter();
+        foreach (array_reverse($this->getExtensionHelpers()) as $extension) {
+            $output[] = $extension->renderAfter($map);
         }
 
-        foreach ($this->computeBounds($map) as $bound) {
-            if (!$bound->hasExtends() && $bound->hasCoordinates()) {
-                if (!in_array($bound->getSouthWest(), $coordinates)) {
-                    $coordinates[] = $bound->getSouthWest();
-                }
-
-                if (!in_array($bound->getNorthEast(), $coordinates)) {
-                    $coordinates[] = $bound->getNorthEast();
-                }
-            }
-        }
-
-        foreach ($map->getCircles() as $circle) {
-            if (!in_array($circle->getCenter(), $coordinates)) {
-                $coordinates[] = $circle->getCenter();
-            }
-        }
-
-        foreach ($map->getInfoWindows() as $infoWindow) {
-            if (!in_array($infoWindow->getPosition(), $coordinates)) {
-                $coordinates[] = $infoWindow->getPosition();
-            }
-        }
-
-        foreach ($map->getMarkers() as $marker) {
-            if (!in_array($marker->getPosition(), $coordinates)) {
-                $coordinates[] = $marker->getPosition();
-            }
-        }
-
-        foreach ($map->getPolygons() as $polygon) {
-            foreach ($polygon->getCoordinates() as $polygonCoordinate) {
-                if (!in_array($polygonCoordinate, $coordinates)) {
-                    $coordinates[] = $polygonCoordinate;
-                }
-            }
-        }
-
-        foreach ($map->getPolylines() as $polyline) {
-            foreach ($polyline->getCoordinates() as $polylineCoordinate) {
-                if (!in_array($polylineCoordinate, $coordinates)) {
-                    $coordinates[] = $polylineCoordinate;
-                }
-            }
-        }
-
-        return $coordinates;
-    }
-
-    /**
-     * Computes the bounds of a map.
-     *
-     * @param \Ivory\GoogleMap\Map $map The map.
-     *
-     * @return array The computed bounds.
-     */
-    protected function computeBounds(Map $map)
-    {
-        $bounds = array();
-
-        if ($map->isAutoZoom() && !in_array($map->getBound(), $bounds)) {
-            $bounds[] = $map->getBound();
-        }
-
-        foreach ($map->getGroundOverlays() as $groundOverlay) {
-            if (!in_array($groundOverlay->getBound(), $bounds)) {
-                $bounds[] = $groundOverlay->getBound();
-            }
-        }
-
-        foreach ($map->getRectangles() as $rectangle) {
-            if (!in_array($rectangle->getBound(), $bounds)) {
-                $bounds[] = $rectangle->getBound();
-            }
-        }
-
-        return $bounds;
-    }
-
-    /**
-     * Computes the points of a map.
-     *
-     * @param \Ivory\GoogleMap\Map $map The map.
-     *
-     * @return array The computed points.
-     */
-    protected function computePoints(Map $map)
-    {
-        $points = array();
-
-        foreach ($map->getMarkers() as $marker) {
-            if ($marker->hasIcon()) {
-                if ($marker->getIcon()->hasAnchor() && !in_array($marker->getIcon()->getAnchor(), $points)) {
-                    $points[] = $marker->getIcon()->getAnchor();
-                }
-
-                if ($marker->getIcon()->hasOrigin() && !in_array($marker->getIcon()->getOrigin(), $points)) {
-                    $points[] = $marker->getIcon()->getOrigin();
-                }
-            }
-
-            if ($marker->hasShadow()) {
-                if ($marker->getShadow()->hasAnchor() && !in_array($marker->getShadow()->getAnchor(), $points)) {
-                    $points[] = $marker->getShadow()->getAnchor();
-                }
-
-                if ($marker->getShadow()->hasOrigin() && !in_array($marker->getShadow()->getOrigin(), $points)) {
-                    $points[] = $marker->getShadow()->getOrigin();
-                }
-            }
-        }
-
-        return $points;
-    }
-
-    /**
-     * Computes the sizes of a map.
-     *
-     * @param \Ivory\GoogleMap\Map $map The map.
-     *
-     * @return array The computed sizes.
-     */
-    protected function computeSizes(Map $map)
-    {
-        $sizes = array();
-
-        foreach (array_merge($map->getInfoWindows(), $this->computeMarkerInfoWindows($map)) as $infoWindow) {
-            if ($infoWindow->hasPixelOffset() && !in_array($infoWindow->getPixelOffset(), $sizes)) {
-                $sizes[] = $infoWindow->getPixelOffset();
-            }
-        }
-
-        foreach ($map->getMarkers() as $marker) {
-            if ($marker->hasIcon()) {
-                if ($marker->getIcon()->hasSize() && !in_array($marker->getIcon()->getSize(), $sizes)) {
-                    $sizes[] = $marker->getIcon()->getSize();
-                }
-
-                if ($marker->getIcon()->hasScaledSize() && !in_array($marker->getIcon()->getScaledSize(), $sizes)) {
-                    $sizes[] = $marker->getIcon()->getScaledSize();
-                }
-            }
-
-            if ($marker->hasShadow()) {
-                if ($marker->getShadow()->hasSize() && !in_array($marker->getShadow()->getSize(), $sizes)) {
-                    $sizes[] = $marker->getShadow()->getSize();
-                }
-
-                if ($marker->getShadow()->hasScaledSize() && !in_array($marker->getShadow()->getScaledSize(), $sizes)) {
-                    $sizes[] = $marker->getShadow()->getScaledSize();
-                }
-            }
-        }
-
-        return $sizes;
-    }
-
-    /**
-     * Computes the marker images of a map.
-     *
-     * @param \Ivory\GoogleMap\Map $map The map.
-     *
-     * @return array The computed marker images.
-     */
-    protected function computeMarkerImages(Map $map)
-    {
-        $markerImages = array();
-
-        foreach ($map->getMarkers() as $marker) {
-            if ($marker->hasIcon() && !in_array($marker->getIcon(), $markerImages)) {
-                $markerImages[] = $marker->getIcon();
-            }
-
-            if ($marker->hasShadow() && !in_array($marker->getShadow(), $markerImages)) {
-                $markerImages[] = $marker->getShadow();
-            }
-        }
-
-        return $markerImages;
-    }
-
-    /**
-     * Computes the marker shapes of a map.
-     *
-     * @param \Ivory\GoogleMap\Map $map The map.
-     *
-     * @return array The computed marker shapes.
-     */
-    protected function computeMarkerShapes(Map $map)
-    {
-        $markerShapes = array();
-
-        foreach ($map->getMarkers() as $marker) {
-            if ($marker->hasShape() && !in_array($marker->getShape(), $markerShapes)) {
-                $markerShapes[] = $marker->getShape();
-            }
-        }
-
-        return $markerShapes;
-    }
-
-    /**
-     * Computes the marker info windows of a map.
-     *
-     * @param \Ivory\GoogleMap\Map $map The map.
-     *
-     * @return array The computed marker info windows.
-     */
-    protected function computeMarkerInfoWindows(Map $map)
-    {
-        $infoWinfows = array();
-
-        foreach ($map->getMarkers() as $marker) {
-            if ($marker->hasInfoWindow() && !in_array($marker->getInfoWindow(), $infoWinfows)) {
-                $infoWinfows[] = $marker->getInfoWindow();
-            }
-        }
-
-        return $infoWinfows;
-    }
-
-    /**
-     * Renders the map controls in the json builder.
-     *
-     * @param \Ivory\GoogleMap\Map $map The map.
-     */
-    protected function renderMapControls(Map $map)
-    {
-        $controlNames = array(
-            'MapTypeControl',
-            'OverviewMapControl',
-            'PanControl',
-            'RotateControl',
-            'ScaleControl',
-            'StreetViewControl',
-            'ZoomControl',
-        );
-
-        foreach ($controlNames as $controlName) {
-            $controlHelper = lcfirst($controlName).'Helper';
-            $this->renderMapControl($map, $controlName, $this->$controlHelper);
-        }
-    }
-
-    /**
-     * Renders a map control in the json builder.
-     *
-     * @param \Ivory\GoogleMap\Map $map           The map.
-     * @param string               $controlName   The control name.
-     * @param mixed                $controlHelper The control helper.
-     */
-    protected function renderMapControl(Map $map, $controlName, $controlHelper)
-    {
-        $lcFirstControlName = lcfirst($controlName);
-
-        if (!$map->hasMapOption($lcFirstControlName)) {
-            return;
-        }
-
-        $this->jsonBuilder->setValue(
-            sprintf('[%s]', $lcFirstControlName),
-            (bool) $map->getMapOption($lcFirstControlName)
-        );
-
-        if ($map->getMapOption($lcFirstControlName)) {
-            $hasControlMethod = 'has'.$controlName;
-            if ($map->$hasControlMethod()) {
-                $getControlMethod = 'get'.$controlName;
-
-                $this->jsonBuilder->setValue(
-                    sprintf('[%sOptions]', $lcFirstControlName),
-                    $controlHelper->render($map->$getControlMethod()),
-                    false
-                );
-            }
-        }
-
-        $map->removeMapOption($lcFirstControlName);
+        return implode('', $output);
     }
 }

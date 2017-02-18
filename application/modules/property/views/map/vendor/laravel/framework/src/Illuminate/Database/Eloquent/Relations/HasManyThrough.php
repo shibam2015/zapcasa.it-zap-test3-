@@ -64,6 +64,31 @@ class HasManyThrough extends Relation {
 	}
 
 	/**
+	 * Set the join clause on the query.
+	 *
+	 * @param  \Illuminate\Database\Eloquent\Builder|null $query
+	 * @return void
+	 */
+	protected function setJoin(Builder $query = null)
+	{
+		$query = $query ?: $this->query;
+
+		$foreignKey = $this->related->getTable() . '.' . $this->secondKey;
+
+		$query->join($this->parent->getTable(), $this->getQualifiedParentKeyName(), '=', $foreignKey);
+	}
+
+	/**
+	 * Get the key name of the parent model.
+	 *
+	 * @return string
+	 */
+	protected function getQualifiedParentKeyName()
+	{
+		return $this->parent->getQualifiedKeyName();
+	}
+
+	/**
 	 * Add the constraints for a relationship count query.
 	 *
 	 * @param  \Illuminate\Database\Eloquent\Builder  $query
@@ -84,18 +109,13 @@ class HasManyThrough extends Relation {
 	}
 
 	/**
-	 * Set the join clause on the query.
+	 * Get the key for comparing against the parent key in "has" query.
 	 *
-	 * @param  \Illuminate\Database\Eloquent\Builder|null  $query
-	 * @return void
+	 * @return string
 	 */
-	protected function setJoin(Builder $query = null)
+	public function getHasCompareKey()
 	{
-		$query = $query ?: $this->query;
-
-		$foreignKey = $this->related->getTable().'.'.$this->secondKey;
-
-		$query->join($this->parent->getTable(), $this->getQualifiedParentKeyName(), '=', $foreignKey);
+		return $this->farParent->getQualifiedKeyName();
 	}
 
 	/**
@@ -230,26 +250,6 @@ class HasManyThrough extends Relation {
 		}
 
 		return array_merge($columns, array($this->parent->getTable().'.'.$this->firstKey));
-	}
-
-	/**
-	 * Get the key name of the parent model.
-	 *
-	 * @return string
-	 */
-	protected function getQualifiedParentKeyName()
-	{
-		return $this->parent->getQualifiedKeyName();
-	}
-
-	/**
-	 * Get the key for comparing against the parent key in "has" query.
-	 *
-	 * @return string
-	 */
-	public function getHasCompareKey()
-	{
-		return $this->farParent->getQualifiedKeyName();
 	}
 
 }

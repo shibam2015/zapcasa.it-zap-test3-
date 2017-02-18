@@ -3,21 +3,6 @@
 class SyncQueue extends Queue implements QueueInterface {
 
 	/**
-	 * Push a new job onto the queue.
-	 *
-	 * @param  string  $job
-	 * @param  mixed   $data
-	 * @param  string  $queue
-	 * @return mixed
-	 */
-	public function push($job, $data = '', $queue = null)
-	{
-		$this->resolveJob($job, json_encode($data))->fire();
-
-		return 0;
-	}
-
-	/**
 	 * Push a raw payload onto the queue.
 	 *
 	 * @param  string  $payload
@@ -45,12 +30,19 @@ class SyncQueue extends Queue implements QueueInterface {
 	}
 
 	/**
-	 * Pop the next job off of the queue.
+	 * Push a new job onto the queue.
 	 *
+	 * @param  string $job
+	 * @param  mixed $data
 	 * @param  string  $queue
-	 * @return \Illuminate\Queue\Jobs\Job|null
+	 * @return mixed
 	 */
-	public function pop($queue = null) {}
+	public function push($job, $data = '', $queue = null)
+	{
+		$this->resolveJob($job, json_encode($data))->fire();
+
+		return 0;
+	}
 
 	/**
 	 * Resolve a Sync job instance.
@@ -62,6 +54,16 @@ class SyncQueue extends Queue implements QueueInterface {
 	protected function resolveJob($job, $data)
 	{
 		return new Jobs\SyncJob($this->container, $job, $data);
+	}
+
+	/**
+	 * Pop the next job off of the queue.
+	 *
+	 * @param  string $queue
+	 * @return \Illuminate\Queue\Jobs\Job|null
+	 */
+	public function pop($queue = null)
+	{
 	}
 
 }

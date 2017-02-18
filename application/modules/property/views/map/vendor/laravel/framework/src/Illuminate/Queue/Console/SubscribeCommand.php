@@ -82,6 +82,18 @@ class SubscribeCommand extends Command {
 	}
 
 	/**
+	 * Get the queue information from Iron.io.
+	 *
+	 * @return object
+	 */
+	protected function getQueue()
+	{
+		if (isset($this->meta)) return $this->meta;
+
+		return $this->meta = $this->laravel['queue']->getIron()->getQueue($this->argument('queue'));
+	}
+
+	/**
 	 * Get the current subscribers for the queue.
 	 *
 	 * @return array
@@ -110,18 +122,6 @@ class SubscribeCommand extends Command {
 		{
 			return array();
 		}
-	}
-
-	/**
-	 * Get the queue information from Iron.io.
-	 *
-	 * @return object
-	 */
-	protected function getQueue()
-	{
-		if (isset($this->meta)) return $this->meta;
-
-		return $this->meta = $this->laravel['queue']->getIron()->getQueue($this->argument('queue'));
 	}
 
 	/**

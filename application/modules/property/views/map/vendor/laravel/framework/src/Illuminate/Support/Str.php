@@ -10,17 +10,6 @@ class Str {
 	protected static $macros = array();
 
 	/**
-	 * Transliterate a UTF-8 value to ASCII.
-	 *
-	 * @param  string  $value
-	 * @return string
-	 */
-	public static function ascii($value)
-	{
-		return \Patchwork\Utf8::toAscii($value);
-	}
-
-	/**
 	 * Convert a value to camel case.
 	 *
 	 * @param  string  $value
@@ -32,20 +21,16 @@ class Str {
 	}
 
 	/**
-	 * Determine if a given string contains a given substring.
+	 * Convert a value to studly caps case.
 	 *
-	 * @param  string  $haystack
-	 * @param  string|array  $needles
-	 * @return bool
+	 * @param  string $value
+	 * @return string
 	 */
-	public static function contains($haystack, $needles)
+	public static function studly($value)
 	{
-		foreach ((array) $needles as $needle)
-		{
-			if ($needle != '' && strpos($haystack, $needle) !== false) return true;
-		}
+		$value = ucwords(str_replace(array('-', '_'), ' ', $value));
 
-		return false;
+		return str_replace(' ', '', $value);
 	}
 
 	/**
@@ -169,6 +154,22 @@ class Str {
 	}
 
 	/**
+	 * Determine if a given string contains a given substring.
+	 *
+	 * @param  string $haystack
+	 * @param  string|array $needles
+	 * @return bool
+	 */
+	public static function contains($haystack, $needles)
+	{
+		foreach ((array)$needles as $needle) {
+			if ($needle != '' && strpos($haystack, $needle) !== false) return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Get the plural form of an English word.
 	 *
 	 * @param  string  $value
@@ -279,6 +280,17 @@ class Str {
 	}
 
 	/**
+	 * Transliterate a UTF-8 value to ASCII.
+	 *
+	 * @param  string $value
+	 * @return string
+	 */
+	public static function ascii($value)
+	{
+		return \Patchwork\Utf8::toAscii($value);
+	}
+
+	/**
 	 * Convert a string to snake case.
 	 *
 	 * @param  string  $value
@@ -307,19 +319,6 @@ class Str {
 		}
 
 		return false;
-	}
-
-	/**
-	 * Convert a value to studly caps case.
-	 *
-	 * @param  string  $value
-	 * @return string
-	 */
-	public static function studly($value)
-	{
-		$value = ucwords(str_replace(array('-', '_'), ' ', $value));
-
-		return str_replace(' ', '', $value);
 	}
 
 	/**

@@ -25,17 +25,14 @@ use Psr\Log\LogLevel;
  */
 class ErrorHandler
 {
+    private static $fatalErrors = array(E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR);
     private $logger;
-
     private $previousExceptionHandler;
     private $uncaughtExceptionLevel;
-
     private $previousErrorHandler;
     private $errorLevelMap;
-
     private $fatalLevel;
     private $reservedMemory;
-    private static $fatalErrors = array(E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR);
 
     public function __construct(LoggerInterface $logger)
     {
@@ -69,15 +66,6 @@ class ErrorHandler
         return $handler;
     }
 
-    public function registerExceptionHandler($level = null, $callPrevious = true)
-    {
-        $prev = set_exception_handler(array($this, 'handleException'));
-        $this->uncaughtExceptionLevel = $level;
-        if ($callPrevious && $prev) {
-            $this->previousExceptionHandler = $prev;
-        }
-    }
-
     public function registerErrorHandler(array $levelMap = array(), $callPrevious = true, $errorTypes = -1)
     {
         $prev = set_error_handler(array($this, 'handleError'), $errorTypes);
@@ -85,14 +73,6 @@ class ErrorHandler
         if ($callPrevious) {
             $this->previousErrorHandler = $prev ?: true;
         }
-    }
-
-    public function registerFatalHandler($level = null, $reservedMemorySize = 20)
-    {
-        register_shutdown_function(array($this, 'handleFatalError'));
-
-        $this->reservedMemory = str_repeat(' ', 1024 * $reservedMemorySize);
-        $this->fatalLevel = $level;
     }
 
     protected function defaultErrorLevelMap()
@@ -114,6 +94,23 @@ class ErrorHandler
             E_DEPRECATED        => LogLevel::NOTICE,
             E_USER_DEPRECATED   => LogLevel::NOTICE,
         );
+    }
+
+    public function registerExceptionHandler($level = null, $callPrevious = true)
+    {
+        $prev = set_exception_handler(array($this, 'handleException'));
+        $this->uncaughtExceptionLevel = $level;
+        if ($callPrevious && $prev) {
+            $this->previousExceptionHandler = $prev;
+        }
+    }
+
+    public function registerFatalHandler($level = null, $reservedMemorySize = 20)
+    {
+        register_shutdown_function(array($this, 'handleFatalError'));
+
+        $this->reservedMemory = str_repeat(' ', 1024 * $reservedMemorySize);
+        $this->fatalLevel = $level;
     }
 
     /**
@@ -148,23 +145,6 @@ class ErrorHandler
             return false;
         } elseif ($this->previousErrorHandler) {
             return call_user_func($this->previousErrorHandler, $code, $message, $file, $line, $context);
-        }
-    }
-
-    /**
-     * @private
-     */
-    public function handleFatalError()
-    {
-        $this->reservedMemory = null;
-
-        $lastError = error_get_last();
-        if ($lastError && in_array($lastError['type'], self::$fatalErrors)) {
-            $this->logger->log(
-                $this->fatalLevel === null ? LogLevel::ALERT : $this->fatalLevel,
-                'Fatal Error ('.self::codeToString($lastError['type']).'): '.$lastError['message'],
-                array('file' => $lastError['file'], 'line' => $lastError['line'])
-            );
         }
     }
 
@@ -204,5 +184,22 @@ class ErrorHandler
         }
 
         return 'Unknown PHP error';
+    }
+
+    /**
+     * @private
+     */
+    public function handleFatalError()
+    {
+        $this->reservedMemory = null;
+
+        $lastError = error_get_last();
+        if ($lastError && in_array($lastError['type'], self::$fatalErrors)) {
+            $this->logger->log(
+                $this->fatalLevel === null ? LogLevel::ALERT : $this->fatalLevel,
+                'Fatal Error (' . self::codeToString($lastError['type']) . '): ' . $lastError['message'],
+                array('file' => $lastError['file'], 'line' => $lastError['line'])
+            );
+        }
     }
 }

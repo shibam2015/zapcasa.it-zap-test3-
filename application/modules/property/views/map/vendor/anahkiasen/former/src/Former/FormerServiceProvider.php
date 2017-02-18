@@ -35,20 +35,6 @@ class FormerServiceProvider extends ServiceProvider
   }
 
   /**
-   * Get the services provided by the provider.
-   *
-   * @return array
-   */
-  public function provides()
-  {
-    return array('former');
-  }
-
-  ////////////////////////////////////////////////////////////////////
-  /////////////////////////// CLASS BINDINGS /////////////////////////
-  ////////////////////////////////////////////////////////////////////
-
-  /**
    * Create a Former container
    *
    * @param  Container $app
@@ -68,6 +54,10 @@ class FormerServiceProvider extends ServiceProvider
 
     return $app;
   }
+
+  ////////////////////////////////////////////////////////////////////
+  /////////////////////////// CLASS BINDINGS /////////////////////////
+  ////////////////////////////////////////////////////////////////////
 
   /**
    * Bind the core classes to the Container
@@ -167,5 +157,15 @@ class FormerServiceProvider extends ServiceProvider
     Helpers::setApp($app);
 
     return $app;
+  }
+
+  /**
+   * Get the services provided by the provider.
+   *
+   * @return array
+   */
+  public function provides()
+  {
+    return array('former');
   }
 }

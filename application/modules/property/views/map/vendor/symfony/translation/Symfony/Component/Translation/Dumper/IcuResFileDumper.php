@@ -51,6 +51,14 @@ class IcuResFileDumper implements DumperInterface
     /**
      * {@inheritdoc}
      */
+    protected function getExtension()
+    {
+        return 'res';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function format(MessageCatalogue $messages, $domain = 'messages')
     {
         $data = $indexes = $resources = '';
@@ -123,13 +131,5 @@ class IcuResFileDumper implements DumperInterface
         $position = (strlen($data) + 28) / 4;
 
         return $position;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getExtension()
-    {
-        return 'res';
     }
 }

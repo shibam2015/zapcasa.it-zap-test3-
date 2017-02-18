@@ -16,22 +16,40 @@ class Former
   ////////////////////////////////////////////////////////////////////
 
   /**
+   * The namespace of Form elements
+   */
+  const FORMSPACE = 'Former\Form\\';
+  /**
+   * The namespace of fields
+   */
+  const FIELDSPACE = 'Former\Form\Fields\\';
+
+  // Informations
+  ////////////////////////////////////////////////////////////////////
+  /**
+   * The labels created so far
+   *
+   * @var array
+   */
+  public $labels = array();
+  /**
+   * The IDs created so far
+   *
+   * @var array
+   */
+  public $ids = array();
+  /**
    * The current environment
    *
    * @var Illuminate\Container
    */
   protected $app;
-
   /**
    * The Method Dispatcher
    *
    * @var MethodDispatcher
    */
   protected $dispatch;
-
-  // Informations
-  ////////////////////////////////////////////////////////////////////
-
   /**
    * The form's errors
    *
@@ -39,46 +57,20 @@ class Former
    */
   protected $errors;
 
+  // Namespaces
+  ////////////////////////////////////////////////////////////////////
   /**
    * An array of rules to use
    *
    * @var array
    */
   protected $rules = array();
-
   /**
    * An array of field macros
    *
    * @var array
    */
   protected $macros = array();
-
-  /**
-   * The labels created so far
-   *
-   * @var array
-   */
-  public $labels = array();
-
-  /**
-   * The IDs created so far
-   *
-   * @var array
-   */
-  public $ids = array();
-
-  // Namespaces
-  ////////////////////////////////////////////////////////////////////
-
-  /**
-   * The namespace of Form elements
-   */
-  const FORMSPACE = 'Former\Form\\';
-
-  /**
-   * The namespace of fields
-   */
-  const FIELDSPACE = 'Former\Form\Fields\\';
 
   /**
    * Build a new Former instance
@@ -332,6 +324,17 @@ class Former
   }
 
   /**
+   * Set an option on the config
+   *
+   * @param string $option
+   * @param mixed $value
+   */
+  public function setOption($option, $value)
+  {
+    return $this->app['config']->set('former::' . $option, $value);
+  }
+
+  /**
    * Get a new framework instance
    *
    * @param string $framework
@@ -357,17 +360,6 @@ class Former
   public function getOption($option, $default = null)
   {
     return $this->app['config']->get('former::'.$option, $default);
-  }
-
-  /**
-   * Set an option on the config
-   *
-   * @param string $option
-   * @param mixed  $value
-   */
-  public function setOption($option, $value)
-  {
-    return $this->app['config']->set('former::'.$option, $value);
   }
 
   ////////////////////////////////////////////////////////////////////

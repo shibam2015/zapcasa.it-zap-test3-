@@ -106,26 +106,6 @@ class Translator implements TranslatorInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @api
-     */
-    public function setLocale($locale)
-    {
-        $this->locale = $locale;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @api
-     */
-    public function getLocale()
-    {
-        return $this->locale;
-    }
-
-    /**
      * Sets the fallback locale(s).
      *
      * @param string|array $locales The fallback locale(s)
@@ -137,6 +117,18 @@ class Translator implements TranslatorInterface
     public function setFallbackLocale($locales)
     {
         $this->setFallbackLocales(is_array($locales) ? $locales : array($locales));
+    }
+
+    /**
+     * Gets the fallback locales.
+     *
+     * @return array $locales The fallback locales
+     *
+     * @api
+     */
+    public function getFallbackLocales()
+    {
+        return $this->fallbackLocales;
     }
 
     /**
@@ -152,18 +144,6 @@ class Translator implements TranslatorInterface
         $this->catalogues = array();
 
         $this->fallbackLocales = $locales;
-    }
-
-    /**
-     * Gets the fallback locales.
-     *
-     * @return array $locales The fallback locales
-     *
-     * @api
-     */
-    public function getFallbackLocales()
-    {
-        return $this->fallbackLocales;
     }
 
     /**
@@ -193,43 +173,19 @@ class Translator implements TranslatorInterface
      *
      * @api
      */
-    public function transChoice($id, $number, array $parameters = array(), $domain = null, $locale = null)
+    public function getLocale()
     {
-        if (null === $locale) {
-            $locale = $this->getLocale();
-        }
-
-        if (null === $domain) {
-            $domain = 'messages';
-        }
-
-        if (!isset($this->catalogues[$locale])) {
-            $this->loadCatalogue($locale);
-        }
-
-        $id = (string) $id;
-
-        $catalogue = $this->catalogues[$locale];
-        while (!$catalogue->defines($id, $domain)) {
-            if ($cat = $catalogue->getFallbackCatalogue()) {
-                $catalogue = $cat;
-                $locale = $catalogue->getLocale();
-            } else {
-                break;
-            }
-        }
-
-        return strtr($this->selector->choose($catalogue->get($id, $domain), (int) $number, $locale), $parameters);
+        return $this->locale;
     }
 
     /**
-     * Gets the loaders.
+     * {@inheritdoc}
      *
-     * @return array LoaderInterface[]
+     * @api
      */
-    protected function getLoaders()
+    public function setLocale($locale)
     {
-        return $this->loaders;
+        $this->locale = $locale;
     }
 
     protected function loadCatalogue($locale)
@@ -258,20 +214,6 @@ class Translator implements TranslatorInterface
         }
     }
 
-    private function loadFallbackCatalogues($locale)
-    {
-        $current = $this->catalogues[$locale];
-
-        foreach ($this->computeFallbackLocales($locale) as $fallback) {
-            if (!isset($this->catalogues[$fallback])) {
-                $this->doLoadCatalogue($fallback);
-            }
-
-            $current->addFallbackCatalogue($this->catalogues[$fallback]);
-            $current = $this->catalogues[$fallback];
-        }
-    }
-
     protected function computeFallbackLocales($locale)
     {
         $locales = array();
@@ -288,5 +230,63 @@ class Translator implements TranslatorInterface
         }
 
         return array_unique($locales);
+    }
+
+    private function loadFallbackCatalogues($locale)
+    {
+        $current = $this->catalogues[$locale];
+
+        foreach ($this->computeFallbackLocales($locale) as $fallback) {
+            if (!isset($this->catalogues[$fallback])) {
+                $this->doLoadCatalogue($fallback);
+            }
+
+            $current->addFallbackCatalogue($this->catalogues[$fallback]);
+            $current = $this->catalogues[$fallback];
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @api
+     */
+    public function transChoice($id, $number, array $parameters = array(), $domain = null, $locale = null)
+    {
+        if (null === $locale) {
+            $locale = $this->getLocale();
+        }
+
+        if (null === $domain) {
+            $domain = 'messages';
+        }
+
+        if (!isset($this->catalogues[$locale])) {
+            $this->loadCatalogue($locale);
+        }
+
+        $id = (string)$id;
+
+        $catalogue = $this->catalogues[$locale];
+        while (!$catalogue->defines($id, $domain)) {
+            if ($cat = $catalogue->getFallbackCatalogue()) {
+                $catalogue = $cat;
+                $locale = $catalogue->getLocale();
+            } else {
+                break;
+            }
+        }
+
+        return strtr($this->selector->choose($catalogue->get($id, $domain), (int)$number, $locale), $parameters);
+    }
+
+    /**
+     * Gets the loaders.
+     *
+     * @return array LoaderInterface[]
+     */
+    protected function getLoaders()
+    {
+        return $this->loaders;
     }
 }

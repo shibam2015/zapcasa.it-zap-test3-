@@ -67,12 +67,6 @@ class ShallowParser {
     }
   }
 
-  public function quote($token) {
-    return preg_quote($token, '/');
-  }
-
-  // -- Private Methods
-
   private function _createResult($buffer) {
     $result = new \stdClass();
     $result->buffer     = $buffer;
@@ -85,6 +79,8 @@ class ShallowParser {
     return $result;
   }
 
+  // -- Private Methods
+
   private function _resetResult($result) {
     $result->stop       = false;
     $result->state      = end($result->states);
@@ -92,6 +88,21 @@ class ShallowParser {
       ? '/^(.*?' . preg_quote($this->_pairs[$result->state], '/') . ')/s'
       : null
       ;
+  }
+
+  private function _initializeHeredoc($result)
+  {
+    if (preg_match('/^([\'"]?)([a-z_][a-z0-9_]*)\\1/i', $result->buffer, $match)) {
+      $docId = $match[2];
+      $result->stmt .= $match[0];
+      $result->buffer = substr($result->buffer, strlen($match[0]));
+
+      $result->terminator = '/^(.*?\n' . $docId . ');?\n/s';
+
+      return true;
+    } else {
+      return false;
+    }
   }
 
   private function _combineStatements($result) {
@@ -112,18 +123,43 @@ class ShallowParser {
     $result->statements []= $this->_prepareDebugStmt(array_pop($result->statements));
   }
 
-  private function _initializeHeredoc($result) {
-    if (preg_match('/^([\'"]?)([a-z_][a-z0-9_]*)\\1/i', $result->buffer, $match)) {
-      $docId = $match[2];
-      $result->stmt .= $match[0];
-      $result->buffer = substr($result->buffer, strlen($match[0]));
+  private function _prepareDebugStmt($input)
+  {
+    if ($this->_isReturnable($input) && !preg_match('/^\s*return/i', $input)) {
+      $input = sprintf('return %s', $input);
+    }
 
-      $result->terminator = '/^(.*?\n' . $docId . ');?\n/s';
+    return $input;
+  }
 
-      return true;
+  private function _isReturnable($input)
+  {
+    $input = trim($input);
+    if (substr($input, -1) == ';' && substr($input, 0, 1) != '{') {
+      return $this->_isLambda($input) || !preg_match(
+          '/^(' .
+          'echo|print|exit|die|goto|global|include|include_once|require|require_once|list|' .
+          'return|do|for|foreach|while|if|function|namespace|class|interface|abstract|switch|' .
+          'declare|throw|try|unset' .
+          ')\b/i',
+          $input
+      );
     } else {
       return false;
     }
+  }
+
+  private function _isLambda($input)
+  {
+    return preg_match(
+        '/^([^=]*?=\s*)?function\s*\([^\)]*\)\s*(use\s*\([^\)]*\)\s*)?\s*\{.*\}\s*;?$/is',
+        trim($input)
+    );
+  }
+
+  public function quote($token)
+  {
+    return preg_quote($token, '/');
   }
 
   private function _scanWsp($result) {
@@ -198,36 +234,5 @@ class ShallowParser {
     }
 
     return true;
-  }
-
-  private function _isLambda($input) {
-    return preg_match(
-      '/^([^=]*?=\s*)?function\s*\([^\)]*\)\s*(use\s*\([^\)]*\)\s*)?\s*\{.*\}\s*;?$/is',
-      trim($input)
-    );
-  }
-
-  private function _isReturnable($input) {
-    $input = trim($input);
-    if (substr($input, -1) == ';' && substr($input, 0, 1) != '{') {
-      return $this->_isLambda($input) || !preg_match(
-        '/^(' .
-        'echo|print|exit|die|goto|global|include|include_once|require|require_once|list|' .
-        'return|do|for|foreach|while|if|function|namespace|class|interface|abstract|switch|' .
-        'declare|throw|try|unset' .
-        ')\b/i',
-        $input
-      );
-    } else {
-      return false;
-    }
-  }
-
-  private function _prepareDebugStmt($input) {
-    if ($this->_isReturnable($input) && !preg_match('/^\s*return/i', $input)) {
-      $input = sprintf('return %s', $input);
-    }
-
-    return $input;
   }
 }

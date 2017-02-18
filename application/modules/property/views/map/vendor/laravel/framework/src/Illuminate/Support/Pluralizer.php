@@ -141,37 +141,6 @@ class Pluralizer {
 	}
 
 	/**
-	 * Get the plural form of the given word.
-	 *
-	 * @param  string  $value
-	 * @param  int     $count
-	 * @return string
-	 */
-	public static function plural($value, $count = 2)
-	{
-		if ($count == 1) return $value;
-
-		// First we'll check the cache of inflected values. We cache each word that
-		// is inflected so we don't have to spin through the regular expressions
-		// on each subsequent method calls for this word by the app developer.
-		if (isset(static::$pluralCache[$value]))
-		{
-			return static::$pluralCache[$value];
-		}
-
-		$irregular = array_flip(static::$irregular);
-
-		// When doing the singular to plural transformation, we'll flip the irregular
-		// array since we need to swap sides on the keys and values. After we have
-		// the transformed value we will cache it in memory for faster look-ups.
-		$plural = static::$plural;
-
-		$result = static::inflect($value, $plural, $irregular);
-
-		return static::$pluralCache[$value] = $result;
-	}
-
-	/**
 	 * Perform auto inflection on an English word.
 	 *
 	 * @param  string  $value
@@ -241,6 +210,36 @@ class Pluralizer {
 		}
 
 		return $value;
+	}
+
+	/**
+	 * Get the plural form of the given word.
+	 *
+	 * @param  string $value
+	 * @param  int $count
+	 * @return string
+	 */
+	public static function plural($value, $count = 2)
+	{
+		if ($count == 1) return $value;
+
+		// First we'll check the cache of inflected values. We cache each word that
+		// is inflected so we don't have to spin through the regular expressions
+		// on each subsequent method calls for this word by the app developer.
+		if (isset(static::$pluralCache[$value])) {
+			return static::$pluralCache[$value];
+		}
+
+		$irregular = array_flip(static::$irregular);
+
+		// When doing the singular to plural transformation, we'll flip the irregular
+		// array since we need to swap sides on the keys and values. After we have
+		// the transformed value we will cache it in memory for faster look-ups.
+		$plural = static::$plural;
+
+		$result = static::inflect($value, $plural, $irregular);
+
+		return static::$pluralCache[$value] = $result;
 	}
 
 }

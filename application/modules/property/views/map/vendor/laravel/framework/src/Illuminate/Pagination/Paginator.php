@@ -124,18 +124,6 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
 	}
 
 	/**
-	 * Calculate the first and last item number for this instance.
-	 *
-	 * @return void
-	 */
-	protected function calculateItemRanges()
-	{
-		$this->from = $this->total ? ($this->currentPage - 1) * $this->perPage + 1 : 0;
-
-		$this->to = min($this->total, $this->currentPage * $this->perPage);
-	}
-
-	/**
 	 * Get the current page for the request.
 	 *
 	 * @param  int  $lastPage
@@ -165,6 +153,18 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
 	protected function isValidPageNumber($page)
 	{
 		return $page >= 1 && filter_var($page, FILTER_VALIDATE_INT) !== false;
+	}
+
+	/**
+	 * Calculate the first and last item number for this instance.
+	 *
+	 * @return void
+	 */
+	protected function calculateItemRanges()
+	{
+		$this->from = $this->total ? ($this->currentPage - 1) * $this->perPage + 1 : 0;
+
+		$this->to = min($this->total, $this->currentPage * $this->perPage);
 	}
 
 	/**
@@ -204,6 +204,16 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
 	}
 
 	/**
+	 * Build the full fragment portion of a URL.
+	 *
+	 * @return string
+	 */
+	protected function buildFragment()
+	{
+		return $this->fragment ? '#' . $this->fragment : '';
+	}
+
+	/**
 	 * Get / set the URL fragment to be appended to URLs.
 	 *
 	 * @param  string|null  $fragment
@@ -214,16 +224,6 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
 		if (is_null($fragment)) return $this->fragment;
 
 		$this->fragment = $fragment; return $this;
-	}
-
-	/**
-	 * Build the full fragment portion of a URL.
-	 *
-	 * @return string
-	 */
-	protected function buildFragment()
-	{
-		return $this->fragment ? '#'.$this->fragment : '';
 	}
 
 	/**
@@ -326,16 +326,6 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
 	public function getPerPage()
 	{
 		return $this->perPage;
-	}
-
-	/**
-	 * Get a collection instance containing the items.
-	 *
-	 * @return \Illuminate\Support\Collection
-	 */
-	public function getCollection()
-	{
-		return new Collection($this->items);
 	}
 
 	/**
@@ -466,6 +456,17 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
 	}
 
 	/**
+	 * Convert the object to its JSON representation.
+	 *
+	 * @param  int $options
+	 * @return string
+	 */
+	public function toJson($options = 0)
+	{
+		return json_encode($this->toArray(), $options);
+	}
+
+	/**
 	 * Get the instance as an array.
 	 *
 	 * @return array
@@ -480,14 +481,13 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
 	}
 
 	/**
-	 * Convert the object to its JSON representation.
+	 * Get a collection instance containing the items.
 	 *
-	 * @param  int  $options
-	 * @return string
+	 * @return \Illuminate\Support\Collection
 	 */
-	public function toJson($options = 0)
+	public function getCollection()
 	{
-		return json_encode($this->toArray(), $options);
+		return new Collection($this->items);
 	}
 
 	/**

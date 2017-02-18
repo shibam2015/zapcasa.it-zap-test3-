@@ -38,6 +38,16 @@ class TinkerCommand extends Command {
 	}
 
 	/**
+	 * Determine if the current environment supports Boris.
+	 *
+	 * @return bool
+	 */
+	protected function supportsBoris()
+	{
+		return extension_loaded('readline') && extension_loaded('posix') && extension_loaded('pcntl');
+	}
+
+	/**
 	 * Run the Boris REPL with the current context.
 	 *
 	 * @return void
@@ -109,16 +119,6 @@ class TinkerCommand extends Command {
 		$dialog = $this->getHelperSet()->get('dialog');
 
 		return $dialog->ask($this->output, "<info>></info>", null);
-	}
-
-	/**
-	 * Determine if the current environment supports Boris.
-	 *
-	 * @return bool
-	 */
-	protected function supportsBoris()
-	{
-		return extension_loaded('readline') && extension_loaded('posix') && extension_loaded('pcntl');
 	}
 
 }

@@ -83,6 +83,43 @@ class GeocoderCaProvider extends AbstractProvider implements ProviderInterface
     }
 
     /**
+     * @param  string $query
+     * @throws InvalidCredentialsException
+     * @throws QuotaExceededException
+     * @throws NoResultException
+     * @return \DOMDocument
+     */
+    private function handleQuery($query)
+    {
+        $content = $this->getAdapter()->getContent($query);
+
+        $doc = new \DOMDocument;
+        if (!@$doc->loadXML($content) || $doc->getElementsByTagName('error')->length) {
+            switch ($this->getNodeValue($doc->getElementsByTagName('code'))) {
+                case '001':
+                case '003':
+                    throw new InvalidCredentialsException(sprintf('Invalid authentification token %s', $query));
+                case '002':
+                    throw new QuotaExceededException(sprintf('Account ran out of credits %s', $query));
+                default:
+                    throw new NoResultException;
+            }
+        }
+
+        return $doc;
+    }
+
+    /**
+     * @param \DOMNodeList
+     *
+     * @return string
+     */
+    private function getNodeValue(\DOMNodeList $element)
+    {
+        return $element->length ? $element->item(0)->nodeValue : null;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function getReversedData(array $coordinates)
@@ -116,42 +153,5 @@ class GeocoderCaProvider extends AbstractProvider implements ProviderInterface
     public function getName()
     {
         return 'geocoder_ca';
-    }
-
-    /**
-     * @param \DOMNodeList
-     *
-     * @return string
-     */
-    private function getNodeValue(\DOMNodeList $element)
-    {
-        return $element->length ? $element->item(0)->nodeValue : null;
-    }
-
-    /**
-     * @param  string                      $query
-     * @throws InvalidCredentialsException
-     * @throws QuotaExceededException
-     * @throws NoResultException
-     * @return \DOMDocument
-     */
-    private function handleQuery($query)
-    {
-        $content = $this->getAdapter()->getContent($query);
-
-        $doc = new \DOMDocument;
-        if (!@$doc->loadXML($content) || $doc->getElementsByTagName('error')->length) {
-            switch ($this->getNodeValue($doc->getElementsByTagName('code'))) {
-                case '001':
-                case '003':
-                    throw new InvalidCredentialsException(sprintf('Invalid authentification token %s', $query));
-                case '002':
-                    throw new QuotaExceededException(sprintf('Account ran out of credits %s', $query));
-                default:
-                    throw new NoResultException;
-            }
-        }
-
-        return $doc;
     }
 }

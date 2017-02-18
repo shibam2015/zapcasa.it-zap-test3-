@@ -77,33 +77,6 @@ class Intl
         return $ret;
     }
 
-    static function grapheme_strlen($s)
-    {
-        preg_replace('/' . GRAPHEME_CLUSTER_RX . '/u', '', $s, -1, $len);
-        return 0 === $len && '' !== $s ? null : $len;
-    }
-
-    static function grapheme_substr($s, $start, $len = 2147483647)
-    {
-        preg_match_all('/' . GRAPHEME_CLUSTER_RX . '/u', $s, $s);
-
-        $slen = count($s[0]);
-        $start = (int) $start;
-
-        if (0 > $start) $start += $slen;
-        if (0 > $start) return false;
-        if ($start >= $slen) return false;
-
-        $rem = $slen - $start;
-
-        if (0 > $len) $len += $rem;
-        if (0 === $len) return '';
-        if (0 > $len) return false;
-        if ($len > $rem) $len = $rem;
-
-        return implode('', array_slice($s[0], $start, $len));
-    }
-
     static function grapheme_substr_workaround62759($s, $start, $len)
     {
         // Intl based http://bugs.php.net/62759 and 55562 workaround
@@ -129,12 +102,6 @@ class Intl
     }
 
     static function grapheme_strpos  ($s, $needle, $offset = 0) {return self::grapheme_position($s, $needle, $offset, 0);}
-    static function grapheme_stripos ($s, $needle, $offset = 0) {return self::grapheme_position($s, $needle, $offset, 1);}
-    static function grapheme_strrpos ($s, $needle, $offset = 0) {return self::grapheme_position($s, $needle, $offset, 2);}
-    static function grapheme_strripos($s, $needle, $offset = 0) {return self::grapheme_position($s, $needle, $offset, 3);}
-    static function grapheme_stristr ($s, $needle, $before_needle = false) {return mb_stristr($s, $needle, $before_needle, 'UTF-8');}
-    static function grapheme_strstr  ($s, $needle, $before_needle = false) {return mb_strstr ($s, $needle, $before_needle, 'UTF-8');}
-
 
     protected static function grapheme_position($s, $needle, $offset, $mode)
     {
@@ -152,5 +119,57 @@ class Intl
         }
 
         return $needle ? self::grapheme_strlen(iconv_substr($s, 0, $needle, 'UTF-8')) + $offset : $needle;
+    }
+
+    static function grapheme_substr($s, $start, $len = 2147483647)
+    {
+        preg_match_all('/' . GRAPHEME_CLUSTER_RX . '/u', $s, $s);
+
+        $slen = count($s[0]);
+        $start = (int)$start;
+
+        if (0 > $start) $start += $slen;
+        if (0 > $start) return false;
+        if ($start >= $slen) return false;
+
+        $rem = $slen - $start;
+
+        if (0 > $len) $len += $rem;
+        if (0 === $len) return '';
+        if (0 > $len) return false;
+        if ($len > $rem) $len = $rem;
+
+        return implode('', array_slice($s[0], $start, $len));
+    }
+
+    static function grapheme_strlen($s)
+    {
+        preg_replace('/' . GRAPHEME_CLUSTER_RX . '/u', '', $s, -1, $len);
+        return 0 === $len && '' !== $s ? null : $len;
+    }
+
+    static function grapheme_stripos($s, $needle, $offset = 0)
+    {
+        return self::grapheme_position($s, $needle, $offset, 1);
+    }
+
+    static function grapheme_strrpos($s, $needle, $offset = 0)
+    {
+        return self::grapheme_position($s, $needle, $offset, 2);
+    }
+
+    static function grapheme_strripos($s, $needle, $offset = 0)
+    {
+        return self::grapheme_position($s, $needle, $offset, 3);
+    }
+
+    static function grapheme_stristr($s, $needle, $before_needle = false)
+    {
+        return mb_stristr($s, $needle, $before_needle, 'UTF-8');
+    }
+
+    static function grapheme_strstr($s, $needle, $before_needle = false)
+    {
+        return mb_strstr($s, $needle, $before_needle, 'UTF-8');
     }
 }

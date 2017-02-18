@@ -46,25 +46,6 @@ class JoinClause {
 	}
 
 	/**
-	 * Add an "on" clause to the join.
-	 *
-	 * @param  string  $first
-	 * @param  string  $operator
-	 * @param  string  $second
-	 * @param  string  $boolean
-	 * @param  bool  $where
-	 * @return \Illuminate\Database\Query\JoinClause
-	 */
-	public function on($first, $operator, $second, $boolean = 'and', $where = false)
-	{
-		$this->clauses[] = compact('first', 'operator', 'second', 'boolean', 'where');
-
-		if ($where) $this->query->addBinding($second);
-
-		return $this;
-	}
-
-	/**
 	 * Add an "or on" clause to the join.
 	 *
 	 * @param  string  $first
@@ -75,6 +56,25 @@ class JoinClause {
 	public function orOn($first, $operator, $second)
 	{
 		return $this->on($first, $operator, $second, 'or');
+	}
+
+	/**
+	 * Add an "on" clause to the join.
+	 *
+	 * @param  string  $first
+	 * @param  string  $operator
+	 * @param  string  $second
+	 * @param  string $boolean
+	 * @param  bool $where
+	 * @return \Illuminate\Database\Query\JoinClause
+	 */
+	public function on($first, $operator, $second, $boolean = 'and', $where = false)
+	{
+		$this->clauses[] = compact('first', 'operator', 'second', 'boolean', 'where');
+
+		if ($where) $this->query->addBinding($second);
+
+		return $this;
 	}
 
 	/**

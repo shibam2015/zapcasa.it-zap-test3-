@@ -20,6 +20,24 @@ class Request extends SymfonyRequest {
 	protected $sessionStore;
 
 	/**
+	 * Create an Illuminate request from a Symfony instance.
+	 *
+	 * @param  \Symfony\Component\HttpFoundation\Request $request
+	 * @return \Illuminate\Http\Request
+	 */
+	public static function createFromBase(SymfonyRequest $request)
+	{
+		if ($request instanceof static) return $request;
+
+		return with(new static)->duplicate(
+
+			$request->query->all(), $request->request->all(), $request->attributes->all(),
+
+			$request->cookies->all(), $request->files->all(), $request->server->all()
+		);
+	}
+
+	/**
 	 * Return the Request instance.
 	 *
 	 * @return \Illuminate\Http\Request
@@ -50,16 +68,6 @@ class Request extends SymfonyRequest {
 	}
 
 	/**
-	 * Get the URL (no query string) for the request.
-	 *
-	 * @return string
-	 */
-	public function url()
-	{
-		return rtrim(preg_replace('/\?.*/', '', $this->getUri()), '/');
-	}
-
-	/**
 	 * Get the full URL for the request.
 	 *
 	 * @return string
@@ -72,15 +80,13 @@ class Request extends SymfonyRequest {
 	}
 
 	/**
-	 * Get the current path info for the request.
+	 * Get the URL (no query string) for the request.
 	 *
 	 * @return string
 	 */
-	public function path()
+	public function url()
 	{
-		$pattern = trim($this->getPathInfo(), '/');
-
-		return $pattern == '' ? '/' : $pattern;
+		return rtrim(preg_replace('/\?.*/', '', $this->getUri()), '/');
 	}
 
 	/**
@@ -91,6 +97,18 @@ class Request extends SymfonyRequest {
 	public function decodedPath()
 	{
 		return rawurldecode($this->path());
+	}
+
+	/**
+	 * Get the current path info for the request.
+	 *
+	 * @return string
+	 */
+	public function path()
+	{
+		$pattern = trim($this->getPathInfo(), '/');
+
+		return $pattern == '' ? '/' : $pattern;
 	}
 
 	/**
@@ -177,17 +195,110 @@ class Request extends SymfonyRequest {
 	}
 
 	/**
+	 * Get all of the input and files for the request.
+	 *
+	 * @return array
+	 */
+	public function all()
+	{
+		return array_merge_recursive($this->input(), $this->files->all());
+	}
+
+	/**
+	 * Retrieve an input item from the request.
+	 *
+	 * @param  string $key
+	 * @param  mixed $default
+	 * @return string
+	 */
+	public function input($key = null, $default = null)
+	{
+		$input = $this->getInputSource()->all() + $this->query->all();
+
+		return array_get($input, $key, $default);
+	}
+
+	/**
+	 * Get the input source for the request.
+	 *
+	 * @return \Symfony\Component\HttpFoundation\ParameterBag
+	 */
+	protected function getInputSource()
+	{
+		if ($this->isJson()) return $this->json();
+
+		return $this->getMethod() == 'GET' ? $this->query : $this->request;
+	}
+
+	/**
+	 * Determine if the request is sending JSON.
+	 *
+	 * @return bool
+	 */
+	public function isJson()
+	{
+		return str_contains($this->header('CONTENT_TYPE'), '/json');
+	}
+
+	/**
+	 * Retrieve a header from the request.
+	 *
+	 * @param  string $key
+	 * @param  mixed $default
+	 * @return string
+	 */
+	public function header($key = null, $default = null)
+	{
+		return $this->retrieveItem('headers', $key, $default);
+	}
+
+	/**
+	 * Retrieve a parameter item from a given source.
+	 *
+	 * @param  string $source
+	 * @param  string $key
+	 * @param  mixed $default
+	 * @return string
+	 */
+	protected function retrieveItem($source, $key, $default)
+	{
+		if (is_null($key))
+		{
+			return $this->$source->all();
+		} else {
+			return $this->$source->get($key, $default, true);
+		}
+	}
+
+	/**
+	 * Get the JSON payload for the request.
+	 *
+	 * @param  string  $key
+	 * @param  mixed $default
+	 * @return mixed
+	 */
+	public function json($key = null, $default = null)
+	{
+		if (!isset($this->json)) {
+			$this->json = new ParameterBag((array)json_decode($this->getContent(), true));
+		}
+
+		if (is_null($key)) return $this->json;
+
+		return array_get($this->json->all(), $key, $default);
+	}
+
+	/**
 	 * Determine if the request contains a non-emtpy value for an input item.
 	 *
-	 * @param  string|array  $key
+	 * @param  string|array $key
 	 * @return bool
 	 */
 	public function has($key)
 	{
 		$keys = is_array($key) ? $key : func_get_args();
 
-		foreach ($keys as $value)
-		{
+		foreach ($keys as $value) {
 			if ($this->isEmptyString($value)) return false;
 		}
 
@@ -204,31 +315,7 @@ class Request extends SymfonyRequest {
 	{
 		$boolOrArray = is_bool($this->input($key)) || is_array($this->input($key));
 
-		return ! $boolOrArray && trim((string) $this->input($key)) === '';
-	}
-
-	/**
-	 * Get all of the input and files for the request.
-	 *
-	 * @return array
-	 */
-	public function all()
-	{
-		return array_merge_recursive($this->input(), $this->files->all());
-	}
-
-	/**
-	 * Retrieve an input item from the request.
-	 *
-	 * @param  string  $key
-	 * @param  mixed   $default
-	 * @return string
-	 */
-	public function input($key = null, $default = null)
-	{
-		$input = $this->getInputSource()->all() + $this->query->all();
-
-		return array_get($input, $key, $default);
+		return !$boolOrArray && trim((string)$this->input($key)) === '';
 	}
 
 	/**
@@ -297,18 +384,6 @@ class Request extends SymfonyRequest {
 	}
 
 	/**
-	 * Retrieve a file from the request.
-	 *
-	 * @param  string  $key
-	 * @param  mixed   $default
-	 * @return \Symfony\Component\HttpFoundation\File\UploadedFile|array
-	 */
-	public function file($key = null, $default = null)
-	{
-		return array_get($this->files->all(), $key, $default);
-	}
-
-	/**
 	 * Determine if the uploaded data contains a file.
 	 *
 	 * @param  string  $key
@@ -322,15 +397,15 @@ class Request extends SymfonyRequest {
 	}
 
 	/**
-	 * Retrieve a header from the request.
+	 * Retrieve a file from the request.
 	 *
 	 * @param  string  $key
 	 * @param  mixed   $default
-	 * @return string
+	 * @return \Symfony\Component\HttpFoundation\File\UploadedFile|array
 	 */
-	public function header($key = null, $default = null)
+	public function file($key = null, $default = null)
 	{
-		return $this->retrieveItem('headers', $key, $default);
+		return array_get($this->files->all(), $key, $default);
 	}
 
 	/**
@@ -358,17 +433,19 @@ class Request extends SymfonyRequest {
 	}
 
 	/**
-	 * Flash the input for the current request to the session.
+	 * Get the session associated with the request.
 	 *
-	 * @param  string $filter
-	 * @param  array  $keys
-	 * @return void
+	 * @return \Illuminate\Session\Store
+	 *
+	 * @throws \RuntimeException
 	 */
-	public function flash($filter = null, $keys = array())
+	public function session()
 	{
-		$flash = ( ! is_null($filter)) ? $this->$filter($keys) : $this->input();
+		if (!$this->hasSession()) {
+			throw new \RuntimeException("Session store not set on request.");
+		}
 
-		$this->session()->flashInput($flash);
+		return $this->getSession();
 	}
 
 	/**
@@ -382,6 +459,20 @@ class Request extends SymfonyRequest {
 		$keys = is_array($keys) ? $keys : func_get_args();
 
 		return $this->flash('only', $keys);
+	}
+
+	/**
+	 * Flash the input for the current request to the session.
+	 *
+	 * @param  string $filter
+	 * @param  array $keys
+	 * @return void
+	 */
+	public function flash($filter = null, $keys = array())
+	{
+		$flash = (!is_null($filter)) ? $this->$filter($keys) : $this->input();
+
+		$this->session()->flashInput($flash);
 	}
 
 	/**
@@ -408,26 +499,6 @@ class Request extends SymfonyRequest {
 	}
 
 	/**
-	 * Retrieve a parameter item from a given source.
-	 *
-	 * @param  string  $source
-	 * @param  string  $key
-	 * @param  mixed   $default
-	 * @return string
-	 */
-	protected function retrieveItem($source, $key, $default)
-	{
-		if (is_null($key))
-		{
-			return $this->$source->all();
-		}
-		else
-		{
-			return $this->$source->get($key, $default, true);
-		}
-	}
-
-	/**
 	 * Merge new input into the current request's input array.
 	 *
 	 * @param  array  $input
@@ -447,47 +518,6 @@ class Request extends SymfonyRequest {
 	public function replace(array $input)
 	{
 		$this->getInputSource()->replace($input);
-	}
-
-	/**
-	 * Get the JSON payload for the request.
-	 *
-	 * @param  string  $key
-	 * @param  mixed   $default
-	 * @return mixed
-	 */
-	public function json($key = null, $default = null)
-	{
-		if ( ! isset($this->json))
-		{
-			$this->json = new ParameterBag((array) json_decode($this->getContent(), true));
-		}
-
-		if (is_null($key)) return $this->json;
-
-		return array_get($this->json->all(), $key, $default);
-	}
-
-	/**
-	 * Get the input source for the request.
-	 *
-	 * @return \Symfony\Component\HttpFoundation\ParameterBag
-	 */
-	protected function getInputSource()
-	{
-		if ($this->isJson()) return $this->json();
-
-		return $this->getMethod() == 'GET' ? $this->query : $this->request;
-	}
-
-	/**
-	 * Determine if the request is sending JSON.
-	 *
-	 * @return bool
-	 */
-	public function isJson()
-	{
-		return str_contains($this->header('CONTENT_TYPE'), '/json');
 	}
 
 	/**
@@ -515,41 +545,6 @@ class Request extends SymfonyRequest {
 		}
 
 		return $default;
-	}
-
-	/**
-	 * Create an Illuminate request from a Symfony instance.
-	 *
-	 * @param  \Symfony\Component\HttpFoundation\Request  $request
-	 * @return \Illuminate\Http\Request
-	 */
-	public static function createFromBase(SymfonyRequest $request)
-	{
-		if ($request instanceof static) return $request;
-
-		return with(new static)->duplicate(
-
-			$request->query->all(), $request->request->all(), $request->attributes->all(),
-
-			$request->cookies->all(), $request->files->all(), $request->server->all()
-		);
-	}
-
-	/**
-	 * Get the session associated with the request.
-	 *
-	 * @return \Illuminate\Session\Store
-	 *
-	 * @throws \RuntimeException
-	 */
-	public function session()
-	{
-		if ( ! $this->hasSession())
-		{
-			throw new \RuntimeException("Session store not set on request.");
-		}
-
-		return $this->getSession();
 	}
 
 }

@@ -43,29 +43,6 @@ class InfoWindowHelper extends AbstractHelper
     }
 
     /**
-     * Renders the info window open flag.
-     *
-     * @param \Ivory\GoogleMap\Overlays\InfoWindow $infoWindow The info window.
-     * @param \Ivory\GoogleMap\Map                 $map        The map.
-     * @param \Ivory\GoogleMap\Overlays\Marker     $marker     The marker.
-     *
-     * @return string The JS output.
-     */
-    public function renderOpen(InfoWindow $infoWindow, Map $map, Marker $marker = null)
-    {
-        if ($marker !== null) {
-            return sprintf(
-                '%s.open(%s, %s);'.PHP_EOL,
-                $infoWindow->getJavascriptVariable(),
-                $map->getJavascriptVariable(),
-                $marker->getJavascriptVariable()
-            );
-        }
-
-        return sprintf('%s.open(%s);'.PHP_EOL, $infoWindow->getJavascriptVariable(), $map->getJavascriptVariable());
-    }
-
-    /**
      * Configures the json builder in order to render an info window.
      *
      * @param \Ivory\GoogleMap\Helper\Overlays\InfoWinfow $infoWindow     The info window.
@@ -90,5 +67,28 @@ class InfoWindowHelper extends AbstractHelper
         $this->jsonBuilder
             ->setValue('[content]', $infoWindow->getContent())
             ->setValues($infoWindow->getOptions());
+    }
+
+    /**
+     * Renders the info window open flag.
+     *
+     * @param \Ivory\GoogleMap\Overlays\InfoWindow $infoWindow The info window.
+     * @param \Ivory\GoogleMap\Map $map The map.
+     * @param \Ivory\GoogleMap\Overlays\Marker $marker The marker.
+     *
+     * @return string The JS output.
+     */
+    public function renderOpen(InfoWindow $infoWindow, Map $map, Marker $marker = null)
+    {
+        if ($marker !== null) {
+            return sprintf(
+                '%s.open(%s, %s);' . PHP_EOL,
+                $infoWindow->getJavascriptVariable(),
+                $map->getJavascriptVariable(),
+                $marker->getJavascriptVariable()
+            );
+        }
+
+        return sprintf('%s.open(%s);' . PHP_EOL, $infoWindow->getJavascriptVariable(), $map->getJavascriptVariable());
     }
 }

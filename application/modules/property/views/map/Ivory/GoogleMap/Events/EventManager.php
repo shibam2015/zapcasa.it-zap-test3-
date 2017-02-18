@@ -67,16 +67,6 @@ class EventManager
     }
 
     /**
-     * Gets the dom events.
-     *
-     * @return array The dom events.
-     */
-    public function getDomEvents()
-    {
-        return $this->domEvents;
-    }
-
-    /**
      * Add a dom event.
      *
      * @param \Ivory\GoogleMap\Events\Event $domEvent The dom event.
@@ -84,16 +74,6 @@ class EventManager
     public function addDomEvent(Event $domEvent)
     {
         $this->domEvents[] = $domEvent;
-    }
-
-    /**
-     * Gets the dom events which are just triggered one time.
-     *
-     * @return array The dom events which are just triggered one time.
-     */
-    public function getDomEventsOnce()
-    {
-        return $this->domEventsOnce;
     }
 
     /**
@@ -107,16 +87,6 @@ class EventManager
     }
 
     /**
-     * Gets the events.
-     *
-     * @return array The events.
-     */
-    public function getEvents()
-    {
-        return $this->events;
-    }
-
-    /**
      * Adds an event.
      *
      * @param \Ivory\GoogleMap\Events\Event $event An event.
@@ -127,16 +97,6 @@ class EventManager
     }
 
     /**
-     * Gets the events which are just triggered one time.
-     *
-     * @return array The events which are just triggered one time.
-     */
-    public function getEventsOnce()
-    {
-        return $this->eventsOnce;
-    }
-
-    /**
      * Adds an event which is just triggered one time.
      *
      * @param \Ivory\GoogleMap\Events\Event $eventOnce An event which is just triggered one time.
@@ -144,5 +104,45 @@ class EventManager
     public function addEventOnce(Event $eventOnce)
     {
         $this->eventsOnce[] = $eventOnce;
+    }
+
+    /**
+     * Gets the dom events.
+     *
+     * @return array The dom events.
+     */
+    public function getDomEvents()
+    {
+        return $this->domEvents;
+    }
+
+    /**
+     * Gets the dom events which are just triggered one time.
+     *
+     * @return array The dom events which are just triggered one time.
+     */
+    public function getDomEventsOnce()
+    {
+        return $this->domEventsOnce;
+    }
+
+    /**
+     * Gets the events.
+     *
+     * @return array The events.
+     */
+    public function getEvents()
+    {
+        return $this->events;
+    }
+
+    /**
+     * Gets the events which are just triggered one time.
+     *
+     * @return array The events which are just triggered one time.
+     */
+    public function getEventsOnce()
+    {
+        return $this->eventsOnce;
     }
 }

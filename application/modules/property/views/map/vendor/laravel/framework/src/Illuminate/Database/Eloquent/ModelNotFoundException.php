@@ -10,6 +10,16 @@ class ModelNotFoundException extends \RuntimeException {
 	protected $model;
 
 	/**
+	 * Get the affected Eloquent model.
+	 *
+	 * @return string
+	 */
+	public function getModel()
+	{
+		return $this->model;
+	}
+
+	/**
 	 * Set the affected Eloquent model.
 	 *
 	 * @param  string   $model
@@ -22,16 +32,6 @@ class ModelNotFoundException extends \RuntimeException {
 		$this->message = "No query results for model [{$model}].";
 
 		return $this;
-	}
-
-	/**
-	 * Get the affected Eloquent model.
-	 *
-	 * @return string
-	 */
-	public function getModel()
-	{
-		return $this->model;
 	}
 
 }

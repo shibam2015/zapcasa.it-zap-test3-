@@ -101,6 +101,16 @@ class Middleware implements HttpKernelInterface {
 	}
 
 	/**
+	 * Determine if a session driver has been configured.
+	 *
+	 * @return bool
+	 */
+	protected function sessionConfigured()
+	{
+		return !is_null(array_get($this->manager->getSessionConfig(), 'driver'));
+	}
+
+	/**
 	 * Start the session for the given request.
 	 *
 	 * @param  \Symfony\Component\HttpFoundation\Request  $request
@@ -116,9 +126,23 @@ class Middleware implements HttpKernelInterface {
 	}
 
 	/**
+	 * Get the session implementation from the manager.
+	 *
+	 * @return \Illuminate\Session\SessionInterface
+	 */
+	public function getSession(Request $request)
+	{
+		$session = $this->manager->driver();
+
+		$session->setId($request->cookies->get($session->getName()));
+
+		return $session;
+	}
+
+	/**
 	 * Close the session handling for the request.
 	 *
-	 * @param  \Illuminate\Session\SessionInterface  $session
+	 * @param  \Illuminate\Session\SessionInterface $session
 	 * @return void
 	 */
 	protected function closeSession(SessionInterface $session)
@@ -126,19 +150,6 @@ class Middleware implements HttpKernelInterface {
 		$session->save();
 
 		$this->collectGarbage($session);
-	}
-
-	/**
-	 * Get the full URL for the request.
-	 *
-	 * @param  \Symfony\Component\HttpFoundation\Request  $request
-	 * @return string
-	 */
-	protected function getUrl(Request $request)
-	{
-		$url = rtrim(preg_replace('/\?.*/', '', $request->getUri()), '/');
-
-		return $request->getQueryString() ? $url.'?'.$request->getQueryString() : $url;
 	}
 
 	/**
@@ -172,6 +183,16 @@ class Middleware implements HttpKernelInterface {
 	}
 
 	/**
+	 * Get the session lifetime in seconds.
+	 *
+	 *
+	 */
+	protected function getLifetimeSeconds()
+	{
+		return array_get($this->manager->getSessionConfig(), 'lifetime') * 60;
+	}
+
+	/**
 	 * Add the session cookie to the application response.
 	 *
 	 * @param  \Symfony\Component\HttpFoundation\Response  $response
@@ -193,13 +214,19 @@ class Middleware implements HttpKernelInterface {
 	}
 
 	/**
-	 * Get the session lifetime in seconds.
+	 * Determine if the configured session driver is persistent.
 	 *
-	 *
+	 * @param  array|null $config
+	 * @return bool
 	 */
-	protected function getLifetimeSeconds()
+	protected function sessionIsPersistent(array $config = null)
 	{
-		return array_get($this->manager->getSessionConfig(), 'lifetime') * 60;
+		// Some session drivers are not persistent, such as the test array driver or even
+		// when the developer don't have a session driver configured at all, which the
+		// session cookies will not need to get set on any responses in those cases.
+		$config = $config ?: $this->manager->getSessionConfig();
+
+		return !in_array($config['driver'], array(null, 'array'));
 	}
 
 	/**
@@ -215,43 +242,16 @@ class Middleware implements HttpKernelInterface {
 	}
 
 	/**
-	 * Determine if a session driver has been configured.
+	 * Get the full URL for the request.
 	 *
-	 * @return bool
+	 * @param  \Symfony\Component\HttpFoundation\Request $request
+	 * @return string
 	 */
-	protected function sessionConfigured()
+	protected function getUrl(Request $request)
 	{
-		return ! is_null(array_get($this->manager->getSessionConfig(), 'driver'));
-	}
+		$url = rtrim(preg_replace('/\?.*/', '', $request->getUri()), '/');
 
-	/**
-	 * Determine if the configured session driver is persistent.
-	 *
-	 * @param  array|null  $config
-	 * @return bool
-	 */
-	protected function sessionIsPersistent(array $config = null)
-	{
-		// Some session drivers are not persistent, such as the test array driver or even
-		// when the developer don't have a session driver configured at all, which the
-		// session cookies will not need to get set on any responses in those cases.
-		$config = $config ?: $this->manager->getSessionConfig();
-
-		return ! in_array($config['driver'], array(null, 'array'));
-	}
-
-	/**
-	 * Get the session implementation from the manager.
-	 *
-	 * @return \Illuminate\Session\SessionInterface
-	 */
-	public function getSession(Request $request)
-	{
-		$session = $this->manager->driver();
-
-		$session->setId($request->cookies->get($session->getName()));
-
-		return $session;
+		return $request->getQueryString() ? $url . '?' . $request->getQueryString() : $url;
 	}
 
 }

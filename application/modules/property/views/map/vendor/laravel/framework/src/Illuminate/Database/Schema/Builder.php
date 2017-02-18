@@ -95,6 +95,33 @@ class Builder {
 	}
 
 	/**
+	 * Execute the blueprint to build / modify the table.
+	 *
+	 * @param  \Illuminate\Database\Schema\Blueprint $blueprint
+	 * @return void
+	 */
+	protected function build(Blueprint $blueprint)
+	{
+		$blueprint->build($this->connection, $this->grammar);
+	}
+
+	/**
+	 * Create a new command set with a Closure.
+	 *
+	 * @param  string $table
+	 * @param  Closure $callback
+	 * @return \Illuminate\Database\Schema\Blueprint
+	 */
+	protected function createBlueprint($table, Closure $callback = null)
+	{
+		if (isset($this->resolver)) {
+			return call_user_func($this->resolver, $table, $callback);
+		} else {
+			return new Blueprint($table, $callback);
+		}
+	}
+
+	/**
 	 * Create a new table on the schema.
 	 *
 	 * @param  string   $table
@@ -156,36 +183,6 @@ class Builder {
 		$blueprint->rename($to);
 
 		$this->build($blueprint);
-	}
-
-	/**
-	 * Execute the blueprint to build / modify the table.
-	 *
-	 * @param  \Illuminate\Database\Schema\Blueprint  $blueprint
-	 * @return void
-	 */
-	protected function build(Blueprint $blueprint)
-	{
-		$blueprint->build($this->connection, $this->grammar);
-	}
-
-	/**
-	 * Create a new command set with a Closure.
-	 *
-	 * @param  string   $table
-	 * @param  Closure  $callback
-	 * @return \Illuminate\Database\Schema\Blueprint
-	 */
-	protected function createBlueprint($table, Closure $callback = null)
-	{
-		if (isset($this->resolver))
-		{
-			return call_user_func($this->resolver, $table, $callback);
-		}
-		else
-		{
-			return new Blueprint($table, $callback);
-		}
 	}
 
 	/**

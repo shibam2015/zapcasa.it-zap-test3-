@@ -47,6 +47,13 @@ class FragmentListener implements EventSubscriberInterface
         $this->fragmentPath = $fragmentPath;
     }
 
+    public static function getSubscribedEvents()
+    {
+        return array(
+            KernelEvents::REQUEST => array(array('onKernelRequest', 48)),
+        );
+    }
+
     /**
      * Fixes request attributes when the path is '/_fragment'.
      *
@@ -96,12 +103,5 @@ class FragmentListener implements EventSubscriberInterface
     protected function getLocalIpAddresses()
     {
         return array('127.0.0.1', 'fe80::1', '::1');
-    }
-
-    public static function getSubscribedEvents()
-    {
-        return array(
-            KernelEvents::REQUEST => array(array('onKernelRequest', 48)),
-        );
     }
 }

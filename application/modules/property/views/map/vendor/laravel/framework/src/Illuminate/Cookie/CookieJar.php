@@ -26,6 +26,22 @@ class CookieJar {
 	protected $queued = array();
 
 	/**
+	 * Create a cookie that lasts "forever" (five years).
+	 *
+	 * @param  string $name
+	 * @param  string $value
+	 * @param  string $path
+	 * @param  string $domain
+	 * @param  bool $secure
+	 * @param  bool $httpOnly
+	 * @return \Symfony\Component\HttpFoundation\Cookie
+	 */
+	public function forever($name, $value, $path = null, $domain = null, $secure = false, $httpOnly = true)
+	{
+		return $this->make($name, $value, 2628000, $path, $domain, $secure, $httpOnly);
+	}
+
+	/**
 	 * Create a new cookie instance.
 	 *
 	 * @param  string  $name
@@ -47,19 +63,15 @@ class CookieJar {
 	}
 
 	/**
-	 * Create a cookie that lasts "forever" (five years).
+	 * Get the path and domain, or the default values.
 	 *
-	 * @param  string  $name
-	 * @param  string  $value
 	 * @param  string  $path
 	 * @param  string  $domain
-	 * @param  bool    $secure
-	 * @param  bool    $httpOnly
-	 * @return \Symfony\Component\HttpFoundation\Cookie
+	 * @return array
 	 */
-	public function forever($name, $value, $path = null, $domain = null, $secure = false, $httpOnly = true)
+	protected function getPathAndDomain($path, $domain)
 	{
-		return $this->make($name, $value, 2628000, $path, $domain, $secure, $httpOnly);
+		return array($path ?: $this->path, $domain ?: $this->domain);
 	}
 
 	/**
@@ -126,18 +138,6 @@ class CookieJar {
 	public function unqueue($name)
 	{
 		unset($this->queued[$name]);
-	}
-
-	/**
-	 * Get the path and domain, or the default values.
-	 *
-	 * @param  string  $path
-	 * @param  string  $domain
-	 * @return array
-	 */
-	protected function getPathAndDomain($path, $domain)
-	{
-		return array($path ?: $this->path, $domain ?: $this->domain);
 	}
 
 	/**

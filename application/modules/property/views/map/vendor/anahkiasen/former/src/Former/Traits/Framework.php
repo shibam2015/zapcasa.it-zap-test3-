@@ -77,16 +77,6 @@ abstract class Framework
   ////////////////////////////////////////////////////////////////////
 
   /**
-   * Get the name of the current framework
-   *
-   * @return string
-   */
-  public function current()
-  {
-    return basename(str_replace('\\', '/', get_class($this)));
-  }
-
-  /**
    * Check if the current framework matches something
    *
    * @param  string $framework
@@ -96,6 +86,16 @@ abstract class Framework
   public function is($framework)
   {
     return $framework == $this->current();
+  }
+
+  /**
+   * Get the name of the current framework
+   *
+   * @return string
+   */
+  public function current()
+  {
+    return basename(str_replace('\\', '/', get_class($this)));
   }
 
   /**
@@ -161,27 +161,6 @@ abstract class Framework
   }
 
   /**
-   * Set framework defaults from its config file
-   */
-  protected function setFrameworkDefaults()
-  {
-    $this->setFieldWidths($this->getFrameworkOption('labelWidths'));
-    $this->setIconDefaults();
-  }
-
-  protected function setFieldWidths($widths) {}
-
-  /**
-   * Override framework defaults for icons with config values where set
-   */
-  protected function setIconDefaults()
-  {
-    $this->iconTag    = $this->getFrameworkOption('icon.tag');
-    $this->iconSet    = $this->getFrameworkOption('icon.set');
-    $this->iconPrefix = $this->getFrameworkOption('icon.prefix');
-  }
-
-  /**
    * Render an icon
    *
    * @param string $icon          The icon name
@@ -203,41 +182,6 @@ abstract class Framework
     $prefix = array_get($iconSettings, 'prefix', $this->iconPrefix);
 
     return Element::create($tag, null, $attributes)->addClass("$set $prefix-$iconType");
-  }
-
-  ////////////////////////////////////////////////////////////////////
-  ///////////////////////////// HELPERS //////////////////////////////
-  ////////////////////////////////////////////////////////////////////
-
-  /**
-   * Add classes to a field
-   *
-   * @param Field $field
-   * @param array $classes
-   */
-  protected function addClassesToField($field, $classes)
-  {
-    // If we found any class, add them
-    if ($classes) {
-      $field->addClass(implode(' ', $classes));
-    }
-
-    return $field;
-  }
-
-  /**
-   * Prepend an array of classes with a string
-   *
-   * @param array  $classes The classes to prepend
-   * @param string $with    The string to prepend them with
-   *
-   * @return array A prepended array
-   */
-  protected function prependWith($classes, $with)
-  {
-    return array_map(function ($class) use ($with) {
-      return $with.$class;
-    }, $classes);
   }
 
   /**
@@ -279,6 +223,35 @@ abstract class Framework
   }
 
   /**
+   * Wraps all label contents with potential additional tags.
+   *
+   * @param  string $label
+   *
+   * @return string A wrapped label
+   */
+  public function wrapLabel($label)
+  {
+    return $label;
+  }
+
+  /**
+   * Set framework defaults from its config file
+   */
+  protected function setFrameworkDefaults()
+  {
+    $this->setFieldWidths($this->getFrameworkOption('labelWidths'));
+    $this->setIconDefaults();
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  ///////////////////////////// HELPERS //////////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+  protected function setFieldWidths($widths)
+  {
+  }
+
+  /**
    * Get an option for the current framework
    *
    * @param string $option
@@ -290,19 +263,48 @@ abstract class Framework
     return $this->app['config']->get("former::{$this->current()}.$option");
   }
 
+  /**
+   * Override framework defaults for icons with config values where set
+   */
+  protected function setIconDefaults()
+  {
+    $this->iconTag = $this->getFrameworkOption('icon.tag');
+    $this->iconSet = $this->getFrameworkOption('icon.set');
+    $this->iconPrefix = $this->getFrameworkOption('icon.prefix');
+  }
+
+  /**
+   * Add classes to a field
+   *
+   * @param Field $field
+   * @param array $classes
+   */
+  protected function addClassesToField($field, $classes)
+  {
+    // If we found any class, add them
+    if ($classes) {
+      $field->addClass(implode(' ', $classes));
+    }
+
+    return $field;
+  }
+
   ////////////////////////////////////////////////////////////////////
   //////////////////////////// WRAP BLOCKS ///////////////////////////
   ////////////////////////////////////////////////////////////////////
 
   /**
-   * Wraps all label contents with potential additional tags.
+   * Prepend an array of classes with a string
    *
-   * @param  string $label
+   * @param array $classes The classes to prepend
+   * @param string $with The string to prepend them with
    *
-   * @return string A wrapped label
+   * @return array A prepended array
    */
-  public function wrapLabel($label)
+  protected function prependWith($classes, $with)
   {
-    return $label;
+    return array_map(function ($class) use ($with) {
+      return $with . $class;
+    }, $classes);
   }
 }

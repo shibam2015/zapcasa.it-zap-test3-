@@ -65,6 +65,14 @@ class GoogleMapsProvider extends AbstractProvider implements LocaleAwareProvider
     /**
      * {@inheritDoc}
      */
+    public function getReversedData(array $coordinates)
+    {
+        return $this->getGeocodedData(sprintf('%F,%F', $coordinates[0], $coordinates[1]));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getGeocodedData($address)
     {
         // Google API returns invalid data if IP address given
@@ -79,44 +87,6 @@ class GoogleMapsProvider extends AbstractProvider implements LocaleAwareProvider
         );
 
         return $this->executeQuery($query);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getReversedData(array $coordinates)
-    {
-        return $this->getGeocodedData(sprintf('%F,%F', $coordinates[0], $coordinates[1]));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getName()
-    {
-        return 'google_maps';
-    }
-
-    /**
-     * @param string $query
-     *
-     * @return string Query with extra params
-     */
-    protected function buildQuery($query)
-    {
-        if (null !== $this->getLocale()) {
-            $query = sprintf('%s&language=%s', $query, $this->getLocale());
-        }
-
-        if (null !== $this->getRegion()) {
-            $query = sprintf('%s&region=%s', $query, $this->getRegion());
-        }
-
-        if (null !== $this->apiKey) {
-            $query = sprintf('%s&key=%s', $query, $this->apiKey);
-        }
-
-        return $query;
     }
 
     /**
@@ -197,6 +167,38 @@ class GoogleMapsProvider extends AbstractProvider implements LocaleAwareProvider
     }
 
     /**
+     * @param string $query
+     *
+     * @return string Query with extra params
+     */
+    protected function buildQuery($query)
+    {
+        if (null !== $this->getLocale()) {
+            $query = sprintf('%s&language=%s', $query, $this->getLocale());
+        }
+
+        if (null !== $this->getRegion()) {
+            $query = sprintf('%s&region=%s', $query, $this->getRegion());
+        }
+
+        if (null !== $this->apiKey) {
+            $query = sprintf('%s&key=%s', $query, $this->apiKey);
+        }
+
+        return $query;
+    }
+
+    /**
+     * Returns the configured region or null.
+     *
+     * @return string|null
+     */
+    protected function getRegion()
+    {
+        return $this->region;
+    }
+
+    /**
      * Update current resultset with given key/value.
      *
      * @param array  $resultset Resultset to update.
@@ -250,12 +252,10 @@ class GoogleMapsProvider extends AbstractProvider implements LocaleAwareProvider
     }
 
     /**
-     * Returns the configured region or null.
-     *
-     * @return string|null
+     * {@inheritDoc}
      */
-    protected function getRegion()
+    public function getName()
     {
-        return $this->region;
+        return 'google_maps';
     }
 }

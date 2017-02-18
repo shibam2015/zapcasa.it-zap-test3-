@@ -46,23 +46,6 @@ class Table extends Element
   }
 
   /**
-   * Static alias for constructor
-   *
-   * @param string          $element
-   * @param string|null|Tag $value
-   * @param array           $attributes
-   * @return                Table
-   */
-  public static function create($headers = array(), $rows = array(), $attributes = array())
-  {
-    return new static($headers, $rows, $attributes);
-  }
-
-  ////////////////////////////////////////////////////////////////////
-  /////////////////////////////// CHILDREN ///////////////////////////
-  ////////////////////////////////////////////////////////////////////
-
-  /**
    * Set the table's headers
    *
    * @param array $headers
@@ -91,6 +74,10 @@ class Table extends Element
 
     return $this;
   }
+
+  ////////////////////////////////////////////////////////////////////
+  /////////////////////////////// CHILDREN ///////////////////////////
+  ////////////////////////////////////////////////////////////////////
 
   /**
    * Set the table's rows
@@ -123,5 +110,18 @@ class Table extends Element
     ));
 
     return $this;
+  }
+
+  /**
+   * Static alias for constructor
+   *
+   * @param string $element
+   * @param string|null|Tag $value
+   * @param array $attributes
+   * @return                Table
+   */
+  public static function create($headers = array(), $rows = array(), $attributes = array())
+  {
+    return new static($headers, $rows, $attributes);
   }
 }

@@ -67,6 +67,13 @@ class Config {
     return $applied;
   }
 
+  private function _loadInIsolation($path, $boris)
+  {
+    require $path;
+  }
+
+  // -- Private Methods
+
   /**
    * Returns an array of files that were loaded
    * for this Config
@@ -75,11 +82,5 @@ class Config {
    */
   public function loadedFiles() {
     return $this->_files;
-  }
-
-  // -- Private Methods
-
-  private function _loadInIsolation($path, $boris) {
-    require $path;
   }
 }

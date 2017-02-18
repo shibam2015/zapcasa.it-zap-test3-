@@ -45,6 +45,15 @@ class LocaleListener implements EventSubscriberInterface
         $this->router = $router;
     }
 
+    public static function getSubscribedEvents()
+    {
+        return array(
+            // must be registered after the Router to have access to the _locale
+            KernelEvents::REQUEST => array(array('onKernelRequest', 16)),
+            KernelEvents::FINISH_REQUEST => array(array('onKernelFinishRequest', 0)),
+        );
+    }
+
     /**
      * Sets the current Request.
      *
@@ -66,6 +75,20 @@ class LocaleListener implements EventSubscriberInterface
         $this->setRouterContext($request);
     }
 
+    private function setLocale(Request $request)
+    {
+        if ($locale = $request->attributes->get('_locale')) {
+            $request->setLocale($locale);
+        }
+    }
+
+    private function setRouterContext(Request $request)
+    {
+        if (null !== $this->router) {
+            $this->router->getContext()->setParameter('_locale', $request->getLocale());
+        }
+    }
+
     public function onKernelRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
@@ -84,28 +107,5 @@ class LocaleListener implements EventSubscriberInterface
         if (null !== $parentRequest = $this->requestStack->getParentRequest()) {
             $this->setRouterContext($parentRequest);
         }
-    }
-
-    private function setLocale(Request $request)
-    {
-        if ($locale = $request->attributes->get('_locale')) {
-            $request->setLocale($locale);
-        }
-    }
-
-    private function setRouterContext(Request $request)
-    {
-        if (null !== $this->router) {
-            $this->router->getContext()->setParameter('_locale', $request->getLocale());
-        }
-    }
-
-    public static function getSubscribedEvents()
-    {
-        return array(
-            // must be registered after the Router to have access to the _locale
-            KernelEvents::REQUEST => array(array('onKernelRequest', 16)),
-            KernelEvents::FINISH_REQUEST => array(array('onKernelFinishRequest', 0)),
-        );
     }
 }

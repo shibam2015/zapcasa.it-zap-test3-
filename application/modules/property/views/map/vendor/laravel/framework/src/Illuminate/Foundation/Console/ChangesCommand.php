@@ -37,37 +37,6 @@ class ChangesCommand extends Command {
 	}
 
 	/**
-	 * Write the heading for the change log.
-	 *
-	 * @param  string  $version
-	 * @return void
-	 */
-	protected function writeHeader($version)
-	{
-		$this->info($heading = 'Changes For Laravel '.$version);
-
-		$this->comment(str_repeat('-', strlen($heading)));
-	}
-
-	/**
-	 * Format the given change message.
-	 *
-	 * @param  array   $change
-	 * @return string
-	 */
-	protected function formatMessage(array $change)
-	{
-		$message = '<comment>-></comment> <info>'.$change['message'].'</info>';
-
-		if ( ! is_null($change['backport']))
-		{
-			$message .= ' <comment>(Backported to '.$change['backport'].')</comment>';
-		}
-
-		return $message;
-	}
-
-	/**
 	 * Get the change list for the specified version.
 	 *
 	 * @param  array  $changes
@@ -97,6 +66,36 @@ class ChangesCommand extends Command {
 	protected function getChangesArray()
 	{
 		return json_decode(file_get_contents(__DIR__.'/../changes.json'), true);
+	}
+
+	/**
+	 * Write the heading for the change log.
+	 *
+	 * @param  string $version
+	 * @return void
+	 */
+	protected function writeHeader($version)
+	{
+		$this->info($heading = 'Changes For Laravel ' . $version);
+
+		$this->comment(str_repeat('-', strlen($heading)));
+	}
+
+	/**
+	 * Format the given change message.
+	 *
+	 * @param  array $change
+	 * @return string
+	 */
+	protected function formatMessage(array $change)
+	{
+		$message = '<comment>-></comment> <info>' . $change['message'] . '</info>';
+
+		if (!is_null($change['backport'])) {
+			$message .= ' <comment>(Backported to ' . $change['backport'] . ')</comment>';
+		}
+
+		return $message;
 	}
 
 	/**

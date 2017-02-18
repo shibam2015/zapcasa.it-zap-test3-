@@ -28,7 +28,10 @@ use Symfony\Component\Debug\FatalErrorHandler\FatalErrorHandlerInterface;
 class ErrorHandler
 {
     const TYPE_DEPRECATION = -100;
-
+    /**
+     * @var LoggerInterface[] Loggers for channels
+     */
+    private static $loggers = array();
     private $levels = array(
         E_WARNING           => 'Warning',
         E_NOTICE            => 'Notice',
@@ -44,17 +47,9 @@ class ErrorHandler
         E_COMPILE_ERROR     => 'Compile Error',
         E_PARSE             => 'Parse',
     );
-
     private $level;
-
     private $reservedMemory;
-
     private $displayErrors;
-
-    /**
-     * @var LoggerInterface[] Loggers for channels
-     */
-    private static $loggers = array();
 
     /**
      * Registers the error handler.
@@ -220,21 +215,6 @@ class ErrorHandler
         }
     }
 
-    /**
-     * Gets the fatal error handlers.
-     *
-     * Override this method if you want to define more fatal error handlers.
-     *
-     * @return FatalErrorHandlerInterface[] An array of FatalErrorHandlerInterface
-     */
-    protected function getFatalErrorHandlers()
-    {
-        return array(
-            new UndefinedFunctionFatalErrorHandler(),
-            new ClassNotFoundFatalErrorHandler(),
-        );
-    }
-
     private function handleFatalError(ExceptionHandler $exceptionHandler, array $error)
     {
         $level = isset($this->levels[$error['type']]) ? $this->levels[$error['type']] : $error['type'];
@@ -248,5 +228,20 @@ class ErrorHandler
         }
 
         $exceptionHandler->handle($exception);
+    }
+
+    /**
+     * Gets the fatal error handlers.
+     *
+     * Override this method if you want to define more fatal error handlers.
+     *
+     * @return FatalErrorHandlerInterface[] An array of FatalErrorHandlerInterface
+     */
+    protected function getFatalErrorHandlers()
+    {
+        return array(
+            new UndefinedFunctionFatalErrorHandler(),
+            new ClassNotFoundFatalErrorHandler(),
+        );
     }
 }

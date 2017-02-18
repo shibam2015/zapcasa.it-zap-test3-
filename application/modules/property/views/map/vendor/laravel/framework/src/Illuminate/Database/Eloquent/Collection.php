@@ -5,27 +5,6 @@ use Illuminate\Support\Collection as BaseCollection;
 class Collection extends BaseCollection {
 
 	/**
-	 * Find a model in the collection by key.
-	 *
-	 * @param  mixed  $key
-	 * @param  mixed  $default
-	 * @return \Illuminate\Database\Eloquent\Model
-	 */
-	public function find($key, $default = null)
-	{
-		if ($key instanceof Model)
-		{
-			$key = $key->getKey();
-		}
-
-		return array_first($this->items, function($itemKey, $model) use ($key)
-		{
-			return $model->getKey() == $key;
-
-		}, $default);
-	}
-
-	/**
 	 * Load a set of relationships onto the collection.
 	 *
 	 * @param  dynamic  $relations
@@ -46,27 +25,33 @@ class Collection extends BaseCollection {
 	}
 
 	/**
-	 * Add an item to the collection.
-	 *
-	 * @param  mixed  $item
-	 * @return \Illuminate\Database\Eloquent\Collection
-	 */
-	public function add($item)
-	{
-		$this->items[] = $item;
-
-		return $this;
-	}
-
-	/**
 	 * Determine if a key exists in the collection.
 	 *
-	 * @param  mixed  $key
+	 * @param  mixed $key
 	 * @return bool
 	 */
 	public function contains($key)
 	{
-		return ! is_null($this->find($key));
+		return !is_null($this->find($key));
+	}
+
+	/**
+	 * Find a model in the collection by key.
+	 *
+	 * @param  mixed  $key
+	 * @param  mixed $default
+	 * @return \Illuminate\Database\Eloquent\Model
+	 */
+	public function find($key, $default = null)
+	{
+		if ($key instanceof Model) {
+			$key = $key->getKey();
+		}
+
+		return array_first($this->items, function ($itemKey, $model) use ($key) {
+			return $model->getKey() == $key;
+
+		}, $default);
 	}
 
 	/**
@@ -137,6 +122,25 @@ class Collection extends BaseCollection {
 	}
 
 	/**
+	 * Get a dictionary keyed by primary keys.
+	 *
+	 * @param  \Illuminate\Support\Collection $collection
+	 * @return array
+	 */
+	public function getDictionary($collection = null)
+	{
+		$collection = $collection ?: $this;
+
+		$dictionary = array();
+
+		foreach ($collection as $value) {
+			$dictionary[$value->getKey()] = $value;
+		}
+
+		return $dictionary;
+	}
+
+	/**
 	 * Diff the collection with the given items.
 	 *
 	 * @param  \Illuminate\Support\Collection|\Illuminate\Support\Contracts\ArrayableInterface|array  $items
@@ -157,6 +161,19 @@ class Collection extends BaseCollection {
 		}
 
 		return $diff;
+	}
+
+	/**
+	 * Add an item to the collection.
+	 *
+	 * @param  mixed $item
+	 * @return \Illuminate\Database\Eloquent\Collection
+	 */
+	public function add($item)
+	{
+		$this->items[] = $item;
+
+		return $this;
 	}
 
 	/**
@@ -218,26 +235,6 @@ class Collection extends BaseCollection {
 	    $dictionary = array_except($this->getDictionary($this), $keys);
 
 	    return new static(array_values($dictionary));
-	}
-
-	/**
-	 * Get a dictionary keyed by primary keys.
-	 *
-	 * @param  \Illuminate\Support\Collection  $collection
-	 * @return array
-	 */
-	public function getDictionary($collection = null)
-	{
-		$collection = $collection ?: $this;
-
-		$dictionary = array();
-
-		foreach ($collection as $value)
-		{
-			$dictionary[$value->getKey()] = $value;
-		}
-
-		return $dictionary;
 	}
 
 	/**

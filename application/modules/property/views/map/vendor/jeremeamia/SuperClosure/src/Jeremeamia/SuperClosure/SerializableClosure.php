@@ -35,18 +35,6 @@ class SerializableClosure implements \Serializable
     }
 
     /**
-     * @return \ReflectionFunction
-     */
-    public function getReflection()
-    {
-        if (!$this->reflection) {
-            $this->reflection = new \ReflectionFunction($this->closure);
-        }
-
-        return $this->reflection;
-    }
-
-    /**
      * @return \Closure
      */
     public function getClosure()
@@ -65,6 +53,18 @@ class SerializableClosure implements \Serializable
     }
 
     /**
+     * @return \ReflectionFunction
+     */
+    public function getReflection()
+    {
+        if (!$this->reflection) {
+            $this->reflection = new \ReflectionFunction($this->closure);
+        }
+
+        return $this->reflection;
+    }
+
+    /**
      * Serialize the code and of context of the closure
      *
      * @return string
@@ -76,6 +76,19 @@ class SerializableClosure implements \Serializable
         }
 
         return serialize($this->state);
+    }
+
+    /**
+     * Uses the closure parser to fetch the closure's code and context
+     */
+    protected function createState()
+    {
+        $parser = new ClosureParser($this->getReflection());
+        $this->state = array($parser->getCode());
+        // Add the used variables (context) to the state, but wrap all closures with SerializableClosure
+        $this->state[] = array_map(function ($var) {
+            return ($var instanceof \Closure) ? new self($var) : $var;
+        }, $parser->getUsedVariables());
     }
 
     /**
@@ -97,18 +110,5 @@ class SerializableClosure implements \Serializable
 
         // Evaluate the code to recreate the Closure
         eval("\$this->closure = {$__code__};");
-    }
-
-    /**
-     * Uses the closure parser to fetch the closure's code and context
-     */
-    protected function createState()
-    {
-        $parser = new ClosureParser($this->getReflection());
-        $this->state = array($parser->getCode());
-        // Add the used variables (context) to the state, but wrap all closures with SerializableClosure
-        $this->state[] = array_map(function ($var) {
-            return ($var instanceof \Closure) ? new self($var) : $var;
-        }, $parser->getUsedVariables());
     }
 }

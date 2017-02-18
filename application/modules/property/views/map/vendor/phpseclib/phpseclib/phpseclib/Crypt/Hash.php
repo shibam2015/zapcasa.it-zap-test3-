@@ -572,6 +572,94 @@ class Crypt_Hash
     }
 
     /**
+     * String Shift
+     *
+     * Inspired by array_shift
+     *
+     * @param String $string
+     * @param optional Integer $index
+     * @return String
+     * @access private
+     */
+    function _string_shift(&$string, $index = 1)
+    {
+        $substr = substr($string, 0, $index);
+        $string = substr($string, $index);
+        return $substr;
+    }
+
+    /**
+     * Right Rotate
+     *
+     * @access private
+     * @param Integer $int
+     * @param Integer $amt
+     * @see _sha256()
+     * @return Integer
+     */
+    function _rightRotate($int, $amt)
+    {
+        $invamt = 32 - $amt;
+        $mask = (1 << $invamt) - 1;
+        return (($int << $invamt) & 0xFFFFFFFF) | (($int >> $amt) & $mask);
+    }
+
+    /**
+     * Right Shift
+     *
+     * @access private
+     * @param Integer $int
+     * @param Integer $amt
+     * @see _sha256()
+     * @return Integer
+     */
+    function _rightShift($int, $amt)
+    {
+        $mask = (1 << (32 - $amt)) - 1;
+        return ($int >> $amt) & $mask;
+    }
+
+    /**
+     * Add
+     *
+     * _sha256() adds multiple unsigned 32-bit integers.  Since PHP doesn't support unsigned integers and since the
+     * possibility of overflow exists, care has to be taken.  Math_BigInteger() could be used but this should be faster.
+     *
+     * @param Integer $...
+     * @return Integer
+     * @see _sha256()
+     * @access private
+     */
+    function _add()
+    {
+        static $mod;
+        if (!isset($mod)) {
+            $mod = pow(2, 32);
+        }
+
+        $result = 0;
+        $arguments = func_get_args();
+        foreach ($arguments as $argument) {
+            $result += $argument < 0 ? ($argument & 0x7FFFFFFF) + 0x80000000 : $argument;
+        }
+
+        return fmod($result, $mod);
+    }
+
+    /**
+     * Not
+     *
+     * @access private
+     * @param Integer $int
+     * @see _sha256()
+     * @return Integer
+     */
+    function _not($int)
+    {
+        return ~$int & 0xFFFFFFFF;
+    }
+
+    /**
      * Pure-PHP implementation of SHA384 and SHA512
      *
      * @access private
@@ -752,93 +840,5 @@ class Crypt_Hash
         }
 
         return $temp;
-    }
-
-    /**
-     * Right Rotate
-     *
-     * @access private
-     * @param Integer $int
-     * @param Integer $amt
-     * @see _sha256()
-     * @return Integer
-     */
-    function _rightRotate($int, $amt)
-    {
-        $invamt = 32 - $amt;
-        $mask = (1 << $invamt) - 1;
-        return (($int << $invamt) & 0xFFFFFFFF) | (($int >> $amt) & $mask);
-    }
-
-    /**
-     * Right Shift
-     *
-     * @access private
-     * @param Integer $int
-     * @param Integer $amt
-     * @see _sha256()
-     * @return Integer
-     */
-    function _rightShift($int, $amt)
-    {
-        $mask = (1 << (32 - $amt)) - 1;
-        return ($int >> $amt) & $mask;
-    }
-
-    /**
-     * Not
-     *
-     * @access private
-     * @param Integer $int
-     * @see _sha256()
-     * @return Integer
-     */
-    function _not($int)
-    {
-        return ~$int & 0xFFFFFFFF;
-    }
-
-    /**
-     * Add
-     *
-     * _sha256() adds multiple unsigned 32-bit integers.  Since PHP doesn't support unsigned integers and since the
-     * possibility of overflow exists, care has to be taken.  Math_BigInteger() could be used but this should be faster.
-     *
-     * @param Integer $...
-     * @return Integer
-     * @see _sha256()
-     * @access private
-     */
-    function _add()
-    {
-        static $mod;
-        if (!isset($mod)) {
-            $mod = pow(2, 32);
-        }
-
-        $result = 0;
-        $arguments = func_get_args();
-        foreach ($arguments as $argument) {
-            $result+= $argument < 0 ? ($argument & 0x7FFFFFFF) + 0x80000000 : $argument;
-        }
-
-        return fmod($result, $mod);
-    }
-
-    /**
-     * String Shift
-     *
-     * Inspired by array_shift
-     *
-     * @param String $string
-     * @param optional Integer $index
-     * @return String
-     * @access private
-     */
-    function _string_shift(&$string, $index = 1)
-    {
-        $substr = substr($string, 0, $index);
-        $string = substr($string, $index);
-        return $substr;
     }
 }

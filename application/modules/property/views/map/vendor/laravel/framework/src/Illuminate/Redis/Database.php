@@ -72,18 +72,6 @@ class Database {
 	}
 
 	/**
-	 * Run a command against the Redis database.
-	 *
-	 * @param  string  $method
-	 * @param  array   $parameters
-	 * @return mixed
-	 */
-	public function command($method, array $parameters = array())
-	{
-		return call_user_func_array(array($this->clients['default'], $method), $parameters);
-	}
-
-	/**
 	 * Dynamically make a Redis command.
 	 *
 	 * @param  string  $method
@@ -93,6 +81,18 @@ class Database {
 	public function __call($method, $parameters)
 	{
 		return $this->command($method, $parameters);
+	}
+
+	/**
+	 * Run a command against the Redis database.
+	 *
+	 * @param  string  $method
+	 * @param  array   $parameters
+	 * @return mixed
+	 */
+	public function command($method, array $parameters = array())
+	{
+		return call_user_func_array(array($this->clients['default'], $method), $parameters);
 	}
 
 }

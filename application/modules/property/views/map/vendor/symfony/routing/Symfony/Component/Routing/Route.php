@@ -352,18 +352,6 @@ class Route implements \Serializable
     }
 
     /**
-     * Get an option value.
-     *
-     * @param string $name An option name
-     *
-     * @return mixed The option value or null when not given
-     */
-    public function getOption($name)
-    {
-        return isset($this->options[$name]) ? $this->options[$name] : null;
-    }
-
-    /**
      * Checks if an option has been set
      *
      * @param string $name An option name
@@ -549,6 +537,34 @@ class Route implements \Serializable
         return $this;
     }
 
+    private function sanitizeRequirement($key, $regex)
+    {
+        if (!is_string($regex)) {
+            throw new \InvalidArgumentException(sprintf('Routing requirement for "%s" must be a string.', $key));
+        }
+
+        if ('' !== $regex && '^' === $regex[0]) {
+            $regex = (string)substr($regex, 1); // returns false for a single character
+        }
+
+        if ('$' === substr($regex, -1)) {
+            $regex = substr($regex, 0, -1);
+        }
+
+        if ('' === $regex) {
+            throw new \InvalidArgumentException(sprintf('Routing requirement for "%s" cannot be empty.', $key));
+        }
+
+        // this is to keep BC and will be removed in a future version
+        if ('_scheme' === $key) {
+            $this->setSchemes(explode('|', $regex));
+        } elseif ('_method' === $key) {
+            $this->setMethods(explode('|', $regex));
+        }
+
+        return $regex;
+    }
+
     /**
      * Returns the condition.
      *
@@ -597,31 +613,15 @@ class Route implements \Serializable
         return $this->compiled = $class::compile($this);
     }
 
-    private function sanitizeRequirement($key, $regex)
+    /**
+     * Get an option value.
+     *
+     * @param string $name An option name
+     *
+     * @return mixed The option value or null when not given
+     */
+    public function getOption($name)
     {
-        if (!is_string($regex)) {
-            throw new \InvalidArgumentException(sprintf('Routing requirement for "%s" must be a string.', $key));
-        }
-
-        if ('' !== $regex && '^' === $regex[0]) {
-            $regex = (string) substr($regex, 1); // returns false for a single character
-        }
-
-        if ('$' === substr($regex, -1)) {
-            $regex = substr($regex, 0, -1);
-        }
-
-        if ('' === $regex) {
-            throw new \InvalidArgumentException(sprintf('Routing requirement for "%s" cannot be empty.', $key));
-        }
-
-        // this is to keep BC and will be removed in a future version
-        if ('_scheme' === $key) {
-            $this->setSchemes(explode('|', $regex));
-        } elseif ('_method' === $key) {
-            $this->setMethods(explode('|', $regex));
-        }
-
-        return $regex;
+        return isset($this->options[$name]) ? $this->options[$name] : null;
     }
 }

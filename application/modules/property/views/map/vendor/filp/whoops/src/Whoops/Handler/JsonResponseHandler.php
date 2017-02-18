@@ -26,45 +26,6 @@ class JsonResponseHandler extends Handler
     private $onlyForAjaxRequests = false;
 
     /**
-     * @param  bool|null $returnFrames
-     * @return null|bool
-     */
-    public function addTraceToOutput($returnFrames = null)
-    {
-        if(func_num_args() == 0) {
-            return $this->returnFrames;
-        }
-
-        $this->returnFrames = (bool) $returnFrames;
-    }
-
-    /**
-     * @param  bool|null $onlyForAjaxRequests
-     * @return null|bool
-     */
-    public function onlyForAjaxRequests($onlyForAjaxRequests = null)
-    {
-        if(func_num_args() == 0) {
-            return $this->onlyForAjaxRequests;
-        }
-
-        $this->onlyForAjaxRequests = (bool) $onlyForAjaxRequests;
-    }
-
-    /**
-     * Check, if possible, that this execution was triggered by an AJAX request.
-     *
-     * @return bool
-     */
-    private function isAjaxRequest()
-    {
-        return (
-            !empty($_SERVER['HTTP_X_REQUESTED_WITH'])
-            && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')
-        ;
-    }
-
-    /**
      * @return int
      */
     public function handle()
@@ -105,5 +66,43 @@ class JsonResponseHandler extends Handler
 
         echo json_encode($response);
         return Handler::QUIT;
+    }
+
+    /**
+     * @param  bool|null $onlyForAjaxRequests
+     * @return null|bool
+     */
+    public function onlyForAjaxRequests($onlyForAjaxRequests = null)
+    {
+        if (func_num_args() == 0) {
+            return $this->onlyForAjaxRequests;
+        }
+
+        $this->onlyForAjaxRequests = (bool)$onlyForAjaxRequests;
+    }
+
+    /**
+     * Check, if possible, that this execution was triggered by an AJAX request.
+     *
+     * @return bool
+     */
+    private function isAjaxRequest()
+    {
+        return (
+            !empty($_SERVER['HTTP_X_REQUESTED_WITH'])
+            && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
+    }
+
+    /**
+     * @param  bool|null $returnFrames
+     * @return null|bool
+     */
+    public function addTraceToOutput($returnFrames = null)
+    {
+        if (func_num_args() == 0) {
+            return $this->returnFrames;
+        }
+
+        $this->returnFrames = (bool)$returnFrames;
     }
 }

@@ -48,17 +48,6 @@ class Module
         $this->attachListeners($event);
     }
 
-    public function getAutoloaderConfig()
-    {
-        return array(
-            'Zend\Loader\StandardAutoloader' => array(
-                'namespaces' => array(
-                    __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
-                ),
-            ),
-        );
-    }
-
     private function attachListeners(EventInterface $event)
     {
         $request = $event->getRequest();
@@ -101,6 +90,17 @@ class Module
 
         //Detach default RouteNotFoundStrategy
         $services->get('Zend\Mvc\View\Http\RouteNotFoundStrategy')->detach($events);
+    }
+
+    public function getAutoloaderConfig()
+    {
+        return array(
+            'Zend\Loader\StandardAutoloader' => array(
+                'namespaces' => array(
+                    __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
+                ),
+            ),
+        );
     }
 
 }

@@ -41,6 +41,17 @@ abstract class Queue {
 	}
 
 	/**
+	 * Set the IoC container instance.
+	 *
+	 * @param  \Illuminate\Container\Container $container
+	 * @return void
+	 */
+	public function setContainer(Container $container)
+	{
+		$this->container = $container;
+	}
+
+	/**
 	 * Create a payload string from the given job and data.
 	 *
 	 * @param  string  $job
@@ -115,17 +126,6 @@ abstract class Queue {
 	public function getTime()
 	{
 		return time();
-	}
-
-	/**
-	 * Set the IoC container instance.
-	 *
-	 * @param  \Illuminate\Container\Container  $container
-	 * @return void
-	 */
-	public function setContainer(Container $container)
-	{
-		$this->container = $container;
 	}
 
 }

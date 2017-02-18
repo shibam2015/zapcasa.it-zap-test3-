@@ -83,14 +83,6 @@ class Geocoder implements GeocoderInterface
     }
 
     /**
-     * @return integer $maxResults
-     */
-    public function getMaxResults()
-    {
-        return $this->maxResults;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function geocode($value)
@@ -105,6 +97,42 @@ class Geocoder implements GeocoderInterface
         $result   = $this->returnResult($data);
 
         return $result;
+    }
+
+    /**
+     * @param array $data An array of data.
+     *
+     * @return ResultInterface
+     */
+    protected function returnResult(array $data = array())
+    {
+        return $this->resultFactory->createFromArray($data);
+    }
+
+    /**
+     * Returns the provider to use.
+     *
+     * @return ProviderInterface
+     */
+    protected function getProvider()
+    {
+        if (null === $this->provider) {
+            if (0 === count($this->providers)) {
+                throw new \RuntimeException('No provider registered.');
+            } else {
+                $this->provider = $this->providers[key($this->providers)];
+            }
+        }
+
+        return $this->provider;
+    }
+
+    /**
+     * @return integer $maxResults
+     */
+    public function getMaxResults()
+    {
+        return $this->maxResults;
     }
 
     /**
@@ -125,22 +153,6 @@ class Geocoder implements GeocoderInterface
     }
 
     /**
-     * Registers a provider.
-     *
-     * @param ProviderInterface $provider
-     *
-     * @return GeocoderInterface
-     */
-    public function registerProvider(ProviderInterface $provider)
-    {
-        if (null !== $provider) {
-            $this->providers[$provider->getName()] = $provider;
-        }
-
-        return $this;
-    }
-
-    /**
      * Registers a set of providers.
      *
      * @param ProviderInterface[] $providers
@@ -151,6 +163,22 @@ class Geocoder implements GeocoderInterface
     {
         foreach ($providers as $provider) {
             $this->registerProvider($provider);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Registers a provider.
+     *
+     * @param ProviderInterface $provider
+     *
+     * @return GeocoderInterface
+     */
+    public function registerProvider(ProviderInterface $provider)
+    {
+        if (null !== $provider) {
+            $this->providers[$provider->getName()] = $provider;
         }
 
         return $this;
@@ -180,33 +208,5 @@ class Geocoder implements GeocoderInterface
     public function getProviders()
     {
         return $this->providers;
-    }
-
-    /**
-     * Returns the provider to use.
-     *
-     * @return ProviderInterface
-     */
-    protected function getProvider()
-    {
-        if (null === $this->provider) {
-            if (0 === count($this->providers)) {
-                throw new \RuntimeException('No provider registered.');
-            } else {
-                $this->provider = $this->providers[key($this->providers)];
-            }
-        }
-
-        return $this->provider;
-    }
-
-    /**
-     * @param array $data An array of data.
-     *
-     * @return ResultInterface
-     */
-    protected function returnResult(array $data = array())
-    {
-        return $this->resultFactory->createFromArray($data);
     }
 }

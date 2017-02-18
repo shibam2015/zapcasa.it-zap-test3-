@@ -135,6 +135,17 @@ class Handler {
 	}
 
 	/**
+	 * Handle an uncaught exception.
+	 *
+	 * @param  \Exception $exception
+	 * @return void
+	 */
+	public function handleUncaughtException($exception)
+	{
+		$this->handleException($exception)->send();
+	}
+
+	/**
 	 * Handle an exception for the application.
 	 *
 	 * @param  \Exception  $exception
@@ -156,61 +167,6 @@ class Handler {
 		// default exception displayer for the current application context and let
 		// it show the exception to the user / developer based on the situation.
 		return $this->displayException($exception);
-	}
-
-	/**
-	 * Handle an uncaught exception.
-	 *
-	 * @param  \Exception  $exception
-	 * @return void
-	 */
-	public function handleUncaughtException($exception)
-	{
-		$this->handleException($exception)->send();
-	}
-
-	/**
-	 * Handle the PHP shutdown event.
-	 *
-	 * @return void
-	 */
-	public function handleShutdown()
-	{
-		$error = error_get_last();
-
-		// If an error has occurred that has not been displayed, we will create a fatal
-		// error exception instance and pass it into the regular exception handling
-		// code so it can be displayed back out to the developer for information.
-		if ( ! is_null($error))
-		{
-			extract($error);
-
-			if ( ! $this->isFatal($type)) return;
-
-			$this->handleException(new FatalError($message, $type, 0, $file, $line))->send();
-		}
-	}
-
-	/**
-	 * Determine if the error type is fatal.
-	 *
-	 * @param  int   $type
-	 * @return bool
-	 */
-	protected function isFatal($type)
-	{
-        return in_array($type, array(E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_PARSE));
-	}
-
-	/**
-	 * Handle a console exception.
-	 *
-	 * @param  \Exception  $exception
-	 * @return void
-	 */
-	public function handleConsole($exception)
-	{
-		return $this->callCustomHandlers($exception, true);
 	}
 
 	/**
@@ -267,19 +223,6 @@ class Handler {
 	}
 
 	/**
-	 * Display the given exception to the user.
-	 *
-	 * @param  \Exception  $exception
-	 * @return void
-	 */
-	protected function displayException($exception)
-	{
-		$displayer = $this->debug ? $this->debugDisplayer : $this->plainDisplayer;
-
-		return $displayer->display($exception);
-	}
-
-	/**
 	 * Determine if the given handler handles this exception.
 	 *
 	 * @param  Closure    $handler
@@ -328,6 +271,73 @@ class Handler {
 	}
 
 	/**
+	 * Prepare the given response.
+	 *
+	 * @param  mixed $response
+	 * @return \Illuminate\Http\Response
+	 */
+	protected function prepareResponse($response)
+	{
+		return $this->responsePreparer->prepareResponse($response);
+	}
+
+	/**
+	 * Display the given exception to the user.
+	 *
+	 * @param  \Exception $exception
+	 * @return void
+	 */
+	protected function displayException($exception)
+	{
+		$displayer = $this->debug ? $this->debugDisplayer : $this->plainDisplayer;
+
+		return $displayer->display($exception);
+	}
+
+	/**
+	 * Handle the PHP shutdown event.
+	 *
+	 * @return void
+	 */
+	public function handleShutdown()
+	{
+		$error = error_get_last();
+
+		// If an error has occurred that has not been displayed, we will create a fatal
+		// error exception instance and pass it into the regular exception handling
+		// code so it can be displayed back out to the developer for information.
+		if (!is_null($error)) {
+			extract($error);
+
+			if (!$this->isFatal($type)) return;
+
+			$this->handleException(new FatalError($message, $type, 0, $file, $line))->send();
+		}
+	}
+
+	/**
+	 * Determine if the error type is fatal.
+	 *
+	 * @param  int $type
+	 * @return bool
+	 */
+	protected function isFatal($type)
+	{
+		return in_array($type, array(E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_PARSE));
+	}
+
+	/**
+	 * Handle a console exception.
+	 *
+	 * @param  \Exception $exception
+	 * @return void
+	 */
+	public function handleConsole($exception)
+	{
+		return $this->callCustomHandlers($exception, true);
+	}
+
+	/**
 	 * Register an application error handler.
 	 *
 	 * @param  Closure  $callback
@@ -347,17 +357,6 @@ class Handler {
 	public function pushError(Closure $callback)
 	{
 		$this->handlers[] = $callback;
-	}
-
-	/**
-	 * Prepare the given response.
-	 *
-	 * @param  mixed  $response
-	 * @return \Illuminate\Http\Response
-	 */
-	protected function prepareResponse($response)
-	{
-		return $this->responsePreparer->prepareResponse($response);
 	}
 
 	/**

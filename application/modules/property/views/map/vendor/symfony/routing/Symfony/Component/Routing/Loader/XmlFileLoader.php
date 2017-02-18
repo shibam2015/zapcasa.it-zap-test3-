@@ -65,6 +65,22 @@ class XmlFileLoader extends FileLoader
     }
 
     /**
+     * Loads an XML file.
+     *
+     * @param string $file An XML file path
+     *
+     * @return \DOMDocument
+     *
+     * @throws \InvalidArgumentException When loading of XML file fails because of syntax errors
+     *                                   or when the XML structure is not as expected by the scheme -
+     *                                   see validate()
+     */
+    protected function loadFile($file)
+    {
+        return XmlUtils::loadFile($file, __DIR__ . static::SCHEME_PATH);
+    }
+
+    /**
      * Parses a node from a loaded XML file.
      *
      * @param RouteCollection $collection Collection to associate with the node
@@ -90,16 +106,6 @@ class XmlFileLoader extends FileLoader
             default:
                 throw new \InvalidArgumentException(sprintf('Unknown tag "%s" used in file "%s". Expected "route" or "import".', $node->localName, $path));
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @api
-     */
-    public function supports($resource, $type = null)
-    {
-        return is_string($resource) && 'xml' === pathinfo($resource, PATHINFO_EXTENSION) && (!$type || 'xml' === $type);
     }
 
     /**
@@ -133,6 +139,50 @@ class XmlFileLoader extends FileLoader
 
         $route = new Route($node->getAttribute('path'), $defaults, $requirements, $options, $node->getAttribute('host'), $schemes, $methods, $condition);
         $collection->add($id, $route);
+    }
+
+    /**
+     * Parses the config elements (default, requirement, option).
+     *
+     * @param \DOMElement $node Element to parse that contains the configs
+     * @param string $path Full path of the XML file being processed
+     *
+     * @return array An array with the defaults as first item, requirements as second and options as third.
+     *
+     * @throws \InvalidArgumentException When the XML is invalid
+     */
+    private function parseConfigs(\DOMElement $node, $path)
+    {
+        $defaults = array();
+        $requirements = array();
+        $options = array();
+        $condition = null;
+
+        foreach ($node->getElementsByTagNameNS(self::NAMESPACE_URI, '*') as $n) {
+            switch ($n->localName) {
+                case 'default':
+                    if ($n->hasAttribute('xsi:nil') && 'true' == $n->getAttribute('xsi:nil')) {
+                        $defaults[$n->getAttribute('key')] = null;
+                    } else {
+                        $defaults[$n->getAttribute('key')] = trim($n->textContent);
+                    }
+
+                    break;
+                case 'requirement':
+                    $requirements[$n->getAttribute('key')] = trim($n->textContent);
+                    break;
+                case 'option':
+                    $options[$n->getAttribute('key')] = trim($n->textContent);
+                    break;
+                case 'condition':
+                    $condition = trim($n->textContent);
+                    break;
+                default:
+                    throw new \InvalidArgumentException(sprintf('Unknown tag "%s" used in file "%s". Expected "default", "requirement" or "option".', $n->localName, $path));
+            }
+        }
+
+        return array($defaults, $requirements, $options, $condition);
     }
 
     /**
@@ -184,62 +234,12 @@ class XmlFileLoader extends FileLoader
     }
 
     /**
-     * Loads an XML file.
+     * {@inheritdoc}
      *
-     * @param string $file An XML file path
-     *
-     * @return \DOMDocument
-     *
-     * @throws \InvalidArgumentException When loading of XML file fails because of syntax errors
-     *                                   or when the XML structure is not as expected by the scheme -
-     *                                   see validate()
+     * @api
      */
-    protected function loadFile($file)
+    public function supports($resource, $type = null)
     {
-        return XmlUtils::loadFile($file, __DIR__.static::SCHEME_PATH);
-    }
-
-    /**
-     * Parses the config elements (default, requirement, option).
-     *
-     * @param \DOMElement $node Element to parse that contains the configs
-     * @param string      $path Full path of the XML file being processed
-     *
-     * @return array An array with the defaults as first item, requirements as second and options as third.
-     *
-     * @throws \InvalidArgumentException When the XML is invalid
-     */
-    private function parseConfigs(\DOMElement $node, $path)
-    {
-        $defaults = array();
-        $requirements = array();
-        $options = array();
-        $condition = null;
-
-        foreach ($node->getElementsByTagNameNS(self::NAMESPACE_URI, '*') as $n) {
-            switch ($n->localName) {
-                case 'default':
-                    if ($n->hasAttribute('xsi:nil') && 'true' == $n->getAttribute('xsi:nil')) {
-                        $defaults[$n->getAttribute('key')] = null;
-                    } else {
-                        $defaults[$n->getAttribute('key')] = trim($n->textContent);
-                    }
-
-                    break;
-                case 'requirement':
-                    $requirements[$n->getAttribute('key')] = trim($n->textContent);
-                    break;
-                case 'option':
-                    $options[$n->getAttribute('key')] = trim($n->textContent);
-                    break;
-                case 'condition':
-                    $condition = trim($n->textContent);
-                    break;
-                default:
-                    throw new \InvalidArgumentException(sprintf('Unknown tag "%s" used in file "%s". Expected "default", "requirement" or "option".', $n->localName, $path));
-            }
-        }
-
-        return array($defaults, $requirements, $options, $condition);
+        return is_string($resource) && 'xml' === pathinfo($resource, PATHINFO_EXTENSION) && (!$type || 'xml' === $type);
     }
 }

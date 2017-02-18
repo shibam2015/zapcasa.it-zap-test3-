@@ -86,6 +86,20 @@ class Actions extends FormerObject
   ////////////////////////////////////////////////////////////////////
 
   /**
+   * Check if a given method calls a button or not
+   *
+   * @param string $method The method to check
+   *
+   * @return boolean
+   */
+  private function isButtonMethod($method)
+  {
+    $buttons = array('button', 'submit', 'link', 'reset');
+
+    return (bool)Str::contains($method, $buttons);
+  }
+
+  /**
    * Create a new Button and add it to the actions
    *
    * @param string $type       The button type
@@ -100,20 +114,6 @@ class Actions extends FormerObject
     $this->value[] = $this->app['former']->$type($name, $link, $attributes)->__toString();
 
     return $this;
-  }
-
-  /**
-   * Check if a given method calls a button or not
-   *
-   * @param string $method The method to check
-   *
-   * @return boolean
-   */
-  private function isButtonMethod($method)
-  {
-    $buttons = array('button', 'submit', 'link', 'reset');
-
-    return (bool) Str::contains($method, $buttons);
   }
 
 }

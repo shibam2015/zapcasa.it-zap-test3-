@@ -155,7 +155,8 @@ $(document).ready(function(){
 
 			<?php
 			$pageLink = "";
-			$featuredLink = '<a href="'.base_url()."property/make_featured/".$property_details[0]['property_id'].'" class="btn btn-blue btn-sm btn-icon btn-xs">
+			$featuredLink = '<a href="' . base_url() . "property/make_featured/" . $property_details[0]['property_id'] . "/" . $this->uri->segment('4') . "/" . $this->uri->segment('5') . "/" . $this->uri->segment('6') . '" class="btn btn-blue btn-sm btn-icon btn-xs">
+								
 								<i class="entypo-back-in-time"></i>Feature&nbsp;&nbsp;
 							 </a>';
 			$featureStatus = get_perticular_field_value('zc_property_featured','status'," and property_id='".$property_details[0]['property_id']."'");
@@ -165,15 +166,16 @@ $(document).ready(function(){
 				$expDateLength = get_perticular_field_value('zc_property_featured','number_of_days'," and property_id='".$property_details[0]['property_id']."'");
 				$expireDate = strtotime(date('Y-m-d', strtotime($startDate . " +".$expDateLength." days")));
 				if($todayDate < $expireDate){
-					$featuredLink = '<a href="'.base_url()."property/".($property_details[0]['feature_status']==0?'property_feature_resume':'property_feature_suspend')."/".$property_details[0]['property_id'].$pageLink.'" class="btn btn-'.($property_details[0]['feature_status']==0?'gold':'red').' btn-sm btn-icon btn-xs">
-										<i class="entypo-back-in-time"></i>'.($property_details[0]['feature_status']==0?'Resume':'Suspend').'
+					$featuredLink = '<a href="' . base_url() . "property/" . ($property_details[0]['feature_status'] == 0 ? 'make_featured' : 'make_featured') . "/" . $property_details[0]['property_id'] . "/" . $this->uri->segment('4') . "/" . $this->uri->segment('5') . "/" . $this->uri->segment('6') . '" class="btn btn-' . ($property_details[0]['feature_status'] == 0 ? 'gold' : 'red') . ' btn-sm btn-icon btn-xs">
+										<i class="entypo-back-in-time"></i>' . ($property_details[0]['feature_status'] == 0 ? 'Resume' : 'Suspend') . '
 									 </a>';
 				}
 			}
 			echo $featuredLink;
 			?>
 
-			<a href="<?php echo base_url();?>property/delete_property/<?php echo $property_details[0]['property_id']; ?>" class="btn btn-sm btn-icon btn-xs btn-red" onclick="return confirm('Are your sure?')">
+			<a href="<?php echo base_url(); ?>property/delete_property/<?php echo $property_details[0]['property_id']; ?>/<?php echo $this->uri->segment('4') ?>/<?php echo $this->uri->segment('5') ?>/<?php echo $this->uri->segment('6') ?>"
+			   class="btn btn-sm btn-icon btn-xs btn-red" onclick="return confirm('Are your sure?')">
 				<i class="entypo-cancel"></i>Delete
 			</a>
 

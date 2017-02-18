@@ -179,6 +179,7 @@ $(function(){
 					$alt = 0;
 					$gMapCounter = 0;
 					foreach($property_details as $arrProp) {
+						$advertiserGeoAddress = "";
 						$first_segment="";
 						if($_GET['category_id']=='10' || $_GET['for_luxury']!=''){
 							if($_GET['for_luxury']!=''){
@@ -217,6 +218,7 @@ $(function(){
 						//$prop_det_url.='-'.trim($typology_name);
 						if($_COOKIE['lang'] == "english")				
 						{
+
 							$prop_det_url.='-'.trim($arrProp->city_name);
 							$prop_det_url.='-'.trim($arrProp->provience_name);
 						}
@@ -225,7 +227,9 @@ $(function(){
 							$prop_det_url.='-'.trim($arrProp->city_name_it);
 							$prop_det_url.='-'.trim($arrProp->provience_name_it);
 						}
-						$prop_det_url.='-'.trim($arrProp->property_id);						
+						$prop_det_url .= '-' . trim($arrProp->property_id);
+						//$prop_det_url = prop_det_url.replaceAll("'","");	
+						// echo "hiii".stripslashes($prop_det_url);				
 						?>
 					<li class="<?php echo($alt>0?'alt':''); ?>" <?php echo($arrProp->feature_status == 1?'style="background-color:rgb(233, 242, 255);"':''); ?>>
 						<?php
@@ -407,13 +411,15 @@ $(function(){
 							</div>
 							<!-- <div class="listingShw"></div> -->
 						</div>
-
+						<?php $prop_det_url = str_replace("'", "", $prop_det_url); ?>
 						<div class="listingContent">
 							<h4 style="font-weight:bold;font-size:12px;">
 								<?php echo $this->lang->line('ref_code').': '.CreateNewRefToken($arrProp->property_id,$arrProp->name); ?>
 							</h4>
 							<h2 class="hackerspace">
-								<a href="<?php echo base_url().$first_segment.'/'.$prop_det_url;?>" onMouseOver="goToMarker('<?php echo $gMapCounter; ?>')" onMouseOut="markerListMouseOut('<?php echo $gMapCounter; ?>')">
+								<a href="<?php echo base_url() . $first_segment . '/' . stripslashes($prop_det_url); ?>"
+								   onMouseOver="goToMarker('<?php echo $gMapCounter; ?>')"
+								   onMouseOut="markerListMouseOut('<?php echo $gMapCounter; ?>')">
 									<?php echo $proptitle;?>
 								</a>
 							</h2>
@@ -645,6 +651,10 @@ $(function(){
 						</div>
 					</li>						
 						<?php
+						$advertiserGeoAddress .= stripslashes($arrProp->city_name) . ', ' . $arrProp->province_code . ', ' . $arrAdv->zip . ', Italy';
+						$lat_lng_array = getLangLat($advertiserGeoAddress);
+						$GoogleMapMarkersLatitude = $lat_lng_array->lat;
+						$GoogleMapMarkersLongitude = $lat_lng_array->lng;
 						$alt++;
 						if($alt > 1){
 							$alt = 0;
@@ -652,8 +662,8 @@ $(function(){
 						$GoogleMapMarkers[$gMapCounter] = array(
 							'proptitle' => $proptitle,
 							'hackerspace' => 'marker'.$arrProp->contract_id,
-							'latitude' => ($arrProp->latitude=='0'?'42.500000':$arrProp->latitude),
-							'longitude' => ($arrProp->longitude=='0'?'21.500000':$arrProp->longitude),
+							'latitude' => ($arrProp->latitude == '0' ? $GoogleMapMarkersLatitude : $arrProp->latitude),
+							'longitude' => ($arrProp->longitude == '0' ? $GoogleMapMarkersLongitude : $arrProp->longitude),
 							'proaddress' => $propertyAddress,
 							'propurl' => base_url().$first_segment.'/'.$prop_det_url,
 							'proprice' => '<font style="color:#ED6B1F">'.$propertyPrice.'</font>',

@@ -61,6 +61,17 @@ class SqsQueue extends Queue implements QueueInterface {
 	}
 
 	/**
+	 * Get the queue or return the default.
+	 *
+	 * @param  string|null $queue
+	 * @return string
+	 */
+	public function getQueue($queue)
+	{
+		return $queue ?: $this->default;
+	}
+
+	/**
 	 * Push a new job onto the queue after a delay.
 	 *
 	 * @param  \DateTime|int  $delay
@@ -100,17 +111,6 @@ class SqsQueue extends Queue implements QueueInterface {
 		{
 			return new SqsJob($this->container, $this->sqs, $queue, $response['Messages'][0]);
 		}
-	}
-
-	/**
-	 * Get the queue or return the default.
-	 *
-	 * @param  string|null  $queue
-	 * @return string
-	 */
-	public function getQueue($queue)
-	{
-		return $queue ?: $this->default;
 	}
 
 	/**

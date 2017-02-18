@@ -19,6 +19,26 @@ namespace Symfony\Component\PropertyAccess;
 final class PropertyAccess
 {
     /**
+     * This class cannot be instantiated.
+     */
+    private function __construct()
+    {
+    }
+
+    /**
+     * Alias of {@link getPropertyAccessor}.
+     *
+     * @return PropertyAccessor The new property accessor
+     *
+     * @deprecated Deprecated since version 2.3, to be removed in 3.0. Use
+     *             {@link createPropertyAccessor()} instead.
+     */
+    public static function getPropertyAccessor()
+    {
+        return self::createPropertyAccessor();
+    }
+
+    /**
      * Creates a property accessor with the default configuration.
      *
      * @return PropertyAccessor The new property accessor
@@ -36,25 +56,5 @@ final class PropertyAccess
     public static function createPropertyAccessorBuilder()
     {
         return new PropertyAccessorBuilder();
-    }
-
-    /**
-     * Alias of {@link getPropertyAccessor}.
-     *
-     * @return PropertyAccessor The new property accessor
-     *
-     * @deprecated Deprecated since version 2.3, to be removed in 3.0. Use
-     *             {@link createPropertyAccessor()} instead.
-     */
-    public static function getPropertyAccessor()
-    {
-        return self::createPropertyAccessor();
-    }
-
-    /**
-     * This class cannot be instantiated.
-     */
-    private function __construct()
-    {
     }
 }

@@ -40,14 +40,6 @@ abstract class Handler implements HandlerInterface
     private $exception;
 
     /**
-     * @param Run $run
-     */
-    public function setRun(Run $run)
-    {
-        $this->run = $run;
-    }
-
-    /**
      * @return Run
      */
     protected function getRun()
@@ -56,11 +48,11 @@ abstract class Handler implements HandlerInterface
     }
 
     /**
-     * @param Inspector $inspector
+     * @param Run $run
      */
-    public function setInspector(Inspector $inspector)
+    public function setRun(Run $run)
     {
-        $this->inspector = $inspector;
+        $this->run = $run;
     }
 
     /**
@@ -72,11 +64,11 @@ abstract class Handler implements HandlerInterface
     }
 
     /**
-     * @param Exception $exception
+     * @param Inspector $inspector
      */
-    public function setException(Exception $exception)
+    public function setInspector(Inspector $inspector)
     {
-        $this->exception = $exception;
+        $this->inspector = $inspector;
     }
 
     /**
@@ -85,5 +77,13 @@ abstract class Handler implements HandlerInterface
     protected function getException()
     {
         return $this->exception;
+    }
+
+    /**
+     * @param Exception $exception
+     */
+    public function setException(Exception $exception)
+    {
+        $this->exception = $exception;
     }
 }

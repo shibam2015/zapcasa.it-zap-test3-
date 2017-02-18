@@ -53,22 +53,6 @@ class DataScienceToolkitProvider extends AbstractProvider implements ProviderInt
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function getReversedData(array $coordinates)
-    {
-        throw new UnsupportedException('The DataScienceToolkitProvider is not able to do reverse geocoding.');
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getName()
-    {
-        return 'data_science_toolkit';
-    }
-
-    /**
      * @param string $query
      *
      * @return array
@@ -94,5 +78,21 @@ class DataScienceToolkitProvider extends AbstractProvider implements ProviderInt
             'streetName'   => isset($result['street_name']) ? $result['street_name'] : null,
             'streetNumber' => isset($result['street_number']) ? $result['street_number'] : null,
         )));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getReversedData(array $coordinates)
+    {
+        throw new UnsupportedException('The DataScienceToolkitProvider is not able to do reverse geocoding.');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getName()
+    {
+        return 'data_science_toolkit';
     }
 }

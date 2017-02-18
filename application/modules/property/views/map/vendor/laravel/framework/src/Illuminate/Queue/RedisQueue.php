@@ -70,6 +70,44 @@ class RedisQueue extends Queue implements QueueInterface {
 	}
 
 	/**
+	 * Get the queue or return the default.
+	 *
+	 * @param  string|null $queue
+	 * @return string
+	 */
+	protected function getQueue($queue)
+	{
+		return 'queues:' . ($queue ?: $this->default);
+	}
+
+	/**
+	 * Create a payload string from the given job and data.
+	 *
+	 * @param  string $job
+	 * @param  mixed $data
+	 * @param  string $queue
+	 * @return string
+	 */
+	protected function createPayload($job, $data = '', $queue = null)
+	{
+		$payload = parent::createPayload($job, $data);
+
+		$payload = $this->setMeta($payload, 'id', $this->getRandomId());
+
+		return $this->setMeta($payload, 'attempts', 1);
+	}
+
+	/**
+	 * Get a random ID string.
+	 *
+	 * @return string
+	 */
+	protected function getRandomId()
+	{
+		return str_random(20);
+	}
+
+	/**
 	 * Push a new job onto the queue after a delay.
 	 *
 	 * @param  \DateTime|int  $delay
@@ -125,18 +163,6 @@ class RedisQueue extends Queue implements QueueInterface {
 
 			return new RedisJob($this->container, $this, $job, $original);
 		}
-	}
-
-	/**
-	 * Delete a reserved job from the queue.
-	 *
-	 * @param  string  $queue
-	 * @param  string  $job
-	 * @return void
-	 */
-	public function deleteReserved($queue, $job)
-	{
-		$this->redis->zrem($this->getQueue($queue).':reserved', $job);
 	}
 
 	/**
@@ -196,41 +222,15 @@ class RedisQueue extends Queue implements QueueInterface {
 	}
 
 	/**
-	 * Create a payload string from the given job and data.
+	 * Delete a reserved job from the queue.
 	 *
-	 * @param  string  $job
-	 * @param  mixed   $data
 	 * @param  string  $queue
-	 * @return string
+	 * @param  string $job
+	 * @return void
 	 */
-	protected function createPayload($job, $data = '', $queue = null)
+	public function deleteReserved($queue, $job)
 	{
-		$payload = parent::createPayload($job, $data);
-
-		$payload = $this->setMeta($payload, 'id', $this->getRandomId());
-
-		return $this->setMeta($payload, 'attempts', 1);
-	}
-
-	/**
-	 * Get a random ID string.
-	 *
-	 * @return string
-	 */
-	protected function getRandomId()
-	{
-		return str_random(20);
-	}
-
-	/**
-	 * Get the queue or return the default.
-	 *
-	 * @param  string|null  $queue
-	 * @return string
-	 */
-	protected function getQueue($queue)
-	{
-		return 'queues:'.($queue ?: $this->default);
+		$this->redis->zrem($this->getQueue($queue) . ':reserved', $job);
 	}
 
 	/**

@@ -88,6 +88,18 @@ class Manager {
 	}
 
 	/**
+	 * Get a fluent query builder instance.
+	 *
+	 * @param  string $table
+	 * @param  string $connection
+	 * @return \Illuminate\Database\Query\Builder
+	 */
+	public static function table($table, $connection = null)
+	{
+		return static::$instance->connection($connection)->table($table);
+	}
+
+	/**
 	 * Get a connection instance from the global manager.
 	 *
 	 * @param  string  $connection
@@ -99,15 +111,14 @@ class Manager {
 	}
 
 	/**
-	 * Get a fluent query builder instance.
+	 * Get a registered connection instance.
 	 *
-	 * @param  string  $table
-	 * @param  string  $connection
-	 * @return \Illuminate\Database\Query\Builder
+	 * @param  string $name
+	 * @return \Illuminate\Database\Connection
 	 */
-	public static function table($table, $connection = null)
+	public function getConnection($name = null)
 	{
-		return static::$instance->connection($connection)->table($table);
+		return $this->manager->connection($name);
 	}
 
 	/**
@@ -122,14 +133,15 @@ class Manager {
 	}
 
 	/**
-	 * Get a registered connection instance.
+	 * Dynamically pass methods to the default connection.
 	 *
-	 * @param  string  $name
-	 * @return \Illuminate\Database\Connection
+	 * @param  string $method
+	 * @param  array $parameters
+	 * @return mixed
 	 */
-	public function getConnection($name = null)
+	public static function __callStatic($method, $parameters)
 	{
-		return $this->manager->connection($name);
+		return call_user_func_array(array(static::connection(), $method), $parameters);
 	}
 
 	/**
@@ -167,6 +179,18 @@ class Manager {
 	}
 
 	/**
+	 * Get the current event dispatcher instance.
+	 *
+	 * @return \Illuminate\Events\Dispatcher
+	 */
+	public function getEventDispatcher()
+	{
+		if ($this->container->bound('events')) {
+			return $this->container['events'];
+		}
+	}
+
+	/**
 	 * Set the fetch mode for the database connections.
 	 *
 	 * @param  int  $fetchMode
@@ -197,19 +221,6 @@ class Manager {
 	public function getDatabaseManager()
 	{
 		return $this->manager;
-	}
-
-	/**
-	 * Get the current event dispatcher instance.
-	 *
-	 * @return \Illuminate\Events\Dispatcher
-	 */
-	public function getEventDispatcher()
-	{
-		if ($this->container->bound('events'))
-		{
-			return $this->container['events'];
-		}
 	}
 
 	/**
@@ -266,18 +277,6 @@ class Manager {
 	public function setContainer(Container $container)
 	{
 		$this->container = $container;
-	}
-
-	/**
-	 * Dynamically pass methods to the default connection.
-	 *
-	 * @param  string  $method
-	 * @param  array   $parameters
-	 * @return mixed
-	 */
-	public static function __callStatic($method, $parameters)
-	{
-		return call_user_func_array(array(static::connection(), $method), $parameters);
 	}
 
 }

@@ -13,17 +13,13 @@ abstract class AbstractNodeVisitor extends \PHPParser_NodeVisitorAbstract
     protected $filename = '';
 
     /**
-     * Set the full path to the current file being parsed
+     * Get the directory of the current file being parsed
      *
-     * @param string $filename Filename being parser
-     *
-     * @return self
+     * @return string
      */
-    public function setFilename($filename)
+    public function getDir()
     {
-        $this->filename = $filename;
-
-        return $this;
+        return dirname($this->getFilename());
     }
 
     /**
@@ -37,12 +33,16 @@ abstract class AbstractNodeVisitor extends \PHPParser_NodeVisitorAbstract
     }
 
     /**
-     * Get the directory of the current file being parsed
+     * Set the full path to the current file being parsed
      *
-     * @return string
+     * @param string $filename Filename being parser
+     *
+     * @return self
      */
-    public function getDir()
+    public function setFilename($filename)
     {
-        return dirname($this->getFilename());
+        $this->filename = $filename;
+
+        return $this;
     }
 }

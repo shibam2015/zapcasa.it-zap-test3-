@@ -45,6 +45,11 @@ class UriSigner
         return $uri.(false === (strpos($uri, '?')) ? '?' : '&').'_hash='.$this->computeHash($uri);
     }
 
+    private function computeHash($uri)
+    {
+        return urlencode(base64_encode(hash_hmac('sha256', $uri, $this->secret, true)));
+    }
+
     /**
      * Checks that a URI contains the correct hash.
      *
@@ -63,10 +68,5 @@ class UriSigner
         }
 
         return $this->computeHash($matches[1]) === $matches[2];
-    }
-
-    private function computeHash($uri)
-    {
-        return urlencode(base64_encode(hash_hmac('sha256', $uri, $this->secret, true)));
     }
 }

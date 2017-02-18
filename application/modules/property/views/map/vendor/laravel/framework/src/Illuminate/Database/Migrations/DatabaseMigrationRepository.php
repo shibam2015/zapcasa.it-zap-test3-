@@ -49,6 +49,26 @@ class DatabaseMigrationRepository implements MigrationRepositoryInterface {
 	}
 
 	/**
+	 * Get a query builder for the migration table.
+	 *
+	 * @return \Illuminate\Database\Query\Builder
+	 */
+	protected function table()
+	{
+		return $this->getConnection()->table($this->table);
+	}
+
+	/**
+	 * Resolve the database connection instance.
+	 *
+	 * @return \Illuminate\Database\Connection
+	 */
+	public function getConnection()
+	{
+		return $this->resolver->connection($this->connection);
+	}
+
+	/**
 	 * Get the last migration batch.
 	 *
 	 * @return array
@@ -58,6 +78,16 @@ class DatabaseMigrationRepository implements MigrationRepositoryInterface {
 		$query = $this->table()->where('batch', $this->getLastBatchNumber());
 
 		return $query->orderBy('migration', 'desc')->get();
+	}
+
+	/**
+	 * Get the last migration batch number.
+	 *
+	 * @return int
+	 */
+	public function getLastBatchNumber()
+	{
+		return $this->table()->max('batch');
 	}
 
 	/**
@@ -96,16 +126,6 @@ class DatabaseMigrationRepository implements MigrationRepositoryInterface {
 	}
 
 	/**
-	 * Get the last migration batch number.
-	 *
-	 * @return int
-	 */
-	public function getLastBatchNumber()
-	{
-		return $this->table()->max('batch');
-	}
-
-	/**
 	 * Create the migration repository data store.
 	 *
 	 * @return void
@@ -138,16 +158,6 @@ class DatabaseMigrationRepository implements MigrationRepositoryInterface {
 	}
 
 	/**
-	 * Get a query builder for the migration table.
-	 *
-	 * @return \Illuminate\Database\Query\Builder
-	 */
-	protected function table()
-	{
-		return $this->getConnection()->table($this->table);
-	}
-
-	/**
 	 * Get the connection resolver instance.
 	 *
 	 * @return \Illuminate\Database\ConnectionResolverInterface
@@ -155,16 +165,6 @@ class DatabaseMigrationRepository implements MigrationRepositoryInterface {
 	public function getConnectionResolver()
 	{
 		return $this->resolver;
-	}
-
-	/**
-	 * Resolve the database connection instance.
-	 *
-	 * @return \Illuminate\Database\Connection
-	 */
-	public function getConnection()
-	{
-		return $this->resolver->connection($this->connection);
 	}
 
 	/**

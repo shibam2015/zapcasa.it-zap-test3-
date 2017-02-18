@@ -193,16 +193,6 @@ abstract class AbstractService
     }
 
     /**
-     * Checks if the service has a business account.
-     *
-     * @return boolean TRUE if the service has a business account else FALSE.
-     */
-    public function hasBusinessAccount()
-    {
-        return $this->businessAccount !== null;
-    }
-
-    /**
      * Gets the business account.
      *
      * @return \Ivory\GoogleMap\Services\BusinessAccount The business account.
@@ -236,5 +226,15 @@ abstract class AbstractService
         }
 
         return $this->businessAccount->signUrl($url);
+    }
+
+    /**
+     * Checks if the service has a business account.
+     *
+     * @return boolean TRUE if the service has a business account else FALSE.
+     */
+    public function hasBusinessAccount()
+    {
+        return $this->businessAccount !== null;
     }
 }

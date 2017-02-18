@@ -14,31 +14,28 @@ class Select extends Field
 {
 
   /**
-   * The select's placeholder
-   * @var string
-   */
-  private $placeholder = null;
-
-  /**
    * The Select's options
    *
    * @var array
    */
   protected $options;
-
   /**
    * The select's element
    *
    * @var string
    */
   protected $element = 'select';
-
   /**
    * The select's self-closing state
    *
    * @var boolean
    */
   protected $isSelfClosing = false;
+  /**
+   * The select's placeholder
+   * @var string
+   */
+  private $placeholder = null;
 
   ////////////////////////////////////////////////////////////////////
   /////////////////////////// CORE METHODS ///////////////////////////
@@ -68,88 +65,6 @@ class Select extends Field
       $this->value = $selected ?: null;
     }
   }
-
-  /**
-   * Renders the select
-   *
-   * @return string A <select> tag
-   */
-  public function render()
-  {
-    // Multiselects
-    if ($this->isOfType('multiselect')) {
-      if (!isset($this->attributes['id'])) {
-        $this->setAttribute('id', $this->name);
-      }
-
-      $this->multiple();
-      $this->name .= '[]';
-    }
-
-    $this->value = (array) $this->value;
-
-    // Mark selected values as selected
-    if ($this->hasChildren() and !empty($this->value)) {
-      foreach ($this->value as $value) {
-        $this->selectValue($value);
-      }
-    }
-
-    // Add placeholder text if any
-    if ($placeholder = $this->getPlaceholder()) {
-      array_unshift($this->children, $placeholder);
-    }
-
-    $this->value = null;
-
-    return parent::render();
-  }
-
-  /**
-   * Select a value in the field's children
-   *
-   * @param mixed   $value
-   * @param Element $parent
-   *
-   * @return void
-   */
-  protected function selectValue($value, $parent = null)
-  {
-    // If no parent element defined, use direct children
-    if (!$parent) {
-      $parent = $this;
-    }
-
-    foreach ($parent->getChildren() as $child) {
-      // Search by value
-      if ($child->getAttribute('value') == $value) {
-        $child->selected('selected');
-      }
-
-      // Else iterate over subchilds
-      if ($child->hasChildren()) {
-        $this->selectValue($value, $child);
-      }
-    }
-  }
-
-  /**
-   * Get the Select's placeholder
-   *
-   * @return Element
-   */
-  protected function getPlaceholder()
-  {
-    if (!$this->placeholder) return false;
-
-    $attributes = array('value' => '', 'disabled' => 'disabled');
-    if (!$this->value) $attributes['selected'] = 'selected';
-    return Element::create('option', $this->placeholder, $attributes);
-  }
-
-  ////////////////////////////////////////////////////////////////////
-  ////////////////////////// FIELD METHODS ///////////////////////////
-  ////////////////////////////////////////////////////////////////////
 
   /**
    * Set the select options
@@ -193,20 +108,6 @@ class Select extends Field
   }
 
   /**
-   * Creates a list of options from a range
-   *
-   * @param  integer $from
-   * @param  integer $to
-   */
-  public function range($from, $to)
-  {
-    $range = range($from, $to);
-    $this->options($range, null, true);
-
-    return $this;
-  }
-
-  /**
    * Add an option to the Select's options
    *
    * @param array|string $text       It's value or an array of values
@@ -239,6 +140,22 @@ class Select extends Field
   }
 
   /**
+   * Select a particular list item
+   *
+   * @param  mixed $selected Selected item
+   */
+  public function select($selected)
+  {
+    $this->value = $selected;
+
+    return $this;
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  ////////////////////////// FIELD METHODS ///////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+  /**
    * Use the results from a Fluent/Eloquent query as options
    *
    * @param  array  $results  An array of Eloquent models
@@ -253,13 +170,93 @@ class Select extends Field
   }
 
   /**
-   * Select a particular list item
+   * Renders the select
    *
-   * @param  mixed $selected Selected item
+   * @return string A <select> tag
    */
-  public function select($selected)
+  public function render()
   {
-    $this->value = $selected;
+    // Multiselects
+    if ($this->isOfType('multiselect')) {
+      if (!isset($this->attributes['id'])) {
+        $this->setAttribute('id', $this->name);
+      }
+
+      $this->multiple();
+      $this->name .= '[]';
+    }
+
+    $this->value = (array)$this->value;
+
+    // Mark selected values as selected
+    if ($this->hasChildren() and !empty($this->value)) {
+      foreach ($this->value as $value) {
+        $this->selectValue($value);
+      }
+    }
+
+    // Add placeholder text if any
+    if ($placeholder = $this->getPlaceholder()) {
+      array_unshift($this->children, $placeholder);
+    }
+
+    $this->value = null;
+
+    return parent::render();
+  }
+
+  /**
+   * Select a value in the field's children
+   *
+   * @param mixed $value
+   * @param Element $parent
+   *
+   * @return void
+   */
+  protected function selectValue($value, $parent = null)
+  {
+    // If no parent element defined, use direct children
+    if (!$parent) {
+      $parent = $this;
+    }
+
+    foreach ($parent->getChildren() as $child) {
+      // Search by value
+      if ($child->getAttribute('value') == $value) {
+        $child->selected('selected');
+      }
+
+      // Else iterate over subchilds
+      if ($child->hasChildren()) {
+        $this->selectValue($value, $child);
+      }
+    }
+  }
+
+  /**
+   * Get the Select's placeholder
+   *
+   * @return Element
+   */
+  protected function getPlaceholder()
+  {
+    if (!$this->placeholder) return false;
+
+    $attributes = array('value' => '', 'disabled' => 'disabled');
+    if (!$this->value) $attributes['selected'] = 'selected';
+    return Element::create('option', $this->placeholder, $attributes);
+  }
+
+  /**
+   * Creates a list of options from a range
+   *
+   * @param  integer $from
+   * @param  integer $to
+   */
+  public function range($from, $to)
+  {
+    $range = range($from, $to);
+    $this->options($range, null, true);
 
     return $this;
   }

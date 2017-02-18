@@ -49,6 +49,24 @@ abstract class Grammar extends BaseGrammar {
 	}
 
 	/**
+	 * Create an empty Doctrine DBAL TableDiff from the Blueprint.
+	 *
+	 * @param  \Illuminate\Database\Schema\Blueprint $blueprint
+	 * @param  \Doctrine\DBAL\Schema\AbstractSchemaManager $schema
+	 * @return \Doctrine\DBAL\Schema\TableDiff
+	 */
+	protected function getDoctrineTableDiff(Blueprint $blueprint, SchemaManager $schema)
+	{
+		$table = $this->getTablePrefix() . $blueprint->getTable();
+
+		$tableDiff = new TableDiff($table);
+
+		$tableDiff->fromTable = $schema->listTableDetails($table);
+
+		return $tableDiff;
+	}
+
+	/**
 	 * Set the renamed columns on the table diff.
 	 *
 	 * @param  \Doctrine\DBAL\Schema\TableDiff  $tableDiff
@@ -106,6 +124,34 @@ abstract class Grammar extends BaseGrammar {
 	}
 
 	/**
+	 * Wrap a table in keyword identifiers.
+	 *
+	 * @param  mixed $table
+	 * @return string
+	 */
+	public function wrapTable($table)
+	{
+		if ($table instanceof Blueprint) $table = $table->getTable();
+
+		return parent::wrapTable($table);
+	}
+
+	/**
+	 * Add a prefix to an array of values.
+	 *
+	 * @param  string $prefix
+	 * @param  array $values
+	 * @return array
+	 */
+	public function prefixArray($prefix, array $values)
+	{
+		return array_map(function ($value) use ($prefix) {
+			return $prefix . ' ' . $value;
+
+		}, $values);
+	}
+
+	/**
 	 * Compile the blueprint's column definitions.
 	 *
 	 * @param  \Illuminate\Database\Schema\Blueprint  $blueprint
@@ -126,6 +172,30 @@ abstract class Grammar extends BaseGrammar {
 		}
 
 		return $columns;
+	}
+
+	/**
+	 * Wrap a value in keyword identifiers.
+	 *
+	 * @param  string $value
+	 * @return string
+	 */
+	public function wrap($value)
+	{
+		if ($value instanceof Fluent) $value = $value->name;
+
+		return parent::wrap($value);
+	}
+
+	/**
+	 * Get the SQL for the column data type.
+	 *
+	 * @param  \Illuminate\Support\Fluent $column
+	 * @return string
+	 */
+	protected function getType(Fluent $column)
+	{
+		return $this->{"type" . ucfirst($column->type)}($column);
 	}
 
 	/**
@@ -181,59 +251,6 @@ abstract class Grammar extends BaseGrammar {
 	}
 
 	/**
-	 * Get the SQL for the column data type.
-	 *
-	 * @param  \Illuminate\Support\Fluent  $column
-	 * @return string
-	 */
-	protected function getType(Fluent $column)
-	{
-		return $this->{"type".ucfirst($column->type)}($column);
-	}
-
-	/**
-	 * Add a prefix to an array of values.
-	 *
-	 * @param  string  $prefix
-	 * @param  array   $values
-	 * @return array
-	 */
-	public function prefixArray($prefix, array $values)
-	{
-		return array_map(function($value) use ($prefix)
-		{
-			return $prefix.' '.$value;
-
-		}, $values);
-	}
-
-	/**
-	 * Wrap a table in keyword identifiers.
-	 *
-	 * @param  mixed   $table
-	 * @return string
-	 */
-	public function wrapTable($table)
-	{
-		if ($table instanceof Blueprint) $table = $table->getTable();
-
-		return parent::wrapTable($table);
-	}
-
-	/**
-	 * Wrap a value in keyword identifiers.
-	 *
-	 * @param  string  $value
-	 * @return string
-	 */
-	public function wrap($value)
-	{
-		if ($value instanceof Fluent) $value = $value->name;
-
-		return parent::wrap($value);
-	}
-
-	/**
 	 * Format a value so that it can be used in "default" clauses.
 	 *
 	 * @param  mixed   $value
@@ -246,24 +263,6 @@ abstract class Grammar extends BaseGrammar {
 		if (is_bool($value)) return "'".intval($value)."'";
 
 		return "'".strval($value)."'";
-	}
-
-	/**
-	 * Create an empty Doctrine DBAL TableDiff from the Blueprint.
-	 *
-	 * @param  \Illuminate\Database\Schema\Blueprint  $blueprint
-	 * @param  \Doctrine\DBAL\Schema\AbstractSchemaManager  $schema
-	 * @return \Doctrine\DBAL\Schema\TableDiff
-	 */
-	protected function getDoctrineTableDiff(Blueprint $blueprint, SchemaManager $schema)
-	{
-		$table = $this->getTablePrefix().$blueprint->getTable();
-
-		$tableDiff = new TableDiff($table);
-
-		$tableDiff->fromTable = $schema->listTableDetails($table);
-
-		return $tableDiff;
 	}
 
 }

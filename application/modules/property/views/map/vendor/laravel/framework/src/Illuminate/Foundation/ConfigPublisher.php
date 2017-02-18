@@ -39,22 +39,6 @@ class ConfigPublisher {
 	}
 
 	/**
-	 * Publish configuration files from a given path.
-	 *
-	 * @param  string  $package
-	 * @param  string  $source
-	 * @return bool
-	 */
-	public function publish($package, $source)
-	{
-		$destination = $this->publishPath."/packages/{$package}";
-
-		$this->makeDestination($destination);
-
-		return $this->files->copyDirectory($source, $destination);
-	}
-
-	/**
 	 * Publish the configuration files for a package.
 	 *
 	 * @param  string  $package
@@ -92,6 +76,22 @@ class ConfigPublisher {
 		}
 
 		return $source;
+	}
+
+	/**
+	 * Publish configuration files from a given path.
+	 *
+	 * @param  string $package
+	 * @param  string $source
+	 * @return bool
+	 */
+	public function publish($package, $source)
+	{
+		$destination = $this->publishPath . "/packages/{$package}";
+
+		$this->makeDestination($destination);
+
+		return $this->files->copyDirectory($source, $destination);
 	}
 
 	/**

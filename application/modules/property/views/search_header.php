@@ -212,6 +212,14 @@ $("#mySubmit").click(function(){
 	var property_name=$("#property_name").val();
 	var save_search_flag=$("#save_search_flag").val();
 	var segment_name=$("#segment_name").val();
+	var statusid = [];
+	$('.statusid:checked').each(function (i, e) {
+		statusid.push($(this).val());
+	});
+	var typo = [];
+	$('.typo:checked').each(function (i, e) {
+		typo.push($(this).val());
+	});
 
 	if(property_name==''){
 		$('#property_name').addClass('errorpop');
@@ -220,6 +228,8 @@ $("#mySubmit").click(function(){
 		$('#save_search_flag').addClass('errorpop');
 		return false;
 	}else{
+		//var locc= $("#location").val();
+		//alert(locc);//return false;
 		$.ajax({
 			type: "POST",
 			url: "<?php echo base_url(); ?>property/saved_search_prop",
@@ -228,20 +238,22 @@ $("#mySubmit").click(function(){
 				save_search_flag: $.trim($('#save_search_flag').val()),
 				segment_name: $.trim(segment_name),
 				category_id : $("#category_id").val(),
-				contract_type : $("#contract").val(),
-				posted_by : $("input[name='posted_by']").val(),
+				contract_type: $("input[name='contract_type']:checked").val(),
+				posted_by: $("input[name='posted_by']:checked").val(),
 				min_price : $("#min_price").val(),
 				max_price : $("#max_price").val(),
 				min_room : $("#min_room").val(),
 				max_room : $("#max_room").val(),
-				status : $("input[name='status']").val(),
-				location : $("#location").val(),
-				typology : $("input[name='typology']").val(),
+				//status : $("input[name='status']").val(),
+				'typology[]': typo.join(),
+				'status[]': statusid.join(),
+				location: $("input[name='location']").val(),
+				//typology : $("input[name='typology']:checked").val(),
 				bathrooms_no : $("select[name='bathrooms_no']").val(),
 				min_surface_area : $("#min_surface_area").val(),
 				max_surface_area : $("#max_surface_area").val(),
-				min_beds_no : "",
-				max_beds_no : "",
+				min_beds_no: $("#min_beds_no").val(),
+				max_beds_no: $("#max_beds_no").val(),
 				kind : $("select[name='kind']").val(),
 				energyclass : $("select[name='energyclass']").val(),
 				heating : $("select[name='heating']").val(),
@@ -259,7 +271,7 @@ $("#mySubmit").click(function(){
 				order_option : $("#order_option").val(),
 				parent_id : "",
 				for_business : "",
-				for_luxury : "",
+				for_luxury: $("select[name='for_luxury']").val(),
 				save_search_id : $("#save_search_id").val()
 			},
 			async: false,
@@ -286,7 +298,11 @@ function list_of_savesearch() {
 }	
 </script>
 <div class="searchbig">
-	<input type="text" name="location" id="location" placeholder='<?php echo $this->lang->line('search_header_location_field');?>' value="<?php echo isset( $location) ? $location : ''; ?>" autocomplete="off"><div id="suggesstion-box" style='overflow:auto;max-height:300px;position:absolute;z-index:10;width:220px;margin-top:32px;'></div>
+	<input type="text" placeholder="<?php echo $this->lang->line('search_header_location_field'); ?>" name="location"
+		   id="location" value="<?php echo isset($location) ? $location : ''; ?>">
+
+	<div id="suggesstion-box"
+		 style='overflow:auto;max-height:300px;position:absolute;z-index:10;width:220px;margin-top:32px;'></div>
 </div>
 <div class="multiplesearch">
 	<input type="hidden" id="category_id" name="category_id" value="<?php echo isset($category_id) ? $category_id : 0; ?>" >
@@ -490,7 +506,10 @@ function list_of_savesearch() {
 								<tbody <?php echo $style;?>>
 									<tr>
 										<td>
-											<span><input type="radio" id="contract" name="contract_type" value="1" onclick="return check_param();" <?php echo $check;?> <?php if( $for_rent_val != 0 ) { echo "checked"; } ?>/></span> 
+											<span><input type="radio" id="contract" name="contract_type"
+														 value="1"  <?php echo $check; ?> <?php if ($for_rent_val != 0) {
+													echo "checked";
+												} ?>/></span>
 											<span><img src="<?php echo base_url();?>assets/images/blue_mark.png" alt="" /></span>
 											<span><?php echo $this->lang->line('search_header_for_rent');?></span>
 										</td>
@@ -540,7 +559,8 @@ function list_of_savesearch() {
 									<tr>
 										<td>
 											<span>
-												<input type="checkbox" name="status[]" value="<?php echo $rs_status['id'];?>"
+												<input type="checkbox" name="status[]" class="statusid"
+													   value="<?php echo $rs_status['id'];?>"
 												<?php 
 												if( $rs_status['id'] == 1 ) {
 													if( $to_be_renovated_val != 0 ) { echo "checked"; }
@@ -618,8 +638,16 @@ function list_of_savesearch() {
 					<div id="login-content3" class="dp-content">
 						<div class="basic_div_part">
 							<fieldset id="inputs">
-								<input type="text" placeholder="<?php echo $this->lang->line('search_header_rooms_number_min');?>" name="min_room" id="min_room" value="<?php echo (isset($min_room)) ? $min_room : ''; ?>" class="groupOfTexbox" >
-								<input type="text" placeholder="<?php echo $this->lang->line('search_header_rooms_number_max');?>" name="max_room" id="max_room" value="<?php echo (isset($max_room)) ? $max_room : ''; ?>" class="groupOfTexbox" >
+								<input type="text"
+									   placeholder="<?php echo $this->lang->line('search_header_rooms_number_min');?>"
+									   name="min_room" id="min_room"
+									   value="<?php echo isset($_GET['min_room']) ? $_GET['min_room'] : '';?>"
+									   class="groupOfTexbox">
+								<input type="text"
+									   placeholder="<?php echo $this->lang->line('search_header_rooms_number_max');?>"
+									   name="max_room" id="max_room"
+									   value="<?php echo isset($_GET['max_room']) ? $_GET['max_room'] : '';?>"
+									   class="groupOfTexbox">
 							</fieldset>
 						</div>
 					</div>
@@ -656,7 +684,8 @@ function list_of_savesearch() {
 							if($category_id == 10) {
 								?>
 								<fieldset id="inputs">
-									<select name="for_luxury" id="for_luxury" onchange="return typology_adjustment(this.value, '');" style="width:223px;">
+									<select name="for_luxury" id="for_luxury"
+											onchange="return typology_adjustment(this.value, '');" style="width:223px;">
 										<option value=""><?php echo $this->lang->line('search_header_typology_luxury_select');?></option>
 										<option value="RES" <?php if( isset( $_GET['for_luxury'] ) &&( "RES" == $_GET['for_luxury'] ) ) { echo "selected"; }?> ><?php echo $this->lang->line('search_header_typology_luxury_residential');?></option>
 										<option value="PRO" <?php if( isset( $_GET['for_luxury'] ) &&( "PRO" == $_GET['for_luxury'] ) ) { echo "selected"; }?> ><?php echo $this->lang->line('search_header_typology_luxury_property_for_business');?></option>
@@ -924,7 +953,9 @@ if($category_id==3)
 <fieldset id="inputs">
 <select style="width:137px;" name="roommates">
 <?php foreach( $roommatesArray as $key=>$val) {?>
-<option value="<?php echo $key; ?>" <?php if( isset( $_GET['roommates'] ) &&( preg_replace('/\s+/','', $key ) == preg_replace('/\s+/','', urldecode($_GET['roommates'])) ) ) { echo "selected"; }?> ><?php echo $val; ?></option>
+	<option value="<?php echo $key; ?>" <?php if (isset($_GET['roommates']) && ($key == $_GET['roommates'])) {
+		echo "selected";
+	} ?> ><?php echo $val; ?></option>
 <?php } ?>
 </select>
 </fieldset>     

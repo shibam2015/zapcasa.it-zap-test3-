@@ -109,6 +109,29 @@ class PHPParser_Node_Name extends PHPParser_NodeAbstract
     }
 
     /**
+     * Prepares a (string, array or Name node) name for use in name changing methods by converting
+     * it to an array.
+     *
+     * @param string|array|self $name Name to prepare
+     *
+     * @return array Prepared name
+     */
+    protected function prepareName($name)
+    {
+        if (is_string($name)) {
+            return explode('\\', $name);
+        } elseif (is_array($name)) {
+            return $name;
+        } elseif ($name instanceof self) {
+            return $name->parts;
+        }
+
+        throw new InvalidArgumentException(
+            'When changing a name you need to pass either a string, an array or a Name node'
+        );
+    }
+
+    /**
      * Prepends a name to this name.
      *
      * @param string|array|self $name Name to prepend
@@ -142,27 +165,5 @@ class PHPParser_Node_Name extends PHPParser_NodeAbstract
      */
     public function setLast($name) {
         array_splice($this->parts, -1, 1, $this->prepareName($name));
-    }
-
-    /**
-     * Prepares a (string, array or Name node) name for use in name changing methods by converting
-     * it to an array.
-     *
-     * @param string|array|self $name Name to prepare
-     *
-     * @return array Prepared name
-     */
-    protected function prepareName($name) {
-        if (is_string($name)) {
-            return explode('\\', $name);
-        } elseif (is_array($name)) {
-            return $name;
-        } elseif ($name instanceof self) {
-            return $name->parts;
-        }
-
-        throw new InvalidArgumentException(
-            'When changing a name you need to pass either a string, an array or a Name node'
-        );
     }
 }

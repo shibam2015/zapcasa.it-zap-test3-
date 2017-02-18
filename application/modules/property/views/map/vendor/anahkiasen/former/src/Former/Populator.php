@@ -76,32 +76,6 @@ class Populator extends Collection
   ////////////////////////////////////////////////////////////////////
 
   /**
-   * Replace the items
-   *
-   * @param  mixed $items
-   *
-   * @return void
-   */
-  public function replace($items)
-  {
-    $this->items = $items;
-  }
-
-  /**
-   * Reset the current values array
-   *
-   * @return void
-   */
-  public function reset()
-  {
-    $this->items = array();
-  }
-
-  ////////////////////////////////////////////////////////////////////
-  ////////////////////////////// HELPERS /////////////////////////////
-  ////////////////////////////////////////////////////////////////////
-
-  /**
    * Parses the name of a field to a tree of fields
    *
    * @param string $field The field's name
@@ -156,5 +130,31 @@ class Populator extends Collection
     }
 
     return $fallback;
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  ////////////////////////////// HELPERS /////////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+  /**
+   * Replace the items
+   *
+   * @param  mixed $items
+   *
+   * @return void
+   */
+  public function replace($items)
+  {
+    $this->items = $items;
+  }
+
+  /**
+   * Reset the current values array
+   *
+   * @return void
+   */
+  public function reset()
+  {
+    $this->items = array();
   }
 }

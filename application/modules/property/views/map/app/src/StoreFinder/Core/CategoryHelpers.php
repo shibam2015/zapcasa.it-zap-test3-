@@ -16,6 +16,14 @@ class CategoryHelpers {
     }
 
     /**
+	 * Get link for map
+	 */
+	public static function getLink($category_id)
+	{
+		return url('/map?m=' . Crypt::encrypt('id=' . $category_id));
+	}
+
+	/**
      * Get languages
      */
     public static function getLanguages() {
@@ -51,13 +59,6 @@ class CategoryHelpers {
 		}
 
 		return ($format_value) ? $language : $language;
-    }
-
-    /**
-     * Get link for map
-     */
-    public static function getLink($category_id) {
-		return url('/map?m=' . Crypt::encrypt('id=' . $category_id));
     }
 
     /**

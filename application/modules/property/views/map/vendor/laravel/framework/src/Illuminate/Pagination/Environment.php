@@ -120,6 +120,30 @@ class Environment {
 	}
 
 	/**
+	 * Get the name of the pagination view.
+	 *
+	 * @param  string $view
+	 * @return string
+	 */
+	public function getViewName($view = null)
+	{
+		if (!is_null($view)) return $view;
+
+		return $this->viewName ?: 'pagination::slider';
+	}
+
+	/**
+	 * Set the name of the pagination view.
+	 *
+	 * @param  string $viewName
+	 * @return void
+	 */
+	public function setViewName($viewName)
+	{
+		$this->viewName = $viewName;
+	}
+
+	/**
 	 * Get the number of the current page.
 	 *
 	 * @return int
@@ -169,17 +193,6 @@ class Environment {
 	}
 
 	/**
-	 * Set the input page parameter name used by the paginator.
-	 *
-	 * @param  string  $pageName
-	 * @return void
-	 */
-	public function setPageName($pageName)
-	{
-		$this->pageName = $pageName;
-	}
-
-	/**
 	 * Get the input page parameter name used by the paginator.
 	 *
 	 * @return string
@@ -190,27 +203,14 @@ class Environment {
 	}
 
 	/**
-	 * Get the name of the pagination view.
+	 * Set the input page parameter name used by the paginator.
 	 *
-	 * @param  string  $view
-	 * @return string
-	 */
-	public function getViewName($view = null)
-	{
-		if ( ! is_null($view)) return $view;
-
-		return $this->viewName ?: 'pagination::slider';
-	}
-
-	/**
-	 * Set the name of the pagination view.
-	 *
-	 * @param  string  $viewName
+	 * @param  string $pageName
 	 * @return void
 	 */
-	public function setViewName($viewName)
+	public function setPageName($pageName)
 	{
-		$this->viewName = $viewName;
+		$this->pageName = $pageName;
 	}
 
 	/**

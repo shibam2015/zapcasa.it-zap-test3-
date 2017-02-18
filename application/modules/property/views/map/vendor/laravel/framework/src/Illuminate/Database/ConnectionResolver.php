@@ -31,6 +31,18 @@ class ConnectionResolver implements ConnectionResolverInterface {
 	}
 
 	/**
+	 * Add a connection to the resolver.
+	 *
+	 * @param  string $name
+	 * @param  \Illuminate\Database\Connection $connection
+	 * @return void
+	 */
+	public function addConnection($name, Connection $connection)
+	{
+		$this->connections[$name] = $connection;
+	}
+
+	/**
 	 * Get a database connection instance.
 	 *
 	 * @param  string  $name
@@ -44,15 +56,13 @@ class ConnectionResolver implements ConnectionResolverInterface {
 	}
 
 	/**
-	 * Add a connection to the resolver.
+	 * Get the default connection name.
 	 *
-	 * @param  string  $name
-	 * @param  \Illuminate\Database\Connection  $connection
-	 * @return void
+	 * @return string
 	 */
-	public function addConnection($name, Connection $connection)
+	public function getDefaultConnection()
 	{
-		$this->connections[$name] = $connection;
+		return $this->default;
 	}
 
 	/**
@@ -64,16 +74,6 @@ class ConnectionResolver implements ConnectionResolverInterface {
 	public function hasConnection($name)
 	{
 		return isset($this->connections[$name]);
-	}
-
-	/**
-	 * Get the default connection name.
-	 *
-	 * @return string
-	 */
-	public function getDefaultConnection()
-	{
-		return $this->default;
 	}
 
 	/**

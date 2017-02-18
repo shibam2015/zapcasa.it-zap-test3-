@@ -331,6 +331,18 @@ class NearByProperty extends CI_Controller {
 		$this->load->view('index_edit', $data);		
 	}
 
+	private function set_upload_options($upload_path)
+	{
+		$config = array();
+		$config['upload_path'] = $upload_path;
+		$config['allowed_types'] = '*';
+		$config['max_size'] = '0';
+		$config['overwrite'] = FALSE;
+		$config['encrypt_name'] = TRUE;
+		$config['set_file_ext'] = TRUE;
+		return $config;
+	}
+
 	public function index_edit_page( $cat_id = 0  ) {
 
 		$this->load->model('Common_model');
@@ -507,18 +519,6 @@ class NearByProperty extends CI_Controller {
 
 		}
 
-	}
-
-	private function set_upload_options($upload_path)
-	{
-		$config = array();
-		$config['upload_path'] = $upload_path;
-		$config['allowed_types'] = '*';
-		$config['max_size'] = '0';
-		$config['overwrite'] = FALSE;
-		$config['encrypt_name'] = TRUE;
-		$config['set_file_ext'] = TRUE;
-		return $config;
 	}
 
 	public function manage_location(){

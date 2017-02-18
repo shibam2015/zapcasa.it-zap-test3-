@@ -47,42 +47,11 @@ class ClassLoader
     }
 
     /**
-     * Registers this instance as an autoloader.
-     */
-    public function register()
-    {
-        spl_autoload_register(array($this, 'loadClass'), true, true);
-    }
-
-    /**
      * Unregisters this instance as an autoloader.
      */
     public function unregister()
     {
         spl_autoload_unregister(array($this, 'loadClass'));
-    }
-
-    /**
-     * Loads the given class or interface.
-     *
-     * @param  string    $class The name of the class
-     * @return bool|null True, if loaded
-     */
-    public function loadClass($class)
-    {
-        foreach (spl_autoload_functions() as $func) {
-            if (is_array($func) && $func[0] === $this) {
-                continue;
-            }
-            $this->classList->push($class);
-            if (call_user_func($func, $class)) {
-                break;
-            }
-        }
-
-        $this->classList->next();
-
-        return true;
     }
 
     /**
@@ -106,5 +75,36 @@ class ClassLoader
         }
 
         return $files;
+    }
+
+    /**
+     * Registers this instance as an autoloader.
+     */
+    public function register()
+    {
+        spl_autoload_register(array($this, 'loadClass'), true, true);
+    }
+
+    /**
+     * Loads the given class or interface.
+     *
+     * @param  string    $class The name of the class
+     * @return bool|null True, if loaded
+     */
+    public function loadClass($class)
+    {
+        foreach (spl_autoload_functions() as $func) {
+            if (is_array($func) && $func[0] === $this) {
+                continue;
+            }
+            $this->classList->push($class);
+            if (call_user_func($func, $class)) {
+                break;
+            }
+        }
+
+        $this->classList->next();
+
+        return true;
     }
 }

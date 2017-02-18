@@ -55,6 +55,63 @@ class Bound extends AbstractJavascriptVariableAsset
     }
 
     /**
+     * Checks if the bound extends something.
+     *
+     * @return boolean TRUE if the bound extends somethind else FALSE.
+     */
+    public function hasExtends()
+    {
+        return !empty($this->extends);
+    }
+
+    /**
+     * Gets the google map objects that the bound extends.
+     *
+     * @return array The objects that the bound extends.
+     */
+    public function getExtends()
+    {
+        return $this->extends;
+    }
+
+    /**
+     * Sets the google map objects that the bound extends.
+     *
+     * @param array $extends The objects that the bound extends.
+     */
+    public function setExtends($extends)
+    {
+        $this->extends = array();
+
+        foreach ($extends as $extend) {
+            $this->extend($extend);
+        }
+    }
+
+    /**
+     * Adds an object that the bound extends.
+     *
+     * @param \Ivory\GoogleMap\Overlays\ExtendableInterface $extend The object that the bound extends.
+     */
+    public function extend(ExtendableInterface $extend)
+    {
+        $this->extends[] = $extend;
+    }
+
+    /**
+     * Gets the center of the bound.
+     *
+     * @return \Ivory\GoogleMap\Base\Coordinate The bound center.
+     */
+    public function getCenter()
+    {
+        $centerLatitude = ($this->getSouthWest()->getLatitude() + $this->getNorthEast()->getLatitude()) / 2;
+        $centerLongitude = ($this->getSouthWest()->getLongitude() + $this->getNorthEast()->getLongitude()) / 2;
+
+        return new Coordinate($centerLatitude, $centerLongitude);
+    }
+
+    /**
      * Gets the south west coordinate.
      *
      * @return \Ivory\GoogleMap\Base\Coordinate The south west coordinate.
@@ -138,62 +195,5 @@ class Bound extends AbstractJavascriptVariableAsset
         } else {
             throw BaseException::invalidBoundNorthEast();
         }
-    }
-
-    /**
-     * Checks if the bound extends something.
-     *
-     * @return boolean TRUE if the bound extends somethind else FALSE.
-     */
-    public function hasExtends()
-    {
-        return !empty($this->extends);
-    }
-
-    /**
-     * Gets the google map objects that the bound extends.
-     *
-     * @return array The objects that the bound extends.
-     */
-    public function getExtends()
-    {
-        return $this->extends;
-    }
-
-    /**
-     * Sets the google map objects that the bound extends.
-     *
-     * @param array $extends The objects that the bound extends.
-     */
-    public function setExtends($extends)
-    {
-        $this->extends = array();
-
-        foreach ($extends as $extend) {
-            $this->extend($extend);
-        }
-    }
-
-    /**
-     * Adds an object that the bound extends.
-     *
-     * @param \Ivory\GoogleMap\Overlays\ExtendableInterface $extend The object that the bound extends.
-     */
-    public function extend(ExtendableInterface $extend)
-    {
-        $this->extends[] = $extend;
-    }
-
-    /**
-     * Gets the center of the bound.
-     *
-     * @return \Ivory\GoogleMap\Base\Coordinate The bound center.
-     */
-    public function getCenter()
-    {
-        $centerLatitude = ($this->getSouthWest()->getLatitude() + $this->getNorthEast()->getLatitude()) / 2;
-        $centerLongitude = ($this->getSouthWest()->getLongitude() + $this->getNorthEast()->getLongitude()) / 2;
-
-        return new Coordinate($centerLatitude, $centerLongitude);
     }
 }

@@ -152,26 +152,6 @@ class EvalWorker {
     }
   }
 
-  /**
-   * While a child process is running, terminate it immediately.
-   */
-  public function cancelOperation() {
-    printf("Cancelling...\n");
-    $this->_cancelled = true;
-    posix_kill($this->_pid, SIGKILL);
-    pcntl_signal_dispatch();
-  }
-
-  /**
-   * If any user-defined exception handler is present, call it, but be sure to exit correctly.
-   */
-  public function delegateExceptionHandler($ex) {
-    call_user_func($this->_exceptionHandler, $ex);
-    exit(self::ABNORMAL_EXIT);
-  }
-
-  // -- Private Methods
-
   private function _runHooks($hooks) {
     extract($this->_exports);
 
@@ -196,15 +176,29 @@ class EvalWorker {
     return get_defined_vars();
   }
 
-  private function _expungeOldWorker() {
-    posix_kill($this->_ppid, SIGTERM);
-    pcntl_signal_dispatch();
-  }
-
   private function _write($socket, $data) {
     if (!fwrite($socket, $data)) {
       throw new \RuntimeException('Socket error: failed to write data');
     }
+  }
+
+  // -- Private Methods
+
+  private function _transform($input)
+  {
+    if ($input === null) {
+      return null;
+    }
+
+    $transforms = array(
+        'exit' => 'exit(0)'
+    );
+
+    foreach ($transforms as $from => $to) {
+      $input = preg_replace('/^\s*' . preg_quote($from, '/') . '\s*;?\s*$/', $to . ';', $input);
+    }
+
+    return $input;
   }
 
   private function _read($socket)
@@ -229,19 +223,29 @@ class EvalWorker {
     return $result;
   }
 
-  private function _transform($input) {
-    if ($input === null) {
-      return null;
-    }
+  private function _expungeOldWorker()
+  {
+    posix_kill($this->_ppid, SIGTERM);
+    pcntl_signal_dispatch();
+  }
 
-    $transforms = array(
-      'exit' => 'exit(0)'
-    );
+  /**
+   * While a child process is running, terminate it immediately.
+   */
+  public function cancelOperation()
+  {
+    printf("Cancelling...\n");
+    $this->_cancelled = true;
+    posix_kill($this->_pid, SIGKILL);
+    pcntl_signal_dispatch();
+  }
 
-    foreach ($transforms as $from => $to) {
-      $input = preg_replace('/^\s*' . preg_quote($from, '/') . '\s*;?\s*$/', $to . ';', $input);
-    }
-
-    return $input;
+  /**
+   * If any user-defined exception handler is present, call it, but be sure to exit correctly.
+   */
+  public function delegateExceptionHandler($ex)
+  {
+    call_user_func($this->_exceptionHandler, $ex);
+    exit(self::ABNORMAL_EXIT);
   }
 }

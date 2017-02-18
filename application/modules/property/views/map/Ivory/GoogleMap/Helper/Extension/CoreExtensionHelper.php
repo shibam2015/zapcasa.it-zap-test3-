@@ -112,6 +112,25 @@ class CoreExtensionHelper implements ExtensionHelperInterface
     }
 
     /**
+     * Gets the libraries needed for the map.
+     *
+     * @param \Ivory\GoogleMap\Map $map The map.
+     *
+     * @return array The map libraries.
+     */
+    protected function getLibraries(Map $map)
+    {
+        $libraries = $map->getLibraries();
+
+        $encodedPolylines = $map->getEncodedPolylines();
+        if (!empty($encodedPolylines)) {
+            $libraries[] = 'geometry';
+        }
+
+        return array_unique($libraries);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function renderBefore(Map $map)
@@ -129,24 +148,5 @@ class CoreExtensionHelper implements ExtensionHelperInterface
         if ($map->isAsync()) {
             return '}'.PHP_EOL;
         }
-    }
-
-    /**
-     * Gets the libraries needed for the map.
-     *
-     * @param \Ivory\GoogleMap\Map $map The map.
-     *
-     * @return array The map libraries.
-     */
-    protected function getLibraries(Map $map)
-    {
-        $libraries = $map->getLibraries();
-
-        $encodedPolylines = $map->getEncodedPolylines();
-        if (!empty($encodedPolylines)) {
-            $libraries[] = 'geometry';
-        }
-
-        return array_unique($libraries);
     }
 }

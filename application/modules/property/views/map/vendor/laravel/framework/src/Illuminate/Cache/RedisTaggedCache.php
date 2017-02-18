@@ -17,18 +17,6 @@ class RedisTaggedCache extends TaggedCache {
 	}
 
 	/**
-	 * Remove all items from the cache.
-	 *
-	 * @return void
-	 */
-	public function flush()
-	{
-		$this->deleteForeverKeys();
-
-		parent::flush();
-	}
-
-	/**
 	 * Store a copy of the full key for each namespace segment.
 	 *
 	 * @param  string  $namespace
@@ -43,6 +31,29 @@ class RedisTaggedCache extends TaggedCache {
 		{
 			$this->store->connection()->lpush($this->foreverKey($segment), $fullKey);
 		}
+	}
+
+	/**
+	 * Get the forever reference key for the segment.
+	 *
+	 * @param  string $segment
+	 * @return string
+	 */
+	protected function foreverKey($segment)
+	{
+		return $this->getPrefix() . $segment . ':forever';
+	}
+
+	/**
+	 * Remove all items from the cache.
+	 *
+	 * @return void
+	 */
+	public function flush()
+	{
+		$this->deleteForeverKeys();
+
+		parent::flush();
 	}
 
 	/**
@@ -74,17 +85,6 @@ class RedisTaggedCache extends TaggedCache {
 		{
 			call_user_func_array(array($this->store->connection(), 'del'), $forever);
 		}
-	}
-
-	/**
-	 * Get the forever reference key for the segment.
-	 *
-	 * @param  string  $segment
-	 * @return string
-	 */
-	protected function foreverKey($segment)
-	{
-		return $this->getPrefix().$segment.':forever';
 	}
 
 }

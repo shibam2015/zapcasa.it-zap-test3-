@@ -50,6 +50,16 @@ abstract class HasOneOrMany extends Relation {
 	}
 
 	/**
+	 * Get the key value of the paren's local key.
+	 *
+	 * @return mixed
+	 */
+	public function getParentKey()
+	{
+		return $this->parent->getAttribute($this->localKey);
+	}
+
+	/**
 	 * Set the constraints for an eager load of the relation.
 	 *
 	 * @param  array  $models
@@ -71,19 +81,6 @@ abstract class HasOneOrMany extends Relation {
 	public function matchOne(array $models, Collection $results, $relation)
 	{
 		return $this->matchOneOrMany($models, $results, $relation, 'one');
-	}
-
-	/**
-	 * Match the eagerly loaded results to their many parents.
-	 *
-	 * @param  array   $models
-	 * @param  \Illuminate\Database\Eloquent\Collection  $results
-	 * @param  string  $relation
-	 * @return array
-	 */
-	public function matchMany(array $models, Collection $results, $relation)
-	{
-		return $this->matchOneOrMany($models, $results, $relation, 'many');
 	}
 
 	/**
@@ -118,21 +115,6 @@ abstract class HasOneOrMany extends Relation {
 	}
 
 	/**
-	 * Get the value of a relationship by one or many type.
-	 *
-	 * @param  array   $dictionary
-	 * @param  string  $key
-	 * @param  string  $type
-	 * @return mixed
-	 */
-	protected function getRelationValue(array $dictionary, $key, $type)
-	{
-		$value = $dictionary[$key];
-
-		return $type == 'one' ? reset($value) : $this->related->newCollection($value);
-	}
-
-	/**
 	 * Build model dictionary keyed by the relation's foreign key.
 	 *
 	 * @param  \Illuminate\Database\Eloquent\Collection  $results
@@ -153,6 +135,56 @@ abstract class HasOneOrMany extends Relation {
 		}
 
 		return $dictionary;
+	}
+
+	/**
+	 * Get the plain foreign key.
+	 *
+	 * @return string
+	 */
+	public function getPlainForeignKey()
+	{
+		$segments = explode('.', $this->getForeignKey());
+
+		return $segments[count($segments) - 1];
+	}
+
+	/**
+	 * Get the foreign key for the relationship.
+	 *
+	 * @return string
+	 */
+	public function getForeignKey()
+	{
+		return $this->foreignKey;
+	}
+
+	/**
+	 * Get the value of a relationship by one or many type.
+	 *
+	 * @param  array $dictionary
+	 * @param  string $key
+	 * @param  string $type
+	 * @return mixed
+	 */
+	protected function getRelationValue(array $dictionary, $key, $type)
+	{
+		$value = $dictionary[$key];
+
+		return $type == 'one' ? reset($value) : $this->related->newCollection($value);
+	}
+
+	/**
+	 * Match the eagerly loaded results to their many parents.
+	 *
+	 * @param  array $models
+	 * @param  \Illuminate\Database\Eloquent\Collection $results
+	 * @param  string $relation
+	 * @return array
+	 */
+	public function matchMany(array $models, Collection $results, $relation)
+	{
+		return $this->matchOneOrMany($models, $results, $relation, 'many');
 	}
 
 	/**
@@ -182,6 +214,23 @@ abstract class HasOneOrMany extends Relation {
 	}
 
 	/**
+	 * Create an array of new instances of the related model.
+	 *
+	 * @param  array $records
+	 * @return array
+	 */
+	public function createMany(array $records)
+	{
+		$instances = array();
+
+		foreach ($records as $record) {
+			$instances[] = $this->create($record);
+		}
+
+		return $instances;
+	}
+
+	/**
 	 * Create a new instance of the related model.
 	 *
 	 * @param  array  $attributes
@@ -203,24 +252,6 @@ abstract class HasOneOrMany extends Relation {
 		$instance->save();
 
 		return $instance;
-	}
-
-	/**
-	 * Create an array of new instances of the related model.
-	 *
-	 * @param  array  $records
-	 * @return array
-	 */
-	public function createMany(array $records)
-	{
-		$instances = array();
-
-		foreach ($records as $record)
-		{
-			$instances[] = $this->create($record);
-		}
-
-		return $instances;
 	}
 
 	/**
@@ -247,38 +278,6 @@ abstract class HasOneOrMany extends Relation {
 	public function getHasCompareKey()
 	{
 		return $this->getForeignKey();
-	}
-
-	/**
-	 * Get the foreign key for the relationship.
-	 *
-	 * @return string
-	 */
-	public function getForeignKey()
-	{
-		return $this->foreignKey;
-	}
-
-	/**
-	 * Get the plain foreign key.
-	 *
-	 * @return string
-	 */
-	public function getPlainForeignKey()
-	{
-		$segments = explode('.', $this->getForeignKey());
-
-		return $segments[count($segments) - 1];
-	}
-
-	/**
-	 * Get the key value of the paren's local key.
-	 *
-	 * @return mixed
-	 */
-	public function getParentKey()
-	{
-		return $this->parent->getAttribute($this->localKey);
 	}
 
 	/**

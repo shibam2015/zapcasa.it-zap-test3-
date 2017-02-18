@@ -35,6 +35,14 @@ class RollbarHandler extends AbstractProcessingHandler
     /**
      * {@inheritdoc}
      */
+    public function close()
+    {
+        $this->rollbarNotifier->flush();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function write(array $record)
     {
         if (isset($record['context']['exception']) && $record['context']['exception'] instanceof Exception) {
@@ -52,13 +60,5 @@ class RollbarHandler extends AbstractProcessingHandler
                 array_merge($record['context'], $record['extra'], $extraData)
             );
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function close()
-    {
-        $this->rollbarNotifier->flush();
     }
 }

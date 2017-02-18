@@ -39,14 +39,21 @@ class Repository implements ArrayAccess {
 	}
 
 	/**
-	 * Determine if an item exists in the cache.
+	 * Store an item in the cache if the key does not exist.
 	 *
 	 * @param  string  $key
+	 * @param  mixed $value
+	 * @param  \DateTime|int $minutes
 	 * @return bool
 	 */
-	public function has($key)
+	public function add($key, $value, $minutes)
 	{
-		return ! is_null($this->get($key));
+		if (is_null($this->get($key))) {
+			$this->put($key, $value, $minutes);
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -79,21 +86,21 @@ class Repository implements ArrayAccess {
 	}
 
 	/**
-	 * Store an item in the cache if the key does not exist.
+	 * Calculate the number of minutes with the given duration.
 	 *
-	 * @param  string  $key
-	 * @param  mixed   $value
-	 * @param  \DateTime|int  $minutes
-	 * @return bool
+	 * @param  \DateTime|int $duration
+	 * @return int
 	 */
-	public function add($key, $value, $minutes)
+	protected function getMinutes($duration)
 	{
-		if (is_null($this->get($key)))
+		if ($duration instanceof DateTime)
 		{
-			$this->put($key, $value, $minutes); return true;
-		}
+			$duration = Carbon::instance($duration);
 
-		return false;
+			return max(0, Carbon::now()->diffInMinutes($duration, false));
+		} else {
+			return is_string($duration) ? intval($duration) : $duration;
+		}
 	}
 
 	/**
@@ -196,6 +203,17 @@ class Repository implements ArrayAccess {
 	}
 
 	/**
+	 * Determine if an item exists in the cache.
+	 *
+	 * @param  string $key
+	 * @return bool
+	 */
+	public function has($key)
+	{
+		return !is_null($this->get($key));
+	}
+
+	/**
 	 * Retrieve an item from the cache by key.
 	 *
 	 * @param  string  $key
@@ -227,26 +245,6 @@ class Repository implements ArrayAccess {
 	public function offsetUnset($key)
 	{
 		return $this->forget($key);
-	}
-
-	/**
-	 * Calculate the number of minutes with the given duration.
-	 *
-	 * @param  \DateTime|int  $duration
-	 * @return int
-	 */
-	protected function getMinutes($duration)
-	{
-		if ($duration instanceof DateTime)
-		{
-			$duration = Carbon::instance($duration);
-
-			return max(0, Carbon::now()->diffInMinutes($duration, false));
-		}
-		else
-		{
-			return is_string($duration) ? intval($duration) : $duration;
-		}
 	}
 
 	/**

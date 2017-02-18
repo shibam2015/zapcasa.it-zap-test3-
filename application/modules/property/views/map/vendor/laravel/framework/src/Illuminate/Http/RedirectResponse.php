@@ -37,30 +37,9 @@ class RedirectResponse extends \Symfony\Component\HttpFoundation\RedirectRespons
 	}
 
 	/**
-	 * Flash a piece of data to the session.
-	 *
-	 * @param  string  $key
-	 * @param  mixed   $value
-	 * @return \Illuminate\Http\RedirectResponse
-	 */
-	public function with($key, $value = null)
-	{
-		if (is_array($key))
-		{
-			foreach ($key as $k => $v) $this->with($k, $v);
-		}
-		else
-		{
-			$this->session->flash($key, $value);
-		}
-
-		return $this;
-	}
-
-	/**
 	 * Add a cookie to the response.
 	 *
-	 * @param  \Symfony\Component\HttpFoundation\Cookie  $cookie
+	 * @param  \Symfony\Component\HttpFoundation\Cookie $cookie
 	 * @return \Illuminate\Http\RedirectResponse
 	 */
 	public function withCookie(Cookie $cookie)
@@ -68,6 +47,17 @@ class RedirectResponse extends \Symfony\Component\HttpFoundation\RedirectRespons
 		$this->headers->setCookie($cookie);
 
 		return $this;
+	}
+
+	/**
+	 * Flash an array of input to the session.
+	 *
+	 * @param  dynamic  string
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
+	public function onlyInput()
+	{
+		return $this->withInput($this->request->only(func_get_args()));
 	}
 
 	/**
@@ -83,17 +73,6 @@ class RedirectResponse extends \Symfony\Component\HttpFoundation\RedirectRespons
 		$this->session->flashInput($input);
 
 		return $this;
-	}
-
-	/**
-	 * Flash an array of input to the session.
-	 *
-	 * @param  dynamic  string
-	 * @return \Illuminate\Http\RedirectResponse
-	 */
-	public function onlyInput()
-	{
-		return $this->withInput($this->request->only(func_get_args()));
 	}
 
 	/**
@@ -122,6 +101,24 @@ class RedirectResponse extends \Symfony\Component\HttpFoundation\RedirectRespons
 		else
 		{
 			$this->with('errors', new MessageBag((array) $provider));
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Flash a piece of data to the session.
+	 *
+	 * @param  string $key
+	 * @param  mixed $value
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
+	public function with($key, $value = null)
+	{
+		if (is_array($key)) {
+			foreach ($key as $k => $v) $this->with($k, $v);
+		} else {
+			$this->session->flash($key, $value);
 		}
 
 		return $this;

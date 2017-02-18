@@ -68,6 +68,19 @@ class IronJob extends Job {
 	}
 
 	/**
+	 * Release the job back into the queue.
+	 *
+	 * @param  int $delay
+	 * @return void
+	 */
+	public function release($delay = 0)
+	{
+		if (!$this->pushed) $this->delete();
+
+		$this->recreateJob($delay);
+	}
+
+	/**
 	 * Delete the job from the queue.
 	 *
 	 * @return void
@@ -82,16 +95,13 @@ class IronJob extends Job {
 	}
 
 	/**
-	 * Release the job back into the queue.
+	 * Get the name of the queue the job belongs to.
 	 *
-	 * @param  int   $delay
-	 * @return void
+	 * @return string
 	 */
-	public function release($delay = 0)
+	public function getQueue()
 	{
-		if ( ! $this->pushed) $this->delete();
-
-		$this->recreateJob($delay);
+		return array_get(json_decode($this->job->body, true), 'queue');
 	}
 
 	/**
@@ -157,16 +167,6 @@ class IronJob extends Job {
 	public function getIronJob()
 	{
 		return $this->job;
-	}
-
-	/**
-	 * Get the name of the queue the job belongs to.
-	 *
-	 * @return string
-	 */
-	public function getQueue()
-	{
-		return array_get(json_decode($this->job->body, true), 'queue');
 	}
 
 }

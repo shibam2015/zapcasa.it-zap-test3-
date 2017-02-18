@@ -23,19 +23,6 @@ class XmlResponseHandler extends Handler
     private $returnFrames = false;
 
     /**
-     * @param  bool|null $returnFrames
-     * @return null|bool
-     */
-    public function addTraceToOutput($returnFrames = null)
-    {
-        if(func_num_args() == 0) {
-            return $this->returnFrames;
-        }
-
-        $this->returnFrames = (bool) $returnFrames;
-    }
-
-    /**
      * @return int
      */
     public function handle()
@@ -76,6 +63,44 @@ class XmlResponseHandler extends Handler
     }
 
     /**
+     * @param  bool|null $returnFrames
+     * @return null|bool
+     */
+    public function addTraceToOutput($returnFrames = null)
+    {
+        if (func_num_args() == 0) {
+            return $this->returnFrames;
+        }
+
+        $this->returnFrames = (bool)$returnFrames;
+    }
+
+    /**
+     * The main function for converting to an XML document.
+     *
+     * @param array|Traversable $data
+     * @return string XML
+     */
+    private static function toXml($data)
+    {
+        assert('is_array($data) || $node instanceof Traversable');
+
+        // turn off compatibility mode as simple xml throws a wobbly if you don't.
+        $compatibilityMode = ini_get('zend.ze1_compatibility_mode');
+        if ($compatibilityMode) {
+            ini_set('zend.ze1_compatibility_mode', 0);
+        }
+
+        $node = simplexml_load_string("<?xml version='1.0' encoding='utf-8'?><root />");
+        $xml = self::addDataToNode($node, $data)->asXML();
+
+        if ($compatibilityMode) {
+            ini_set('zend.ze1_compatibility_mode', $compatibilityMode);
+        }
+        return $xml;
+    }
+
+    /**
      * @param SimpleXMLElement $node Node to append data to, will be modified in place
      * @param array|Traversable $data
      * @return SimpleXMLElement The modified node, for chaining
@@ -108,30 +133,5 @@ class XmlResponseHandler extends Handler
         }
 
         return $node;
-    }
-
-    /**
-     * The main function for converting to an XML document.
-     *
-     * @param array|Traversable $data
-     * @return string XML
-     */
-    private static function toXml($data)
-    {
-        assert('is_array($data) || $node instanceof Traversable');
-
-        // turn off compatibility mode as simple xml throws a wobbly if you don't.
-        $compatibilityMode = ini_get('zend.ze1_compatibility_mode');
-        if ($compatibilityMode) {
-            ini_set('zend.ze1_compatibility_mode', 0);
-        }
-
-        $node = simplexml_load_string("<?xml version='1.0' encoding='utf-8'?><root />");
-        $xml = self::addDataToNode($node, $data)->asXML();
-
-        if ($compatibilityMode) {
-            ini_set('zend.ze1_compatibility_mode', $compatibilityMode);
-        }
-        return $xml;
     }
 }

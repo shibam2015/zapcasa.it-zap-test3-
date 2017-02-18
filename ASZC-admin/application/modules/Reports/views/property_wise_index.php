@@ -264,9 +264,7 @@
 
 									            <ul class="pagination">
 
-
-												<?php echo $pagination; ?>
-
+													<?php echo $pagination; ?>
 
 												</ul>
 

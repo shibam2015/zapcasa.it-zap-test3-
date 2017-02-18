@@ -67,16 +67,6 @@ class Swift_Mime_ContentEncoder_NativeQpContentEncoder implements Swift_Mime_Con
     }
 
     /**
-     * Get the MIME name of this content encoding scheme.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return 'quoted-printable';
-    }
-
-    /**
      * Encode a given string to produce an encoded string.
      *
      * @param string  $string
@@ -121,5 +111,15 @@ class Swift_Mime_ContentEncoder_NativeQpContentEncoder implements Swift_Mime_Con
         }
 
         return $string;
+    }
+
+    /**
+     * Get the MIME name of this content encoding scheme.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return 'quoted-printable';
     }
 }

@@ -50,60 +50,38 @@ EOF
     }
 
     /**
-     * Get the node traverser used by the command
-     *
-     * @return NodeTraverser
+     * {@inheritdoc}
      */
-    protected function getTraverser()
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if (!$this->traverser) {
-            $this->traverser = new NodeTraverser();
-            if ($this->input->getOption('fix_dir')) {
-                $this->traverser->addVisitor(new DirVisitor());
-            }
-            if ($this->input->getOption('fix_file')) {
-                $this->traverser->addVisitor(new FileVisitor());
-            }
+        $this->input = $input;
+        $this->output = $output;
+        $this->validateCommand();
+        $outputFile = $this->input->getOption('output');
+        $config = $this->input->getOption('config');
+        $files = $this->getFileList($config);
+        $output->writeLn('- Found ' . count($files) . ' files');
+
+        // Make sure that the output dir can be used or create it
+        $this->prepareOutput($outputFile);
+
+        if (!$handle = fopen($input->getOption('output'), 'w')) {
+            throw new \RuntimeException(
+                "Unable to open {$outputFile} for writing"
+            );
         }
 
-        return $this->traverser;
-    }
-
-    /**
-     * Get a pretty printed string of code from a file while applying visitors
-     *
-     * @param string $file Name of the file to get code from
-     *
-     * @return string
-     * @throws \RuntimeException
-     */
-    protected function getCode($file)
-    {
-        if (!is_readable($file)) {
-            throw new \RuntimeException("Cannot open {$file} for reading");
+        // Write the first line of the output
+        fwrite($handle, "<?php\n");
+        $output->writeln('> Compiling classes');
+        foreach ($files as $file) {
+            $this->output->writeln('- Writing ' . $file);
+            fwrite($handle, $this->getCode($file) . "\n");
         }
+        fclose($handle);
 
-        if ($this->input->getOption('strip_comments')) {
-            $content = php_strip_whitespace($file);
-        } else {
-            $content = file_get_contents($file);
-        }
-
-        $stmts = $this->getTraverser()
-            ->traverseFile($this->parser->parse($content), $file);
-        $pretty = $this->printer->prettyPrint($stmts);
-
-        // Remove the open PHP tag
-        if (substr($pretty, 6) == "<?php\n") {
-            $pretty = substr($pretty, 7);
-        }
-
-        // Add a wrapping namespace if needed
-        if (false === strpos($pretty, 'namespace ')) {
-            $pretty = "namespace {\n" . $pretty . "\n}\n";
-        }
-
-        return $pretty;
+        $output->writeln("> Compiled loader written to {$outputFile}");
+        $output->writeln('- ' . (round(filesize($outputFile) / 1024)) . ' kb');
     }
 
     /**
@@ -165,6 +143,26 @@ EOF
     }
 
     /**
+     * Get the node traverser used by the command
+     *
+     * @return NodeTraverser
+     */
+    protected function getTraverser()
+    {
+        if (!$this->traverser) {
+            $this->traverser = new NodeTraverser();
+            if ($this->input->getOption('fix_dir')) {
+                $this->traverser->addVisitor(new DirVisitor());
+            }
+            if ($this->input->getOption('fix_file')) {
+                $this->traverser->addVisitor(new FileVisitor());
+            }
+        }
+
+        return $this->traverser;
+    }
+
+    /**
      * Prepare the output file and directory
      *
      * @param string $outputFile The full path to the output file
@@ -180,37 +178,39 @@ EOF
     }
 
     /**
-     * {@inheritdoc}
+     * Get a pretty printed string of code from a file while applying visitors
+     *
+     * @param string $file Name of the file to get code from
+     *
+     * @return string
+     * @throws \RuntimeException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function getCode($file)
     {
-        $this->input = $input;
-        $this->output = $output;
-        $this->validateCommand();
-        $outputFile = $this->input->getOption('output');
-        $config = $this->input->getOption('config');
-        $files = $this->getFileList($config);
-        $output->writeLn('- Found ' . count($files) . ' files');
-
-        // Make sure that the output dir can be used or create it
-        $this->prepareOutput($outputFile);
-
-        if (!$handle = fopen($input->getOption('output'), 'w')) {
-            throw new \RuntimeException(
-                "Unable to open {$outputFile} for writing"
-            );
+        if (!is_readable($file)) {
+            throw new \RuntimeException("Cannot open {$file} for reading");
         }
 
-        // Write the first line of the output
-        fwrite($handle, "<?php\n");
-        $output->writeln('> Compiling classes');
-        foreach ($files as $file) {
-            $this->output->writeln('- Writing ' . $file);
-            fwrite($handle, $this->getCode($file) . "\n");
+        if ($this->input->getOption('strip_comments')) {
+            $content = php_strip_whitespace($file);
+        } else {
+            $content = file_get_contents($file);
         }
-        fclose($handle);
 
-        $output->writeln("> Compiled loader written to {$outputFile}");
-        $output->writeln('- ' . (round(filesize($outputFile) / 1024)) . ' kb');
+        $stmts = $this->getTraverser()
+            ->traverseFile($this->parser->parse($content), $file);
+        $pretty = $this->printer->prettyPrint($stmts);
+
+        // Remove the open PHP tag
+        if (substr($pretty, 6) == "<?php\n") {
+            $pretty = substr($pretty, 7);
+        }
+
+        // Add a wrapping namespace if needed
+        if (false === strpos($pretty, 'namespace ')) {
+            $pretty = "namespace {\n" . $pretty . "\n}\n";
+        }
+
+        return $pretty;
     }
 }

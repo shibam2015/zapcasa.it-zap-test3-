@@ -147,6 +147,44 @@ class RouteCollection implements Countable, IteratorAggregate {
 	}
 
 	/**
+	 * Get all of the routes in the collection.
+	 *
+	 * @param  string|null $method
+	 * @return array
+	 */
+	protected function get($method = null)
+	{
+		if (is_null($method)) return $this->getRoutes();
+
+		return array_get($this->routes, $method, array());
+	}
+
+	/**
+	 * Get all of the routes in the collection.
+	 *
+	 * @return array
+	 */
+	public function getRoutes()
+	{
+		return array_values($this->allRoutes);
+	}
+
+	/**
+	 * Determine if a route in the array matches the request.
+	 *
+	 * @param  array $routes
+	 * @param  \Illuminate\http\Request $request
+	 * @param  bool $includingMethod
+	 * @return \Illuminate\Routing\Route|null
+	 */
+	protected function check(array $routes, $request, $includingMethod = true)
+	{
+		return array_first($routes, function ($key, $value) use ($request, $includingMethod) {
+			return $value->matches($request, $includingMethod);
+		});
+	}
+
+	/**
 	 * Determine if any routes match on another HTTP verb.
 	 *
 	 * @param  \Illuminate\Http\Request  $request
@@ -211,35 +249,6 @@ class RouteCollection implements Countable, IteratorAggregate {
 	}
 
 	/**
-	 * Determine if a route in the array matches the request.
-	 *
-	 * @param  array  $routes
-	 * @param  \Illuminate\http\Request  $request
-	 * @param  bool  $includingMethod
-	 * @return \Illuminate\Routing\Route|null
-	 */
-	protected function check(array $routes, $request, $includingMethod = true)
-	{
-		return array_first($routes, function($key, $value) use ($request, $includingMethod)
-		{
-			return $value->matches($request, $includingMethod);
-		});
-	}
-
-	/**
-	 * Get all of the routes in the collection.
-	 *
-	 * @param  string|null  $method
-	 * @return array
-	 */
-	protected function get($method = null)
-	{
-		if (is_null($method)) return $this->getRoutes();
-
-		return array_get($this->routes, $method, array());
-	}
-
-	/**
 	 * Determine if the route collection contains a given named route.
 	 *
 	 * @param  string  $name
@@ -270,16 +279,6 @@ class RouteCollection implements Countable, IteratorAggregate {
 	public function getByAction($action)
 	{
 		return isset($this->actionList[$action]) ? $this->actionList[$action] : null;
-	}
-
-	/**
-	 * Get all of the routes in the collection.
-	 *
-	 * @return array
-	 */
-	public function getRoutes()
-	{
-		return array_values($this->allRoutes);
 	}
 
 	/**

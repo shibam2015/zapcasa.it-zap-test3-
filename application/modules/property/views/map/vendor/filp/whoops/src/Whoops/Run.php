@@ -30,6 +30,11 @@ class Run
     protected $handlerStack = array();
 
     protected $silencedPatterns = array();
+    /**
+     * In certain scenarios, like in shutdown handler, we can not throw exceptions
+     * @var boolean
+     */
+    private $canThrowExceptions = true;
 
     /**
      * Pushes a handler to the end of the stack
@@ -87,15 +92,6 @@ class Run
     }
 
     /**
-     * @param  Exception $exception
-     * @return Inspector
-     */
-    protected function getInspector(Exception $exception)
-    {
-        return new Inspector($exception);
-    }
-
-    /**
      * Registers this instance as an error handler.
      * @return Run
      */
@@ -136,20 +132,6 @@ class Run
     }
 
     /**
-     * Should Whoops allow Handlers to force the script to quit?
-     * @param bool|int $exit
-     * @return bool
-     */
-    public function allowQuit($exit = null)
-    {
-        if(func_num_args() == 0) {
-            return $this->allowQuit;
-        }
-
-        return $this->allowQuit = (bool) $exit;
-    }
-
-    /**
      * Silence particular errors in particular files
      * @param array|string $patterns List or a single regex pattern to match
      * @param integer $levels Defaults to E_STRICT | E_DEPRECATED
@@ -172,6 +154,29 @@ class Run
         return $this;
     }
 
+    /**
+     * Special case to deal with Fatal errors and the like.
+     */
+    public function handleShutdown()
+    {
+        // If we reached this step, we are in shutdown handler.
+        // An exception thrown in a shutdown handler will not be propagated
+        // to the exception handler. Pass that information along.
+        $this->canThrowExceptions = false;
+
+        $error = error_get_last();
+        if ($error && $this->isLevelFatal($error['type'])) {
+            // If there was a fatal error,
+            // it was not handled in handleError yet.
+            $this->handleError(
+                $error['type'],
+                $error['message'],
+                $error['file'],
+                $error['line']
+            );
+        }
+    }
+
     /*
      * Should Whoops send HTTP error code to the browser if possible?
      * Whoops will by default send HTTP code 500, but you may wish to
@@ -180,42 +185,54 @@ class Run
      * @param bool|int $code
      * @return bool
      */
-    public function sendHttpCode($code = null)
+
+    private static function isLevelFatal($level)
     {
-        if(func_num_args() == 0) {
-            return $this->sendHttpCode;
-        }
-
-        if(!$code) {
-            return $this->sendHttpCode = false;
-        }
-
-        if($code === true) {
-            $code = 500;
-        }
-
-        if ($code < 400 || 600 <= $code) {
-            throw new InvalidArgumentException(
-                 "Invalid status code '$code', must be 4xx or 5xx"
-            );
-        }
-
-        return $this->sendHttpCode = $code;
+        return in_array(
+            $level,
+            array(
+                E_ERROR,
+                E_PARSE,
+                E_CORE_ERROR,
+                E_CORE_WARNING,
+                E_COMPILE_ERROR,
+                E_COMPILE_WARNING
+            )
+        );
     }
 
     /**
-     * Should Whoops push output directly to the client?
-     * If this is false, output will be returned by handleException
-     * @param bool|int $send
+     * Converts generic PHP errors to \ErrorException
+     * instances, before passing them off to be handled.
+     *
+     * This method MUST be compatible with set_error_handler.
+     *
+     * @param int $level
+     * @param string $message
+     * @param string $file
+     * @param int $line
+     *
      * @return bool
      */
-    public function writeToOutput($send = null)
+    public function handleError($level, $message, $file = null, $line = null)
     {
-        if(func_num_args() == 0) {
-            return $this->sendOutput;
-        }
+        if ($level & error_reporting()) {
+            foreach ($this->silencedPatterns as $entry) {
+                $pathMatches = (bool)preg_match($entry["pattern"], $file);
+                $levelMatches = $level & $entry["levels"];
+                if ($pathMatches && $levelMatches) {
+                    // Ignore the error, abort handling
+                    return true;
+                }
+            }
 
-        return $this->sendOutput = (bool) $send;
+            $exception = new ErrorException($message, $level, 0, $file, $line);
+            if ($this->canThrowExceptions) {
+                throw $exception;
+            } else {
+                $this->handleException($exception);
+            }
+        }
     }
 
     /**
@@ -303,80 +320,63 @@ class Run
     }
 
     /**
-     * Converts generic PHP errors to \ErrorException
-     * instances, before passing them off to be handled.
-     *
-     * This method MUST be compatible with set_error_handler.
-     *
-     * @param int    $level
-     * @param string $message
-     * @param string $file
-     * @param int    $line
-     *
+     * @param  Exception $exception
+     * @return Inspector
+     */
+    protected function getInspector(Exception $exception)
+    {
+        return new Inspector($exception);
+    }
+
+    /**
+     * Should Whoops push output directly to the client?
+     * If this is false, output will be returned by handleException
+     * @param bool|int $send
      * @return bool
      */
-    public function handleError($level, $message, $file = null, $line = null)
+    public function writeToOutput($send = null)
     {
-        if ($level & error_reporting()) {
-            foreach ($this->silencedPatterns as $entry) {
-                $pathMatches = (bool) preg_match($entry["pattern"], $file);
-                $levelMatches = $level & $entry["levels"];
-                if ($pathMatches && $levelMatches)  {
-                    // Ignore the error, abort handling
-                    return true;
-                }
-            }
-
-            $exception = new ErrorException($message, $level, 0, $file, $line);
-            if ($this->canThrowExceptions) {
-                throw $exception;
-            } else {
-                $this->handleException($exception);
-            }
+        if (func_num_args() == 0) {
+            return $this->sendOutput;
         }
+
+        return $this->sendOutput = (bool)$send;
     }
 
     /**
-     * Special case to deal with Fatal errors and the like.
+     * Should Whoops allow Handlers to force the script to quit?
+     * @param bool|int $exit
+     * @return bool
      */
-    public function handleShutdown()
+    public function allowQuit($exit = null)
     {
-        // If we reached this step, we are in shutdown handler.
-        // An exception thrown in a shutdown handler will not be propagated
-        // to the exception handler. Pass that information along.
-        $this->canThrowExceptions = false;
+        if (func_num_args() == 0) {
+            return $this->allowQuit;
+        }
 
-        $error = error_get_last();
-        if ($error && $this->isLevelFatal($error['type'])) {
-            // If there was a fatal error,
-            // it was not handled in handleError yet.
-            $this->handleError(
-                $error['type'],
-                $error['message'],
-                $error['file'],
-                $error['line']
+        return $this->allowQuit = (bool)$exit;
+    }
+
+    public function sendHttpCode($code = null)
+    {
+        if (func_num_args() == 0) {
+            return $this->sendHttpCode;
+        }
+
+        if (!$code) {
+            return $this->sendHttpCode = false;
+        }
+
+        if ($code === true) {
+            $code = 500;
+        }
+
+        if ($code < 400 || 600 <= $code) {
+            throw new InvalidArgumentException(
+                "Invalid status code '$code', must be 4xx or 5xx"
             );
         }
-    }
 
-    /**
-     * In certain scenarios, like in shutdown handler, we can not throw exceptions
-     * @var boolean
-     */
-    private $canThrowExceptions = true;
-
-    private static function isLevelFatal($level)
-    {
-        return in_array(
-            $level,
-            array(
-                E_ERROR,
-                E_PARSE,
-                E_CORE_ERROR,
-                E_CORE_WARNING,
-                E_COMPILE_ERROR,
-                E_COMPILE_WARNING
-            )
-        );
+        return $this->sendHttpCode = $code;
     }
 }

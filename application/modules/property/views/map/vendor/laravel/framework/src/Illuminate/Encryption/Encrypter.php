@@ -67,6 +67,32 @@ class Encrypter {
 	}
 
 	/**
+	 * Get the IV size for the cipher.
+	 *
+	 * @return int
+	 */
+	protected function getIvSize()
+	{
+		return mcrypt_get_iv_size($this->cipher, $this->mode);
+	}
+
+	/**
+	 * Get the random data source available for the OS.
+	 *
+	 * @return int
+	 */
+	protected function getRandomizer()
+	{
+		if (defined('MCRYPT_DEV_URANDOM')) return MCRYPT_DEV_URANDOM;
+
+		if (defined('MCRYPT_DEV_RANDOM')) return MCRYPT_DEV_RANDOM;
+
+		mt_srand();
+
+		return MCRYPT_RAND;
+	}
+
+	/**
 	 * Pad and use mcrypt on the given value and input vector.
 	 *
 	 * @param  string  $value
@@ -78,6 +104,31 @@ class Encrypter {
 		$value = $this->addPadding(serialize($value));
 
 		return mcrypt_encrypt($this->cipher, $this->key, $value, $this->mode, $iv);
+	}
+
+	/**
+	 * Add PKCS7 padding to a given value.
+	 *
+	 * @param  string $value
+	 * @return string
+	 */
+	protected function addPadding($value)
+	{
+		$pad = $this->block - (strlen($value) % $this->block);
+
+		return $value . str_repeat(chr($pad), $pad);
+	}
+
+	/**
+	 * Create a MAC for the given value.
+	 *
+	 * @param  string $iv
+	 * @param  string $value
+	 * @return string
+	 */
+	protected function hash($iv, $value)
+	{
+		return hash_hmac('sha256', $iv . $value, $this->key);
 	}
 
 	/**
@@ -98,18 +149,6 @@ class Encrypter {
 		$iv = base64_decode($payload['iv']);
 
 		return unserialize($this->stripPadding($this->mcryptDecrypt($value, $iv)));
-	}
-
-	/**
-	 * Run the mcrypt decryption routine for the value.
-	 *
-	 * @param  string  $value
-	 * @param  string  $iv
-	 * @return string
-	 */
-	protected function mcryptDecrypt($value, $iv)
-	{
-		return mcrypt_decrypt($this->cipher, $this->key, $value, $this->mode, $iv);
 	}
 
 	/**
@@ -141,6 +180,17 @@ class Encrypter {
 	}
 
 	/**
+	 * Verify that the encryption payload is valid.
+	 *
+	 * @param  array|mixed $data
+	 * @return bool
+	 */
+	protected function invalidPayload($data)
+	{
+		return !is_array($data) || !isset($data['iv']) || !isset($data['value']) || !isset($data['mac']);
+	}
+
+	/**
 	 * Determine if the MAC for the given payload is valid.
 	 *
 	 * @param  array  $payload
@@ -153,31 +203,6 @@ class Encrypter {
 		$calcMac = hash_hmac('sha256', $this->hash($payload['iv'], $payload['value']), $bytes, true);
 
 		return StringUtils::equals(hash_hmac('sha256', $payload['mac'], $bytes, true), $calcMac);
-	}
-
-	/**
-	 * Create a MAC for the given value.
-	 *
-	 * @param  string  $iv
-	 * @param  string  $value
-	 * @return string
-	 */
-	protected function hash($iv, $value)
-	{
-		return hash_hmac('sha256', $iv.$value, $this->key);
-	}
-
-	/**
-	 * Add PKCS7 padding to a given value.
-	 *
-	 * @param  string  $value
-	 * @return string
-	 */
-	protected function addPadding($value)
-	{
-		$pad = $this->block - (strlen($value) % $this->block);
-
-		return $value.str_repeat(chr($pad), $pad);
 	}
 
 	/**
@@ -208,40 +233,15 @@ class Encrypter {
 	}
 
 	/**
-	 * Verify that the encryption payload is valid.
+	 * Run the mcrypt decryption routine for the value.
 	 *
-	 * @param  array|mixed  $data
-	 * @return bool
+	 * @param  string $value
+	 * @param  string $iv
+	 * @return string
 	 */
-	protected function invalidPayload($data)
+	protected function mcryptDecrypt($value, $iv)
 	{
-		return ! is_array($data) || ! isset($data['iv']) || ! isset($data['value']) || ! isset($data['mac']);
-	}
-
-	/**
-	 * Get the IV size for the cipher.
-	 *
-	 * @return int
-	 */
-	protected function getIvSize()
-	{
-		return mcrypt_get_iv_size($this->cipher, $this->mode);
-	}
-
-	/**
-	 * Get the random data source available for the OS.
-	 *
-	 * @return int
-	 */
-	protected function getRandomizer()
-	{
-		if (defined('MCRYPT_DEV_URANDOM')) return MCRYPT_DEV_URANDOM;
-
-		if (defined('MCRYPT_DEV_RANDOM')) return MCRYPT_DEV_RANDOM;
-
-		mt_srand();
-
-		return MCRYPT_RAND;
+		return mcrypt_decrypt($this->cipher, $this->key, $value, $this->mode, $iv);
 	}
 
 	/**

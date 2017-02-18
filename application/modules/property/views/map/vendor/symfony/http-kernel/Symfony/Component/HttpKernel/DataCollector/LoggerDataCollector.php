@@ -54,41 +54,6 @@ class LoggerDataCollector extends DataCollector implements LateDataCollectorInte
         }
     }
 
-    /**
-     * Gets the called events.
-     *
-     * @return array An array of called events
-     *
-     * @see TraceableEventDispatcherInterface
-     */
-    public function countErrors()
-    {
-        return isset($this->data['error_count']) ? $this->data['error_count'] : 0;
-    }
-
-    /**
-     * Gets the logs.
-     *
-     * @return array An array of logs
-     */
-    public function getLogs()
-    {
-        return isset($this->data['logs']) ? $this->data['logs'] : array();
-    }
-
-    public function countDeprecations()
-    {
-        return isset($this->data['deprecation_count']) ? $this->data['deprecation_count'] : 0;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'logger';
-    }
-
     private function sanitizeLogs($logs)
     {
         foreach ($logs as $i => $log) {
@@ -129,5 +94,40 @@ class LoggerDataCollector extends DataCollector implements LateDataCollectorInte
         }
 
         return $count;
+    }
+
+    /**
+     * Gets the called events.
+     *
+     * @return array An array of called events
+     *
+     * @see TraceableEventDispatcherInterface
+     */
+    public function countErrors()
+    {
+        return isset($this->data['error_count']) ? $this->data['error_count'] : 0;
+    }
+
+    /**
+     * Gets the logs.
+     *
+     * @return array An array of logs
+     */
+    public function getLogs()
+    {
+        return isset($this->data['logs']) ? $this->data['logs'] : array();
+    }
+
+    public function countDeprecations()
+    {
+        return isset($this->data['deprecation_count']) ? $this->data['deprecation_count'] : 0;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        return 'logger';
     }
 }

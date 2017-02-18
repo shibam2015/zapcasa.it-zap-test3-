@@ -70,37 +70,31 @@ class FileStore implements StoreInterface {
 	}
 
 	/**
-	 * Store an item in the cache for a given number of minutes.
+	 * Get the full path for the given cache key.
 	 *
 	 * @param  string  $key
-	 * @param  mixed   $value
-	 * @param  int     $minutes
-	 * @return void
+	 * @return string
 	 */
-	public function put($key, $value, $minutes)
+	protected function path($key)
 	{
-		$value = $this->expiration($minutes).serialize($value);
+		$parts = array_slice(str_split($hash = md5($key), 2), 0, 2);
 
-		$this->createCacheDirectory($path = $this->path($key));
-
-		$this->files->put($path, $value);
+		return $this->directory . '/' . join('/', $parts) . '/' . $hash;
 	}
 
 	/**
-	 * Create the file cache directory if necessary.
+	 * Remove an item from the cache.
 	 *
-	 * @param  string  $path
+	 * @param  string $key
 	 * @return void
 	 */
-	protected function createCacheDirectory($path)
+	public function forget($key)
 	{
-		try
+		$file = $this->path($key);
+
+		if ($this->files->exists($file))
 		{
-			$this->files->makeDirectory(dirname($path), 0777, true, true);
-		}
-		catch (\Exception $e)
-		{
-			//
+			$this->files->delete($file);
 		}
 	}
 
@@ -145,18 +139,47 @@ class FileStore implements StoreInterface {
 	}
 
 	/**
-	 * Remove an item from the cache.
+	 * Store an item in the cache for a given number of minutes.
 	 *
 	 * @param  string  $key
+	 * @param  mixed $value
+	 * @param  int $minutes
 	 * @return void
 	 */
-	public function forget($key)
+	public function put($key, $value, $minutes)
 	{
-		$file = $this->path($key);
+		$value = $this->expiration($minutes) . serialize($value);
 
-		if ($this->files->exists($file))
-		{
-			$this->files->delete($file);
+		$this->createCacheDirectory($path = $this->path($key));
+
+		$this->files->put($path, $value);
+	}
+
+	/**
+	 * Get the expiration time based on the given minutes.
+	 *
+	 * @param  int $minutes
+	 * @return int
+	 */
+	protected function expiration($minutes)
+	{
+		if ($minutes === 0) return 9999999999;
+
+		return time() + ($minutes * 60);
+	}
+
+	/**
+	 * Create the file cache directory if necessary.
+	 *
+	 * @param  string $path
+	 * @return void
+	 */
+	protected function createCacheDirectory($path)
+	{
+		try {
+			$this->files->makeDirectory(dirname($path), 0777, true, true);
+		} catch (\Exception $e) {
+			//
 		}
 	}
 
@@ -167,36 +190,9 @@ class FileStore implements StoreInterface {
 	 */
 	public function flush()
 	{
-		foreach ($this->files->directories($this->directory) as $directory)
-		{
+		foreach ($this->files->directories($this->directory) as $directory) {
 			$this->files->deleteDirectory($directory);
 		}
-	}
-
-	/**
-	 * Get the full path for the given cache key.
-	 *
-	 * @param  string  $key
-	 * @return string
-	 */
-	protected function path($key)
-	{
-		$parts = array_slice(str_split($hash = md5($key), 2), 0, 2);
-
-		return $this->directory.'/'.join('/', $parts).'/'.$hash;
-	}
-
-	/**
-	 * Get the expiration time based on the given minutes.
-	 *
-	 * @param  int  $minutes
-	 * @return int
-	 */
-	protected function expiration($minutes)
-	{
-		if ($minutes === 0) return 9999999999;
-
-		return time() + ($minutes * 60);
 	}
 
 	/**

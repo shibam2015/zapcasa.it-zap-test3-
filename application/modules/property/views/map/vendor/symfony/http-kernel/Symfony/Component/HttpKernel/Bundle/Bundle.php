@@ -101,48 +101,6 @@ abstract class Bundle extends ContainerAware implements BundleInterface
     }
 
     /**
-     * Gets the Bundle namespace.
-     *
-     * @return string The Bundle namespace
-     *
-     * @api
-     */
-    public function getNamespace()
-    {
-        $class = get_class($this);
-
-        return substr($class, 0, strrpos($class, '\\'));
-    }
-
-    /**
-     * Gets the Bundle directory path.
-     *
-     * @return string The Bundle absolute path
-     *
-     * @api
-     */
-    public function getPath()
-    {
-        if (null === $this->path) {
-            $reflected = new \ReflectionObject($this);
-            $this->path = dirname($reflected->getFileName());
-        }
-
-        return $this->path;
-    }
-
-    /**
-     * Returns the bundle parent name.
-     *
-     * @return string The Bundle parent name it overrides or null if no parent
-     *
-     * @api
-     */
-    public function getParent()
-    {
-    }
-
-    /**
      * Returns the bundle name (the class short name).
      *
      * @return string The Bundle name
@@ -159,6 +117,31 @@ abstract class Bundle extends ContainerAware implements BundleInterface
         $pos = strrpos($name, '\\');
 
         return $this->name = false === $pos ? $name : substr($name, $pos + 1);
+    }
+
+    /**
+     * Gets the Bundle namespace.
+     *
+     * @return string The Bundle namespace
+     *
+     * @api
+     */
+    public function getNamespace()
+    {
+        $class = get_class($this);
+
+        return substr($class, 0, strrpos($class, '\\'));
+    }
+
+    /**
+     * Returns the bundle parent name.
+     *
+     * @return string The Bundle parent name it overrides or null if no parent
+     *
+     * @api
+     */
+    public function getParent()
+    {
     }
 
     /**
@@ -198,5 +181,22 @@ abstract class Bundle extends ContainerAware implements BundleInterface
                 $application->add($r->newInstance());
             }
         }
+    }
+
+    /**
+     * Gets the Bundle directory path.
+     *
+     * @return string The Bundle absolute path
+     *
+     * @api
+     */
+    public function getPath()
+    {
+        if (null === $this->path) {
+            $reflected = new \ReflectionObject($this);
+            $this->path = dirname($reflected->getFileName());
+        }
+
+        return $this->path;
     }
 }

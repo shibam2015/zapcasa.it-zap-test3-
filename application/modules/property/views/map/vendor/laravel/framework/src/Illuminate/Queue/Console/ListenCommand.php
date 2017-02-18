@@ -72,6 +72,20 @@ class ListenCommand extends Command {
 	}
 
 	/**
+	 * Set the options on the queue listener.
+	 *
+	 * @return void
+	 */
+	protected function setListenerOptions()
+	{
+		$this->listener->setEnvironment($this->laravel->environment());
+
+		$this->listener->setSleep($this->option('sleep'));
+
+		$this->listener->setMaxTries($this->option('tries'));
+	}
+
+	/**
 	 * Get the name of the queue connection to listen on.
 	 *
 	 * @param  string  $connection
@@ -87,20 +101,6 @@ class ListenCommand extends Command {
 		$queue = $this->laravel['config']->get("queue.connections.{$connection}.queue", 'default');
 
 		return $this->input->getOption('queue') ?: $queue;
-	}
-
-	/**
-	 * Set the options on the queue listener.
-	 *
-	 * @return void
-	 */
-	protected function setListenerOptions()
-	{
-		$this->listener->setEnvironment($this->laravel->environment());
-
-		$this->listener->setSleep($this->option('sleep'));
-
-		$this->listener->setMaxTries($this->option('tries'));
 	}
 
 	/**

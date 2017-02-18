@@ -103,6 +103,34 @@ class Environment {
 	}
 
 	/**
+	 * Add a piece of shared data to the environment.
+	 *
+	 * @param  string $key
+	 * @param  mixed $value
+	 * @return void
+	 */
+	public function share($key, $value = null)
+	{
+		if (!is_array($key)) return $this->shared[$key] = $value;
+
+		foreach ($key as $innerKey => $innerValue) {
+			$this->share($innerKey, $innerValue);
+		}
+	}
+
+	/**
+	 * Get the evaluated view contents for a named view.
+	 *
+	 * @param string $view
+	 * @param mixed $data
+	 * @return \Illuminate\View\View
+	 */
+	public function of($view, $data = array())
+	{
+		return $this->make($this->names[$view], $data);
+	}
+
+	/**
 	 * Get the evaluated view contents for the given view.
 	 *
 	 * @param  string  $view
@@ -133,15 +161,42 @@ class Environment {
 	}
 
 	/**
-	 * Get the evaluated view contents for a named view.
+	 * Call the creator for a given view.
 	 *
-	 * @param string $view
-	 * @param mixed $data
-	 * @return \Illuminate\View\View
+	 * @param  \Illuminate\View\View $view
+	 * @return void
 	 */
-	public function of($view, $data = array())
+	public function callCreator(View $view)
 	{
-		return $this->make($this->names[$view], $data);
+		$this->events->fire('creating: ' . $view->getName(), array($view));
+	}
+
+	/**
+	 * Get the appropriate view engine for the given path.
+	 *
+	 * @param  string $path
+	 * @return \Illuminate\View\Engines\EngineInterface
+	 */
+	protected function getEngineFromPath($path)
+	{
+		$engine = $this->extensions[$this->getExtension($path)];
+
+		return $this->engines->resolve($engine);
+	}
+
+	/**
+	 * Get the extension used by the view file.
+	 *
+	 * @param  string $path
+	 * @return string
+	 */
+	protected function getExtension($path)
+	{
+		$extensions = array_keys($this->extensions);
+
+		return array_first($extensions, function ($key, $value) use ($path) {
+			return ends_with($path, $value);
+		});
 	}
 
 	/**
@@ -221,52 +276,6 @@ class Environment {
 	}
 
 	/**
-	 * Get the appropriate view engine for the given path.
-	 *
-	 * @param  string  $path
-	 * @return \Illuminate\View\Engines\EngineInterface
-	 */
-	protected function getEngineFromPath($path)
-	{
-		$engine = $this->extensions[$this->getExtension($path)];
-
-		return $this->engines->resolve($engine);
-	}
-
-	/**
-	 * Get the extension used by the view file.
-	 *
-	 * @param  string  $path
-	 * @return string
-	 */
-	protected function getExtension($path)
-	{
-		$extensions = array_keys($this->extensions);
-
-		return array_first($extensions, function($key, $value) use ($path)
-		{
-			return ends_with($path, $value);
-		});
-	}
-
-	/**
-	 * Add a piece of shared data to the environment.
-	 *
-	 * @param  string  $key
-	 * @param  mixed   $value
-	 * @return void
-	 */
-	public function share($key, $value = null)
-	{
-		if ( ! is_array($key)) return $this->shared[$key] = $value;
-
-		foreach ($key as $innerKey => $innerValue)
-		{
-			$this->share($innerKey, $innerValue);
-		}
-	}
-
-	/**
 	 * Register a view creator event.
 	 *
 	 * @param  array|string  $views
@@ -283,43 +292,6 @@ class Environment {
 		}
 
 		return $creators;
-	}
-
-	/**
-	 * Register multiple view composers via an array.
-	 *
-	 * @param array  $composers
-	 * @return array
-	 */
-	public function composers(array $composers)
-	{
-		$registered = array();
-
-		foreach ($composers as $callback => $views)
-		{
-			$registered += $this->composer($views, $callback);
-		}
-
-		return $registered;
-	}
-
-	/**
-	 * Register a view composer event.
-	 *
-	 * @param  array|string  $views
-	 * @param  \Closure|string  $callback
-	 * @return array
-	 */
-	public function composer($views, $callback, $priority = null)
-	{
-		$composers = array();
-
-		foreach ((array) $views as $view)
-		{
-			$composers[] = $this->addViewEvent($view, $callback, 'composing: ', $priority);
-		}
-
-		return $composers;
 	}
 
 	/**
@@ -345,6 +317,22 @@ class Environment {
 	}
 
 	/**
+	 * Add a listener to the event dispatcher.
+	 *
+	 * @param string $name
+	 * @param \Closure $callback
+	 * @param integer $priority
+	 */
+	protected function addEventListener($name, $callback, $priority = null)
+	{
+		if (is_null($priority)) {
+			$this->events->listen($name, $callback);
+		} else {
+			$this->events->listen($name, $callback, $priority);
+		}
+	}
+
+	/**
 	 * Register a class based view composer.
 	 *
 	 * @param  string   $view
@@ -364,25 +352,6 @@ class Environment {
 		$this->addEventListener($name, $callback, $priority);
 
 		return $callback;
-	}
-
-	/**
-	 * Add a listener to the event dispatcher.
-	 *
-	 * @param string   $name
-	 * @param \Closure $callback
-	 * @param integer  $priority
-	 */
-	protected function addEventListener($name, $callback, $priority = null)
-	{
-		if (is_null($priority))
-		{
-			$this->events->listen($name, $callback);
-		}
-		else
-		{
-			$this->events->listen($name, $callback, $priority);
-		}
 	}
 
 	/**
@@ -431,6 +400,41 @@ class Environment {
 	}
 
 	/**
+	 * Register multiple view composers via an array.
+	 *
+	 * @param array $composers
+	 * @return array
+	 */
+	public function composers(array $composers)
+	{
+		$registered = array();
+
+		foreach ($composers as $callback => $views) {
+			$registered += $this->composer($views, $callback);
+		}
+
+		return $registered;
+	}
+
+	/**
+	 * Register a view composer event.
+	 *
+	 * @param  array|string $views
+	 * @param  \Closure|string $callback
+	 * @return array
+	 */
+	public function composer($views, $callback, $priority = null)
+	{
+		$composers = array();
+
+		foreach ((array)$views as $view) {
+			$composers[] = $this->addViewEvent($view, $callback, 'composing: ', $priority);
+		}
+
+		return $composers;
+	}
+
+	/**
 	 * Call the composer for a given view.
 	 *
 	 * @param  \Illuminate\View\View  $view
@@ -442,14 +446,15 @@ class Environment {
 	}
 
 	/**
-	 * Call the creator for a given view.
+	 * Inject inline content into a section.
 	 *
-	 * @param  \Illuminate\View\View  $view
+	 * @param  string $section
+	 * @param  string $content
 	 * @return void
 	 */
-	public function callCreator(View $view)
+	public function inject($section, $content)
 	{
-		$this->events->fire('creating: '.$view->getName(), array($view));
+		return $this->startSection($section, $content);
 	}
 
 	/**
@@ -472,15 +477,21 @@ class Environment {
 	}
 
 	/**
-	 * Inject inline content into a section.
+	 * Append content to a given section.
 	 *
 	 * @param  string  $section
 	 * @param  string  $content
 	 * @return void
 	 */
-	public function inject($section, $content)
+	protected function extendSection($section, $content)
 	{
-		return $this->startSection($section, $content);
+		if (isset($this->sections[$section])) {
+			$content = str_replace('@parent', $content, $this->sections[$section]);
+
+			$this->sections[$section] = $content;
+		} else {
+			$this->sections[$section] = $content;
+		}
 	}
 
 	/**
@@ -491,6 +502,18 @@ class Environment {
 	public function yieldSection()
 	{
 		return $this->yieldContent($this->stopSection());
+	}
+
+	/**
+	 * Get the string contents of a section.
+	 *
+	 * @param  string $section
+	 * @param  string $default
+	 * @return string
+	 */
+	public function yieldContent($section, $default = '')
+	{
+		return isset($this->sections[$section]) ? $this->sections[$section] : $default;
 	}
 
 	/**
@@ -537,36 +560,23 @@ class Environment {
 	}
 
 	/**
-	 * Append content to a given section.
+	 * Flush all of the section contents if done rendering.
 	 *
-	 * @param  string  $section
-	 * @param  string  $content
 	 * @return void
 	 */
-	protected function extendSection($section, $content)
+	public function flushSectionsIfDoneRendering()
 	{
-		if (isset($this->sections[$section]))
-		{
-			$content = str_replace('@parent', $content, $this->sections[$section]);
-
-			$this->sections[$section] = $content;
-		}
-		else
-		{
-			$this->sections[$section] = $content;
-		}
+		if ($this->doneRendering()) $this->flushSections();
 	}
 
 	/**
-	 * Get the string contents of a section.
+	 * Check if there are no active render operations.
 	 *
-	 * @param  string  $section
-	 * @param  string  $default
-	 * @return string
+	 * @return bool
 	 */
-	public function yieldContent($section, $default = '')
+	public function doneRendering()
 	{
-		return isset($this->sections[$section]) ? $this->sections[$section] : $default;
+		return $this->renderCount == 0;
 	}
 
 	/**
@@ -579,16 +589,6 @@ class Environment {
 		$this->sections = array();
 
 		$this->sectionStack = array();
-	}
-
-	/**
-	 * Flush all of the section contents if done rendering.
-	 *
-	 * @return void
-	 */
-	public function flushSectionsIfDoneRendering()
-	{
-		if ($this->doneRendering()) $this->flushSections();
 	}
 
 	/**
@@ -609,16 +609,6 @@ class Environment {
 	public function decrementRender()
 	{
 		$this->renderCount--;
-	}
-
-	/**
-	 * Check if there are no active render operations.
-	 *
-	 * @return bool
-	 */
-	public function doneRendering()
-	{
-		return $this->renderCount == 0;
 	}
 
 	/**

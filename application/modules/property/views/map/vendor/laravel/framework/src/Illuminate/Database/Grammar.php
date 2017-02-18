@@ -34,6 +34,28 @@ abstract class Grammar {
 	}
 
 	/**
+	 * Determine if the given value is a raw expression.
+	 *
+	 * @param  mixed $value
+	 * @return bool
+	 */
+	public function isExpression($value)
+	{
+		return $value instanceof Query\Expression;
+	}
+
+	/**
+	 * Get the value of a raw expression.
+	 *
+	 * @param  \Illuminate\Database\Query\Expression $expression
+	 * @return string
+	 */
+	public function getValue($expression)
+	{
+		return $expression->getValue();
+	}
+
+	/**
 	 * Wrap a value in keyword identifiers.
 	 *
 	 * @param  string  $value
@@ -119,28 +141,6 @@ abstract class Grammar {
 	public function parameter($value)
 	{
 		return $this->isExpression($value) ? $this->getValue($value) : '?';
-	}
-
-	/**
-	 * Get the value of a raw expression.
-	 *
-	 * @param  \Illuminate\Database\Query\Expression  $expression
-	 * @return string
-	 */
-	public function getValue($expression)
-	{
-		return $expression->getValue();
-	}
-
-	/**
-	 * Determine if the given value is a raw expression.
-	 *
-	 * @param  mixed  $value
-	 * @return bool
-	 */
-	public function isExpression($value)
-	{
-		return $value instanceof Query\Expression;
 	}
 
 	/**

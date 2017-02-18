@@ -41,6 +41,14 @@ class MessageDigestPasswordEncoder extends BasePasswordEncoder
     /**
      * {@inheritdoc}
      */
+    public function isPasswordValid($encoded, $raw, $salt)
+    {
+        return !$this->isPasswordTooLong($raw) && $this->comparePasswords($encoded, $this->encodePassword($raw, $salt));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function encodePassword($raw, $salt)
     {
         if ($this->isPasswordTooLong($raw)) {
@@ -60,13 +68,5 @@ class MessageDigestPasswordEncoder extends BasePasswordEncoder
         }
 
         return $this->encodeHashAsBase64 ? base64_encode($digest) : bin2hex($digest);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isPasswordValid($encoded, $raw, $salt)
-    {
-        return !$this->isPasswordTooLong($raw) && $this->comparePasswords($encoded, $this->encodePassword($raw, $salt));
     }
 }

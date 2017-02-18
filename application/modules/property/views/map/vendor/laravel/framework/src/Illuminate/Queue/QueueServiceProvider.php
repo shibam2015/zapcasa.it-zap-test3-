@@ -61,6 +61,19 @@ class QueueServiceProvider extends ServiceProvider {
 	}
 
 	/**
+	 * Register the connectors on the queue manager.
+	 *
+	 * @param  \Illuminate\Queue\QueueManager $manager
+	 * @return void
+	 */
+	public function registerConnectors($manager)
+	{
+		foreach (array('Sync', 'Beanstalkd', 'Redis', 'Sqs', 'Iron') as $connector) {
+			$this->{"register{$connector}Connector"}($manager);
+		}
+	}
+
+	/**
 	 * Register the queue worker.
 	 *
 	 * @return void
@@ -136,17 +149,31 @@ class QueueServiceProvider extends ServiceProvider {
 	}
 
 	/**
-	 * Register the connectors on the queue manager.
+	 * Register the failed job services.
 	 *
-	 * @param  \Illuminate\Queue\QueueManager  $manager
 	 * @return void
 	 */
-	public function registerConnectors($manager)
+	protected function registerFailedJobServices()
 	{
-		foreach (array('Sync', 'Beanstalkd', 'Redis', 'Sqs', 'Iron') as $connector)
+		$this->app->bindShared('queue.failer', function ($app)
 		{
-			$this->{"register{$connector}Connector"}($manager);
-		}
+			$config = $app['config']['queue.failed'];
+
+			return new DatabaseFailedJobProvider($app['db'], $config['database'], $config['table']);
+		});
+	}
+
+	/**
+	 * Get the services provided by the provider.
+	 *
+	 * @return array
+	 */
+	public function provides()
+	{
+		return array(
+			'queue', 'queue.worker', 'queue.listener', 'queue.failer',
+			'command.queue.work', 'command.queue.listen', 'command.queue.subscribe'
+		);
 	}
 
 	/**
@@ -239,34 +266,6 @@ class QueueServiceProvider extends ServiceProvider {
 				$app['queue']->connection('iron')->setRequest($request);
 			}
 		});
-	}
-
-	/**
-	 * Register the failed job services.
-	 *
-	 * @return void
-	 */
-	protected function registerFailedJobServices()
-	{
-		$this->app->bindShared('queue.failer', function($app)
-		{
-			$config = $app['config']['queue.failed'];
-
-			return new DatabaseFailedJobProvider($app['db'], $config['database'], $config['table']);
-		});
-	}
-
-	/**
-	 * Get the services provided by the provider.
-	 *
-	 * @return array
-	 */
-	public function provides()
-	{
-		return array(
-			'queue', 'queue.worker', 'queue.listener', 'queue.failer',
-			'command.queue.work', 'command.queue.listen', 'command.queue.subscribe'
-		);
 	}
 
 }

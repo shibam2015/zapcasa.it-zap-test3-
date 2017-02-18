@@ -79,18 +79,54 @@ class ControllerDispatcher {
 	}
 
 	/**
-	 * Call the given controller instance method.
+	 * Apply the applicable after filters to the route.
 	 *
 	 * @param  \Illuminate\Routing\Controller  $instance
 	 * @param  \Illuminate\Routing\Route  $route
+	 * @param  \Illuminate\Http\Request $request
 	 * @param  string  $method
 	 * @return mixed
 	 */
-	protected function call($instance, $route, $method)
+	protected function assignAfter($instance, $route, $request, $method)
 	{
-		$parameters = $route->parametersWithoutNulls();
+		foreach ($instance->getAfterFilters() as $filter) {
+			// If the filter applies, we will add it to the route, since it has already been
+			// registered on the filterer by the controller, and will just let the normal
+			// router take care of calling these filters so we do not duplicate logics.
+			if ($this->filterApplies($filter, $request, $method)) {
+				$route->after($this->getAssignableAfter($filter));
+			}
+		}
+	}
 
-		return $instance->callAction($method, $parameters);
+	/**
+	 * Determine if the given filter applies to the request.
+	 *
+	 * @param  array $filter
+	 * @param  \Illuminate\Http\Request $request
+	 * @param  string $method
+	 * @return bool
+	 */
+	protected function filterApplies($filter, $request, $method)
+	{
+		foreach (array('Only', 'Except', 'On') as $type) {
+			if ($this->{"filterFails{$type}"}($filter, $request, $method)) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Get the assignable after filter for the route.
+	 *
+	 * @param  Closure|string $filter
+	 * @return string
+	 */
+	protected function getAssignableAfter($filter)
+	{
+		return $filter['original'] instanceof Closure ? $filter['filter'] : $filter['original'];
 	}
 
 	/**
@@ -119,58 +155,33 @@ class ControllerDispatcher {
 	}
 
 	/**
-	 * Apply the applicable after filters to the route.
+	 * Call the given controller filter method.
 	 *
-	 * @param  \Illuminate\Routing\Controller  $instance
+	 * @param  array $filter
 	 * @param  \Illuminate\Routing\Route  $route
 	 * @param  \Illuminate\Http\Request  $request
+	 * @return mixed
+	 */
+	protected function callFilter($filter, $route, $request)
+	{
+		extract($filter);
+
+		return $this->filterer->callRouteFilter($filter, $parameters, $route, $request);
+	}
+
+	/**
+	 * Call the given controller instance method.
+	 *
+	 * @param  \Illuminate\Routing\Controller $instance
+	 * @param  \Illuminate\Routing\Route $route
 	 * @param  string  $method
 	 * @return mixed
 	 */
-	protected function assignAfter($instance, $route, $request, $method)
+	protected function call($instance, $route, $method)
 	{
-		foreach ($instance->getAfterFilters() as $filter)
-		{
-			// If the filter applies, we will add it to the route, since it has already been
-			// registered on the filterer by the controller, and will just let the normal
-			// router take care of calling these filters so we do not duplicate logics.
-			if ($this->filterApplies($filter, $request, $method))
-			{
-				$route->after($this->getAssignableAfter($filter));
-			}
-		}
-	}
+		$parameters = $route->parametersWithoutNulls();
 
-	/**
-	 * Get the assignable after filter for the route.
-	 *
-	 * @param  Closure|string  $filter
-	 * @return string
-	 */
-	protected function getAssignableAfter($filter)
-	{
-		return $filter['original'] instanceof Closure ? $filter['filter'] : $filter['original'];
-	}
-
-	/**
-	 * Determine if the given filter applies to the request.
-	 *
-	 * @param  array  $filter
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  string  $method
-	 * @return bool
-	 */
-	protected function filterApplies($filter, $request, $method)
-	{
-		foreach (array('Only', 'Except', 'On') as $type)
-		{
-			if ($this->{"filterFails{$type}"}($filter, $request, $method))
-			{
-				return false;
-			}
-		}
-
-		return true;
+		return $instance->callAction($method, $parameters);
 	}
 
 	/**
@@ -223,21 +234,6 @@ class ControllerDispatcher {
 		if (is_string($on)) $on = explode('|', $on);
 
 		return ! in_array(strtolower($request->getMethod()), $on);
-	}
-
-	/**
-	 * Call the given controller filter method.
-	 *
-	 * @param  array  $filter
-	 * @param  \Illuminate\Routing\Route  $route
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return mixed
-	 */
-	protected function callFilter($filter, $route, $request)
-	{
-		extract($filter);
-
-		return $this->filterer->callRouteFilter($filter, $parameters, $route, $request);
 	}
 
 }

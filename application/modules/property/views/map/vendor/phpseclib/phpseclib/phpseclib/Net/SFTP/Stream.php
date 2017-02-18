@@ -127,6 +127,22 @@ class Net_SFTP_Stream
     var $notification;
 
     /**
+     * The Constructor
+     *
+     * @access public
+     */
+    function Net_SFTP_Stream()
+    {
+        if (defined('NET_SFTP_STREAM_LOGGING')) {
+            echo "__construct()\r\n";
+        }
+
+        if (!class_exists('Net_SFTP')) {
+            include_once 'Net/SFTP.php';
+        }
+    }
+
+    /**
      * Registers this class as a URL wrapper.
      *
      * @param optional String $protocol The wrapper name to be registered.
@@ -143,19 +159,45 @@ class Net_SFTP_Stream
     }
 
     /**
-     * The Constructor
+     * Opens file or URL
      *
+     * @param String $path
+     * @param String $mode
+     * @param Integer $options
+     * @param String $opened_path
+     * @return Boolean
      * @access public
      */
-    function Net_SFTP_Stream()
+    function _stream_open($path, $mode, $options, &$opened_path)
     {
-        if (defined('NET_SFTP_STREAM_LOGGING')) {
-            echo "__construct()\r\n";
+        $path = $this->_parse_path($path);
+
+        if ($path === false) {
+            return false;
+        }
+        $this->path = $path;
+
+        $this->size = $this->sftp->size($path);
+        $this->mode = preg_replace('#[bt]$#', '', $mode);
+        $this->eof = false;
+
+        if ($this->size === false) {
+            if ($this->mode[0] == 'r') {
+                return false;
+            }
+        } else {
+            switch ($this->mode[0]) {
+                case 'x':
+                    return false;
+                case 'w':
+                case 'c':
+                    $this->sftp->truncate($path, 0);
+            }
         }
 
-        if (!class_exists('Net_SFTP')) {
-            include_once 'Net/SFTP.php';
-        }
+        $this->pos = $this->mode[0] != 'a' ? 0 : $this->size;
+
+        return true;
     }
 
     /**
@@ -253,48 +295,6 @@ class Net_SFTP_Stream
         }
 
         return $path;
-    }
-
-    /**
-     * Opens file or URL
-     *
-     * @param String $path
-     * @param String $mode
-     * @param Integer $options
-     * @param String $opened_path
-     * @return Boolean
-     * @access public
-     */
-    function _stream_open($path, $mode, $options, &$opened_path)
-    {
-        $path = $this->_parse_path($path);
-
-        if ($path === false) {
-            return false;
-        }
-        $this->path = $path;
-
-        $this->size = $this->sftp->size($path);
-        $this->mode = preg_replace('#[bt]$#', '', $mode);
-        $this->eof = false;
-
-        if ($this->size === false) {
-            if ($this->mode[0] == 'r') {
-                return false;
-            }
-        } else {
-            switch ($this->mode[0]) {
-                case 'x':
-                    return false;
-                case 'w':
-                case 'c':
-                    $this->sftp->truncate($path, 0);
-            }
-        }
-
-        $this->pos = $this->mode[0] != 'a' ? 0 : $this->size;
-
-        return true;
     }
 
     /**

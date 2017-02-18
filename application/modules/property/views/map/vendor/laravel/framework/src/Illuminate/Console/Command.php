@@ -81,6 +81,26 @@ class Command extends \Symfony\Component\Console\Command\Command {
 	}
 
 	/**
+	 * Get the console command arguments.
+	 *
+	 * @return array
+	 */
+	protected function getArguments()
+	{
+		return array();
+	}
+
+	/**
+	 * Get the console command options.
+	 *
+	 * @return array
+	 */
+	protected function getOptions()
+	{
+		return array();
+	}
+
+	/**
 	 * Run the console command.
 	 *
 	 * @param  \Symfony\Component\Console\Input\InputInterface  $input
@@ -94,18 +114,6 @@ class Command extends \Symfony\Component\Console\Command\Command {
 		$this->output = $output;
 
 		return parent::run($input, $output);
-	}
-
-	/**
-	 * Execute the console command.
-	 *
-	 * @param  \Symfony\Component\Console\Input\InputInterface  $input
-	 * @param  \Symfony\Component\Console\Output\OutputInterface  $output
-	 * @return mixed
-	 */
-	protected function execute(InputInterface $input, OutputInterface $output)
-	{
-		return $this->fire();
 	}
 
 	/**
@@ -194,7 +202,6 @@ class Command extends \Symfony\Component\Console\Command\Command {
 		return $dialog->ask($this->output, "<question>$question</question>", $default);
 	}
 
-
 	/**
 	 * Prompt the user for input but hide the answer from the console.
 	 *
@@ -281,26 +288,6 @@ class Command extends \Symfony\Component\Console\Command\Command {
 	}
 
 	/**
-	 * Get the console command arguments.
-	 *
-	 * @return array
-	 */
-	protected function getArguments()
-	{
-		return array();
-	}
-
-	/**
-	 * Get the console command options.
-	 *
-	 * @return array
-	 */
-	protected function getOptions()
-	{
-		return array();
-	}
-
-	/**
 	 * Get the output implementation.
 	 *
 	 * @return \Symfony\Component\Console\Output\OutputInterface
@@ -329,6 +316,18 @@ class Command extends \Symfony\Component\Console\Command\Command {
 	public function setLaravel($laravel)
 	{
 		$this->laravel = $laravel;
+	}
+
+	/**
+	 * Execute the console command.
+	 *
+	 * @param  \Symfony\Component\Console\Input\InputInterface $input
+	 * @param  \Symfony\Component\Console\Output\OutputInterface $output
+	 * @return mixed
+	 */
+	protected function execute(InputInterface $input, OutputInterface $output)
+	{
+		return $this->fire();
 	}
 
 }

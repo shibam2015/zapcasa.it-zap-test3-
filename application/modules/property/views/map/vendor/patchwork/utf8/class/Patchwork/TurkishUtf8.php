@@ -21,6 +21,14 @@ class TurkishUtf8 extends Utf8
         return parent::strtocasefold($s, $full);
     }
 
+    static function stristr($s, $needle, $before_needle = false)
+    {
+        $needle = self::stripos($s, $needle);
+        if (false === $needle) return false;
+        if ($before_needle) return self::substr($s, 0, $needle);
+        return self::substr($s, $needle);
+    }
+
     static function stripos($s, $needle, $offset = 0)
     {
         if (false !== strpos($needle, 'I')) $needle = str_replace('I', 'ı', $needle);
@@ -31,6 +39,14 @@ class TurkishUtf8 extends Utf8
         return parent::stripos($s, $needle, $offset);
     }
 
+    static function strrichr($s, $needle, $before_needle = false)
+    {
+        $needle = self::strripos($s, $needle);
+        if (false === $needle) return false;
+        if ($before_needle) return self::substr($s, 0, $needle);
+        return self::substr($s, $needle);
+    }
+
     static function strripos($s, $needle, $offset = 0)
     {
         if (false !== strpos($needle, 'I')) $needle = str_replace('I', 'ı', $needle);
@@ -39,22 +55,6 @@ class TurkishUtf8 extends Utf8
         if (false !== strpos($s, 'İ')) $s = str_replace('İ', 'i', $s);
 
         return parent::strripos($s, $needle, $offset);
-    }
-
-    static function stristr($s, $needle, $before_needle = false)
-    {
-        $needle = self::stripos($s, $needle);
-        if (false === $needle) return false;
-        if ($before_needle) return self::substr($s, 0, $needle);
-        return self::substr($s, $needle);
-    }
-
-    static function strrichr($s, $needle, $before_needle = false)
-    {
-        $needle = self::strripos($s, $needle);
-        if (false === $needle) return false;
-        if ($before_needle) return self::substr($s, 0, $needle);
-        return self::substr($s, $needle);
     }
 
     static function strtolower($s)

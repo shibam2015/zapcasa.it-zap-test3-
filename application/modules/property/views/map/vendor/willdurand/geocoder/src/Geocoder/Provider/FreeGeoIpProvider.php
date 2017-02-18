@@ -42,22 +42,6 @@ class FreeGeoIpProvider extends AbstractProvider implements ProviderInterface
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function getReversedData(array $coordinates)
-    {
-        throw new UnsupportedException('The FreeGeoIpProvider is not able to do reverse geocoding.');
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getName()
-    {
-        return 'free_geo_ip';
-    }
-
-    /**
      * @param string $query
      *
      * @return array
@@ -172,5 +156,21 @@ class FreeGeoIpProvider extends AbstractProvider implements ProviderInterface
             'WI' => 55, //WISCONSIN
             'WV' => 54, //WEST VIRGINIA
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getReversedData(array $coordinates)
+    {
+        throw new UnsupportedException('The FreeGeoIpProvider is not able to do reverse geocoding.');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getName()
+    {
+        return 'free_geo_ip';
     }
 }

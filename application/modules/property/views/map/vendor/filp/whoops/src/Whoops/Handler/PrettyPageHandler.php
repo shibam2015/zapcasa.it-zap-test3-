@@ -11,21 +11,6 @@ use InvalidArgumentException;
 class PrettyPageHandler extends Handler
 {
     /**
-     * @var string
-     */
-    private $resourcesPath;
-
-    /**
-     * @var array[]
-     */
-    private $extraTables = array();
-
-    /**
-     * @var string
-     */
-    private $pageTitle = 'Whoops! There was an error.';
-
-    /**
      * A string identifier for a known IDE/text editor, or a closure
      * that resolves a string that can be used to open a given file
      * in an editor. If the string contains the special substrings
@@ -36,7 +21,6 @@ class PrettyPageHandler extends Handler
      * @var mixed $editor
      */
     protected $editor;
-
     /**
      * A list of known editor strings
      * @var array
@@ -47,6 +31,18 @@ class PrettyPageHandler extends Handler
         'emacs'    => 'emacs://open?url=file://%file&line=%line',
         'macvim'   => 'mvim://open/?url=file://%file&line=%line'
     );
+    /**
+     * @var string
+     */
+    private $resourcesPath;
+    /**
+     * @var array[]
+     */
+    private $extraTables = array();
+    /**
+     * @var string
+     */
+    private $pageTitle = 'Whoops! There was an error.';
 
     /**
      * Constructor.
@@ -148,6 +144,62 @@ class PrettyPageHandler extends Handler
     }
 
     /**
+     * @return string
+     */
+    public function getResourcesPath()
+    {
+        return $this->resourcesPath;
+    }
+
+    /**
+     * @throws InvalidArgumentException If argument is not a valid directory
+     * @param string $resourcesPath
+     */
+    public function setResourcesPath($resourcesPath)
+    {
+        if (!is_dir($resourcesPath)) {
+            throw new InvalidArgumentException(
+                "$resourcesPath is not a valid directory"
+            );
+        }
+
+        $this->resourcesPath = $resourcesPath;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPageTitle()
+    {
+        return $this->pageTitle;
+    }
+
+    /**
+     * @var string
+     */
+    public function setPageTitle($title)
+    {
+        $this->pageTitle = (string)$title;
+    }
+
+    /**
+     * Returns all the extra data tables registered with this handler.
+     * Optionally accepts a 'label' parameter, to only return the data
+     * table under that label.
+     * @param string|null $label
+     * @return array[]
+     */
+    public function getDataTables($label = null)
+    {
+        if ($label !== null) {
+            return isset($this->extraTables[$label]) ?
+                $this->extraTables[$label] : array();
+        }
+
+        return $this->extraTables;
+    }
+
+    /**
      * Adds an entry to the list of tables displayed in the template.
      * The expected data is a simple associative array. Any nested arrays
      * will be flattened with print_r
@@ -186,23 +238,6 @@ class PrettyPageHandler extends Handler
                 return array();
             }
         };
-    }
-
-    /**
-     * Returns all the extra data tables registered with this handler.
-     * Optionally accepts a 'label' parameter, to only return the data
-     * table under that label.
-     * @param string|null $label
-     * @return array[]
-     */
-    public function getDataTables($label = null)
-    {
-        if($label !== null) {
-            return isset($this->extraTables[$label]) ?
-                   $this->extraTables[$label] : array();
-        }
-
-        return $this->extraTables;
     }
 
     /**
@@ -290,44 +325,5 @@ class PrettyPageHandler extends Handler
         $editor = str_replace("%file", rawurlencode($filePath), $editor);
 
         return $editor;
-    }
-
-    /**
-     * @var string
-     */
-    public function setPageTitle($title)
-    {
-        $this->pageTitle = (string) $title;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPageTitle()
-    {
-        return $this->pageTitle;
-    }
-
-    /**
-     * @return string
-     */
-    public function getResourcesPath()
-    {
-        return $this->resourcesPath;
-    }
-
-    /**
-     * @throws InvalidArgumentException If argument is not a valid directory
-     * @param string $resourcesPath
-     */
-    public function setResourcesPath($resourcesPath)
-    {
-        if(!is_dir($resourcesPath)) {
-            throw new InvalidArgumentException(
-                "$resourcesPath is not a valid directory"
-            );
-        }
-
-        $this->resourcesPath = $resourcesPath;
     }
 }

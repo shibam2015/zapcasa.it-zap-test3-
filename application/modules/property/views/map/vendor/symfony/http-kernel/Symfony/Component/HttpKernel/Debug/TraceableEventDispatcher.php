@@ -101,14 +101,6 @@ class TraceableEventDispatcher implements EventDispatcherInterface, TraceableEve
     /**
      * {@inheritdoc}
      */
-    public function getListeners($eventName = null)
-    {
-        return $this->dispatcher->getListeners($eventName);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function hasListeners($eventName = null)
     {
         return $this->dispatcher->hasListeners($eventName);
@@ -148,78 +140,63 @@ class TraceableEventDispatcher implements EventDispatcherInterface, TraceableEve
         return $event;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getCalledListeners()
+    private function preDispatch($eventName, $eventId, Event $event)
     {
-        return $this->called;
-    }
+        // wrap all listeners before they are called
+        $this->wrappedListeners[$eventId] = new \SplObjectStorage();
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getNotCalledListeners()
-    {
-        $notCalled = array();
+        $listeners = $this->dispatcher->getListeners($eventName);
 
-        foreach ($this->getListeners() as $name => $listeners) {
-            foreach ($listeners as $listener) {
-                $info = $this->getListenerInfo($listener, null, $name);
-                if (!isset($this->called[$name.'.'.$info['pretty']])) {
-                    $notCalled[$name.'.'.$info['pretty']] = $info;
+        foreach ($listeners as $listener) {
+            $this->dispatcher->removeListener($eventName, $listener);
+            $wrapped = $this->wrapListener($eventName, $eventId, $listener);
+            $this->wrappedListeners[$eventId][$wrapped] = $listener;
+            $this->dispatcher->addListener($eventName, $wrapped);
+        }
+
+        switch ($eventName) {
+            case KernelEvents::REQUEST:
+                $this->stopwatch->openSection();
+                break;
+            case KernelEvents::VIEW:
+            case KernelEvents::RESPONSE:
+                // stop only if a controller has been executed
+                if ($this->stopwatch->isStarted('controller')) {
+                    $this->stopwatch->stop('controller');
                 }
-            }
+                break;
+            case KernelEvents::TERMINATE:
+                $token = $event->getResponse()->headers->get('X-Debug-Token');
+                // There is a very special case when using builtin AppCache class as kernel wrapper, in the case
+                // of an ESI request leading to a `stale` response [B]  inside a `fresh` cached response [A].
+                // In this case, `$token` contains the [B] debug token, but the  open `stopwatch` section ID
+                // is equal to the [A] debug token. Trying to reopen section with the [B] token throws an exception
+                // which must be caught.
+                try {
+                    $this->stopwatch->openSection($token);
+                } catch (\LogicException $e) {
+                }
+                break;
         }
-
-        return $notCalled;
     }
 
-    /**
-     * Proxies all method calls to the original event dispatcher.
-     *
-     * @param string $method    The method name
-     * @param array  $arguments The method arguments
-     *
-     * @return mixed
-     */
-    public function __call($method, $arguments)
+    private function wrapListener($eventName, $eventId, $listener)
     {
-        return call_user_func_array(array($this->dispatcher, $method), $arguments);
-    }
+        $self = $this;
 
-    /**
-     * This is a private method and must not be used.
-     *
-     * This method is public because it is used in a closure.
-     * Whenever Symfony will require PHP 5.4, this could be changed
-     * to a proper private method.
-     */
-    public function logSkippedListeners($eventName, $eventId, Event $event, $listener)
-    {
-        if (null === $this->logger) {
-            return;
-        }
+        return function (Event $event) use ($self, $eventName, $eventId, $listener) {
+            $e = $self->preListenerCall($eventName, $eventId, $listener);
 
-        $info = $this->getListenerInfo($listener, $eventId, $eventName);
+            call_user_func($listener, $event, $eventName, $self);
 
-        $this->logger->debug(sprintf('Listener "%s" stopped propagation of the event "%s".', $info['pretty'], $eventName));
-
-        $skippedListeners = $this->getListeners($eventName);
-        $skipped = false;
-
-        foreach ($skippedListeners as $skippedListener) {
-            $skippedListener = $this->unwrapListener($skippedListener, $eventId);
-
-            if ($skipped) {
-                $info = $this->getListenerInfo($skippedListener, $eventId, $eventName);
-                $this->logger->debug(sprintf('Listener "%s" was not called for event "%s".', $info['pretty'], $eventName));
+            if ($e->isStarted()) {
+                $e->stop();
             }
 
-            if ($skippedListener === $listener) {
-                $skipped = true;
+            if ($event->isPropagationStopped()) {
+                $self->logSkippedListeners($eventName, $eventId, $event, $listener);
             }
-        }
+        };
     }
 
     /**
@@ -311,43 +288,64 @@ class TraceableEventDispatcher implements EventDispatcherInterface, TraceableEve
         return $info;
     }
 
-    private function preDispatch($eventName, $eventId, Event $event)
+    private function unwrapListener($listener, $eventId)
     {
-        // wrap all listeners before they are called
-        $this->wrappedListeners[$eventId] = new \SplObjectStorage();
-
-        $listeners = $this->dispatcher->getListeners($eventName);
-
-        foreach ($listeners as $listener) {
-            $this->dispatcher->removeListener($eventName, $listener);
-            $wrapped = $this->wrapListener($eventName, $eventId, $listener);
-            $this->wrappedListeners[$eventId][$wrapped] = $listener;
-            $this->dispatcher->addListener($eventName, $wrapped);
-        }
-
-        switch ($eventName) {
-            case KernelEvents::REQUEST:
-                $this->stopwatch->openSection();
-                break;
-            case KernelEvents::VIEW:
-            case KernelEvents::RESPONSE:
-                // stop only if a controller has been executed
-                if ($this->stopwatch->isStarted('controller')) {
-                    $this->stopwatch->stop('controller');
+        // get the original listener
+        if (is_object($listener)) {
+            if (null === $eventId) {
+                foreach (array_keys($this->wrappedListeners) as $eventId) {
+                    if (isset($this->wrappedListeners[$eventId][$listener])) {
+                        return $this->wrappedListeners[$eventId][$listener];
+                    }
                 }
-                break;
-            case KernelEvents::TERMINATE:
-                $token = $event->getResponse()->headers->get('X-Debug-Token');
-                // There is a very special case when using builtin AppCache class as kernel wrapper, in the case
-                // of an ESI request leading to a `stale` response [B]  inside a `fresh` cached response [A].
-                // In this case, `$token` contains the [B] debug token, but the  open `stopwatch` section ID
-                // is equal to the [A] debug token. Trying to reopen section with the [B] token throws an exception
-                // which must be caught.
-                try {
-                    $this->stopwatch->openSection($token);
-                } catch (\LogicException $e) {}
-                break;
+            } elseif (isset($this->wrappedListeners[$eventId][$listener])) {
+                return $this->wrappedListeners[$eventId][$listener];
+            }
         }
+
+        return $listener;
+    }
+
+    /**
+     * This is a private method and must not be used.
+     *
+     * This method is public because it is used in a closure.
+     * Whenever Symfony will require PHP 5.4, this could be changed
+     * to a proper private method.
+     */
+    public function logSkippedListeners($eventName, $eventId, Event $event, $listener)
+    {
+        if (null === $this->logger) {
+            return;
+        }
+
+        $info = $this->getListenerInfo($listener, $eventId, $eventName);
+
+        $this->logger->debug(sprintf('Listener "%s" stopped propagation of the event "%s".', $info['pretty'], $eventName));
+
+        $skippedListeners = $this->getListeners($eventName);
+        $skipped = false;
+
+        foreach ($skippedListeners as $skippedListener) {
+            $skippedListener = $this->unwrapListener($skippedListener, $eventId);
+
+            if ($skipped) {
+                $info = $this->getListenerInfo($skippedListener, $eventId, $eventName);
+                $this->logger->debug(sprintf('Listener "%s" was not called for event "%s".', $info['pretty'], $eventName));
+            }
+
+            if ($skippedListener === $listener) {
+                $skipped = true;
+            }
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getListeners($eventName = null)
+    {
+        return $this->dispatcher->getListeners($eventName);
     }
 
     private function postDispatch($eventName, $eventId, Event $event)
@@ -378,40 +376,43 @@ class TraceableEventDispatcher implements EventDispatcherInterface, TraceableEve
         unset($this->wrappedListeners[$eventId]);
     }
 
-    private function wrapListener($eventName, $eventId, $listener)
+    /**
+     * {@inheritdoc}
+     */
+    public function getCalledListeners()
     {
-        $self = $this;
-
-        return function (Event $event) use ($self, $eventName, $eventId, $listener) {
-            $e = $self->preListenerCall($eventName, $eventId, $listener);
-
-            call_user_func($listener, $event, $eventName, $self);
-
-            if ($e->isStarted()) {
-                $e->stop();
-            }
-
-            if ($event->isPropagationStopped()) {
-                $self->logSkippedListeners($eventName, $eventId, $event, $listener);
-            }
-        };
+        return $this->called;
     }
 
-    private function unwrapListener($listener, $eventId)
+    /**
+     * {@inheritdoc}
+     */
+    public function getNotCalledListeners()
     {
-        // get the original listener
-        if (is_object($listener)) {
-            if (null === $eventId) {
-                foreach (array_keys($this->wrappedListeners) as $eventId) {
-                    if (isset($this->wrappedListeners[$eventId][$listener])) {
-                        return $this->wrappedListeners[$eventId][$listener];
-                    }
+        $notCalled = array();
+
+        foreach ($this->getListeners() as $name => $listeners) {
+            foreach ($listeners as $listener) {
+                $info = $this->getListenerInfo($listener, null, $name);
+                if (!isset($this->called[$name . '.' . $info['pretty']])) {
+                    $notCalled[$name . '.' . $info['pretty']] = $info;
                 }
-            } elseif (isset($this->wrappedListeners[$eventId][$listener])) {
-                return $this->wrappedListeners[$eventId][$listener];
             }
         }
 
-        return $listener;
+        return $notCalled;
+    }
+
+    /**
+     * Proxies all method calls to the original event dispatcher.
+     *
+     * @param string $method The method name
+     * @param array $arguments The method arguments
+     *
+     * @return mixed
+     */
+    public function __call($method, $arguments)
+    {
+        return call_user_func_array(array($this->dispatcher, $method), $arguments);
     }
 }

@@ -60,6 +60,27 @@ class StreamOutput extends Output
     }
 
     /**
+     * Returns true if the stream supports colorization.
+     *
+     * Colorization is disabled if not supported by the stream:
+     *
+     *  -  Windows without Ansicon and ConEmu
+     *  -  non tty consoles
+     *
+     * @return bool    true if the stream supports colorization, false otherwise
+     */
+    protected function hasColorSupport()
+    {
+        // @codeCoverageIgnoreStart
+        if (DIRECTORY_SEPARATOR == '\\') {
+            return false !== getenv('ANSICON') || 'ON' === getenv('ConEmuANSI');
+        }
+
+        return function_exists('posix_isatty') && @posix_isatty($this->stream);
+        // @codeCoverageIgnoreEnd
+    }
+
+    /**
      * Gets the stream attached to this StreamOutput instance.
      *
      * @return resource A stream resource
@@ -82,26 +103,5 @@ class StreamOutput extends Output
         }
 
         fflush($this->stream);
-    }
-
-    /**
-     * Returns true if the stream supports colorization.
-     *
-     * Colorization is disabled if not supported by the stream:
-     *
-     *  -  Windows without Ansicon and ConEmu
-     *  -  non tty consoles
-     *
-     * @return bool    true if the stream supports colorization, false otherwise
-     */
-    protected function hasColorSupport()
-    {
-        // @codeCoverageIgnoreStart
-        if (DIRECTORY_SEPARATOR == '\\') {
-            return false !== getenv('ANSICON') || 'ON' === getenv('ConEmuANSI');
-        }
-
-        return function_exists('posix_isatty') && @posix_isatty($this->stream);
-        // @codeCoverageIgnoreEnd
     }
 }

@@ -13,25 +13,23 @@ class File extends Field
 {
 
   /**
+   * A list of properties to be injected in the attributes
+   *
+   * @var array
+   */
+  protected $injectedProperties = array('type', 'name');
+  /**
    * The maximum file size
    *
    * @var integer
    */
   private $maxSize;
-
   /**
    * An array of mime groups to use as shortcuts
    *
    * @var array
    */
   private $mimeGroups = array('audio', 'video', 'image');
-
-  /**
-   * A list of properties to be injected in the attributes
-   *
-   * @var array
-   */
-  protected $injectedProperties = array('type', 'name');
 
   ////////////////////////////////////////////////////////////////////
   /////////////////////////// CORE METHODS ///////////////////////////

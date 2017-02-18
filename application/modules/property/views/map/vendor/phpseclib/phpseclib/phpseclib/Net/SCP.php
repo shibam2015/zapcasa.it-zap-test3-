@@ -228,6 +228,76 @@ class Net_SCP
     }
 
     /**
+     * Receives a packet from an SSH server
+     *
+     * @return String
+     * @access private
+     */
+    function _receive()
+    {
+        switch ($this->mode) {
+            case NET_SCP_SSH2:
+                return $this->ssh->_get_channel_packet(NET_SSH2_CHANNEL_EXEC, true);
+            case NET_SCP_SSH1:
+                if (!$this->ssh->bitmap) {
+                    return false;
+                }
+                while (true) {
+                    $response = $this->ssh->_get_binary_packet();
+                    switch ($response[NET_SSH1_RESPONSE_TYPE]) {
+                        case NET_SSH1_SMSG_STDOUT_DATA:
+                            extract(unpack('Nlength', $response[NET_SSH1_RESPONSE_DATA]));
+                            return $this->ssh->_string_shift($response[NET_SSH1_RESPONSE_DATA], $length);
+                        case NET_SSH1_SMSG_STDERR_DATA:
+                            break;
+                        case NET_SSH1_SMSG_EXITSTATUS:
+                            $this->ssh->_send_binary_packet(chr(NET_SSH1_CMSG_EXIT_CONFIRMATION));
+                            fclose($this->ssh->fsock);
+                            $this->ssh->bitmap = 0;
+                            return false;
+                        default:
+                            user_error('Unknown packet received', E_USER_NOTICE);
+                            return false;
+                    }
+                }
+        }
+    }
+
+    /**
+     * Sends a packet to an SSH server
+     *
+     * @param String $data
+     * @access private
+     */
+    function _send($data)
+    {
+        switch ($this->mode) {
+            case NET_SCP_SSH2:
+                $this->ssh->_send_channel_packet(NET_SSH2_CHANNEL_EXEC, $data);
+                break;
+            case NET_SCP_SSH1:
+                $data = pack('CNa*', NET_SSH1_CMSG_STDIN_DATA, strlen($data), $data);
+                $this->ssh->_send_binary_packet($data);
+        }
+    }
+
+    /**
+     * Closes the connection to an SSH server
+     *
+     * @access private
+     */
+    function _close()
+    {
+        switch ($this->mode) {
+            case NET_SCP_SSH2:
+                $this->ssh->_close_channel(NET_SSH2_CHANNEL_EXEC, true);
+                break;
+            case NET_SCP_SSH1:
+                $this->ssh->disconnect();
+        }
+    }
+
+    /**
      * Downloads a file from the SCP server.
      *
      * Returns a string containing the contents of $remote_file if $local_file is left undefined or a boolean false if
@@ -287,75 +357,5 @@ class Net_SCP
         }
 
         return $content;
-    }
-
-    /**
-     * Sends a packet to an SSH server
-     *
-     * @param String $data
-     * @access private
-     */
-    function _send($data)
-    {
-        switch ($this->mode) {
-            case NET_SCP_SSH2:
-                $this->ssh->_send_channel_packet(NET_SSH2_CHANNEL_EXEC, $data);
-                break;
-            case NET_SCP_SSH1:
-                $data = pack('CNa*', NET_SSH1_CMSG_STDIN_DATA, strlen($data), $data);
-                $this->ssh->_send_binary_packet($data);
-         }
-    }
-
-    /**
-     * Receives a packet from an SSH server
-     *
-     * @return String
-     * @access private
-     */
-    function _receive()
-    {
-        switch ($this->mode) {
-            case NET_SCP_SSH2:
-                return $this->ssh->_get_channel_packet(NET_SSH2_CHANNEL_EXEC, true);
-            case NET_SCP_SSH1:
-                if (!$this->ssh->bitmap) {
-                    return false;
-                }
-                while (true) {
-                    $response = $this->ssh->_get_binary_packet();
-                    switch ($response[NET_SSH1_RESPONSE_TYPE]) {
-                        case NET_SSH1_SMSG_STDOUT_DATA:
-                            extract(unpack('Nlength', $response[NET_SSH1_RESPONSE_DATA]));
-                            return $this->ssh->_string_shift($response[NET_SSH1_RESPONSE_DATA], $length);
-                        case NET_SSH1_SMSG_STDERR_DATA:
-                            break;
-                        case NET_SSH1_SMSG_EXITSTATUS:
-                            $this->ssh->_send_binary_packet(chr(NET_SSH1_CMSG_EXIT_CONFIRMATION));
-                            fclose($this->ssh->fsock);
-                            $this->ssh->bitmap = 0;
-                            return false;
-                        default:
-                            user_error('Unknown packet received', E_USER_NOTICE);
-                            return false;
-                    }
-                }
-         }
-    }
-
-    /**
-     * Closes the connection to an SSH server
-     *
-     * @access private
-     */
-    function _close()
-    {
-        switch ($this->mode) {
-            case NET_SCP_SSH2:
-                $this->ssh->_close_channel(NET_SSH2_CHANNEL_EXEC, true);
-                break;
-            case NET_SCP_SSH1:
-                $this->ssh->disconnect();
-         }
     }
 }

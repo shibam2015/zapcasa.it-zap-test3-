@@ -46,14 +46,6 @@ class ExpressionVoter implements VoterInterface
     /**
      * {@inheritdoc}
      */
-    public function supportsAttribute($attribute)
-    {
-        return $attribute instanceof Expression;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function supportsClass($class)
     {
         return true;
@@ -82,6 +74,14 @@ class ExpressionVoter implements VoterInterface
         }
 
         return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function supportsAttribute($attribute)
+    {
+        return $attribute instanceof Expression;
     }
 
     private function getVariables(TokenInterface $token, $object)

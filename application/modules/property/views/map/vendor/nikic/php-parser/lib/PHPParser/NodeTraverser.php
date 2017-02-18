@@ -48,34 +48,6 @@ class PHPParser_NodeTraverser implements PHPParser_NodeTraverserInterface
         return $nodes;
     }
 
-    protected function traverseNode(PHPParser_Node $node) {
-        $node = clone $node;
-
-        foreach ($node->getSubNodeNames() as $name) {
-            $subNode =& $node->$name;
-
-            if (is_array($subNode)) {
-                $subNode = $this->traverseArray($subNode);
-            } elseif ($subNode instanceof PHPParser_Node) {
-                foreach ($this->visitors as $visitor) {
-                    if (null !== $return = $visitor->enterNode($subNode)) {
-                        $subNode = $return;
-                    }
-                }
-
-                $subNode = $this->traverseNode($subNode);
-
-                foreach ($this->visitors as $visitor) {
-                    if (null !== $return = $visitor->leaveNode($subNode)) {
-                        $subNode = $return;
-                    }
-                }
-            }
-        }
-
-        return $node;
-    }
-
     protected function traverseArray(array $nodes) {
         $doNodes = array();
 
@@ -114,5 +86,34 @@ class PHPParser_NodeTraverser implements PHPParser_NodeTraverserInterface
         }
 
         return $nodes;
+    }
+
+    protected function traverseNode(PHPParser_Node $node)
+    {
+        $node = clone $node;
+
+        foreach ($node->getSubNodeNames() as $name) {
+            $subNode =& $node->$name;
+
+            if (is_array($subNode)) {
+                $subNode = $this->traverseArray($subNode);
+            } elseif ($subNode instanceof PHPParser_Node) {
+                foreach ($this->visitors as $visitor) {
+                    if (null !== $return = $visitor->enterNode($subNode)) {
+                        $subNode = $return;
+                    }
+                }
+
+                $subNode = $this->traverseNode($subNode);
+
+                foreach ($this->visitors as $visitor) {
+                    if (null !== $return = $visitor->leaveNode($subNode)) {
+                        $subNode = $return;
+                    }
+                }
+            }
+        }
+
+        return $node;
     }
 }

@@ -704,21 +704,6 @@ class Crypt_DES extends Crypt_Base
     }
 
     /**
-     * Decrypts a block
-     *
-     * @see Crypt_Base::_decryptBlock()
-     * @see Crypt_Base::decrypt()
-     * @see Crypt_DES::decrypt()
-     * @access private
-     * @param String $in
-     * @return String
-     */
-    function _decryptBlock($in)
-    {
-        return $this->_processBlock($in, CRYPT_DES_DECRYPT);
-    }
-
-    /**
      * Encrypts or decrypts a 64-bit block
      *
      * $mode should be either CRYPT_DES_ENCRYPT or CRYPT_DES_DECRYPT.  See
@@ -805,6 +790,21 @@ class Crypt_DES extends Crypt_Base
                ($shuffleinvip[($l >>  8) & 0xFF] & "\x04\x04\x04\x04\x04\x04\x04\x04") |
                ($shuffleinvip[ $r        & 0xFF] & "\x02\x02\x02\x02\x02\x02\x02\x02") |
                ($shuffleinvip[ $l        & 0xFF] & "\x01\x01\x01\x01\x01\x01\x01\x01");
+    }
+
+    /**
+     * Decrypts a block
+     *
+     * @see Crypt_Base::_decryptBlock()
+     * @see Crypt_Base::decrypt()
+     * @see Crypt_DES::decrypt()
+     * @access private
+     * @param String $in
+     * @return String
+     */
+    function _decryptBlock($in)
+    {
+        return $this->_processBlock($in, CRYPT_DES_DECRYPT);
     }
 
     /**

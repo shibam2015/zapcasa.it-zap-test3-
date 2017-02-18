@@ -74,6 +74,18 @@ class Swift_Mime_Headers_PathHeader extends Swift_Mime_Headers_AbstractHeader
     }
 
     /**
+     * Get the address which is used in this Header (if any).
+     *
+     * Null is returned if no address is set.
+     *
+     * @return string
+     */
+    public function getAddress()
+    {
+        return $this->_address;
+    }
+
+    /**
      * Set the Address which should appear in this Header.
      *
      * @param string $address
@@ -91,18 +103,6 @@ class Swift_Mime_Headers_PathHeader extends Swift_Mime_Headers_AbstractHeader
             $this->_address = $address;
         }
         $this->setCachedValue(null);
-    }
-
-    /**
-     * Get the address which is used in this Header (if any).
-     *
-     * Null is returned if no address is set.
-     *
-     * @return string
-     */
-    public function getAddress()
-    {
-        return $this->_address;
     }
 
     /**

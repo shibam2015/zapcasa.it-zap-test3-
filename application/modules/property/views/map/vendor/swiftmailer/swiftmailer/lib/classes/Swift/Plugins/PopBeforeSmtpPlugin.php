@@ -139,6 +139,23 @@ class Swift_Plugins_PopBeforeSmtpPlugin implements Swift_Events_TransportChangeL
     }
 
     /**
+     * Invoked just before a Transport is started.
+     *
+     * @param Swift_Events_TransportChangeEvent $evt
+     */
+    public function beforeTransportStarted(Swift_Events_TransportChangeEvent $evt)
+    {
+        if (isset($this->_transport)) {
+            if ($this->_transport !== $evt->getTransport()) {
+                return;
+            }
+        }
+
+        $this->connect();
+        $this->disconnect();
+    }
+
+    /**
      * Connect to the POP3 host and authenticate.
      *
      * @throws Swift_Plugins_Pop_Pop3Exception if connection fails
@@ -174,63 +191,30 @@ class Swift_Plugins_PopBeforeSmtpPlugin implements Swift_Events_TransportChangeL
         }
     }
 
-    /**
-     * Disconnect from the POP3 host.
-     */
-    public function disconnect()
+    private function _getHostString()
     {
-        if (isset($this->_connection)) {
-            $this->_connection->disconnect();
-        } else {
-            $this->_command("QUIT\r\n");
-            if (!fclose($this->_socket)) {
-                throw new Swift_Plugins_Pop_Pop3Exception(
-                    sprintf('POP3 host [%s] connection could not be stopped', $this->_host)
-                );
-            }
-            $this->_socket = null;
-        }
-    }
+        $host = $this->_host;
+        switch (strtolower($this->_crypto)) {
+            case 'ssl':
+                $host = 'ssl://' . $host;
+                break;
 
-    /**
-     * Invoked just before a Transport is started.
-     *
-     * @param Swift_Events_TransportChangeEvent $evt
-     */
-    public function beforeTransportStarted(Swift_Events_TransportChangeEvent $evt)
-    {
-        if (isset($this->_transport)) {
-            if ($this->_transport !== $evt->getTransport()) {
-                return;
-            }
+            case 'tls':
+                $host = 'tls://' . $host;
+                break;
         }
 
-        $this->connect();
-        $this->disconnect();
+        return $host;
     }
 
-    /**
-     * Not used.
-     */
-    public function transportStarted(Swift_Events_TransportChangeEvent $evt)
+    private function _assertOk($response)
     {
+        if (substr($response, 0, 3) != '+OK') {
+            throw new Swift_Plugins_Pop_Pop3Exception(
+                sprintf('POP3 command failed [%s]', trim($response))
+            );
+        }
     }
-
-    /**
-     * Not used.
-     */
-    public function beforeTransportStopped(Swift_Events_TransportChangeEvent $evt)
-    {
-    }
-
-    /**
-     * Not used.
-     */
-    public function transportStopped(Swift_Events_TransportChangeEvent $evt)
-    {
-    }
-
-    // -- Private Methods
 
     private function _command($command)
     {
@@ -251,28 +235,44 @@ class Swift_Plugins_PopBeforeSmtpPlugin implements Swift_Events_TransportChangeL
         return $response;
     }
 
-    private function _assertOk($response)
+    /**
+     * Disconnect from the POP3 host.
+     */
+    public function disconnect()
     {
-        if (substr($response, 0, 3) != '+OK') {
-            throw new Swift_Plugins_Pop_Pop3Exception(
-                sprintf('POP3 command failed [%s]', trim($response))
-            );
+        if (isset($this->_connection)) {
+            $this->_connection->disconnect();
+        } else {
+            $this->_command("QUIT\r\n");
+            if (!fclose($this->_socket)) {
+                throw new Swift_Plugins_Pop_Pop3Exception(
+                    sprintf('POP3 host [%s] connection could not be stopped', $this->_host)
+                );
+            }
+            $this->_socket = null;
         }
     }
 
-    private function _getHostString()
+    // -- Private Methods
+
+    /**
+     * Not used.
+     */
+    public function transportStarted(Swift_Events_TransportChangeEvent $evt)
     {
-        $host = $this->_host;
-        switch (strtolower($this->_crypto)) {
-            case 'ssl':
-                $host = 'ssl://' . $host;
-                break;
+    }
 
-            case 'tls':
-                $host = 'tls://' . $host;
-                break;
-        }
+    /**
+     * Not used.
+     */
+    public function beforeTransportStopped(Swift_Events_TransportChangeEvent $evt)
+    {
+    }
 
-        return $host;
+    /**
+     * Not used.
+     */
+    public function transportStopped(Swift_Events_TransportChangeEvent $evt)
+    {
     }
 }

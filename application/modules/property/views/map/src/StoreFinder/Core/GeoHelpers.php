@@ -6,32 +6,6 @@ use Cache;
 class GeoHelpers {
 
     /**
-     * Geocode address
-     */
-    public static function geocode($address) {
-		try {
-			$geocode = Cache::rememberForever('geo_' . md5($address), function() use($address)
-			{
-				$geocoder = new \Geocoder\Geocoder;
-				$adapter  = new \Geocoder\HttpAdapter\CurlHttpAdapter;
-				$dumper   = new \Geocoder\Dumper\GeoJsonDumper;
-				$chain    = new \Geocoder\Provider\ChainProvider(array(
-					new \Geocoder\Provider\GoogleMapsProvider($adapter),
-					new \Geocoder\Provider\FreeGeoIpProvider($adapter),
-       				new \Geocoder\Provider\HostIpProvider($adapter),
-				));
-				$geocoder->registerProvider($chain);
-				$geocoded = $geocoder->geocode($address);
-
-				return $geocoded;
-			});
-			return $geocode;
-		} catch (\Exception $e) {
-			return array('error' => true, 'msg' => $e->getMessage());
-		}
-	}
-
-    /**
      * Reverse address from coordinates
      */
     public static function reverse($lat, $lng) {
@@ -72,6 +46,32 @@ class GeoHelpers {
 			$geocode['countryCode'] = 'Unkown';
 		}
 		return $geocode;
+	}
+
+	/**
+	 * Geocode address
+	 */
+	public static function geocode($address)
+	{
+		try {
+			$geocode = Cache::rememberForever('geo_' . md5($address), function () use ($address) {
+				$geocoder = new \Geocoder\Geocoder;
+				$adapter = new \Geocoder\HttpAdapter\CurlHttpAdapter;
+				$dumper = new \Geocoder\Dumper\GeoJsonDumper;
+				$chain = new \Geocoder\Provider\ChainProvider(array(
+					new \Geocoder\Provider\GoogleMapsProvider($adapter),
+					new \Geocoder\Provider\FreeGeoIpProvider($adapter),
+					new \Geocoder\Provider\HostIpProvider($adapter),
+				));
+				$geocoder->registerProvider($chain);
+				$geocoded = $geocoder->geocode($address);
+
+				return $geocoded;
+			});
+			return $geocode;
+		} catch (\Exception $e) {
+			return array('error' => true, 'msg' => $e->getMessage());
+		}
 	}
 
     /**

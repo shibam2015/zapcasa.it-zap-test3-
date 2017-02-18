@@ -131,104 +131,6 @@ class Connection implements ConnectionInterface {
 	}
 
 	/**
-	 * Download the contents of a remote file.
-	 *
-	 * @param  string  $remote
-	 * @param  string  $local
-	 * @return void
-	 */
-	public function get($remote, $local)
-	{
-		$this->getGateway()->get($remote, $local);
-	}
-
-	/**
-	 * Get the contents of a remote file.
-	 *
-	 * @param  string  $remote
-	 * @return string
-	 */
-	public function getString($remote)
-	{
-		return $this->getGateway()->getString($remote);
-	}
-
-	/**
-	 * Upload a local file to the server.
-	 *
-	 * @param  string  $local
-	 * @param  string  $remote
-	 * @return void
-	 */
-	public function put($local, $remote)
-	{
-		$this->getGateway()->put($local, $remote);
-	}
-
-	/**
-	 * Upload a string to to the given file on the server.
-	 *
-	 * @param  string  $remote
-	 * @param  string  $contents
-	 * @return void
-	 */
-	public function putString($remote, $contents)
-	{
-		$this->getGateway()->putString($remote, $contents);
-	}
-
-	/**
-	 * Display the given line using the default output.
-	 *
-	 * @param  string  $line
-	 * @return void
-	 */
-	public function display($line)
-	{
-		$server = $this->username.'@'.$this->host;
-
-		$lead = '<comment>['.$server.']</comment> <info>('.$this->name.')</info>';
-
-		$this->getOutput()->writeln($lead.' '.$line);
-	}
-
-	/**
-	 * Format the given command set.
-	 *
-	 * @param  string|array  $commands
-	 * @return string
-	 */
-	protected function formatCommands($commands)
-	{
-		return is_array($commands) ? implode(' && ', $commands) : $commands;
-	}
-
-	/**
-	 * Get the display callback for the connection.
-	 *
-	 * @param  \Closure|null  $callback
-	 * @return \Closure
-	 */
-	protected function getCallback($callback)
-	{
-		if ( ! is_null($callback)) return $callback;
-
-		$me = $this;
-
-		return function($line) use ($me) { $me->display($line); };
-	}
-
-	/**
-	 * Get the exit status of the last command.
-	 *
-	 * @return int|bool
-	 */
-	public function status()
-	{
-		return $this->gateway->status();
-	}
-
-	/**
 	 * Get the gateway implementation.
 	 *
 	 * @return \Illuminate\Remote\GatewayInterface
@@ -237,15 +139,45 @@ class Connection implements ConnectionInterface {
 	 */
 	public function getGateway()
 	{
-		if ( ! $this->gateway->connected())
-		{
-			if ( ! $this->gateway->connect($this->username))
-			{
+		if (!$this->gateway->connected()) {
+			if (!$this->gateway->connect($this->username)) {
 				throw new \RuntimeException("Unable to connect to remote server.");
 			}
 		}
 
 		return $this->gateway;
+	}
+
+	/**
+	 * Get the display callback for the connection.
+	 *
+	 * @param  \Closure|null $callback
+	 * @return \Closure
+	 */
+	protected function getCallback($callback)
+	{
+		if (!is_null($callback)) return $callback;
+
+		$me = $this;
+
+		return function ($line) use ($me) {
+			$me->display($line);
+		};
+	}
+
+	/**
+	 * Display the given line using the default output.
+	 *
+	 * @param  string $line
+	 * @return void
+	 */
+	public function display($line)
+	{
+		$server = $this->username . '@' . $this->host;
+
+		$lead = '<comment>[' . $server . ']</comment> <info>(' . $this->name . ')</info>';
+
+		$this->getOutput()->writeln($lead . ' ' . $line);
 	}
 
 	/**
@@ -263,12 +195,80 @@ class Connection implements ConnectionInterface {
 	/**
 	 * Set the output implementation.
 	 *
-	 * @param  \Symfony\Component\Console\Output\OutputInterface  $output
+	 * @param  \Symfony\Component\Console\Output\OutputInterface $output
 	 * @return void
 	 */
 	public function setOutput(OutputInterface $output)
 	{
 		$this->output = $output;
+	}
+
+	/**
+	 * Format the given command set.
+	 *
+	 * @param  string|array  $commands
+	 * @return string
+	 */
+	protected function formatCommands($commands)
+	{
+		return is_array($commands) ? implode(' && ', $commands) : $commands;
+	}
+
+	/**
+	 * Download the contents of a remote file.
+	 *
+	 * @param  string $remote
+	 * @param  string $local
+	 * @return void
+	 */
+	public function get($remote, $local)
+	{
+		$this->getGateway()->get($remote, $local);
+	}
+
+	/**
+	 * Get the contents of a remote file.
+	 *
+	 * @param  string $remote
+	 * @return string
+	 */
+	public function getString($remote)
+	{
+		return $this->getGateway()->getString($remote);
+	}
+
+	/**
+	 * Upload a local file to the server.
+	 *
+	 * @param  string $local
+	 * @param  string $remote
+	 * @return void
+	 */
+	public function put($local, $remote)
+	{
+		$this->getGateway()->put($local, $remote);
+	}
+
+	/**
+	 * Upload a string to to the given file on the server.
+	 *
+	 * @param  string $remote
+	 * @param  string $contents
+	 * @return void
+	 */
+	public function putString($remote, $contents)
+	{
+		$this->getGateway()->putString($remote, $contents);
+	}
+
+	/**
+	 * Get the exit status of the last command.
+	 *
+	 * @return int|bool
+	 */
+	public function status()
+	{
+		return $this->gateway->status();
 	}
 
 }

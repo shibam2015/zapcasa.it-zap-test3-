@@ -27,6 +27,11 @@ class Swift_Encoding
         return self::_lookup('mime.7bitcontentencoder');
     }
 
+    private static function _lookup($key)
+    {
+        return Swift_DependencyContainer::getInstance()->lookup($key);
+    }
+
     /**
      * Get the Encoder that provides 8-bit encoding.
      *
@@ -47,6 +52,8 @@ class Swift_Encoding
         return self::_lookup('mime.qpcontentencoder');
     }
 
+    // -- Private Static Methods
+
     /**
      * Get the Encoder that provides Base64 encoding.
      *
@@ -55,12 +62,5 @@ class Swift_Encoding
     public static function getBase64Encoding()
     {
         return self::_lookup('mime.base64contentencoder');
-    }
-
-    // -- Private Static Methods
-
-    private static function _lookup($key)
-    {
-        return Swift_DependencyContainer::getInstance()->lookup($key);
     }
 }

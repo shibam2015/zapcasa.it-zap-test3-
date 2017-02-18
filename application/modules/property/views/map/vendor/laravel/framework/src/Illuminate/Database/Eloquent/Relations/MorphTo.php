@@ -156,6 +156,17 @@ class MorphTo extends BelongsTo {
 	}
 
 	/**
+	 * Create a new model instance by type.
+	 *
+	 * @param  string $type
+	 * @return \Illuminate\Database\Eloquent\Model
+	 */
+	public function createModelByType($type)
+	{
+		return new $type;
+	}
+
+	/**
 	 * Gather all of the foreign keys for a given type.
 	 *
 	 * @param  string  $type
@@ -170,17 +181,6 @@ class MorphTo extends BelongsTo {
 			return head($models)->{$foreign};
 
 		})->unique();
-	}
-
-	/**
-	 * Create a new model instance by type.
-	 *
-	 * @param  string  $type
-	 * @return \Illuminate\Database\Eloquent\Model
-	 */
-	public function createModelByType($type)
-	{
-		return new $type;
 	}
 
 	/**

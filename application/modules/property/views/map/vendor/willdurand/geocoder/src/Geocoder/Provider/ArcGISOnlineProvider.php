@@ -106,66 +106,6 @@ class ArcGISOnlineProvider extends AbstractProvider implements ProviderInterface
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function getReversedData(array $coordinates)
-    {
-        $query = sprintf(self::REVERSE_ENDPOINT_URL, $this->protocol, $coordinates[1], $coordinates[0]);
-
-        $json = $this->executeQuery($query);
-
-        if (property_exists($json, 'error')) {
-            throw new NoResultException(sprintf('No results found for query %s', $query));
-        }
-
-        $data = $json->address;
-
-        $streetName   = !empty($data->Address) ? $data->Address : null;
-        $city         = !empty($data->City) ? $data->City : null;
-        $zipcode      = !empty($data->Postal) ? $data->Postal : null;
-        $region       = !empty($data->Region) ? $data->Region : null;
-        $county       = !empty($data->Subregion) ? $data->Subregion : null;
-        $countryCode  = !empty($data->CountryCode) ? $data->CountryCode : null;
-
-        return array(array_merge($this->getDefaults(), array(
-            'latitude'     => $coordinates[0],
-            'longitude'    => $coordinates[1],
-            'streetName'   => $streetName,
-            'city'         => $city,
-            'zipcode'      => $zipcode,
-            'region'       => $region,
-            'countryCode'  => $countryCode,
-            'county'       => $county,
-        )));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getName()
-    {
-        return 'arcgis_online';
-    }
-
-    /**
-     * @param string $query
-     *
-     * @return string Query with extra params
-     */
-    protected function buildQuery($query)
-    {
-        if (null !== $this->getSourceCountry()) {
-            $query = sprintf('%s&sourceCountry=%s', $query, $this->getSourceCountry());
-        }
-
-        $query = sprintf('%s&maxLocations=%d', $query, $this->getMaxResults());
-        $query = sprintf('%s&f=%s', $query, 'json'); // set format to json
-        $query = sprintf('%s&outFields=*', $query); // Get all result fields
-
-        return $query;
-    }
-
-    /**
      * Executes a query
      *
      * @param string $query
@@ -194,6 +134,24 @@ class ArcGISOnlineProvider extends AbstractProvider implements ProviderInterface
     }
 
     /**
+     * @param string $query
+     *
+     * @return string Query with extra params
+     */
+    protected function buildQuery($query)
+    {
+        if (null !== $this->getSourceCountry()) {
+            $query = sprintf('%s&sourceCountry=%s', $query, $this->getSourceCountry());
+        }
+
+        $query = sprintf('%s&maxLocations=%d', $query, $this->getMaxResults());
+        $query = sprintf('%s&f=%s', $query, 'json'); // set format to json
+        $query = sprintf('%s&outFields=*', $query); // Get all result fields
+
+        return $query;
+    }
+
+    /**
      * Returns the configured source country or null.
      *
      * @return string|null
@@ -201,5 +159,47 @@ class ArcGISOnlineProvider extends AbstractProvider implements ProviderInterface
     protected function getSourceCountry()
     {
         return $this->sourceCountry;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getReversedData(array $coordinates)
+    {
+        $query = sprintf(self::REVERSE_ENDPOINT_URL, $this->protocol, $coordinates[1], $coordinates[0]);
+
+        $json = $this->executeQuery($query);
+
+        if (property_exists($json, 'error')) {
+            throw new NoResultException(sprintf('No results found for query %s', $query));
+        }
+
+        $data = $json->address;
+
+        $streetName = !empty($data->Address) ? $data->Address : null;
+        $city = !empty($data->City) ? $data->City : null;
+        $zipcode = !empty($data->Postal) ? $data->Postal : null;
+        $region = !empty($data->Region) ? $data->Region : null;
+        $county = !empty($data->Subregion) ? $data->Subregion : null;
+        $countryCode = !empty($data->CountryCode) ? $data->CountryCode : null;
+
+        return array(array_merge($this->getDefaults(), array(
+            'latitude' => $coordinates[0],
+            'longitude' => $coordinates[1],
+            'streetName' => $streetName,
+            'city' => $city,
+            'zipcode' => $zipcode,
+            'region' => $region,
+            'countryCode' => $countryCode,
+            'county' => $county,
+        )));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getName()
+    {
+        return 'arcgis_online';
     }
 }

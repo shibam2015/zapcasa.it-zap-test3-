@@ -62,17 +62,6 @@ class RemoteManager {
 	}
 
 	/**
-	 * Get a connection group instance by name.
-	 *
-	 * @param  string  $name
-	 * @return \Illuminate\Remote\ConnectionInterface
-	 */
-	public function group($name)
-	{
-		return $this->connection($this->app['config']['remote.groups.'.$name]);
-	}
-
-	/**
 	 * Resolve a multiple connection instance.
 	 *
 	 * @param  array  $names
@@ -185,6 +174,17 @@ class RemoteManager {
 	public function getDefaultConnection()
 	{
 		return $this->app['config']['remote.default'];
+	}
+
+	/**
+	 * Get a connection group instance by name.
+	 *
+	 * @param  string $name
+	 * @return \Illuminate\Remote\ConnectionInterface
+	 */
+	public function group($name)
+	{
+		return $this->connection($this->app['config']['remote.groups.' . $name]);
 	}
 
 	/**

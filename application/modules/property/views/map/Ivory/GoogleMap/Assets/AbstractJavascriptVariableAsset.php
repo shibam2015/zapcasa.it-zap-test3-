@@ -36,6 +36,18 @@ abstract class AbstractJavascriptVariableAsset
     }
 
     /**
+     * Generates a unique javascript variable which can be prefixed.
+     *
+     * @param string $prefix The prefix.
+     *
+     * @return string The unique javascript variable.
+     */
+    protected function generateJavascriptVariable($prefix = null)
+    {
+        return str_replace('.', '', uniqid($prefix, true));
+    }
+
+    /**
      * Sets the prefix of the javascript variable.
      *
      * @param string $prefixJavascriptVariable The prefix of the javascript variable.
@@ -75,17 +87,5 @@ abstract class AbstractJavascriptVariableAsset
         }
 
         $this->javascriptVariable = $javascriptVariable;
-    }
-
-    /**
-     * Generates a unique javascript variable which can be prefixed.
-     *
-     * @param string $prefix The prefix.
-     *
-     * @return string The unique javascript variable.
-     */
-    protected function generateJavascriptVariable($prefix = null)
-    {
-        return str_replace('.', '', uniqid($prefix, true));
     }
 }

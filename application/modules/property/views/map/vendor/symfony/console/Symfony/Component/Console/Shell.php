@@ -138,6 +138,24 @@ EOF;
     }
 
     /**
+     * Reads a single line from standard input.
+     *
+     * @return string The single line from standard input
+     */
+    private function readline()
+    {
+        if ($this->hasReadline) {
+            $line = readline($this->getPrompt());
+        } else {
+            $this->output->write($this->getPrompt());
+            $line = fgets(STDIN, 1024);
+            $line = (!$line && strlen($line) == 0) ? false : rtrim($line);
+        }
+
+        return $line;
+    }
+
+    /**
      * Renders a prompt.
      *
      * @return string The prompt
@@ -146,6 +164,20 @@ EOF;
     {
         // using the formatter here is required when using readline
         return $this->output->getFormatter()->format($this->application->getName().' > ');
+    }
+
+    public function getProcessIsolation()
+    {
+        return $this->processIsolation;
+    }
+
+    public function setProcessIsolation($processIsolation)
+    {
+        $this->processIsolation = (bool)$processIsolation;
+
+        if ($this->processIsolation && !class_exists('Symfony\\Component\\Process\\Process')) {
+            throw new \RuntimeException('Unable to isolate processes as the Symfony Process Component is not installed.');
+        }
     }
 
     protected function getOutput()
@@ -192,37 +224,5 @@ EOF;
         }
 
         return $list;
-    }
-
-    /**
-     * Reads a single line from standard input.
-     *
-     * @return string The single line from standard input
-     */
-    private function readline()
-    {
-        if ($this->hasReadline) {
-            $line = readline($this->getPrompt());
-        } else {
-            $this->output->write($this->getPrompt());
-            $line = fgets(STDIN, 1024);
-            $line = (!$line && strlen($line) == 0) ? false : rtrim($line);
-        }
-
-        return $line;
-    }
-
-    public function getProcessIsolation()
-    {
-        return $this->processIsolation;
-    }
-
-    public function setProcessIsolation($processIsolation)
-    {
-        $this->processIsolation = (bool) $processIsolation;
-
-        if ($this->processIsolation && !class_exists('Symfony\\Component\\Process\\Process')) {
-            throw new \RuntimeException('Unable to isolate processes as the Symfony Process Component is not installed.');
-        }
     }
 }

@@ -58,22 +58,14 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase {
 	abstract public function createApplication();
 
 	/**
-	 * Call the given URI and return the Response.
+	 * Create a new HttpKernel client instance.
 	 *
-	 * @param  string  $method
-	 * @param  string  $uri
-	 * @param  array   $parameters
-	 * @param  array   $files
-	 * @param  array   $server
-	 * @param  string  $content
-	 * @param  bool    $changeHistory
-	 * @return \Illuminate\Http\Response
+	 * @param  array $server
+	 * @return \Symfony\Component\HttpKernel\Client
 	 */
-	public function call()
+	protected function createClient(array $server = array())
 	{
-		call_user_func_array(array($this->client, 'request'), func_get_args());
-
-		return $this->client->getResponse();
+		return new Client($this->app, $server);
 	}
 
 	/**
@@ -115,6 +107,25 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase {
 		$uri = $this->app['url']->action($action, $wildcards, true);
 
 		return $this->call($method, $uri, $parameters, $files, $server, $content, $changeHistory);
+	}
+
+	/**
+	 * Call the given URI and return the Response.
+	 *
+	 * @param  string $method
+	 * @param  string $uri
+	 * @param  array $parameters
+	 * @param  array $files
+	 * @param  array $server
+	 * @param  string $content
+	 * @param  bool $changeHistory
+	 * @return \Illuminate\Http\Response
+	 */
+	public function call()
+	{
+		call_user_func_array(array($this->client, 'request'), func_get_args());
+
+		return $this->client->getResponse();
 	}
 
 	/**
@@ -230,6 +241,19 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase {
 	}
 
 	/**
+	 * Assert whether the client was redirected to a given route.
+	 *
+	 * @param  string $name
+	 * @param  array $parameters
+	 * @param  array $with
+	 * @return void
+	 */
+	public function assertRedirectedToRoute($name, $parameters = array(), $with = array())
+	{
+		$this->assertRedirectedTo($this->app['url']->route($name, $parameters), $with);
+	}
+
+	/**
 	 * Assert whether the client was redirected to a given URI.
 	 *
 	 * @param  string  $uri
@@ -248,29 +272,20 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * Assert whether the client was redirected to a given route.
+	 * Assert that the session has a given list of values.
 	 *
-	 * @param  string  $name
-	 * @param  array   $parameters
-	 * @param  array   $with
+	 * @param  array $bindings
 	 * @return void
 	 */
-	public function assertRedirectedToRoute($name, $parameters = array(), $with = array())
+	public function assertSessionHasAll(array $bindings)
 	{
-		$this->assertRedirectedTo($this->app['url']->route($name, $parameters), $with);
-	}
-
-	/**
-	 * Assert whether the client was redirected to a given action.
-	 *
-	 * @param  string  $name
-	 * @param  array   $parameters
-	 * @param  array   $with
-	 * @return void
-	 */
-	public function assertRedirectedToAction($name, $parameters = array(), $with = array())
-	{
-		$this->assertRedirectedTo($this->app['url']->action($name, $parameters), $with);
+		foreach ($bindings as $key => $value) {
+			if (is_int($key)) {
+				$this->assertSessionHas($value);
+			} else {
+				$this->assertSessionHas($key, $value);
+			}
+		}
 	}
 
 	/**
@@ -295,24 +310,16 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * Assert that the session has a given list of values.
+	 * Assert whether the client was redirected to a given action.
 	 *
-	 * @param  array  $bindings
+	 * @param  string $name
+	 * @param  array $parameters
+	 * @param  array $with
 	 * @return void
 	 */
-	public function assertSessionHasAll(array $bindings)
+	public function assertRedirectedToAction($name, $parameters = array(), $with = array())
 	{
-		foreach ($bindings as $key => $value)
-		{
-			if (is_int($key))
-			{
-				$this->assertSessionHas($value);
-			}
-			else
-			{
-				$this->assertSessionHas($key, $value);
-			}
-		}
+		$this->assertRedirectedTo($this->app['url']->action($name, $parameters), $with);
 	}
 
 	/**
@@ -370,6 +377,18 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase {
 	}
 
 	/**
+	 * Start the session for the application.
+	 *
+	 * @return void
+	 */
+	protected function startSession()
+	{
+		if (!$this->app['session']->isStarted()) {
+			$this->app['session']->start();
+		}
+	}
+
+	/**
 	 * Flush all of the current session data.
 	 *
 	 * @return void
@@ -379,19 +398,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase {
 		$this->startSession();
 
 		$this->app['session']->flush();
-	}
-
-	/**
-	 * Start the session for the application.
-	 *
-	 * @return void
-	 */
-	protected function startSession()
-	{
-		if ( ! $this->app['session']->isStarted())
-		{
-			$this->app['session']->start();
-		}
 	}
 
 	/**
@@ -415,17 +421,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase {
 	public function seed($class = 'DatabaseSeeder')
 	{
 		$this->app['artisan']->call('db:seed', array('--class' => $class));
-	}
-
-	/**
-	 * Create a new HttpKernel client instance.
-	 *
-	 * @param  array  $server
-	 * @return \Symfony\Component\HttpKernel\Client
-	 */
-	protected function createClient(array $server = array())
-	{
-		return new Client($this->app, $server);
 	}
 
 }

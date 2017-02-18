@@ -7,9 +7,9 @@ class Subscriber {
 	 *
 	 * @return array
 	 */
-	public static function subscribes()
+	public static function getSubscribedEvents()
 	{
-		return array();
+		return static::subscribes();
 	}
 
 	/**
@@ -17,9 +17,9 @@ class Subscriber {
 	 *
 	 * @return array
 	 */
-	public static function getSubscribedEvents()
+	public static function subscribes()
 	{
-		return static::subscribes();
+		return array();
 	}
 
 }

@@ -84,6 +84,19 @@ class RoutesCommand extends Command {
 	}
 
 	/**
+	 * Display the route information on the console.
+	 *
+	 * @param  array $routes
+	 * @return void
+	 */
+	protected function displayRoutes(array $routes)
+	{
+		$this->table->setHeaders($this->headers)->setRows($routes);
+
+		$this->table->render($this->getOutput());
+	}
+
+	/**
 	 * Compile the routes into a displayable format.
 	 *
 	 * @return array
@@ -122,16 +135,20 @@ class RoutesCommand extends Command {
 	}
 
 	/**
-	 * Display the route information on the console.
+	 * Filter the route by URI and / or name.
 	 *
-	 * @param  array  $routes
-	 * @return void
+	 * @param  array $route
+	 * @return array|null
 	 */
-	protected function displayRoutes(array $routes)
+	protected function filterRoute(array $route)
 	{
-		$this->table->setHeaders($this->headers)->setRows($routes);
-
-		$this->table->render($this->getOutput());
+		if (($this->option('name') && !str_contains($route['name'], $this->option('name'))) ||
+			$this->option('path') && !str_contains($route['uri'], $this->option('path'))
+		) {
+			return null;
+		} else {
+			return $route;
+		}
 	}
 
 	/**
@@ -193,25 +210,6 @@ class RoutesCommand extends Command {
 	protected function getAfterFilters($route)
 	{
 		return implode(', ', array_keys($route->afterFilters()));
-	}
-
-	/**
-	 * Filter the route by URI and / or name.
-	 *
-	 * @param  array  $route
-	 * @return array|null
-	 */
-	protected function filterRoute(array $route)
-	{
-		if (($this->option('name') && ! str_contains($route['name'], $this->option('name'))) ||
-			 $this->option('path') && ! str_contains($route['uri'], $this->option('path')))
-		{
-			return null;
-		}
-		else
-		{
-			return $route;
-		}
 	}
 
 	/**

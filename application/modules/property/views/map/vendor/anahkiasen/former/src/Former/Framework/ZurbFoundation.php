@@ -19,7 +19,14 @@ class ZurbFoundation extends Framework implements FrameworkInterface
    * @var array
    */
   protected $availableTypes = array('horizontal', 'vertical');
-
+  /**
+   * The field states available
+   *
+   * @var array
+   */
+  protected $states = array(
+      'error',
+  );
   /**
    * The field sizes available
    *
@@ -38,15 +45,6 @@ class ZurbFoundation extends Framework implements FrameworkInterface
     10 => 'ten',
     11 => 'eleven',
     12 => 'twelve'
-  );
-
-  /**
-   * The field states available
-   *
-   * @var array
-   */
-  protected $states = array(
-    'error',
   );
 
   /**
@@ -69,6 +67,17 @@ class ZurbFoundation extends Framework implements FrameworkInterface
     return $classes;
   }
 
+  public function getFieldClasses(Field $field, $classes = array())
+  {
+    $classes = $this->filterFieldClasses($classes);
+
+    return $this->addClassesToField($field, $classes);
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  ///////////////////// EXPOSE FRAMEWORK SPECIFICS ///////////////////
+  ////////////////////////////////////////////////////////////////////
+
   public function filterFieldClasses($classes)
   {
     // Filter classes
@@ -78,38 +87,8 @@ class ZurbFoundation extends Framework implements FrameworkInterface
   }
 
   ////////////////////////////////////////////////////////////////////
-  ///////////////////// EXPOSE FRAMEWORK SPECIFICS ///////////////////
-  ////////////////////////////////////////////////////////////////////
-
-  protected function setFieldWidths($labelWidths)
-  {
-    $labelWidthClass = $fieldWidthClass = $fieldOffsetClass = '';
-
-    $viewports = $this->getFrameworkOption('viewports');
-
-    foreach ($labelWidths as $viewport => $columns) {
-      if ($viewport) {
-        $labelWidthClass .= $viewports[$viewport].$this->fields[$columns].' ';
-        $fieldWidthClass .= $viewports[$viewport].$this->fields[12-$columns].' ';
-        $fieldOffsetClass .= $viewports[$viewport].'offset-by-'.$this->fields[$columns].' ';
-      }
-    }
-
-    $this->labelWidth = $labelWidthClass . 'columns';
-    $this->fieldWidth = $fieldWidthClass . 'columns';
-    $this->fieldOffset = $fieldOffsetClass . 'columns';
-  }
-
-  ////////////////////////////////////////////////////////////////////
   ///////////////////////////// ADD CLASSES //////////////////////////
   ////////////////////////////////////////////////////////////////////
-
-  public function getFieldClasses(Field $field, $classes = array())
-  {
-    $classes = $this->filterFieldClasses($classes);
-
-    return $this->addClassesToField($field, $classes);
-  }
 
   public function getGroupClasses()
   {
@@ -150,14 +129,14 @@ class ZurbFoundation extends Framework implements FrameworkInterface
     return null;
   }
 
-  ////////////////////////////////////////////////////////////////////
-  //////////////////////////// RENDER BLOCKS /////////////////////////
-  ////////////////////////////////////////////////////////////////////
-
   public function createHelp($text, $attributes = array())
   {
     return Element::create('small', $text, $attributes);
   }
+
+  ////////////////////////////////////////////////////////////////////
+  //////////////////////////// RENDER BLOCKS /////////////////////////
+  ////////////////////////////////////////////////////////////////////
 
   /**
    * Render a disabled field
@@ -173,10 +152,6 @@ class ZurbFoundation extends Framework implements FrameworkInterface
     return Input::create('text', $field->getName(), $field->getValue(), $field->getAttributes());
   }
 
-  ////////////////////////////////////////////////////////////////////
-  //////////////////////////// WRAP BLOCKS ///////////////////////////
-  ////////////////////////////////////////////////////////////////////
-
   /**
    * Wrap an item to be prepended or appended to the current field.
    * For Zurb we return the item and handle the wrapping in prependAppend
@@ -190,6 +165,10 @@ class ZurbFoundation extends Framework implements FrameworkInterface
   {
     return $item;
   }
+
+  ////////////////////////////////////////////////////////////////////
+  //////////////////////////// WRAP BLOCKS ///////////////////////////
+  ////////////////////////////////////////////////////////////////////
 
   /**
    * Wrap a field with prepended and appended items
@@ -262,6 +241,25 @@ class ZurbFoundation extends Framework implements FrameworkInterface
     } else {
       return $actions;
     }
+  }
+
+  protected function setFieldWidths($labelWidths)
+  {
+    $labelWidthClass = $fieldWidthClass = $fieldOffsetClass = '';
+
+    $viewports = $this->getFrameworkOption('viewports');
+
+    foreach ($labelWidths as $viewport => $columns) {
+      if ($viewport) {
+        $labelWidthClass .= $viewports[$viewport] . $this->fields[$columns] . ' ';
+        $fieldWidthClass .= $viewports[$viewport] . $this->fields[12 - $columns] . ' ';
+        $fieldOffsetClass .= $viewports[$viewport] . 'offset-by-' . $this->fields[$columns] . ' ';
+      }
+    }
+
+    $this->labelWidth = $labelWidthClass . 'columns';
+    $this->fieldWidth = $fieldWidthClass . 'columns';
+    $this->fieldOffset = $fieldOffsetClass . 'columns';
   }
 
 }

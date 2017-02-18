@@ -74,19 +74,6 @@ class Response extends \Symfony\Component\HttpFoundation\Response {
 	}
 
 	/**
-	 * Morph the given content into JSON.
-	 *
-	 * @param  mixed   $content
-	 * @return string
-	 */
-	protected function morphToJson($content)
-	{
-		if ($content instanceof JsonableInterface) return $content->toJson();
-
-		return json_encode($content);
-	}
-
-	/**
 	 * Determine if the given content should be turned into JSON.
 	 *
 	 * @param  mixed  $content
@@ -97,6 +84,19 @@ class Response extends \Symfony\Component\HttpFoundation\Response {
 		return $content instanceof JsonableInterface ||
 			   $content instanceof ArrayObject ||
 			   is_array($content);
+	}
+
+	/**
+	 * Morph the given content into JSON.
+	 *
+	 * @param  mixed $content
+	 * @return string
+	 */
+	protected function morphToJson($content)
+	{
+		if ($content instanceof JsonableInterface) return $content->toJson();
+
+		return json_encode($content);
 	}
 
 	/**
