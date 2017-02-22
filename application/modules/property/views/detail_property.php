@@ -62,7 +62,7 @@
 
 </style>
 
-<?php
+<?php 
 
 if(count ( $property_details ) == 0 ){
 
@@ -76,9 +76,9 @@ if(count ( $property_details ) == 0 ){
 
 <script type="text/javascript">
 
-	$(document).ready(function() {
+	$(document).ready(function () {
 
-		$.validator.addMethod("multiemail",function(value, element){
+		$.validator.addMethod("multiemail", function (value, element) {
 
 			if (this.optional(element)) // return true on optional element
 
@@ -98,15 +98,15 @@ if(count ( $property_details ) == 0 ){
 
 			return valid;
 
-		},$.validator.messages.email);
+		}, $.validator.messages.email);
 
-		$('#nav li').hover(function() {
+		$('#nav li').hover(function () {
 
 			$('ul', this).slideDown(200);
 
 			$(this).children('a:first').addClass("hov");
 
-		}, function() {
+		}, function () {
 
 			$('ul', this).slideUp(100);
 
@@ -117,7 +117,7 @@ if(count ( $property_details ) == 0 ){
 
 	});
 
-	var page="proDetails";
+	var page = "proDetails";
 
 </script>
 
@@ -141,7 +141,7 @@ if(count ( $property_details ) == 0 ){
 
 	<div class="main">
 
-	<?php $this->load->view("_include/header"); ?>
+		<?php $this->load->view("_include/header"); ?>
 
 	</div>
 
@@ -197,7 +197,7 @@ if(count ( $property_details ) == 0 ){
 
 			<a href="<?php echo base_url();?>">
 
-			<?php echo $this->lang->line('details_property_home');?>
+				<?php echo $this->lang->line('details_property_home'); ?>
 
 			</a>
 
@@ -207,7 +207,7 @@ if(count ( $property_details ) == 0 ){
 
 			<a href="<?php echo base_url();?><?php echo $parent_breadcrumb_search_link;?>">
 
-			<?php echo $parent_breadcrumb_search_title;?>
+				<?php echo $parent_breadcrumb_search_title; ?>
 
 			</a>
 
@@ -223,7 +223,7 @@ if(count ( $property_details ) == 0 ){
 
 			<a href="<?php echo base_url();?><?php echo $child_breadcrumb_search_link; ?>">
 
-			<?php echo $child_breadcrumb_search_title;?>
+				<?php echo $child_breadcrumb_search_title;?>
 
 			</a>
 
@@ -247,7 +247,7 @@ if(count ( $property_details ) == 0 ){
 
 	<div class="refinesearch">
 
-	<?php $this->load->view("_include/search_header"); ?>
+		<?php $this->load->view("_include/search_header"); ?>
 
 	</div>
 
@@ -268,6 +268,7 @@ if(count ( $property_details ) == 0 ){
 					$Typo=get_perticular_field_value('zc_contract_types','name'," and contract_id='".$property_details[0]['contract_id']."'");
 
 					echo CreateNewRefToken($property_details[0]['property_id'],$Typo);
+					$reftoken = CreateNewRefToken($property_details[0]['property_id'], $Typo);
 
 					?>
 
@@ -320,7 +321,7 @@ if(count ( $property_details ) == 0 ){
 
 				<h3>
 
-					<?php
+				<?php
 
 					$propertyAddress = '';
 
@@ -362,45 +363,45 @@ if(count ( $property_details ) == 0 ){
 
 						$propertyPrice = '';
 
-						if($property_details[0]['price']!='0.000'){
+						if ($property_details[0]['price'] != '0.000') {
 
-							$propertyPrice.= '&euro;'.show_price($property_details[0]['price']).'&nbsp;';
+							$propertyPrice .= '&euro;' . show_price($property_details[0]['price']) . '&nbsp;';
 
-							if($property_details[0]['contract_id']==1){
+							if ($property_details[0]['contract_id'] == 1) {
 
-								$propertyPrice.= '<span style="color:#000; font-weight:bold;">'.$this->lang->line('details_property_per_month').'</span>';
+								$propertyPrice .= '<span style="color:#000; font-weight:bold;">' . $this->lang->line('details_property_per_month') . '</span>';
 
 							}
 
-							if($property_details[0]['update_price']!='0.00'){
+							if ($property_details[0]['update_price'] != '0.00') {
 
-								$per_prop=percentage($property_details[0]['update_price'],$property_details[0]['price']);
+								$per_prop = percentage($property_details[0]['update_price'], $property_details[0]['price']);
 
-								if($per_prop != 0) {
+								if ($per_prop != 0) {
 
-									$propertyPrice.= '<span style="color:#000; font-weight:bold;">|</span>';
+									$propertyPrice .= '<span style="color:#000; font-weight:bold;">|</span>';
 
 									if ($per_prop < 0) {
 
-										$propertyPrice.= '<span><img src="'.base_url().'assets/images/green.gif" width="10px" height="10px"></span>';
+										$propertyPrice .= '<span><img src="' . base_url() . 'assets/images/green.gif" width="10px" height="10px"></span>';
 
-										$propertyPrice.= '<span style="color:#090; font-weight:bold; padding-left:2px;">'.percentage($property_details[0]['update_price'],$property_details[0]['price']).' % </span>';
+										$propertyPrice .= '<span style="color:#090; font-weight:bold; padding-left:2px;">' . percentage($property_details[0]['update_price'], $property_details[0]['price']) . ' % </span>';
 
 									} else {
 
-										$propertyPrice.= '<span><img src="'.base_url().'assets/images/red.gif"  width="10px" height="10px"></span>';
+										$propertyPrice .= '<span><img src="' . base_url() . 'assets/images/red.gif"  width="10px" height="10px"></span>';
 
-										$propertyPrice.= '<span style="color:#F00; font-weight:bold; padding-left:2px;"> +'.percentage($property_details[0]['update_price'],$property_details[0]['price']).' % </span>';
-
-									}
+										$propertyPrice .= '<span style="color:#F00; font-weight:bold; padding-left:2px;"> +' . percentage($property_details[0]['update_price'], $property_details[0]['price']) . ' % </span>';
 
 								}
 
 							}
 
-						}else{
+							}
 
-							$propertyPrice.= $this->lang->line('details_property_private_nagotiation');
+						} else {
+
+							$propertyPrice .= $this->lang->line('details_property_private_nagotiation');
 
 						}
 
@@ -412,7 +413,7 @@ if(count ( $property_details ) == 0 ){
 
 				</div>
 
-				<div class="property_view" >
+				<div class="property_view">
 
 					<?php
 
@@ -426,7 +427,7 @@ if(count ( $property_details ) == 0 ){
 
 							<div style="height:67px;">
 
-							<p style="text-align:center;"><?php echo $this->lang->line('details_property_nearby_click_the_following_categories');?></p>
+								<p style="text-align:center;"><?php echo $this->lang->line('details_property_nearby_click_the_following_categories'); ?></p>
 
 							</div>
 
@@ -444,12 +445,14 @@ if(count ( $property_details ) == 0 ){
 
 									$nearByCatCounter = 1;
 
-									foreach($nearby_category as $key){
+									foreach ($nearby_category as $key) {
 
 
 										?>
 
-										<li id="<?php echo $nearByCatCounter; ?>" onClick="return initInTheArea('<?php echo $nearByCatCounter; ?>');" style="float:none;border:0;">
+										<li id="<?php echo $nearByCatCounter; ?>"
+											onClick="return initInTheArea('<?php echo $nearByCatCounter; ?>');"
+											style="float:none;border:0;">
 
 										<?php echo ucfirst($key[($_COOKIE['lang'] == "it"?'it_category_name':'category_name')]);?>
 
@@ -459,9 +462,9 @@ if(count ( $property_details ) == 0 ){
 
 										$nearByProData = get_nearby_area($key['category_id']);
 
-										if(count($nearByProData) > 0){
+										if (count($nearByProData) > 0) {
 
-											foreach($nearByProData as $nearByProDataKey){
+											foreach ($nearByProData as $nearByProDataKey) {
 
 												$nearbyGeoAddress = "";
 
@@ -471,15 +474,15 @@ if(count ( $property_details ) == 0 ){
 
 												$nearby_lng = $nearByProDataKey['longitude'];
 
-												$position="(".$nearby_lat.", ".$nearby_lng.")";
+												$position = "(" . $nearby_lat . ", " . $nearby_lng . ")";
 
-												if( $nearByProDataKey['url'] != "" ) {
+												if ($nearByProDataKey['url'] != "") {
 
 													$nearby_image_path = base_url() . 'ASZC-admin/assets/uploads/NearByProperty/' . $nearByProDataKey['property_details_id'] . '/thumb/' . $nearByProDataKey['url'];
 
 												} else {
 
-													$nearby_image_path = base_url()."assets/images/no_proimg.jpg";
+													$nearby_image_path = base_url() . "assets/images/no_proimg.jpg";
 
 												}
 
@@ -494,39 +497,40 @@ if(count ( $property_details ) == 0 ){
 
 												// }
 
-												if(floatval($areaLimit) >= floatval($geoDistance)){
+												if (floatval($areaLimit) >= floatval($geoDistance)) {
 
 													$nearby_adress = "";
 
-													if($nearByProDataKey['street_address']){
+													if ($nearByProDataKey['street_address']) {
 
 														$nearby_adress .= $nearByProDataKey['street_address'];
 
 													}
 
-													if($nearByProDataKey['street_no']){
+													if ($nearByProDataKey['street_no']) {
 
-														$nearby_adress .= ','.$nearByProDataKey['street_no'];
-
-													}
-
-													if($nearByProDataKey['zip']){
-
-														$nearby_adress .= ' - '.$nearByProDataKey['zip'];
+														$nearby_adress .= ',' . $nearByProDataKey['street_no'];
 
 													}
 
-													if($nearByProDataKey['city']){
+													if ($nearByProDataKey['zip']) {
 
-														$nearby_adress .= ' '.$nearByProDataKey['city'];
+														$nearby_adress .= ' - ' . $nearByProDataKey['zip'];
+
+													}
+
+													if ($nearByProDataKey['city']) {
+
+														$nearby_adress .= ' ' . $nearByProDataKey['city'];
 
 													}
 
-													if($nearByProDataKey['provience']!= ""){
+													if ($nearByProDataKey['provience'] != "") {
 
-														$nearby_adress .= ' - '.$nearByProDataKey['provience'];
+														$nearby_adress .= ' - ' . $nearByProDataKey['provience'];
 
 													}
+
 
 													$nearbyGeoAddress .= stripslashes($nearByProDataKey['city']) . ', ' . $province_code . ', ' . $nearByProDataKey['zip'] . ', Italy';
 
@@ -556,13 +560,13 @@ if(count ( $property_details ) == 0 ){
 
 												);
 
-												}
+											}
 
 												$nearByCounter++;
 
-											}
-
 										}
+
+									}
 
 										$nearByCatCounter++;
 
@@ -590,19 +594,19 @@ if(count ( $property_details ) == 0 ){
 
 									<?php
 
-									$CityName=get_perticular_field_value('zc_city',($_COOKIE['lang']=="it"?'city_name_it':'city_name')," and `city_id` = '".$property_details[0]['city']."'");
+									$CityName = get_perticular_field_value('zc_city', ($_COOKIE['lang'] == "it" ? 'city_name_it' : 'city_name'), " and `city_id` = '" . $property_details[0]['city'] . "'");
 
-									$TypologyName=get_perticular_field_value('zc_typologies',($_COOKIE['lang']=="it"?'name_it':'name')," and status='active' and `typology_id` = '".$property_details[0]['typology']."'");
+									$TypologyName = get_perticular_field_value('zc_typologies', ($_COOKIE['lang'] == "it" ? 'name_it' : 'name'), " and status='active' and `typology_id` = '" . $property_details[0]['typology'] . "'");
 
 
-									if(isset($property_image) && ( !empty($property_image))){
+									if (isset($property_image) && (!empty($property_image))) {
 
-										foreach($property_image as $property_images){
+										foreach ($property_image as $property_images) {
 
-											if($property_images['img_type']=='prop_picture' || $property_images['img_type']=='main_image'){
+											if ($property_images['img_type'] == 'prop_picture' || $property_images['img_type'] == 'main_image') {
 
-												$file = base_url()."assets/uploads/Property/Property".$property_images['property_id']."/thumb_92_82/".$property_images['file_name'];
-
+												$file = base_url() . "assets/uploads/Property/Property" . $property_images['property_id'] . "/thumb_92_82/" . $property_images['file_name'];
+												$file1 = base_url() . "assets/uploads/Property/Property" . $property_images['property_id'] . "/" . $property_images['file_name'];
 												$thumb = "";
 
 												if (file_exists($file)) {
@@ -611,7 +615,7 @@ if(count ( $property_details ) == 0 ){
 
 												} else {
 
-													$thumb = base_url()."assets/uploads/Property/Property".$property_images['property_id']."/thumb_92_82/".$property_images['file_name'];
+													$thumb = base_url() . "assets/uploads/Property/Property" . $property_images['property_id'] . "/thumb_92_82/" . $property_images['file_name'];
 
 												}
 
@@ -619,9 +623,11 @@ if(count ( $property_details ) == 0 ){
 
 												<li>
 
-													<a href="#" rel="nofollow" title="<?php echo stripslashes($TypologyName).' in '.stripslashes($CityName); ?>">
+													<a href="#" rel="nofollow"
+													   title="<?php echo stripslashes($TypologyName) . ' in ' . stripslashes($CityName); ?>">
 
-													<img src="<?php echo $thumb; ?>" alt="<?php echo stripslashes($TypologyName).' in '.stripslashes($CityName); ?>">
+														<img src="<?php echo $thumb; ?>"
+															 alt="<?php echo stripslashes($TypologyName) . ' in ' . stripslashes($CityName); ?>">
 
 													</a>
 
@@ -684,15 +690,15 @@ if(count ( $property_details ) == 0 ){
 
 							<?php
 
-							if(isset($property_image) && ( !empty($property_image) ) ) {
+							if (isset($property_image) && (!empty($property_image))) {
 
-								foreach($property_image as $property_images) {
+								foreach ($property_image as $property_images) {
 
-									if($property_images['img_type']=='prop_picture' || $property_images['img_type']=='main_image') {
+									if ($property_images['img_type'] == 'prop_picture' || $property_images['img_type'] == 'main_image') {
 
-										$file_860_482 = base_url()."assets/uploads/Property/Property".$property_images['property_id']."/".$property_images['file_name'];
+										$file_860_482 = base_url() . "assets/uploads/Property/Property" . $property_images['property_id'] . "/" . $property_images['file_name'];
 
-										$file_200_296 = base_url()."assets/uploads/Property/Property".$property_images['property_id']."/thumb_200_296/".$property_images['file_name'];
+										$file_200_296 = base_url() . "assets/uploads/Property/Property" . $property_images['property_id'] . "/thumb_200_296/" . $property_images['file_name'];
 
 										/*
 
@@ -730,11 +736,16 @@ if(count ( $property_details ) == 0 ){
 
 										<div class="sliderkit-panel">
 
-											<!-- <a href="<?php //echo $thumb_860_482;?>" title="<?php //echo $TypologyName.' in '.stripslashes($CityName); ?>" class="fancybox"> -->
+											<!-- <a href="<?php //echo $thumb_860_482;
+											?>" title="<?php //echo $TypologyName.' in '.stripslashes($CityName);
+											?>" class="fancybox"> -->
 
-											<a href="<?php echo $thumb_860_482;?>" title="<?php echo $TypologyName.' in '.stripslashes($CityName); ?>" rel="group" class="fancybox" data-fancybox-group="gallery">
+											<a href="<?php echo $thumb_860_482;?>"
+											   title="<?php echo $TypologyName . ' in ' . stripslashes($CityName); ?>"
+											   rel="group" class="fancybox" data-fancybox-group="gallery">
 
-											<img src="<?php echo $thumb_860_482;?>" alt="<?php echo $TypologyName.' in '.stripslashes($CityName); ?>">
+												<img src="<?php echo $thumb_860_482;?>"
+													 alt="<?php echo $TypologyName . ' in ' . stripslashes($CityName); ?>">
 
 											</a>
 
@@ -759,7 +770,7 @@ if(count ( $property_details ) == 0 ){
 
 					<div class="showcase" id="showcase1">
 
-					<div id="map_canvas" style="width:464px;height:455px;"></div>
+						<div id="map_canvas" style="width:464px;height:455px;"></div>
 
 					</div>
 
@@ -769,13 +780,14 @@ if(count ( $property_details ) == 0 ){
 
 						<?php
 
-						if($property_details[0]['youtube_url'] !='' ){
+						if ($property_details[0]['youtube_url'] != '') {
 
-							$youtube_urls=explode('=',$property_details[0]['youtube_url']);
+							$youtube_urls = explode('=', $property_details[0]['youtube_url']);
 
 							?>
 
-							<?php //echo $youtube_urls['1'];?>
+							<?php //echo $youtube_urls['1'];
+							?>
 
 							<iframe class="youtube_player_iframe" width="100%" height="455"
 									src="https://www.youtube.com/embed/<?php echo $youtube_urls['1'];?>?rel=0&showinfo=0&modestbranding=1&autohide=1&wmode=transparent&enablejsapi=1&autoplay=0"
@@ -795,7 +807,7 @@ if(count ( $property_details ) == 0 ){
 
 					<div class="showcase" id="showcase3">
 
-					<div id="map_canvas_street_view" style="width:100%;height:455px;"></div>
+						<div id="map_canvas_street_view" style="width:100%;height:455px;"></div>
 
 					</div>
 
@@ -891,19 +903,21 @@ if(count ( $property_details ) == 0 ){
 
 				<?php
 
-				if($this->session->userdata( 'user_id' )!='' || $this->session->userdata('user_id')!='0') {
+				if ($this->session->userdata('user_id') != '' || $this->session->userdata('user_id') != '0') {
 
 					?>
 
-					<a id="save" href="javascript:void(0)" onClick="return save_property(<?php echo isset( $property_images['property_id'] ) ? $property_images['property_id'] : $property_details[0]['property_id']; ?>);"><?php echo $this->lang->line('details_property_image_save');?></a>
+					<a id="save" href="javascript:void(0)"
+					   onClick="return save_property(<?php echo isset($property_images['property_id']) ? $property_images['property_id'] : $property_details[0]['property_id']; ?>);"><?php echo $this->lang->line('details_property_image_save');?></a>
 
 				<?php
 
 				} else {
 
-					?>
+				?>
 
-					<a id="save" href="javascript:void(0);" class="save_propertys"><?php echo $this->lang->line('details_property_image_save');?></a>
+					<a id="save" href="javascript:void(0);"
+					   class="save_propertys"><?php echo $this->lang->line('details_property_image_save');?></a>
 
 				<?php
 
@@ -911,19 +925,21 @@ if(count ( $property_details ) == 0 ){
 
 				?>
 
-				<a id="general_button_mail" href="javascript:void(0);" onClick="return email_property(<?php echo isset( $property_images['property_id'] ) ? $property_images['property_id'] : $property_details[0]['property_id']; ?>);"><?php echo $this->lang->line('details_property_image_email');?></a>
+				<a id="general_button_mail" href="javascript:void(0);"
+				   onClick="return email_property(<?php echo isset($property_images['property_id']) ? $property_images['property_id'] : $property_details[0]['property_id']; ?>);"><?php echo $this->lang->line('details_property_image_email'); ?></a>
 
-				<a id="general_button_print" href="javascript:void(0);" onClick="printPage(printsection.innerHTML)"><?php echo $this->lang->line('details_property_image_print');?></a>
+				<a id="general_button_print" href="javascript:void(0);"
+				   onClick="printPage(printsection.innerHTML)"><?php echo $this->lang->line('details_property_image_print'); ?></a>
 
 				<?php
 
-				if($this->session->flashdata('mail_success')!='') {
+				if ($this->session->flashdata('mail_success') != '') {
 
 					?>
 
 					<div class="success" id="success" style="float:right;">
 
-					<?php echo $this->session->flashdata('mail_success');?>
+						<?php echo $this->session->flashdata('mail_success');?>
 
 					</div>
 
@@ -946,7 +962,7 @@ if(count ( $property_details ) == 0 ){
 
 					<h2 style="margin:0 0 15px;padding:0 0 5px;font-weight:bold;">
 
-					<?php echo $this->lang->line('details_property_sending_email');?>
+						<?php echo $this->lang->line('details_property_sending_email'); ?>
 
 					</h2>
 
@@ -1018,6 +1034,13 @@ if(count ( $property_details ) == 0 ){
 
 			</div>
 
+			<?php if (isset($_COOKIE['lang']) && ($_COOKIE['lang'] == "english")) {
+				$prop_url = "Property URL";
+				$reference = "Ref.";
+			} else {
+				$prop_url = "URL Immobile";
+				$reference = "Rif.";
+			} ?>
 
 			<!--property detail view-->
 
@@ -1025,7 +1048,7 @@ if(count ( $property_details ) == 0 ){
 
 				<div class="section1">
 
-					<h2><?php echo $this->lang->line('details_property_property_info');?></h2>
+					<h2><?php echo $this->lang->line('details_property_property_info'); ?></h2>
 
 					<div class="column column-listing">
 
@@ -1109,7 +1132,7 @@ if(count ( $property_details ) == 0 ){
 
 										$monthName = $this->lang->line('cal_dec');
 
-										break;
+										break;			
 
 								}
 
@@ -1125,7 +1148,7 @@ if(count ( $property_details ) == 0 ){
 
 								<?php
 
-								if($property_details[0]['update_time']!='0000-00-00'){
+								if ($property_details[0]['update_time'] != '0000-00-00') {
 
 									switch(date('m',strtotime($property_details[0]['update_time']))){
 
@@ -1199,7 +1222,7 @@ if(count ( $property_details ) == 0 ){
 
 											$monthName = $this->lang->line('cal_dec');
 
-											break;
+											break;			
 
 									}
 
@@ -1219,13 +1242,13 @@ if(count ( $property_details ) == 0 ){
 
 								<?php
 
-								$user_type=get_perticular_field_value('zc_user','user_type'," and user_id='".$property_details[0]['property_post_by']."'");
+								$user_type = get_perticular_field_value('zc_user', 'user_type', " and user_id='" . $property_details[0]['property_post_by'] . "'");
 
-								if($user_type==2){
+								if ($user_type == 2) {
 
-									$first_name=get_perticular_field_value('zc_user','first_name'," and user_id='".$property_details[0]['property_post_by']."'");
+									$first_name = get_perticular_field_value('zc_user', 'first_name', " and user_id='" . $property_details[0]['property_post_by'] . "'");
 
-									$last_name=get_perticular_field_value('zc_user','last_name'," and user_id='".$property_details[0]['property_post_by']."'");
+									$last_name = get_perticular_field_value('zc_user', 'last_name', " and user_id='" . $property_details[0]['property_post_by'] . "'");
 
 									?>
 
@@ -1241,11 +1264,11 @@ if(count ( $property_details ) == 0 ){
 
 								}
 
-								if($user_type==3) {
+								if ($user_type == 3) {
 
 									?>
 
-									<span><?php echo $this->lang->line('details_property_property_info_by_agency');?></span> <?php echo get_perticular_field_value('zc_user','company_name'," and user_id='".$property_details[0]['property_post_by']."'");?>
+									<span><?php echo $this->lang->line('details_property_property_info_by_agency');?></span> <?php echo get_perticular_field_value('zc_user', 'company_name', " and user_id='" . $property_details[0]['property_post_by'] . "'");?>
 
 								<?php
 
@@ -1262,15 +1285,15 @@ if(count ( $property_details ) == 0 ){
 
 								<?php
 
-								$contract_id=$property_details[0]['contract_id'];
+								$contract_id = $property_details[0]['contract_id'];
 
-								if($contract_id==1) {
+								if ($contract_id == 1) {
 
 									echo $this->lang->line('details_property_property_info_rent');
 
 								}
 
-								if($contract_id==2) {
+								if ($contract_id == 2) {
 
 									echo $this->lang->line('details_property_property_info_sell');
 
@@ -1283,11 +1306,11 @@ if(count ( $property_details ) == 0 ){
 
 							<li>
 
-								<span><?php echo $this->lang->line('details_property_category');?></span>
+								<span><?php echo $this->lang->line('details_property_category'); ?></span>
 
 								<?php
 
-								if(($property_details[0]['category_id']=='6')){
+								if (($property_details[0]['category_id'] == '6')) {
 
 									echo $this->lang->line('search_header_typology_business_property_for_business');
 
@@ -1306,7 +1329,7 @@ if(count ( $property_details ) == 0 ){
 
 							<li>
 
-								<span><?php echo $this->lang->line('details_property_city');?></span>
+							<span><?php echo $this->lang->line('details_property_city');?></span>
 
 								<?php echo stripslashes($city_name); ?>
 
@@ -1322,19 +1345,22 @@ if(count ( $property_details ) == 0 ){
 
 							<li>
 
-							<span><?php echo $this->lang->line('details_property_zip_code');?></span><?php echo $property_details[0]['zip'];?>
+								<span><?php echo $this->lang->line('details_property_zip_code'); ?></span><?php echo $property_details[0]['zip']; ?>
 
 							</li>
 
 							<li>
 
-							<span><?php echo $this->lang->line('details_property_address');?></span> <?php if($property_details[0]['street_address']!=''){echo $property_details[0]['street_address'];}?><?php if($property_details[0]['street_no']!=''){?>, <?php echo $property_details[0]['street_no'];}?>
+								<span><?php echo $this->lang->line('details_property_address'); ?></span> <?php if ($property_details[0]['street_address'] != '') {
+									echo $property_details[0]['street_address'];
+								} ?><?php if ($property_details[0]['street_no'] != '') { ?>, <?php echo $property_details[0]['street_no'];
+								} ?>
 
 							</li>
 
 							<li>
 
-								<span><?php echo $this->lang->line('details_property_area');?></span>
+								<span><?php echo $this->lang->line('details_property_area'); ?></span>
 
 								<?php if(($property_details[0]['area'] > ' ')){
 
@@ -1368,7 +1394,7 @@ if(count ( $property_details ) == 0 ){
 
 
 
-							<?php if(($property_details[0]['category_id']=='1') || ($property_details[0]['category_id']=='5') || ($property_details[0]['category_id']=='6') || ($property_details[0]['category_id']=='7')){ ?>
+							<?php if (($property_details[0]['category_id'] == '1') || ($property_details[0]['category_id'] == '5') || ($property_details[0]['category_id'] == '6') || ($property_details[0]['category_id'] == '7')) { ?>
 
 								<li>
 
@@ -1380,21 +1406,21 @@ if(count ( $property_details ) == 0 ){
 
 
 
-							<?php if(($property_details[0]['category_id']=='1') || ($property_details[0]['category_id']=='4') || ($property_details[0]['category_id']=='5') || ($property_details[0]['category_id']=='6') || ($property_details[0]['category_id']=='7')){ ?>
+							<?php if (($property_details[0]['category_id'] == '1') || ($property_details[0]['category_id'] == '4') || ($property_details[0]['category_id'] == '5') || ($property_details[0]['category_id'] == '6') || ($property_details[0]['category_id'] == '7')) { ?>
 
 								<li>
 
-									<span><?php echo $this->lang->line('details_property_kind');?></span>
+									<span><?php echo $this->lang->line('details_property_kind'); ?></span>
 
-									<?php if(($property_details[0]['kind'] > ' ')){
+									<?php if (($property_details[0]['kind'] > ' ')) {
 
-										echo get_perticular_field_value('zc_kind_of_property',($_COOKIE['lang']=='it'?'name_it':'name')," and id='".$property_details[0]['kind']."'");
+										echo get_perticular_field_value('zc_kind_of_property', ($_COOKIE['lang'] == 'it' ? 'name_it' : 'name'), " and id='" . $property_details[0]['kind'] . "'");
 
 									} else {
 
 										echo '---';
 
-									}?>
+									} ?>
 
 								</li>
 
@@ -1402,21 +1428,21 @@ if(count ( $property_details ) == 0 ){
 
 
 
-							<?php if(($property_details[0]['category_id']=='1') || ($property_details[0]['category_id']=='5') || ($property_details[0]['category_id']=='6') || ($property_details[0]['category_id']=='7')){ ?>
+							<?php if (($property_details[0]['category_id'] == '1') || ($property_details[0]['category_id'] == '5') || ($property_details[0]['category_id'] == '6') || ($property_details[0]['category_id'] == '7')) { ?>
 
 								<li>
 
-									<span><?php echo $this->lang->line('details_property_energy_class');?></span>
+									<span><?php echo $this->lang->line('details_property_energy_class'); ?></span>
 
 									<?php
 
-									$energyClass = get_perticular_field_value('zc_energy_efficiency_class','name'," and id='".$property_details[0]['energyclass']."'");
+									$energyClass = get_perticular_field_value('zc_energy_efficiency_class', 'name', " and id='" . $property_details[0]['energyclass'] . "'");
 
-									if($energyClass == 'Not Classified'){
+									if ($energyClass == 'Not Classified') {
 
-										echo($_COOKIE['lang']=='it'?'Non classificato':'Not Classified');
+										echo($_COOKIE['lang'] == 'it' ? 'Non classificato' : 'Not Classified');
 
-									}else{
+									} else {
 
 										echo $energyClass;
 
@@ -1430,19 +1456,19 @@ if(count ( $property_details ) == 0 ){
 
 
 
-							<?php if(($property_details[0]['category_id']=='1') || ($property_details[0]['category_id']=='5') || ($property_details[0]['category_id']=='6') || ($property_details[0]['category_id']=='7')){ ?>
+							<?php if (($property_details[0]['category_id'] == '1') || ($property_details[0]['category_id'] == '5') || ($property_details[0]['category_id'] == '6') || ($property_details[0]['category_id'] == '7')) { ?>
 
 								<li>
 
-									<span><?php echo $this->lang->line('details_property_luxury');?></span>
+									<span><?php echo $this->lang->line('details_property_luxury'); ?></span>
 
 									<?php
 
-									if($property_details[0]['add_to_luxury']=='0'){
+									if ($property_details[0]['add_to_luxury'] == '0') {
 
 										echo $this->lang->line('details_property_luxury_no');
 
-									}else{
+									} else {
 
 										echo $this->lang->line('details_property_luxury_yes');
 
@@ -1463,7 +1489,7 @@ if(count ( $property_details ) == 0 ){
 
 				<div class="section1">
 
-					<h3><?php echo $this->lang->line('details_property_main_features');?></h3>
+					<h3><?php echo $this->lang->line('details_property_main_features'); ?></h3>
 
 					<div class="column column-listing">
 
@@ -1471,7 +1497,7 @@ if(count ( $property_details ) == 0 ){
 
 							<?php
 
-							if($property_details[0]['category_id']!='3'){
+							if ($property_details[0]['category_id'] != '3') {
 
 								?>
 
@@ -1487,7 +1513,7 @@ if(count ( $property_details ) == 0 ){
 
 							}
 
-							if(($property_details[0]['category_id']=='1')|| ($property_details[0]['category_id']=='6')||($property_details[0]['category_id']=='7')||($property_details[0]['category_id']=='5')){
+							if (($property_details[0]['category_id'] == '1') || ($property_details[0]['category_id'] == '6') || ($property_details[0]['category_id'] == '7') || ($property_details[0]['category_id'] == '5')) {
 
 								?>
 
@@ -1503,7 +1529,7 @@ if(count ( $property_details ) == 0 ){
 
 							}
 
-							if(($property_details[0]['category_id']=='1')|| ($property_details[0]['category_id']=='6')||($property_details[0]['category_id']=='7')||($property_details[0]['category_id']=='5') || ($property_details[0]['category_id']=='3')){
+							if (($property_details[0]['category_id'] == '1') || ($property_details[0]['category_id'] == '6') || ($property_details[0]['category_id'] == '7') || ($property_details[0]['category_id'] == '5') || ($property_details[0]['category_id'] == '3')) {
 
 								?>
 
@@ -1511,7 +1537,7 @@ if(count ( $property_details ) == 0 ){
 
 									<span><?php echo $this->lang->line('details_property_floor');?></span>
 
-									<?php if(($property_details[0]['floor'] > ' ')){
+									<?php if (($property_details[0]['floor'] > ' ')) {
 
 										echo $property_details[0]['floor'];
 
@@ -1527,7 +1553,7 @@ if(count ( $property_details ) == 0 ){
 
 							}
 
-							if(($property_details[0]['category_id']=='1')|| ($property_details[0]['category_id']=='6')||($property_details[0]['category_id']=='7')||($property_details[0]['category_id']=='5')){
+							if (($property_details[0]['category_id'] == '1') || ($property_details[0]['category_id'] == '6') || ($property_details[0]['category_id'] == '7') || ($property_details[0]['category_id'] == '5')) {
 
 								?>
 
@@ -1535,7 +1561,7 @@ if(count ( $property_details ) == 0 ){
 
 									<span><?php echo $this->lang->line('details_property_total_of_floor');?></span>
 
-									<?php if(($property_details[0]['total_of_floors'] > ' ')){
+									<?php if (($property_details[0]['total_of_floors'] > ' ')) {
 
 										echo $property_details[0]['total_of_floors'];
 
@@ -1551,7 +1577,7 @@ if(count ( $property_details ) == 0 ){
 
 							}
 
-							if(($property_details[0]['category_id']=='1')|| ($property_details[0]['category_id']=='6')||($property_details[0]['category_id']=='7')||($property_details[0]['category_id']=='5')){
+							if (($property_details[0]['category_id'] == '1') || ($property_details[0]['category_id'] == '6') || ($property_details[0]['category_id'] == '7') || ($property_details[0]['category_id'] == '5')) {
 
 								?>
 
@@ -1559,7 +1585,7 @@ if(count ( $property_details ) == 0 ){
 
 									<span><?php echo $this->lang->line('details_property_totayear_of_building');?></span>
 
-									<?php if(($property_details[0]['year_of_building'] > ' ')){
+									<?php if (($property_details[0]['year_of_building'] > ' ')) {
 
 										echo $property_details[0]['year_of_building'];
 
@@ -1575,7 +1601,7 @@ if(count ( $property_details ) == 0 ){
 
 							}
 
-							if(($property_details[0]['category_id']=='5')){
+							if (($property_details[0]['category_id'] == '5')) {
 
 								?>
 
@@ -1583,7 +1609,7 @@ if(count ( $property_details ) == 0 ){
 
 									<span><?php echo $this->lang->line('details_property_beds');?></span>
 
-									<?php if(($property_details[0]['beds_no'] > ' ') && ($property_details[0]['beds_no'] !='0')){
+									<?php if (($property_details[0]['beds_no'] > ' ') && ($property_details[0]['beds_no'] != '0')) {
 
 										echo $property_details[0]['beds_no'];
 
@@ -1599,7 +1625,7 @@ if(count ( $property_details ) == 0 ){
 
 							}
 
-							if(($property_details[0]['category_id']=='1')|| ($property_details[0]['category_id']=='6')||($property_details[0]['category_id']=='7')||($property_details[0]['category_id']=='5') ||($property_details[0]['category_id']=='3')){
+							if (($property_details[0]['category_id'] == '1') || ($property_details[0]['category_id'] == '6') || ($property_details[0]['category_id'] == '7') || ($property_details[0]['category_id'] == '5') || ($property_details[0]['category_id'] == '3')) {
 
 								?>
 
@@ -1617,7 +1643,7 @@ if(count ( $property_details ) == 0 ){
 
 									<?php
 
-									switch($property_details[0]['kitchen']){
+									switch ($property_details[0]['kitchen']) {
 
 										case 'Living':
 
@@ -1663,7 +1689,7 @@ if(count ( $property_details ) == 0 ){
 
 									<?php
 
-									switch($property_details[0]['heating']){
+									switch ($property_details[0]['heating']) {
 
 										case 'Centralized':
 
@@ -1701,7 +1727,7 @@ if(count ( $property_details ) == 0 ){
 
 							}
 
-							if(($property_details[0]['category_id']=='1')|| ($property_details[0]['category_id']=='6')||($property_details[0]['category_id']=='7')||($property_details[0]['category_id']=='3')||($property_details[0]['category_id']=='5')){
+							if (($property_details[0]['category_id'] == '1') || ($property_details[0]['category_id'] == '6') || ($property_details[0]['category_id'] == '7') || ($property_details[0]['category_id'] == '3') || ($property_details[0]['category_id'] == '5')) {
 
 								?>
 
@@ -1711,7 +1737,7 @@ if(count ( $property_details ) == 0 ){
 
 									<?php
 
-									switch($property_details[0]['parking']){
+									switch ($property_details[0]['parking']) {
 
 										case 'Parking':
 
@@ -1749,7 +1775,7 @@ if(count ( $property_details ) == 0 ){
 
 							}
 
-							if(($property_details[0]['category_id']=='3')){
+							if (($property_details[0]['category_id'] == '3')) {
 
 								?>
 
@@ -1759,7 +1785,7 @@ if(count ( $property_details ) == 0 ){
 
 									<?php
 
-									switch($property_details[0]['roommates']){
+									switch ($property_details[0]['roommates']) {
 
 										case 'Men and women':
 
@@ -1799,7 +1825,7 @@ if(count ( $property_details ) == 0 ){
 
 									<?php
 
-									switch($property_details[0]['occupation']){
+									switch ($property_details[0]['occupation']) {
 
 										case 'Students and workers':
 
@@ -1837,7 +1863,7 @@ if(count ( $property_details ) == 0 ){
 
 							}
 
-							if(($property_details[0]['category_id']=='1')|| ($property_details[0]['category_id']=='6')||($property_details[0]['category_id']=='7')||($property_details[0]['category_id']=='3')||($property_details[0]['category_id']=='5')){
+							if (($property_details[0]['category_id'] == '1') || ($property_details[0]['category_id'] == '6') || ($property_details[0]['category_id'] == '7') || ($property_details[0]['category_id'] == '3') || ($property_details[0]['category_id'] == '5')) {
 
 								?>
 
@@ -1847,7 +1873,7 @@ if(count ( $property_details ) == 0 ){
 
 									<?php
 
-									switch($property_details[0]['furnished']){
+									switch ($property_details[0]['furnished']) {
 
 										case 'Partly':
 
@@ -1889,29 +1915,29 @@ if(count ( $property_details ) == 0 ){
 
 							<li>
 
-								<span><?php echo $this->lang->line('details_property_availability');?></span>
+								<span><?php echo $this->lang->line('details_property_availability'); ?></span>
 
-								<?php $availibilty=$property_details[0]['availability']; ?>
+								<?php $availibilty = $property_details[0]['availability']; ?>
 
-								<?php
+							<?php
 
-								if($availibilty==0){
+							if ($availibilty == 0) {
 
-									echo $this->lang->line('details_property_availability_vacant');
+								echo $this->lang->line('details_property_availability_vacant');
 
-								}else{
+							} else {
 
-									echo $this->lang->line('details_property_availability_allowed');
+								echo $this->lang->line('details_property_availability_allowed');
 
-								}
+							}
 
-								?>
+							?>
 
 							</li>
 
 							<?php
 
-							if(($property_details[0]['category_id']=='3')){
+							if (($property_details[0]['category_id'] == '3')) {
 
 								?>
 
@@ -1919,11 +1945,11 @@ if(count ( $property_details ) == 0 ){
 
 									<span><?php echo $this->lang->line('details_property_smokers');?></span>
 
-									<?php $smokers=$property_details[0]['smokers']; ?>
+									<?php $smokers = $property_details[0]['smokers']; ?>
 
 									<?php
 
-									if($smokers==0) {
+									if ($smokers == 0) {
 
 										echo $this->lang->line('details_property_smokers_not_allowed');
 
@@ -1941,7 +1967,7 @@ if(count ( $property_details ) == 0 ){
 
 							}
 
-							if(($property_details[0]['category_id']=='5')||($property_details[0]['category_id']=='3')){
+							if (($property_details[0]['category_id'] == '5') || ($property_details[0]['category_id'] == '3')) {
 
 								?>
 
@@ -1949,11 +1975,11 @@ if(count ( $property_details ) == 0 ){
 
 									<span><?php echo $this->lang->line('details_property_pets');?></span>
 
-									<?php $pets=$property_details[0]['pets']; ?>
+									<?php $pets = $property_details[0]['pets']; ?>
 
 									<?php
 
-									if($pets==0) {
+									if ($pets == 0) {
 
 										echo $this->lang->line('details_property_pets_not_allowed');
 
@@ -1995,7 +2021,11 @@ if(count ( $property_details ) == 0 ){
 
 										<span><?php echo $this->lang->line('details_property_ac');?></span>
 
-										<?php if($property_details[0]['air_conditioning']=='1'){ echo $this->lang->line('details_property_ac_yes');}else{ echo $this->lang->line('details_property_ac_no');} ?>
+										<?php if ($property_details[0]['air_conditioning'] == '1') {
+											echo $this->lang->line('details_property_ac_yes');
+										} else {
+											echo $this->lang->line('details_property_ac_no');
+										} ?>
 
 									</li>
 
@@ -2003,7 +2033,11 @@ if(count ( $property_details ) == 0 ){
 
 										<span><?php echo $this->lang->line('details_property_elevator');?></span>
 
-										<?php if($property_details[0]['elevator']=='1'){ echo $this->lang->line('details_property_elevator_yes');}else{ echo $this->lang->line('details_property_elevator_no');} ?>
+										<?php if ($property_details[0]['elevator'] == '1') {
+											echo $this->lang->line('details_property_elevator_yes');
+										} else {
+											echo $this->lang->line('details_property_elevator_no');
+										} ?>
 
 									</li>
 
@@ -2011,7 +2045,11 @@ if(count ( $property_details ) == 0 ){
 
 										<span><?php echo $this->lang->line('details_property_balcony');?></span>
 
-										<?php if($property_details[0]['balcony']=='1'){ echo $this->lang->line('details_property_balcony_yes');}else{ echo $this->lang->line('details_property_balcony_no');} ?>
+										<?php if ($property_details[0]['balcony'] == '1') {
+											echo $this->lang->line('details_property_balcony_yes');
+										} else {
+											echo $this->lang->line('details_property_balcony_no');
+										} ?>
 
 									</li>
 
@@ -2019,7 +2057,11 @@ if(count ( $property_details ) == 0 ){
 
 										<span><?php echo $this->lang->line('details_property_terrace');?></span>
 
-										<?php if($property_details[0]['terrace']=='1'){ echo $this->lang->line('details_property_terrace_yes');}else{ echo $this->lang->line('details_property_terrace_no');} ?>
+										<?php if ($property_details[0]['terrace'] == '1') {
+											echo $this->lang->line('details_property_terrace_yes');
+										} else {
+											echo $this->lang->line('details_property_terrace_no');
+										} ?>
 
 									</li>
 
@@ -2029,11 +2071,11 @@ if(count ( $property_details ) == 0 ){
 
 										<?php
 
-										if($property_details[0]['garden']=='1'){
+										if ($property_details[0]['garden'] == '1') {
 
 											echo $this->lang->line('details_property_garden_yes');
 
-										}else{
+										} else {
 
 											echo $this->lang->line('details_property_garden_no');
 
@@ -2059,14 +2101,14 @@ if(count ( $property_details ) == 0 ){
 
 					<!--Property detail view ends-->
 
-					<h3><?php echo $this->lang->line('details_property_short_description');?></h3>
+					<h3><?php echo $this->lang->line('details_property_short_description'); ?></h3>
 
-					<p><?php echo nl2br($property_details[0]['description']);?></p>
+					<p><?php echo nl2br($property_details[0]['description']); ?></p>
 
-					<?php $p_img=get_perticular_field_value('zc_property_img','file_name'," and property_id='".$property_details[0]['property_id']."' and img_type='preliminary'");
+					<?php $p_img = get_perticular_field_value('zc_property_img', 'file_name', " and property_id='" . $property_details[0]['property_id'] . "' and img_type='preliminary'");
 
 
-					if($p_img!='') {
+					if ($p_img != '') {
 
 						?>
 
@@ -2074,7 +2116,9 @@ if(count ( $property_details ) == 0 ){
 
 						<p>
 
-						<img src="<?php echo base_url();?>assets/uploads/Property/Property<?php echo $property_details[0]['property_id'];?>/<?php echo $p_img;?>" style="width:100%;"></p>
+							<img
+								src="<?php echo base_url();?>assets/uploads/Property/Property<?php echo $property_details[0]['property_id'];?>/<?php echo $p_img;?>"
+								style="width:100%;"></p>
 
 					<?php
 
@@ -2097,13 +2141,15 @@ if(count ( $property_details ) == 0 ){
 
     	 <?php
 
-		 $user_type=get_perticular_field_value('zc_user','user_type'," and user_id='".$this->session->userdata( 'user_id' )."'");
+		 $user_type = get_perticular_field_value('zc_user', 'user_type', " and user_id='" . $this->session->userdata('user_id') . "'");
 
-		 if($user_type=='2' || $user_type=='3') {
+		 if ($user_type == '2' || $user_type == '3') {
 
 			 ?>
 
-			 <a href="<?php echo base_url();?>property/add_property_form" class="freepost"><?php echo $this->lang->line('details_property_post_your_property');?> <font style="color:#fff000"><?php echo $this->lang->line('details_property_free');?></font></a>
+			 <a href="<?php echo base_url();?>property/add_property_form"
+				class="freepost"><?php echo $this->lang->line('details_property_post_your_property');?> <font
+					 style="color:#fff000"><?php echo $this->lang->line('details_property_free');?></font></a>
 
 
 
@@ -2111,23 +2157,27 @@ if(count ( $property_details ) == 0 ){
 
 		 }
 
-		 if($user_type=='1') {
+		 if ($user_type == '1') {
 
 			 ?>
 
 
 
-			 <a href="<?php echo base_url();?>property/add_property_form" class="freepost add_property"><?php echo $this->lang->line('details_property_post_your_property');?><font style="color:#fff000"><?php echo $this->lang->line('details_property_free');?></font></a>
+			 <a href="<?php echo base_url();?>property/add_property_form"
+				class="freepost add_property"><?php echo $this->lang->line('details_property_post_your_property');?>
+				 <font style="color:#fff000"><?php echo $this->lang->line('details_property_free');?></font></a>
 
 		 <?php
 
 		 }
 
-		 if($this->session->userdata( 'user_id' )=='0'  || $this->session->userdata( 'user_id' )=='' ) {
+		 if ($this->session->userdata('user_id') == '0' || $this->session->userdata('user_id') == '') {
 
 			 ?>
 
-			 <a href="<?php echo base_url();?>users/common_reg" class="freepost"><?php echo $this->lang->line('details_property_post_your_property');?> <font style="color:#fff000"><?php echo $this->lang->line('details_property_free');?></font></a>
+			 <a href="<?php echo base_url();?>users/common_reg"
+				class="freepost"><?php echo $this->lang->line('details_property_post_your_property');?> <font
+					 style="color:#fff000"><?php echo $this->lang->line('details_property_free');?></font></a>
 
 		 <?php
 
@@ -2143,11 +2193,11 @@ if(count ( $property_details ) == 0 ){
 
 			<div class="advertiser_form">
 
-				<h2><?php echo $this->lang->line('details_property_get_more_information');?></h2>
+				<h2><?php echo $this->lang->line('details_property_get_more_information'); ?></h2>
 
 				<?php
 
-				$attributes = array('id' => 'mail_form','class' => 'mail_form_user' );
+				$attributes = array('id' => 'mail_form', 'class' => 'mail_form_user');
 
 				echo form_open_multipart('property/add_message', $attributes);
 
@@ -2157,13 +2207,14 @@ if(count ( $property_details ) == 0 ){
 
 				<?php
 
-				if($user_profile[0]['user_type']=='3') {
+				if ($user_profile[0]['user_type'] == '3') {
 
-					if($user_profile[0]['file_1']!='') {
+					if ($user_profile[0]['file_1'] != '') {
 
 						?>
 
-						<img src="<?php echo base_url();?>assets/uploads/thumb_92_82/<?php echo $user_profile[0]['file_1'];?>">
+						<img
+							src="<?php echo base_url(); ?>assets/uploads/thumb_92_82/<?php echo $user_profile[0]['file_1']; ?>">
 
 					<?php
 
@@ -2171,21 +2222,23 @@ if(count ( $property_details ) == 0 ){
 
 						?>
 
-						<img src="<?php echo base_url();?>assets/images/no_prof.png">
+						<img src="<?php echo base_url(); ?>assets/images/no_prof.png">
 
 					<?php
 
 					}
 
-					$user_preference_loc = get_all_value('zc_user_preference'," and user_id='".$user_profile[0]['user_id']."'");
+					$user_preference_loc = get_all_value('zc_user_preference', " and user_id='" . $user_profile[0]['user_id'] . "'");
 
-					if( isset( $user_preference_loc[0] ) &&( count( $user_preference_loc[0] ) > 0 )) {
+					if (isset($user_preference_loc[0]) && (count($user_preference_loc[0]) > 0)) {
 
-						if( $user_preference_loc[0]['invisible'] != 0 ) {
+						if ($user_preference_loc[0]['invisible'] != 0) {
 
 							?>
 
-							<h3><a href="javascript: void(0);" style="color:#3D8AC1; font-weight:bold;"><?php echo $user_profile[0]['company_name'];?></a></h3>
+							<h3><a href="javascript: void(0);"
+								   style="color:#3D8AC1; font-weight:bold;"><?php echo $user_profile[0]['company_name']; ?></a>
+							</h3>
 
 						<?php
 
@@ -2193,43 +2246,48 @@ if(count ( $property_details ) == 0 ){
 
 							?>
 
-							<h3><a href="<?php echo base_url();?>advertiser/advertiser_details/<?php echo $user_profile[0]['user_id'];?>" style="color:#3D8AC1; font-weight:bold;"><?php echo $user_profile[0]['company_name'];?></a></h3>
+							<h3>
+								<a href="<?php echo base_url(); ?>advertiser/advertiser_details/<?php echo $user_profile[0]['user_id']; ?>"
+								   style="color:#3D8AC1; font-weight:bold;"><?php echo $user_profile[0]['company_name']; ?></a>
+							</h3>
 
 						<?php
 
 						}
 
-					}else {
+					} else {
 
 						?>
 
-						<h3><a href="javascript: void(0);" style="color:#3D8AC1; font-weight:bold;"><?php echo $user_profile[0]['company_name'];?></a></h3>
+						<h3><a href="javascript: void(0);"
+							   style="color:#3D8AC1; font-weight:bold;"><?php echo $user_profile[0]['company_name']; ?></a>
+						</h3>
 
 					<?php } ?>
 
-					<h4 style="font-weight:bold;"><?php echo $user_profile[0]['business_name'];?></h4>
+					<h4 style="font-weight:bold;"><?php echo $user_profile[0]['business_name']; ?></h4>
 
 
 
 					<?php
 
-					if( isset( $user_preference_loc[0] ) &&( count( $user_preference_loc[0] ) > 0 )) {
+					if (isset($user_preference_loc[0]) && (count($user_preference_loc[0]) > 0)) {
 
-						if( $user_preference_loc[0]['my_address_display'] != 1 ) {
+						if ($user_preference_loc[0]['my_address_display'] != 1) {
 
 							?>
 
 							<p>
 
-								<?php $st_name1=get_perticular_field_value('zc_region_master','province_code'," and `province_name` LIKE '%".$user_profile[0]['province']."%' group by province_code");?>
+								<?php $st_name1 = get_perticular_field_value('zc_region_master', 'province_code', " and `province_name` LIKE '%" . $user_profile[0]['province'] . "%' group by province_code"); ?>
 
-								<?php echo $user_profile[0]['street_address'].', '.$user_profile[0]['street_no'].' '.$user_profile[0]['zip'].' '.$user_profile[0]['city'].' '.$st_name1;?>
+								<?php echo $user_profile[0]['street_address'] . ', ' . $user_profile[0]['street_no'] . ' ' . $user_profile[0]['zip'] . ' ' . $user_profile[0]['city'] . ' ' . $st_name1; ?>
 
 							</p>
 
-						<?php }else { ?>
+						<?php } else { ?>
 
-							<p><?php echo $this->lang->line('details_property_well_be_glad_to_reply');?></p>
+							<p><?php echo $this->lang->line('details_property_well_be_glad_to_reply'); ?></p>
 
 						<?php
 
@@ -2243,17 +2301,18 @@ if(count ( $property_details ) == 0 ){
 
 				}
 
-				if($user_profile[0]['user_type']=='2') {
+				if ($user_profile[0]['user_type'] == '2') {
 
 					?>
 
 					<?php
 
-					if($user_profile[0]['file_1']!='') {
+					if ($user_profile[0]['file_1'] != '') {
 
 						?>
 
-						<img src="<?php echo base_url();?>assets/uploads/thumb_92_82/<?php echo $user_profile[0]['file_1'];?>">
+						<img
+							src="<?php echo base_url(); ?>assets/uploads/thumb_92_82/<?php echo $user_profile[0]['file_1']; ?>">
 
 					<?php
 
@@ -2261,7 +2320,7 @@ if(count ( $property_details ) == 0 ){
 
 						?>
 
-						<img src="<?php echo base_url();?>assets/images/no_prof.png">
+						<img src="<?php echo base_url(); ?>assets/images/no_prof.png">
 
 					<?php
 
@@ -2273,15 +2332,17 @@ if(count ( $property_details ) == 0 ){
 
 					<?php
 
-					$user_preference_loc = get_all_value('zc_user_preference'," and user_id='".$user_profile[0]['user_id']."'");
+					$user_preference_loc = get_all_value('zc_user_preference', " and user_id='" . $user_profile[0]['user_id'] . "'");
 
-					if( isset( $user_preference_loc[0] ) &&( count( $user_preference_loc[0] ) > 0 )) {
+					if (isset($user_preference_loc[0]) && (count($user_preference_loc[0]) > 0)) {
 
-						if( $user_preference_loc[0]['invisible'] != 0 ) {
+						if ($user_preference_loc[0]['invisible'] != 0) {
 
 							?>
 
-							<h3  style="color:#3D8AC1;font-weight:bold;"><a href="javascript: void(0);"><?php echo $user_profile[0]['first_name'].' '.$user_profile[0]['last_name'];?></a></h3>
+							<h3 style="color:#3D8AC1;font-weight:bold;"><a
+									href="javascript: void(0);"><?php echo $user_profile[0]['first_name'] . ' ' . $user_profile[0]['last_name']; ?></a>
+							</h3>
 
 						<?php
 
@@ -2289,7 +2350,9 @@ if(count ( $property_details ) == 0 ){
 
 							?>
 
-							<h3  style="color:#3D8AC1;font-weight:bold;"><a href="<?php echo base_url();?>advertiser/advertiser_details/<?php echo $user_profile[0]['user_id'];?>"><?php echo $user_profile[0]['first_name'].' '.$user_profile[0]['last_name'];?></a></h3>
+							<h3 style="color:#3D8AC1;font-weight:bold;"><a
+									href="<?php echo base_url(); ?>advertiser/advertiser_details/<?php echo $user_profile[0]['user_id']; ?>"><?php echo $user_profile[0]['first_name'] . ' ' . $user_profile[0]['last_name']; ?></a>
+							</h3>
 
 						<?php
 
@@ -2299,7 +2362,9 @@ if(count ( $property_details ) == 0 ){
 
 						?>
 
-						<h3  style="color:#3D8AC1;font-weight:bold;"><a href="javascript: void(0);"><?php echo $user_profile[0]['first_name'].' '.$user_profile[0]['last_name'];?></a></h3>
+						<h3 style="color:#3D8AC1;font-weight:bold;"><a
+								href="javascript: void(0);"><?php echo $user_profile[0]['first_name'] . ' ' . $user_profile[0]['last_name']; ?></a>
+						</h3>
 
 					<?php } ?>
 
@@ -2321,13 +2386,13 @@ if(count ( $property_details ) == 0 ){
 
 				<?php
 
-				if($this->session->flashdata('success')!='') {
+				if ($this->session->flashdata('success') != '') {
 
 					?>
 
-					<div class="success" id="success" >
+					<div class="success" id="success">
 
-					<?php echo $this->session->flashdata('success');?>
+						<?php echo $this->session->flashdata('success');?>
 
 					</div>
 
@@ -2343,13 +2408,13 @@ if(count ( $property_details ) == 0 ){
 
 				<?php
 
-				if($this->session->flashdata('error')!='') {
+				if ($this->session->flashdata('error') != '') {
 
 					?>
 
 					<div class="eror" id="eror">
 
-					<?php echo $this->session->flashdata('error');?>
+						<?php echo $this->session->flashdata('error');?>
 
 					</div>
 
@@ -2363,46 +2428,46 @@ if(count ( $property_details ) == 0 ){
 
 
 
-				$uid=$this->session->userdata( 'user_id' );
+				$uid = $this->session->userdata('user_id');
 
 				//print_r($property_details);exit;
 
-				if($uid==$property_details[0]['property_post_by']) {
+				if ($uid == $property_details[0]['property_post_by']) {
 
 
-					$email_id='';
+					$email_id = '';
 
-					$name="";
+					$name = "";
 
-					$phone_number="";
+					$phone_number = "";
 
 				}
 
-				if($uid=='' || $uid=='0') {
+				if ($uid == '' || $uid == '0') {
 
-					$email_id='';
+					$email_id = '';
 
-					$name="";
+					$name = "";
 
-					$phone_number="";
+					$phone_number = "";
 
 				}
 
 				//if($uid !='' && $uid!=$property_details[0]['property_post_by'])
 
-				if($uid !='') {
+				if ($uid != '') {
 
-					$email_id=get_perticular_field_value('zc_user','email_id'," and user_id='".$uid."'");
+					$email_id = get_perticular_field_value('zc_user', 'email_id', " and user_id='" . $uid . "'");
 
 					//print_r($email_id);exit;
 
-					$first_name=get_perticular_field_value('zc_user','first_name'," and user_id='".$uid."'");
+					$first_name = get_perticular_field_value('zc_user', 'first_name', " and user_id='" . $uid . "'");
 
-					$last_name=get_perticular_field_value('zc_user','last_name'," and user_id='".$uid."'");
+					$last_name = get_perticular_field_value('zc_user', 'last_name', " and user_id='" . $uid . "'");
 
-					$name=$first_name.' '.$last_name;
+					$name = $first_name . ' ' . $last_name;
 
-					$phone_number=get_perticular_field_value('zc_user','contact_ph_no'," and user_id='".$uid."'");
+					$phone_number = get_perticular_field_value('zc_user', 'contact_ph_no', " and user_id='" . $uid . "'");
 
 				}
 
@@ -2414,19 +2479,21 @@ if(count ( $property_details ) == 0 ){
 
 				<div class="field">
 
-				<textarea rows="3" cols="15" placeholder="Message" name="message" id="message"><?php echo $this->lang->line('details_property_i_am_interested');?></textarea>
+					<textarea rows="3" cols="15" placeholder="Message" name="message"
+							  id="message"><?php echo $this->lang->line('details_property_i_am_interested'); ?></textarea>
 
 				</div>
 
 				<div class="field">
 
-					<input type="hidden" name="name" id="name" value="<?php echo $name;?>">
+					<input type="hidden" name="name" id="name" value="<?php echo $name; ?>">
 
-					<input type="hidden" name="phone_number" id="phone_number" value="<?php echo $phone_number;?>">
+					<input type="hidden" name="phone_number" id="phone_number" value="<?php echo $phone_number; ?>">
 
-					<input type="hidden" name="email_id" id="email_id" value="<?php echo $email_id;?>">
+					<input type="hidden" name="email_id" id="email_id" value="<?php echo $email_id; ?>">
 
-					<input type="hidden" name="re_url" value="<?php echo $this->uri->segment('1').'/'.$this->uri->segment('2');?>">
+					<input type="hidden" name="re_url"
+						   value="<?php echo $this->uri->segment('1') . '/' . $this->uri->segment('2'); ?>">
 
 					<input type="hidden" name="owner_id" value="<?php echo $user_profile[0]["user_id"]; ?>">
 
@@ -2434,11 +2501,12 @@ if(count ( $property_details ) == 0 ){
 
 					<?php
 
-					if($this->session->userdata( 'user_id' )=='0' || $this->session->userdata( 'user_id' )=='') {
+					if ($this->session->userdata('user_id') == '0' || $this->session->userdata('user_id') == '') {
 
 						?>
 
-						<a herf="javascript:void(0);" class="contact_agent"><?php echo $this->lang->line('details_property_send');?></a>
+						<a herf="javascript:void(0);"
+						   class="contact_agent"><?php echo $this->lang->line('details_property_send'); ?></a>
 
 					<?php
 
@@ -2446,7 +2514,8 @@ if(count ( $property_details ) == 0 ){
 
 						?>
 
-						<input type="submit" value="<?php echo $this->lang->line('details_property_button_send');?>" onClick="return email_form_user_validation();" >
+						<input type="submit" value="<?php echo $this->lang->line('details_property_button_send'); ?>"
+							   onClick="return email_form_user_validation();">
 
 					<?php
 
@@ -2468,9 +2537,9 @@ if(count ( $property_details ) == 0 ){
 
 			<?php
 
-			$google_adsence = get_perticular_field_value('zc_settings','meta_value'," and meta_name='google_adsence'");
+			$google_adsence = get_perticular_field_value('zc_settings', 'meta_value', " and meta_name='google_adsence'");
 
-			if( isset($google_adsence) && ( count($google_adsence) > 0 ) ) {
+			if (isset($google_adsence) && (count($google_adsence) > 0)) {
 
 				?>
 
@@ -2490,19 +2559,19 @@ if(count ( $property_details ) == 0 ){
 
 			<?php
 
-			if( count ( $similar_properties) > 0 ) {
+			if (count($similar_properties) > 0) {
 
 				?>
 
 				<div class="advertiser_form">
 
-					<h2><?php echo $this->lang->line('details_property_similar_property');?></h2>
+					<h2><?php echo $this->lang->line('details_property_similar_property'); ?></h2>
 
 					<ul>
 
 						<?php
 
-						foreach($similar_properties as $similar_property) {
+						foreach ($similar_properties as $similar_property) {
 
 							?>
 
@@ -2512,21 +2581,25 @@ if(count ( $property_details ) == 0 ){
 
 									<?php
 
-									$main_image_sim=get_perticular_field_value('zc_property_img','file_name'," and property_id='".$similar_property['property_id']."' and img_type='main_image'");
+									$main_image_sim = get_perticular_field_value('zc_property_img', 'file_name', " and property_id='" . $similar_property['property_id'] . "' and img_type='main_image'");
 
 									?>
 
-									<a style="font-size:12px;" href="<?php echo prop_url($similar_property['property_id']);?>">
+									<a style="font-size:12px;"
+									   href="<?php echo prop_url($similar_property['property_id']);?>">
 
-									<img src="<?php echo base_url();?>assets/uploads/Property/Property<?php echo $similar_property['property_id']; ?>/thumb_92_82/<?php echo $main_image_sim; ?>" alt="<?php echo property_name($similar_property['property_id']);?>">
+										<img
+											src="<?php echo base_url();?>assets/uploads/Property/Property<?php echo $similar_property['property_id']; ?>/thumb_92_82/<?php echo $main_image_sim; ?>"
+											alt="<?php echo property_name($similar_property['property_id']);?>">
 
 									</a>
 
 									<h2>
 
-										<a style="font-size:12px;" href="<?php echo prop_url($similar_property['property_id']);?>">
+										<a style="font-size:12px;"
+										   href="<?php echo prop_url($similar_property['property_id']);?>">
 
-										<?php echo property_name($similar_property['property_id']);?>
+											<?php echo property_name($similar_property['property_id']);?>
 
 										</a>
 
@@ -2536,19 +2609,25 @@ if(count ( $property_details ) == 0 ){
 
 										<?php
 
-										if($similar_property['area']!=''){
+										if ($similar_property['area'] != '') {
 
-											echo $area_prop=$similar_property['area'].' - ';
+											echo $area_prop = $similar_property['area'] . ' - ';
 
 										}
 
 										?>
 
-										<?php if($similar_property['street_address']!=''){echo $similar_property['street_address'].',';} ?>
+										<?php if ($similar_property['street_address'] != '') {
+											echo $similar_property['street_address'] . ',';
+										} ?>
 
-										<?php if($similar_property['street_no']!=''){echo $similar_property['street_no'].' - ';} ?>
+										<?php if ($similar_property['street_no'] != '') {
+											echo $similar_property['street_no'] . ' - ';
+										} ?>
 
-										<?php if($similar_property['zip']!=''){echo $similar_property['zip'];} ?>
+										<?php if ($similar_property['zip'] != '') {
+											echo $similar_property['zip'];
+										} ?>
 
 									</h3>
 
@@ -2559,23 +2638,23 @@ if(count ( $property_details ) == 0 ){
 
 
 
-										if($similar_property['price']!=0) {
+										if ($similar_property['price'] != 0) {
 
-											if($similar_property['contract_id']=='1') {
+											if ($similar_property['contract_id'] == '1') {
 
-												$per_mnt=$this->lang->line('details_property_per_month');
+												$per_mnt = $this->lang->line('details_property_per_month');
 
 											}
 
-											if($similar_property['contract_id']=='2') {
+											if ($similar_property['contract_id'] == '2') {
 
-												$per_mnt='';
+												$per_mnt = '';
 
 											}
 
 											?>
 
-											<?php echo '&euro;'.show_price($similar_property['price']);?><?php echo ' '.$per_mnt;?>
+											<?php echo '&euro;' . show_price($similar_property['price']);?><?php echo ' ' . $per_mnt;?>
 
 
 
@@ -2593,7 +2672,8 @@ if(count ( $property_details ) == 0 ){
 
 										?>
 
-										<?php //echo percentage('251.000 ','250.000');?></p>
+										<?php //echo percentage('251.000 ','250.000');
+										?></p>
 
 								</div>
 
@@ -2614,13 +2694,13 @@ if(count ( $property_details ) == 0 ){
 
 		</div>
 
-	</div>
+		</div>
 
 </div>
 
 <!------ footer part -------------->
 
-<?php $this->load->view("_include/footer_search");?>
+<?php $this->load->view("_include/footer_search"); ?>
 
 <!------- pagination js ------------------>
 
@@ -2643,7 +2723,7 @@ if(count ( $property_details ) == 0 ){
 
 	}
 
-	function save_property(property_id){
+	function save_property(property_id) {
 
 		$("#prop_saved_msg").show();
 
@@ -2669,7 +2749,7 @@ if(count ( $property_details ) == 0 ){
 
 			async: false,
 
-			success: function(result) {
+			success: function (result) {
 
 				//alert(result);
 
@@ -2695,7 +2775,7 @@ if(count ( $property_details ) == 0 ){
 
 	}
 
-	$(function() {
+	$(function () {
 
 		$("#demo5").paginate({
 
@@ -2723,7 +2803,7 @@ if(count ( $property_details ) == 0 ){
 
 			mouse: 'press',
 
-			onChange: function(page) {
+			onChange: function (page) {
 
 				$('._current', '#paginationdemo').removeClass('_current').hide();
 
@@ -2738,11 +2818,12 @@ if(count ( $property_details ) == 0 ){
 	function printPage(printContent) {
 			var display_setting = "toolbar=yes,menubar=yes,";
 			display_setting += "scrollbars=yes,width=650, height=600, left=100, top=25";
+		//var file1= base_url()assets/uploads/Property/Propertyproperty_images['property_id']/thumb_92_82/$property_images['file_name'];
 		var pathname = window.location.href;
 			var printpage = window.open("", "", display_setting);
 			printpage.document.open();
 		printpage.document.write('<html><head><title>Print Page</title><link rel="stylesheet" type="text/css" href="<?php echo base_url().'assets/css/zapcasa_style.css'?>" /></head>');
-		printpage.document.write('<body onLoad="self.print()" align="center"><div style="border-bottom:solid 1px #DDDDDD;"><img src="<?php echo base_url().'assets/images/logo.png '?>" alt="Zapcasa"/></div><div style=""><img src="<?php echo $file;?>" style="width:34%;margin-top:10px; margin-left:34%;"><div class="printfeature"><div class="property_details"> <div class="left_panel" style="width:100%"><div class="detailview">' + printContent + '<h3 style="border-bottom: 1px solid #e2e2e2;color: #d97621;font-size: 16px;font-weight: normal;line-height: 24px;margin: 8px 16px 0 21px;background-color: #f8fbff;margin:0;width:100%;">Property URL</h3><p style="text-align:center;background-color: #f8fbff;margin:0"><a href="">' + pathname + '</a></p></div></div></div></div></body></html>');
+		printpage.document.write('<body onLoad="self.print()" align="center"><div style="border-bottom:solid 1px #DDDDDD;"><img src="<?php echo base_url().'assets/images/logo.png '?>" alt="Zapcasa"/></div><div class="property_details"> <div class="left_panel" style="width:100%"><div style=""><div class="property_info" style="float: left;margin: 0 0 5px;padding: 10px 0 5px;width: 100%;"><img src="<?php echo $file1;?>" style="width:34%;margin-top: 10px; margin-bottom: 10px;float: left;position: relative;text-align: center;margin-left:2%"><div class="listingContent" style="float: left;padding-left: 15px;width: 280px;padding-right: 8px;text-align:left;padding-top:2px;line-height: 28px;"><h4 style="font-weight:bold;font-size:12px;color: #000000;"> <?php echo $reference;?>: <?php echo $reftoken;?> </h4><h2><?php echo $proptitle;?></h2><h3><?php echo $propertyAddress;?></h3><div class="propFeatures"><h4><?php echo $propertyPrice;?></h4></div></div></div><div class="printfeature"><div class="detailview">' + printContent + '<h3 style="border-bottom: 1px solid #e2e2e2;color: #d97621;font-size: 16px;font-weight: normal;line-height: 24px;margin: 8px 16px 0 21px;background-color: #f8fbff;margin:0;width:100%;"><?php echo $prop_url;?></h3><p style="text-align:center;background-color: #f8fbff;margin:0"><a href="">' + pathname + '</a></p></div></div></div></div></body></html>');
 			
 			printpage.document.close();
 			printpage.focus();
@@ -2760,19 +2841,19 @@ if(count ( $property_details ) == 0 ){
 
 					required: true
 
-				},mail_to: {
+				}, mail_to: {
 
 					required: true,
 
 					multiemail: true
 
-				},message: {
+				}, message: {
 
 					required: true
 
 				}
 
-			},messages: {
+			}, messages: {
 
 				mail_to: {
 
@@ -2796,19 +2877,19 @@ if(count ( $property_details ) == 0 ){
 
 					required: true
 
-				},email_id: {
+				}, email_id: {
 
 					required: true,
 
 					email: true
 
-				},message: {
+				}, message: {
 
 					required: true
 
 				}
 
-			},messages: {
+			}, messages: {
 
 				name: "",
 
@@ -2816,7 +2897,7 @@ if(count ( $property_details ) == 0 ){
 
 				message: ""
 
-			}
+				}
 
 		});
 
@@ -2830,15 +2911,15 @@ if(count ( $property_details ) == 0 ){
 
 		thousandsSeparator: '.'
 
-	});
+		});
 
-	function isCurrency(evt, element){
+	function isCurrency(evt, element) {
 
 		var charCode = (evt.which) ? evt.which : event.keyCode
 
 		// “-” CHECK MINUS, AND ONLY ONE. &&  “.” CHECK DOT, AND ONLY ONE.
 
-		if((charCode != 44 || $(element).val().indexOf(',') != -1) && (charCode != 46 || $(element).val().indexOf('.') != -1) && (charCode < 48 || charCode > 57))
+		if ((charCode != 44 || $(element).val().indexOf(',') != -1) && (charCode != 46 || $(element).val().indexOf('.') != -1) && (charCode < 48 || charCode > 57))
 
 		//console.log(charCode);
 
@@ -2888,9 +2969,9 @@ if(count ( $property_details ) == 0 ){
 
 <script type="text/javascript">
 
-	$(function() {
+	$(function () {
 
-		$(window).scroll(function() {
+		$(window).scroll(function () {
 
 			var scrollTop = $(document).scrollTop();
 
@@ -2928,29 +3009,29 @@ if(count ( $property_details ) == 0 ){
 
 				}
 
-			}
+				}
 
 		});
 
-	});
+		});
 
-	$(document).ready(function() {
+	$(document).ready(function () {
 
 		$("#mail_form").validate({
 
-			rules:{
+			rules: {
 
-				name:{
+				name: {
 
 					required: true
 
-				},email_id: {
+				}, email_id: {
 
 					required: true,
 
 					email: true
 
-				},message: {
+				}, message: {
 
 					required: true
 
@@ -2974,7 +3055,7 @@ if(count ( $property_details ) == 0 ){
 
 		$('.fancybox').fancybox();
 
-	});
+		});
 
 	function show_photos() {
 
@@ -3075,8 +3156,9 @@ $('#video a').click(function (e) {
 
 		if($property_details[0]['latitude'] == 0 && $property_details[0]['longitude'] == 0 ){
 
-			$propertygetLangLatAddress = $propertyAddress.', '.$city_name.', '.$province_code.', Italy';
-
+			//$propertygetLangLatAddress = $propertyAddress.', '.$city_name.', '.$province_code.', Italy';
+			$propertygetLangLatAddress .= $propertyAddress . ',' . stripslashes($city_name) . ', ' . $province_code . ', ' . $property_details[0]['zip'] . ', Italy';
+			
 			$lat_lng_array = getLangLat($propertygetLangLatAddress);
 
 			$GoogleMapMarkersCenterLatitude = $lat_lng_array->lat;
@@ -3093,7 +3175,7 @@ $('#video a').click(function (e) {
 
 		$propertyImage = base_url()."assets/images/no_proimg.jpg";
 
-		$image_path = prop_image($property_details[0]['property_id']);
+		$image_path = prop_image($property_details[0]['property_id']);			
 
 		if( $image_path != "" ) {
 
@@ -3127,7 +3209,7 @@ $('#video a').click(function (e) {
 
 <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/map.css?nocache=289671982568" type="text/css"/>
 
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?=MAP_KEY?>"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?= MAP_KEY ?>"></script>
 
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/label.js"></script>
 
@@ -3183,7 +3265,7 @@ $('#video a').click(function (e) {
 
     ?>
 
-	GoogleMapMarkers.push(["<?php echo $gM['proptitle']; ?>","<?php echo $gM['hackerspace']; ?>",<?php echo $gM['latitude']; ?>,<?php echo $gM['longitude']; ?>,"<?php echo $gM['proaddress']; ?>","<?php echo $gM['propurl']; ?>",'<?php echo $gM['proprice']; ?>',"<?php echo $gM['proimg']; ?>", "proDetails"]);
+	GoogleMapMarkers.push(["<?php echo $gM['proptitle']; ?>", "<?php echo $gM['hackerspace']; ?>", <?php echo $gM['latitude']; ?>, <?php echo $gM['longitude']; ?>, "<?php echo $gM['proaddress']; ?>", "<?php echo $gM['propurl']; ?>", '<?php echo $gM['proprice']; ?>', "<?php echo $gM['proimg']; ?>", "proDetails"]);
 
 	markerTitles[<?php echo $gMi; ?>] = "<?php echo $gM['proptitle']; ?>";
 
@@ -3212,7 +3294,7 @@ $('#video a').click(function (e) {
 
 		$(".bb_one").click(function () {
 			$('.youtube_player_iframe')[0].contentWindow.postMessage('{"event":"command","func":"' + 'pauseVideo' + '","args":""}', '*');
-		});
+	});
 
 	});
 </script>

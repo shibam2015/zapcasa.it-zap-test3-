@@ -26,16 +26,21 @@
 class users extends CI_Controller{
 
 
+
     public function __construct()
+
 
 
     {
 
 
+
         parent::__construct();
 
 
+
         $this->load->library('session');
+
 
 
         $this->load->helper('cookie');
@@ -47,10 +52,13 @@ class users extends CI_Controller{
             $this->lang->load('code', 'english');
 
 
+
         } else {
 
 
+
             $this->lang->load('code', 'it');
+
 
 
         }
@@ -59,11 +67,14 @@ class users extends CI_Controller{
         $this->load->library('image_lib');
 
 
+
         $this->load->model("users/usersm");
         $this->load->model("property/propertym");
 
 
+
         //authenticate();
+
 
 
         /* if($this->session->userdata('user_id')){
@@ -129,19 +140,24 @@ class users extends CI_Controller{
         } */
 
 
+
     }
 
 
     public function index()
 
 
+
     {
+
 
 
         $data = array();
 
 
+
         $data['users'] = $this->usersm->getUsers();
+
 
 
         //echo "<pre>";print_r($data);exit;
@@ -163,16 +179,21 @@ class users extends CI_Controller{
         if ($uid != 0) {
 
 
+
             redirect('users/my_account');
+
 
 
         }
 
 
+
         $data = array();
 
 
+
         $data['sitepage'] = "signup";
+
 
 
         //$this->session->set_userdata('user_id',0);
@@ -191,6 +212,7 @@ class users extends CI_Controller{
         $data = array();
 
 
+
         $data['sitepage'] = "comon_signup";
 
 
@@ -200,16 +222,21 @@ class users extends CI_Controller{
         if ($uid != 0) {
 
 
+
             redirect('users/my_account');
+
 
 
         }
 
 
+
         $new_user['contact_ph_no'] = $this->input->post('ph_no');
 
 
+
         $this->session->set_userdata($new_user);
+
 
 
         $data['countries'] = $this->usersm->get_country();
@@ -251,55 +278,73 @@ class users extends CI_Controller{
         ); */
 
 
+
         $vals = array(
+
 
 
             'img_path' => './captcha/',
 
 
+
             'img_url' => $captcha_lib,
+
 
 
             'img_width' => '380',
 
 
+
             'img_height' => 80,
+
 
 
             'font_size' => 30,
 
 
+
             'font_path' => FCPATH . 'captcha/fonts/ADLER___.TTF',
+
 
 
             'expiration' => 7200
 
 
+
         );
+
 
 
         $cap = create_captcha($vals);
 
 
+
         $data['captcha'] = array(
+
 
 
             'captcha_time' => $cap['time'],
 
 
+
             'ip_address' => $this->input->ip_address(),
+
 
 
             'word' => $cap['word']
 
 
+
         );
+
 
 
         $query = $this->db->insert_string('captcha', $data['captcha']);
 
 
+
         $this->db->query($query);
+
 
 
         $data['cap_img'] = $cap['image'];
@@ -314,6 +359,7 @@ class users extends CI_Controller{
     public function do_registration()
 
 
+
     {
 
 
@@ -323,19 +369,25 @@ class users extends CI_Controller{
             redirect('/users/comon_signup');
 
 
+
         }
+
 
 
         $data = array();
 
 
+
         $data['sitepage'] = "comon_signup";
+
 
 
         $this->load->library('form_validation');
 
 
+
         $new_user['contact_ph_no'] = $this->input->post('ph_no');
+
 
 
         $this->session->set_userdata($new_user);
@@ -344,49 +396,65 @@ class users extends CI_Controller{
         if ($this->input->post('submit') == $this->lang->line('reg_user_button_register')) {
 
 
+
             $this->form_validation->set_rules('user_name', '�', 'required|is_unique[zc_user.user_name]xss_clean|callback_alpha_dash_space');
+
 
 
             $this->form_validation->set_rules('first_name', '�', 'required');
 
 
+
             $this->form_validation->set_rules('last_name', '�', 'required');
+
 
 
             $this->form_validation->set_rules('country', '�', 'required');
 
 
+
             $this->form_validation->set_rules('city', '�', 'required');
+
 
 
             //$this->form_validation->set_rules('date_of_birth', 'Date of Birth', 'required');
 
 
+
             $this->form_validation->set_rules('reg_day', '�', 'required');
+
 
 
             $this->form_validation->set_rules('reg_month', '�', 'required');
 
 
+
             $this->form_validation->set_rules('reg_year', '�', 'required');
+
 
 
             $this->form_validation->set_rules('gender', '�', 'required');
 
 
+
             $this->form_validation->set_rules('email', '�', 'required|valid_email|is_unique[zc_user.email_id]');
+
 
 
             $this->form_validation->set_rules('email2', '�', 'required|valid_email');
 
 
+
             $this->form_validation->set_rules('password', '�', 'required|matches[pass2]|min_length[8]');
+
 
 
             $this->form_validation->set_rules('pass2', '�', 'required|min_length[8]');
 
 
+
             $this->form_validation->set_rules('agree_terms', '�', 'required');
+
 
 
             //print_r($_POST);
@@ -404,7 +472,9 @@ class users extends CI_Controller{
                 $this->load->helper('captcha');
 
 
+
                 $captcha_path = base_url();
+
 
 
                 /*$vals = array(
@@ -437,49 +507,65 @@ class users extends CI_Controller{
                 $vals = array(
 
 
+
                     'img_path' => './captcha/',
+
 
 
                     'img_url' => $captcha_lib,
 
 
+
                     'img_width' => '380',
+
 
 
                     'img_height' => 80,
 
 
+
                     'font_size' => 30,
+
 
 
                     'font_path' => FCPATH . 'captcha/fonts/ADLER___.TTF',
 
 
+
                     'expiration' => 7200
 
 
+
                 );
+
 
 
                 $cap = create_captcha($vals);
 
 
+
                 $data['captcha'] = array(
+
 
 
                     'captcha_time' => $cap['time'],
 
 
+
                     'ip_address' => $this->input->ip_address(),
+
 
 
                     'word' => $cap['word']
 
 
+
                 );
 
 
+
                 $query = $this->db->insert_string('captcha', $data['captcha']);
+
 
 
                 $this->db->query($query);
@@ -500,19 +586,25 @@ class users extends CI_Controller{
                 $this->db->query("DELETE FROM captcha WHERE captcha_time < " . $expiration);
 
 
+
                 $sql = "SELECT COUNT(*) AS count FROM captcha WHERE word = ? AND ip_address = ? AND captcha_time > ?";
+
 
 
                 $binds = array($_POST['captcha'], $this->input->ip_address(), $expiration);
 
 
+
                 $query = $this->db->query($sql, $binds);
+
 
 
                 $row = $query->row();
 
 
+
                 if ($row->count == 0) {
+
 
 
                     $data['countries'] = $this->usersm->get_country();
@@ -524,7 +616,9 @@ class users extends CI_Controller{
                     $this->load->helper('captcha');
 
 
+
                     $captcha_path = base_url();
+
 
 
                     /*$vals = array(
@@ -557,7 +651,9 @@ class users extends CI_Controller{
                     $vals = array(
 
 
+
                         'img_path' => './captcha/',
+
 
 
                         'img_url' => $captcha_lib,
@@ -567,6 +663,7 @@ class users extends CI_Controller{
                         'img_width' => '380',
 
 
+
                         'img_height' => 80,
 
 
@@ -574,37 +671,49 @@ class users extends CI_Controller{
                         'font_size' => 30,
 
 
+
                         'font_path' => FCPATH . 'captcha/fonts/ADLER___.TTF',
+
 
 
                         'expiration' => 7200
 
 
+
                     );
+
 
 
                     $cap = create_captcha($vals);
 
 
+
                     $data['captcha'] = array(
+
 
 
                         'captcha_time' => $cap['time'],
 
 
+
                         'ip_address' => $this->input->ip_address(),
+
 
 
                         'word' => $cap['word']
 
 
+
                     );
+
 
 
                     $query = $this->db->insert_string('captcha', $data['captcha']);
 
 
+
                     $this->db->query($query);
+
 
 
                     $data['captcha_err'] = $this->lang->line('reg_user_you_submit_wrong_captcha');
@@ -622,6 +731,7 @@ class users extends CI_Controller{
                     $new_user = array();
 
 
+
                     $access_token = access_token();
 
 
@@ -631,13 +741,17 @@ class users extends CI_Controller{
                     $new_user['user_name'] = $this->input->post('user_name');
 
 
+
                     $new_user['first_name'] = $this->input->post('first_name');
+
 
 
                     $new_user['last_name'] = $this->input->post('last_name');
 
 
+
                     $new_user['contact_ph_no'] = $this->input->post('ph_no');
+
 
 
                     //$new_user['date_of_birth'] = $this->input->post('date_of_birth');
@@ -649,7 +763,9 @@ class users extends CI_Controller{
                     $new_user['city'] = $this->input->post('city');
 
 
+
                     $new_user['country'] = $this->input->post('country');
+
 
 
                     $new_user['email_id'] = $this->input->post('email');
@@ -667,13 +783,16 @@ class users extends CI_Controller{
                     $new_user['agree_terms'] = $this->input->post('agree_terms');
 
 
+
                     $new_user['receive_mail'] = $this->input->post('receive_mail');
 
 
                     $new_user['reg_day'] = $this->input->post('reg_day');
 
 
+
                     $new_user['reg_month'] = $this->input->post('reg_month');
+
 
 
                     $new_user['reg_year'] = $this->input->post('reg_year');
@@ -682,16 +801,21 @@ class users extends CI_Controller{
                     $this->session->set_userdata($new_user);
 
 
+
                     $ym = $this->session->all_userdata();
+
 
 
                     redirect('users/user_edit');
 
 
+
                 }
 
 
+
             }
+
 
 
         } else {
@@ -701,6 +825,7 @@ class users extends CI_Controller{
 
 
             $captcha_lib = base_url() . '/captcha/';
+
 
 
             $this->load->helper('captcha');
@@ -736,52 +861,69 @@ class users extends CI_Controller{
             ); */
 
 
+
             $vals = array(
+
 
 
                 'img_path' => './captcha/',
 
 
+
                 'img_url' => $captcha_lib,
+
 
 
                 'img_width' => '380',
 
 
+
                 'img_height' => 80,
+
 
 
                 'font_size' => 30,
 
 
+
                 'font_path' => FCPATH . 'captcha/fonts/ADLER___.TTF',
+
 
 
                 'expiration' => 7200
 
 
+
             );
+
 
 
             $cap = create_captcha($vals);
 
 
+
             $data['captcha'] = array(
+
 
 
                 'captcha_time' => $cap['time'],
 
 
+
                 'ip_address' => $this->input->ip_address(),
+
 
 
                 'word' => $cap['word']
 
 
+
             );
 
 
+
             $query = $this->db->insert_string('captcha', $data['captcha']);
+
 
 
             $this->db->query($query);
@@ -793,7 +935,9 @@ class users extends CI_Controller{
             $this->load->view("users/reg_user", $data);
 
 
+
         }
+
 
 
     }
@@ -802,19 +946,25 @@ class users extends CI_Controller{
     private function generate_password_string($access_token, $raw_password)
 
 
+
     {
+
 
 
         $divider = '_';
 
 
+
         $raw_string = $access_token . $divider . $raw_password;
+
 
 
         $encrypted_password = md5($raw_string);
 
 
+
         return $encrypted_password;
+
 
 
     }
@@ -830,25 +980,33 @@ class users extends CI_Controller{
         if ($email_id == '') {
 
 
+
             echo '2';
 
 
+
             exit;
+
 
 
         } else {
 
 
+
             $user_list_cnt = get_perticular_count('zc_user', " and email_id='" . $email_id . "'");
+
 
 
             echo $user_list_cnt;
 
 
+
             exit;
 
 
+
         }
+
 
 
     }
@@ -864,10 +1022,13 @@ class users extends CI_Controller{
         if ($socialSN == '') {
 
 
+
             echo '2';
 
 
+
             exit;
+
 
 
         } else {
@@ -879,10 +1040,13 @@ class users extends CI_Controller{
             echo $user_list_cnt;
 
 
+
             exit;
 
 
+
         }
+
 
 
     }
@@ -898,10 +1062,13 @@ class users extends CI_Controller{
         $user_list_cnt = get_perticular_count('zc_user', " and user_name='" . $user_name . "'");
 
 
+
         echo $user_list_cnt;
 
 
+
         exit;
+
 
 
     }
@@ -917,7 +1084,9 @@ class users extends CI_Controller{
         if ($company_name == '') {
 
 
+
             echo '2';
+
 
 
             exit;
@@ -929,13 +1098,17 @@ class users extends CI_Controller{
             $user_list_cnt = get_perticular_count('zc_user', " and company_name='" . $company_name . "'");
 
 
+
             echo $user_list_cnt;
+
 
 
             exit;
 
 
+
         }
+
 
 
     }
@@ -951,7 +1124,9 @@ class users extends CI_Controller{
         if ($business_name == '') {
 
 
+
             echo '2';
+
 
 
             exit;
@@ -963,13 +1138,17 @@ class users extends CI_Controller{
             $user_list_cnt = get_perticular_count('zc_user', " and business_name='" . $business_name . "'");
 
 
+
             echo $user_list_cnt;
+
 
 
             exit;
 
 
+
         }
+
 
 
     }
@@ -985,7 +1164,9 @@ class users extends CI_Controller{
         if ($vat_no == '') {
 
 
+
             echo '2';
+
 
 
             exit;
@@ -997,13 +1178,17 @@ class users extends CI_Controller{
             $user_list_cnt = get_perticular_count('zc_user', " and vat_number='" . $vat_no . "'");
 
 
+
             echo $user_list_cnt;
+
 
 
             exit;
 
 
+
         }
+
 
 
     }
@@ -1019,16 +1204,21 @@ class users extends CI_Controller{
         if ($uid != 0) {
 
 
+
             redirect('users/my_account');
+
 
 
         }
 
 
+
         $data = array();
 
 
+
         $data['sitepage'] = "comon_signup";
+
 
 
         $data['countries'] = $this->usersm->get_country();
@@ -1040,6 +1230,7 @@ class users extends CI_Controller{
         $this->load->view("users/user_edit", $data);
 
 
+
     }
 
 
@@ -1047,7 +1238,9 @@ class users extends CI_Controller{
     {
 
 
+
         $access_token = $this->uri->segment('4');
+
 
 
         $uid = $this->uri->segment('3');
@@ -1092,6 +1285,7 @@ class users extends CI_Controller{
                         $this->load->view('users/thanks_useract', $data);
 
 
+
                     }
 
 
@@ -1102,6 +1296,7 @@ class users extends CI_Controller{
 
 
                         $this->load->view('users/thanksowneract', $data);
+
 
 
                     }
@@ -1116,7 +1311,9 @@ class users extends CI_Controller{
                         $this->load->view('users/thanksagencyact', $data);
 
 
+
                     }
+
 
 
                 }
@@ -1137,6 +1334,7 @@ class users extends CI_Controller{
                     $this->load->view('users/thanks_useract_alredy', $data);
 
 
+
                 }
 
 
@@ -1147,6 +1345,7 @@ class users extends CI_Controller{
 
 
                     $this->load->view('users/thanksowneract_alredy', $data);
+
 
 
                 }
@@ -1161,7 +1360,9 @@ class users extends CI_Controller{
                     $this->load->view('users/thanksagencyact_alredy', $data);
 
 
+
                 }
+
 
 
             }
@@ -1176,6 +1377,7 @@ class users extends CI_Controller{
             $this->load->view('users/thanksagencyact_fail', $data);
 
 
+
         }
 
 
@@ -1185,7 +1387,9 @@ class users extends CI_Controller{
         if ($uid != 0) {
 
 
+
             redirect('users/my_account');
+
 
 
         }
@@ -1198,6 +1402,7 @@ class users extends CI_Controller{
     {
 
 
+
         $userIDarray = $this->usersm->UserListForNotActvAftr72hrs();
 
 
@@ -1207,13 +1412,16 @@ class users extends CI_Controller{
             $this->usersm->DeltheseUsersForNotActvAccAftr72hrs($userIDarray);
 
 
+
         }
+
 
 
     }
 
 
     function confirm_individual_reg()
+
 
 
     {
@@ -1228,7 +1436,9 @@ class users extends CI_Controller{
         if (isset($new_arr) && ($new_arr['access_token'] == "")) {
 
 
+
             redirect('/');
+
 
 
         }
@@ -1240,13 +1450,17 @@ class users extends CI_Controller{
         $new_user['user_name'] = $this->input->post('user_name');
 
 
+
         $new_user['first_name'] = $this->input->post('first_name');
+
 
 
         $new_user['last_name'] = $this->input->post('last_name');
 
 
+
         $new_user['contact_ph_no'] = $this->input->post('ph_no');
+
 
 
         //$new_user['date_of_birth'] = $this->input->post('date_of_birth');
@@ -1258,13 +1472,17 @@ class users extends CI_Controller{
         $new_user['city'] = $this->input->post('city');
 
 
+
         $new_user['country'] = $this->input->post('country');
+
 
 
         $new_user['email_id'] = $this->input->post('email');
 
 
+
         $new_user['password'] = $new_arr['password'];
+
 
 
         $new_user['gender'] = $this->input->post('gender');
@@ -1274,6 +1492,7 @@ class users extends CI_Controller{
 
 
         $new_user['agree_terms'] = $new_arr['agree_terms'];
+
 
 
         $new_user['receive_mail'] = $new_arr['receive_mail'];
@@ -1300,6 +1519,7 @@ class users extends CI_Controller{
                 $new_data['language'] = $this->input->post('language_nm');
 
 
+
             }
 
 
@@ -1312,28 +1532,37 @@ class users extends CI_Controller{
             $new_user['user_name'] = '';
 
 
+
             $new_user['first_name'] = '';
+
 
 
             $new_user['last_name'] = '';
 
 
+
             $new_user['contact_ph_no'] = '';
+
 
 
             $new_user['date_of_birth'] = '';
 
 
+
             $new_user['city'] = '';
+
 
 
             $new_user['country'] = '';
 
 
+
             $new_user['email_id'] = '';
 
 
+
             $new_user['password'] = '';
+
 
 
             $new_user['gender'] = '';
@@ -1345,6 +1574,7 @@ class users extends CI_Controller{
             $new_user['agree_terms'] = '';
 
 
+
             $new_user['receive_mail'] = '';
 
 
@@ -1352,6 +1582,7 @@ class users extends CI_Controller{
 
 
             $open_page_flag['open_page_flag'] = 'yes';
+
 
 
             $this->session->set_userdata($open_page_flag);
@@ -1370,6 +1601,7 @@ class users extends CI_Controller{
 
 
             $details = array();
+
 
 
             //$details['from']= isset($default_email) ? $default_email : "no-reply@zapcasa.it";
@@ -1394,63 +1626,64 @@ class users extends CI_Controller{
 
 
 
-                <div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
+				<div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
 
 
 
-                    <div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
+					<div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
 
 
 
-                    <div style="border-bottom:1px solid #d1d1d1;">
+				    <div style="border-bottom:1px solid #d1d1d1;">
 
 
 
-                        <img src="' . base_url() . 'assets/images/logo.png" alt="ZapCasa"/>
+				    	<img src="' . base_url() . 'assets/images/logo.png" alt="ZapCasa"/>
 
 
 
-                    </div>
+				    </div>
 
 
 
-                    <div style="padding:15px;">
+				    <div style="padding:15px;">
 
 
 
-                        <strong>' . $this->lang->line('thanks_hi') . ' ' . $user_name . '</strong><br>
+				    	<strong>' . $this->lang->line('thanks_hi') . ' ' . $user_name . '</strong><br>
 
 
 
-                        <p>' . $this->lang->line('thanks_text_1') . '</p><br>
+				        <p>' . $this->lang->line('thanks_text_1') . '</p><br>
 
 
 
-                        <p><strong>' . $this->lang->line('thanks_text_note') . '</strong> ' . $this->lang->line('thanks_text_2') . '. </p><br>
+				        <p><strong>' . $this->lang->line('thanks_text_note') . '</strong> ' . $this->lang->line('thanks_text_2') . '. </p><br>
 
 
 
-                        <p> ' . $this->lang->line('thanks_text_3') . ': </p>
+				        <p> ' . $this->lang->line('thanks_text_3') . ': </p>
 
 
 
-                        <p><a href="' . $link . '"><strong> ' . $link . '</strong></a></p><br>
+				        <p><a href="' . $link . '"><strong> ' . $link . '</strong></a></p><br>
 
 
 
-                        <p>' . $this->lang->line('thanks_text_4') . ',<br><a href="http://www.zapcasa.it">www.zapcasa.it</a></p>
+				        <p>' . $this->lang->line('thanks_text_4') . ',<br><a href="http://www.zapcasa.it">www.zapcasa.it</a></p>
 
 
 
-                    </div>
+				    </div>
 
 
 
-                </div>
+				</div>
 
 
 
-                </body>';
+				</body>';
+
 
 
             //$details['message']= $msg;
@@ -1462,22 +1695,33 @@ class users extends CI_Controller{
             sendemail($mail_from, $mail_to, $subject, $body, $cc = '');
 
 
+
+
+
+
+
             //send_mail($details);
+
 
 
             //$url='user/thanks/'.$rs;
 
 
+
             //redirect($url);
+
 
 
             //echo $rs;die("kkk");
 
 
+
             redirect('users/thanks');
 
 
+
         }
+
 
 
     }
@@ -1485,6 +1729,7 @@ class users extends CI_Controller{
 
     function edit_user_reg()
     {
+
 
 
         $data = array();
@@ -1496,6 +1741,7 @@ class users extends CI_Controller{
         $this->load->view('users/user_edit_reg', $data);
 
 
+
     }
 
 
@@ -1503,7 +1749,9 @@ class users extends CI_Controller{
     {
 
 
+
         $data['sitepage'] = "comon_signup";
+
 
 
         $uid = $this->session->userdata('user_id');
@@ -1515,13 +1763,17 @@ class users extends CI_Controller{
             redirect('users/my_account');
 
 
+
         }
+
 
 
         $new_user['phone_2'] = '';
 
 
+
         $this->session->set_userdata($new_user);
+
 
 
         /*$captcha_lib=base_url().'/captcha/';
@@ -1623,6 +1875,7 @@ class users extends CI_Controller{
             $data['provinces'] = $this->usersm->get_state_list();
 
 
+
         }
 
 
@@ -1635,13 +1888,17 @@ class users extends CI_Controller{
     public function alpha_dash_space($str)
 
 
+
     {
+
 
 
         //$this->CI->form_validation->set_message('alpha_dash_space', 'aaaaaaaaaaaaaa');
 
 
+
         return (preg_match("/s/", $str)) ? FALSE : TRUE;
+
 
 
     }
@@ -1654,10 +1911,13 @@ class users extends CI_Controller{
         return (preg_match('/^(?=^.{8,99}$)(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[' . $special . '])(?!.*?(.)1{1,})^.*$/', $str)) ? TRUE : FALSE;
 
 
+
         //return ( ! preg_match("/^(d++(?! */))? *-? *(?:(d+) */ *(d+))?.*$/", $str)) ? FALSE : TRUE;
 
 
+
         //return FALSE;
+
 
 
     }
@@ -1670,34 +1930,45 @@ class users extends CI_Controller{
         if (!$this->input->post()) {
 
 
+
             redirect('/users/reg_owner');
+
 
 
         }
 
 
+
         $data['sitepage'] = "comon_signup";
+
 
 
         $this->load->library('form_validation');
 
 
+
         /////////store in session while first input/////////////////////////////////////
+
 
 
         $new_user['phone_2'] = $this->input->post('phone_2');
 
 
+
         $this->session->set_userdata($new_user);
+
 
 
         /////////session ends///////////////////////////////////////////
 
 
+
         if ($this->input->post('submit') ==/*'Register' || 'Registrati'*/
 
 
+
             $this->lang->line('reg_owner_button_register')
+
 
 
         ) {
@@ -1712,31 +1983,45 @@ class users extends CI_Controller{
             $UserNameSetRuleTxt = ($_COOKIE['lang'] == 'english' ? 'User Name' : 'Username');
 
 
+
+
+
+
+
             //$this->form_validation->set_rules('captcha','Security Code','required');
+
 
 
             $this->form_validation->set_rules('user_name', $UserNameSetRuleTxt, 'required|min_length[5]|is_unique[zc_user.user_name]|xss_clean|callback_alpha_dash_space');
 
 
+
             $this->form_validation->set_rules('first_name', '�', 'required');
+
 
 
             $this->form_validation->set_rules('last_name', '�', 'required');
 
 
+
             $this->form_validation->set_rules('social_secuirity_number', $SSNSetRuleTxt, 'required|min_length[16]|is_unique[zc_user.social_secuirity_number]');
+
 
 
             $this->form_validation->set_rules('city', '�', 'required');
 
 
+
             $this->form_validation->set_rules('province', 'Province', 'required');
+
 
 
             $this->form_validation->set_rules('reg_day', '�', 'required');
 
 
+
             $this->form_validation->set_rules('reg_month', '�', 'required');
+
 
 
             $this->form_validation->set_rules('reg_year', '�', 'required');
@@ -1745,25 +2030,33 @@ class users extends CI_Controller{
             //$this->form_validation->set_rules('date_of_birth', 'Date of Birth', 'required');
 
 
+
             $this->form_validation->set_rules('street_address', 'Street Address', 'required');
+
 
 
             $this->form_validation->set_rules('street_no', '�', 'required');
 
 
+
             $this->form_validation->set_rules('zip', 'ZIP', 'required|numeric|xss_clean');
+
 
 
             $this->form_validation->set_rules('phone_1', '�', 'required|min_length[7]');
 
 
+
             $this->form_validation->set_rules('phone_2', '�', 'min_length[7]');
+
 
 
             $this->form_validation->set_rules('email', $EmailIDSetRuleTxt, 'required|valid_email|is_unique[zc_user.email_id]|matches[email2]');
 
 
+
             $this->form_validation->set_rules('email2', '�', 'required|valid_email');
+
 
 
             $this->form_validation->set_rules('password', '�', 'required|matches[pass2]|min_length[8]');
@@ -1772,22 +2065,29 @@ class users extends CI_Controller{
             //$this->form_validation->set_rules('password', 'Password', 'required|matches[pass2]|min_length[8]|alpha_numeric');
 
 
+
             $this->form_validation->set_rules('pass2', '�', 'required|min_length[8]');
+
 
 
             //$this->form_validation->set_rules('pass2', 'Password Confirmation', 'required|min_length[8]|alpha_numeric');
 
 
+
             $this->form_validation->set_rules('agree_terms', '�', 'required');
+
 
 
             //print_r($_POST);
 
 
+
             if ($this->form_validation->run() == FALSE) {
 
 
+
                 //$data['provinces']=$this->usersm->get_province();
+
 
 
                 /*$captcha_lib=base_url().'/captcha/';
@@ -1827,6 +2127,7 @@ class users extends CI_Controller{
 
 
                 );*/
+
 
 
                 /*    $vals = array(
@@ -1904,7 +2205,9 @@ class users extends CI_Controller{
                 $data['cap_img']=$cap['image'];*/
 
 
+
                 // $this->session->set_userdata($data['captcha']);
+
 
 
                 //$data['provinces']=$this->usersm->get_state_list();
@@ -1922,6 +2225,7 @@ class users extends CI_Controller{
                     $data['provinces'] = $this->usersm->get_state_list();
 
 
+
                 }
 
 
@@ -1932,6 +2236,7 @@ class users extends CI_Controller{
 
 
                     $data['city'] = $this->usersm->get_city($province, $_COOKIE['lang']);
+
 
 
                 }
@@ -1955,10 +2260,13 @@ class users extends CI_Controller{
                 $new_user['user_name'] = $this->input->post('user_name');
 
 
+
                 $new_user['first_name'] = $this->input->post('first_name');
 
 
+
                 $new_user['last_name'] = $this->input->post('last_name');
+
 
 
                 $new_user['social_secuirity_number'] = $this->input->post('social_secuirity_number');
@@ -1970,22 +2278,29 @@ class users extends CI_Controller{
                 $new_user['city'] = stripslashes($this->input->post('city'));
 
 
+
                 $new_user['province'] = stripslashes($this->input->post('province'));
+
 
 
                 $new_user['street_address'] = $this->input->post('street_address');
 
 
+
                 $new_user['street_no'] = $this->input->post('street_no');
+
 
 
                 $new_user['zip'] = $this->input->post('zip');
 
 
+
                 $new_user['phone_1'] = $this->input->post('phone_1');
 
 
+
                 $new_user['phone_2'] = $this->input->post('phone_2');
+
 
 
                 $new_user['email_id'] = $this->input->post('email');
@@ -2003,13 +2318,16 @@ class users extends CI_Controller{
                 $new_user['agree_terms'] = $this->input->post('agree_terms');
 
 
+
                 $new_user['receive_mail'] = $this->input->post('receive_mail');
 
 
                 $new_user['reg_day'] = $this->input->post('reg_day');
 
 
+
                 $new_user['reg_month'] = $this->input->post('reg_month');
+
 
 
                 $new_user['reg_year'] = $this->input->post('reg_year');
@@ -2083,6 +2401,7 @@ class users extends CI_Controller{
                 }*/
 
 
+
             }
 
 
@@ -2101,10 +2420,13 @@ class users extends CI_Controller{
                 $data['provinces'] = $this->usersm->get_state_list();
 
 
+
             }
 
 
+
             //$data['provinces']=$this->usersm->get_province();
+
 
 
             /* $captcha_lib=base_url().'/captcha/';
@@ -2194,7 +2516,9 @@ class users extends CI_Controller{
             $data['cap_img']=$cap['image']; */
 
 
+
             // $this->session->set_userdata($data['captcha']);
+
 
 
             // $data['provinces']=$this->usersm->get_state_list();
@@ -2206,11 +2530,13 @@ class users extends CI_Controller{
         }
 
 
+
     }
 
 
     public function owner_edit()
     {
+
 
 
         $data = array();
@@ -2222,6 +2548,7 @@ class users extends CI_Controller{
         $new_arr = $this->session->all_userdata();
 
 
+
         //echo '<pre>';print_r($new_arr);die;
 
 
@@ -2231,10 +2558,13 @@ class users extends CI_Controller{
             redirect('/');
 
 
+
         }
 
 
+
         $data['sitepage'] = "comon_signup";
+
 
 
         $data['countries'] = $this->usersm->get_country();
@@ -2258,49 +2588,65 @@ class users extends CI_Controller{
         $vals = array(
 
 
+
             'img_path' => './captcha/',
+
 
 
             'img_url' => $captcha_lib,
 
 
+
             'img_width' => '380',
+
 
 
             'img_height' => 80,
 
 
+
             'font_size' => 30,
+
 
 
             'font_path' => FCPATH . 'captcha/fonts/ADLER___.TTF',
 
 
+
             'expiration' => 7200
 
 
+
         );
+
 
 
         $cap = create_captcha($vals);
 
 
+
         $data['captcha'] = array(
+
 
 
             'captcha_time' => $cap['time'],
 
 
+
             'ip_address' => $this->input->ip_address(),
+
 
 
             'word' => $cap['word']
 
 
+
         );
 
 
+
         $query = $this->db->insert_string('captcha', $data['captcha']);
+
 
 
         $this->db->query($query);
@@ -2310,6 +2656,7 @@ class users extends CI_Controller{
 
 
         ////for captcha end////
+
 
 
         //$data['provinces']=$this->usersm->get_state_list();
@@ -2327,6 +2674,7 @@ class users extends CI_Controller{
             $data['provinces'] = $this->usersm->get_state_list();
 
 
+
         }
 
 
@@ -2336,10 +2684,12 @@ class users extends CI_Controller{
             $data['city'] = $this->usersm->get_city(addslashes($new_arr['province']), $_COOKIE['lang']);
 
 
+
         }
 
 
         $this->load->view("users/owner_edit", $data);
+
 
 
     }
@@ -2355,16 +2705,21 @@ class users extends CI_Controller{
         if ($new_arr['user_type'] == '') {
 
 
+
             redirect('/');
+
 
 
         }
 
 
+
         $data['sitepage'] = "comon_signup";
 
 
+
         ///echo 'ffffffffffffff';die;
+
 
 
         ///for captcha///
@@ -2376,16 +2731,25 @@ class users extends CI_Controller{
         $this->db->query("DELETE FROM captcha WHERE captcha_time < " . $expiration);
 
 
+
+
+
+
+
         // Then see if a captcha exists:
+
 
 
         $sql = "SELECT COUNT(*) AS count FROM captcha WHERE word = ? AND ip_address = ? AND captcha_time > ?";
 
 
+
         $binds = array($_POST['captcha'], $this->input->ip_address(), $expiration);
 
 
+
         $query = $this->db->query($sql, $binds);
+
 
 
         $row = $query->row();
@@ -2397,6 +2761,7 @@ class users extends CI_Controller{
             $captcha_lib = base_url() . '/captcha/';
 
 
+
             $this->load->helper('captcha');
 
 
@@ -2406,52 +2771,69 @@ class users extends CI_Controller{
             $vals = array(
 
 
+
                 'img_path' => './captcha/',
+
 
 
                 'img_url' => $captcha_lib,
 
 
+
                 'img_width' => '380',
+
 
 
                 'img_height' => 80,
 
 
+
                 'font_size' => 30,
+
 
 
                 'font_path' => FCPATH . 'captcha/fonts/ADLER___.TTF',
 
 
+
                 'expiration' => 7200
 
 
+
             );
+
 
 
             $cap = create_captcha($vals);
 
 
+
             $data['captcha'] = array(
+
 
 
                 'captcha_time' => $cap['time'],
 
 
+
                 'ip_address' => $this->input->ip_address(),
+
 
 
                 'word' => $cap['word']
 
 
+
             );
+
 
 
             //print_r($data['captcha']);die;
 
 
+
             $query = $this->db->insert_string('captcha', $data['captcha']);
+
 
 
             $this->db->query($query);
@@ -2463,7 +2845,9 @@ class users extends CI_Controller{
             $data['captcha_err'] = $this->lang->line('reg_owner_you_submit_wrong_captcha');
 
 
+
             // $this->session->set_userdata($data['captcha']);
+
 
 
             //$data['provinces']=$this->usersm->get_state_list();
@@ -2481,6 +2865,7 @@ class users extends CI_Controller{
                 $data['provinces'] = $this->usersm->get_state_list();
 
 
+
             }
 
 
@@ -2493,7 +2878,9 @@ class users extends CI_Controller{
             if ($province) {
 
 
+
                 //$data['city']=$this->usersm->get_city(addslashes($province),$_COOKIE['lang']);
+
 
 
             }
@@ -2502,13 +2889,17 @@ class users extends CI_Controller{
             if ($this->input->post('social_secuirity_number') != '') {
 
 
+
                 $data['new_arr'] = $this->input->post();
+
 
 
                 //$data['new_arr'] = $this->session->all_userdata();
 
 
+
                 $data['edit_mode'] = 1;
+
 
 
             }
@@ -2517,7 +2908,7 @@ class users extends CI_Controller{
             $this->load->view('users/owner_edit', $data);
 
 
-        } else {  /////for captcha end////
+        } else {     /////for captcha end////
 
 
             $new_user = array();
@@ -2532,13 +2923,17 @@ class users extends CI_Controller{
             $new_user['user_name'] = $this->input->post('user_name');
 
 
+
             $new_user['first_name'] = $this->input->post('first_name');
+
 
 
             $new_user['last_name'] = $this->input->post('last_name');
 
 
+
             $new_user['social_secuirity_number'] = $this->input->post('social_secuirity_number');
+
 
 
             //$new_user['date_of_birth'] = $this->input->post('date_of_birth');
@@ -2550,25 +2945,33 @@ class users extends CI_Controller{
             $new_user['city'] = $this->input->post('city');
 
 
+
             $new_user['province'] = $this->input->post('province');
+
 
 
             $new_user['street_address'] = $this->input->post('street_address');
 
 
+
             $new_user['street_no'] = $this->input->post('street_no');
+
 
 
             $new_user['zip'] = $this->input->post('zip');
 
 
+
             $new_user['phone_1'] = $this->input->post('phone_1');
+
 
 
             $new_user['phone_2'] = $this->input->post('phone_2');
 
 
+
             $new_user['email_id'] = $this->input->post('email');
+
 
 
             $new_user['password'] = $new_arr['password'];
@@ -2580,16 +2983,21 @@ class users extends CI_Controller{
             $new_user['agree_terms'] = $new_arr['agree_terms'];
 
 
+
             $new_user['receive_mail'] = $new_arr['receive_mail'];
+
 
 
             //$new_user['about_me'] = $this->input->post('about_me');
 
 
+
             //echo '<pre>';print_r($new_user);die;
 
 
+
             //$file=$_FILES;
+
 
 
             //echo '<pre>';print_r($file);die;
@@ -2604,13 +3012,16 @@ class users extends CI_Controller{
             //print_r($new_user);
 
 
+
             //die();
 
 
             $rs = $this->usersm->insertUser($new_user);
 
 
+
             //$this->upload_image_1('user_file_1',$rs);
+
 
 
             //$this->upload_image_2('user_file_2',$rs);
@@ -2631,6 +3042,7 @@ class users extends CI_Controller{
                     $new_data['language'] = $this->input->post('language_nm');
 
 
+
                 }
 
 
@@ -2646,37 +3058,49 @@ class users extends CI_Controller{
                 $new_user['first_name'] = '';
 
 
+
                 $new_user['last_name'] = '';
+
 
 
                 $new_user['social_secuirity_number'] = '';
 
 
+
                 $new_user['date_of_birth'] = '';
+
 
 
                 $new_user['city'] = '';
 
 
+
                 $new_user['province'] = '';
+
 
 
                 $new_user['street_address'] = '';
 
 
+
                 $new_user['street_no'] = '';
+
 
 
                 $new_user['zip'] = '';
 
 
+
                 $new_user['phone_1'] = '';
+
 
 
                 $new_user['phone_2'] = '';
 
 
+
                 $new_user['email_id'] = '';
+
 
 
                 $new_user['password'] = '';
@@ -2688,6 +3112,7 @@ class users extends CI_Controller{
                 $new_user['agree_terms'] = '';
 
 
+
                 $new_user['receive_mail'] = '';
 
 
@@ -2697,49 +3122,64 @@ class users extends CI_Controller{
                 $open_page_flag['open_page_flag'] = 'yes';
 
 
+
                 $this->session->set_userdata($open_page_flag);
 
 
                 $email = get_perticular_field_value('zc_user', 'email_id', " and user_id='" . $rs . "'");
 
 
+
                 $user_name = get_perticular_field_value('zc_user', 'first_name', " and user_id='" . $rs . "'") . ' ' . get_perticular_field_value('zc_user', 'last_name', " and user_id='" . $rs . "'");
+
 
 
                 $passwrd = get_perticular_field_value('zc_user', 'password', " and user_id='" . $rs . "'");
 
 
+
                 $link = base_url() . 'users/acctivation/' . $rs . '/' . $passwrd;
+
 
 
                 $details = array();
 
 
+
                 $default_email = get_perticular_field_value('zc_settings', 'meta_value', " and meta_name='default_email'");
+
 
 
                 //$details['from']= isset($default_email) ? $default_email : "no-reply@zapcasa.it";
 
 
+
                 $mail_from = isset($default_email) ? $default_email : "no-reply@zapcasa.it";
+
 
 
                 //$details['to']=$email;
 
 
+
                 $mail_to = $email;
+
 
 
                 //$details['subject'] = $this->lang->line('thanks_owner_subject');
 
 
+
                 $subject = $this->lang->line('thanks_text_subject');
+
 
 
                 //$details['message']="<strong>Hi  ".$user_name.",</strong> <br/> <br/>You are receiving this email because you have requested to register on Zapcasa.it <br/> <br/><strong>Note: </strong>If you did not to apply for registration then do nothing, your email will be automatically deleted within 72 hours. <br/><br/>  To activate your ZapCasa account, please click on the following link or copy and paste it into your browser: <br/> <strong> ".$link."</strong> <br/><br/>Regards,<br/><strong> www.zapcasa.it</strong>";
 
 
+
                 //$details['message']="Welcome  ".$user_name.",<br/> To activate your account please click on the following Link <br/>  <strong> ".$link."</strong>";
+
 
 
                 $msg = '<body style="font-family:Century Gothic; color: #4c4d51; font-size:13px;">
@@ -2809,7 +3249,9 @@ class users extends CI_Controller{
                                 </body>';
 
 
+
                 //$details['message']= $msg;
+
 
 
                 $body = $msg;
@@ -2818,28 +3260,37 @@ class users extends CI_Controller{
                 sendemail($mail_from, $mail_to, $subject, $body, $cc = '');
 
 
+
                 //send_mail($details);
+
 
 
                 //$url='user/thanksowner/'.$rs;
 
 
+
                 //redirect($url);
+
 
 
                 // echo '<pre>';print_r($rs);die;
 
 
+
                 //redirect('users/thanksowner'/$rs);
+
 
 
                 redirect('users/thanksowner');
 
 
+
             }
 
 
+
         }
+
 
 
     }
@@ -2849,10 +3300,13 @@ class users extends CI_Controller{
     {
 
 
+
         //echo "thanks...";die();
 
 
+
         $open_page_flag = $this->session->userdata('open_page_flag');
+
 
 
         if (isset($open_page_flag) && ($open_page_flag == "yes")) {
@@ -2867,10 +3321,13 @@ class users extends CI_Controller{
             $data['before_activation'] = 1;
 
 
+
             $data['login_data'] = 1;
 
 
+
             //$open_page_flag['open_page_flag'] = '';
+
 
 
             //$this->session->set_userdata($open_page_flag);
@@ -2882,10 +3339,13 @@ class users extends CI_Controller{
         } else {
 
 
+
             redirect('/');
 
 
+
         }
+
 
 
     }
@@ -2893,6 +3353,7 @@ class users extends CI_Controller{
 
     public function reg_agency()
     {
+
 
 
         $data['sitepage'] = "comon_signup";
@@ -2904,19 +3365,25 @@ class users extends CI_Controller{
         if ($uid != 0) {
 
 
+
             redirect('users/my_account');
+
 
 
         }
 
 
+
         $new_user['phone_2'] = $this->input->post('phone_2');
+
 
 
         $new_user['fax_no'] = $this->input->post('fax_no');
 
 
+
         $new_user['website'] = $this->input->post('website');
+
 
 
         $this->session->set_userdata($new_user);
@@ -3005,6 +3472,7 @@ class users extends CI_Controller{
         $data['cap_img']=$cap['image']; */
 
 
+
         //$data['provinces']=$this->usersm->get_state_list();
 
 
@@ -3020,10 +3488,13 @@ class users extends CI_Controller{
             $data['provinces'] = $this->usersm->get_state_list();
 
 
+
         }
 
 
+
         $this->load->view('users/reg_agency', $data);
+
 
 
     }
@@ -3036,22 +3507,29 @@ class users extends CI_Controller{
         if (!$this->input->post()) {
 
 
+
             redirect('/users/reg_agency');
+
 
 
         }
 
 
+
         $this->load->library('form_validation');
+
 
 
         $new_user['phone_2'] = $this->input->post('phone_2');
 
 
+
         $new_user['fax_no'] = $this->input->post('fax_no');
 
 
+
         $new_user['website'] = $this->input->post('website');
+
 
 
         $this->session->set_userdata($new_user);
@@ -3074,70 +3552,96 @@ class users extends CI_Controller{
             $EmailIDSetRuleTxt = ($this->input->post('email') ? ($_COOKIE['lang'] == 'english' ? 'Email' : 'Email') : '�');
 
 
+
+
+
+
+
             //$this->form_validation->set_rules('captcha','Security Code','required');
+
 
 
             $this->form_validation->set_rules('user_name', $UserNameSetRuleTxt, 'required|is_unique[zc_user.user_name]|xss_clean|callback_alpha_dash_space');
 
 
+
             $this->form_validation->set_rules('company_name', '�', 'required');
+
 
 
             $this->form_validation->set_rules('business_name', $BusNmSetRuleTxt, 'required|is_unique[zc_user.business_name]');
 
 
+
             $this->form_validation->set_rules('vat_number', $VatNoSetRuleTxt, 'required|is_unique[zc_user.vat_number]');
+
 
 
             $this->form_validation->set_rules('first_name', '�', 'required');
 
 
+
             $this->form_validation->set_rules('last_name', '�', 'required');
+
 
 
             $this->form_validation->set_rules('contact_ph_no', '�', 'required|min_length[7]');
 
 
+
             $this->form_validation->set_rules('province', 'Province', 'required');
+
 
 
             $this->form_validation->set_rules('city', 'City', 'required');
 
 
+
             $this->form_validation->set_rules('street_address', '�', 'required');
+
 
 
             $this->form_validation->set_rules('street_no', '�', 'required');
 
 
+
             $this->form_validation->set_rules('zip', '�', 'required');
+
 
 
             $this->form_validation->set_rules('phone_1', '�', 'required|min_length[7]');
 
 
+
             $this->form_validation->set_rules('phone_2', '�', 'min_length[7]');
+
 
 
             $this->form_validation->set_rules('fax_no', '�', 'min_length[7]');
 
 
+
             //$this->form_validation->set_rules('email', 'Email', 'required|valid_email|is_unique[zc_user.email_id]');
+
 
 
             $this->form_validation->set_rules('email', $EmailIDSetRuleTxt, 'required|valid_email|is_unique[zc_user.email_id]|matches[email2]');
 
 
+
             $this->form_validation->set_rules('email2', '�', 'required');
 
 
+
             $this->form_validation->set_rules('password', '�', 'required|matches[pass2]');
+
 
 
             $this->form_validation->set_rules('pass2', '�', 'required');
 
 
             $this->form_validation->set_rules('agree_terms', '�', 'required');
+
 
 
             //print_r($_POST);
@@ -3237,6 +3741,7 @@ class users extends CI_Controller{
                 $data['cap_img']=$cap['image']; */
 
 
+
                 // $data['provinces']=$this->usersm->get_state_list();
 
 
@@ -3252,6 +3757,7 @@ class users extends CI_Controller{
                     $data['provinces'] = $this->usersm->get_state_list();
 
 
+
                 }
 
 
@@ -3262,6 +3768,7 @@ class users extends CI_Controller{
 
 
                     $data['city'] = $this->usersm->get_city($province, $_COOKIE['lang']);
+
 
 
                 }
@@ -3285,49 +3792,65 @@ class users extends CI_Controller{
                 $new_user['user_name'] = $this->input->post('user_name');
 
 
+
                 $new_user['company_name'] = $this->input->post('company_name');
+
 
 
                 $new_user['business_name'] = $this->input->post('business_name');
 
 
+
                 $new_user['vat_number'] = $this->input->post('vat_number');
+
 
 
                 $new_user['first_name'] = $this->input->post('first_name');
 
 
+
                 $new_user['last_name'] = $this->input->post('last_name');
+
 
 
                 $new_user['contact_ph_no'] = $this->input->post('contact_ph_no');
 
 
+
                 $new_user['province'] = stripslashes($this->input->post('province'));
+
 
 
                 $new_user['city'] = stripslashes($this->input->post('city'));
 
 
+
                 $new_user['street_address'] = $this->input->post('street_address');
+
 
 
                 $new_user['street_no'] = $this->input->post('street_no');
 
 
+
                 $new_user['zip'] = $this->input->post('zip');
+
 
 
                 $new_user['phone_1'] = $this->input->post('phone_1');
 
 
+
                 $new_user['phone_2'] = $this->input->post('phone_2');
+
 
 
                 $new_user['fax_no'] = $this->input->post('fax_no');
 
 
+
                 $new_user['website'] = $this->input->post('website');
+
 
 
                 $new_user['email_id'] = $this->input->post('email');
@@ -3345,7 +3868,9 @@ class users extends CI_Controller{
                 $new_user['agree_terms'] = $this->input->post('agree_terms');
 
 
+
                 $new_user['receive_mail'] = $this->input->post('receive_mail');
+
 
 
                 $this->session->set_userdata($new_user);
@@ -3357,7 +3882,9 @@ class users extends CI_Controller{
                 //echo '<pre>';print_r($ym);die;
 
 
+
                 redirect('users/agency_edit');
+
 
 
                 /*$rs=$this->user_model->insert_user( $new_user );
@@ -3419,10 +3946,13 @@ class users extends CI_Controller{
                 }*/
 
 
+
             }
 
 
+
         }
+
 
 
     }
@@ -3430,6 +3960,7 @@ class users extends CI_Controller{
 
     function agency_edit()
     {
+
 
 
         $data['sitepage'] = "comon_signup";
@@ -3441,6 +3972,7 @@ class users extends CI_Controller{
         $new_arr = $this->session->all_userdata();
 
 
+
         //echo '<pre>';print_r($new_arr);die;
 
 
@@ -3450,7 +3982,9 @@ class users extends CI_Controller{
             redirect('/');
 
 
+
         }
+
 
 
         ////for captcha///
@@ -3468,25 +4002,33 @@ class users extends CI_Controller{
         $vals = array(
 
 
+
             'img_path' => './captcha/',
+
 
 
             'img_url' => $captcha_lib,
 
 
+
             'img_width' => '380',
+
 
 
             'img_height' => 80,
 
 
+
             'font_size' => 30,
+
 
 
             'font_path' => FCPATH . 'captcha/fonts/ADLER___.TTF',
 
 
+
             'expiration' => 7200
+
 
 
         );
@@ -3495,22 +4037,28 @@ class users extends CI_Controller{
         $cap = create_captcha($vals);
 
 
+
         $data['captcha'] = array(
+
 
 
             'captcha_time' => $cap['time'],
 
 
+
             'ip_address' => $this->input->ip_address(),
 
 
+
             'word' => $cap['word']
+
 
 
         );
 
 
         $query = $this->db->insert_string('captcha', $data['captcha']);
+
 
 
         $this->db->query($query);
@@ -3534,6 +4082,7 @@ class users extends CI_Controller{
             $data['provinces'] = $this->usersm->get_state_list();
 
 
+
         }
 
 
@@ -3541,6 +4090,7 @@ class users extends CI_Controller{
 
 
             $data['city'] = $this->usersm->get_city(addslashes($new_arr['province']), $_COOKIE['lang']);
+
 
 
         }
@@ -3555,6 +4105,7 @@ class users extends CI_Controller{
         $this->load->view('users/agency_edit', $data);
 
 
+
     }
 
 
@@ -3565,7 +4116,9 @@ class users extends CI_Controller{
         if (!$this->input->post('captcha')) {
 
 
+
             //redirect(base_url());
+
 
 
         }
@@ -3577,7 +4130,9 @@ class users extends CI_Controller{
         if ($new_arr['user_type'] == '') {
 
 
+
             redirect('/');
+
 
 
         }
@@ -3586,28 +4141,39 @@ class users extends CI_Controller{
         $data['sitepage'] = "comon_signup";
 
 
+
         //echo 'ffffffffffffff';die;
+
 
 
         ///for captcha///
 
 
-        $expiration = time() - 7200;  //Two hour limit
+        $expiration = time() - 7200;    //Two hour limit
 
 
         $this->db->query("DELETE FROM captcha WHERE captcha_time < " . $expiration);
 
 
+
+
+
+
+
         // Then see if a captcha exists:
+
 
 
         $sql = "SELECT COUNT(*) AS count FROM captcha WHERE word = ? AND ip_address = ? AND captcha_time > ?";
 
 
+
         $binds = array($_POST['captcha'], $this->input->ip_address(), $expiration);
 
 
+
         $query = $this->db->query($sql, $binds);
+
 
 
         $row = $query->row();
@@ -3616,7 +4182,9 @@ class users extends CI_Controller{
         if ($row->count == 0) {
 
 
+
             $captcha_lib = base_url() . '/captcha/';
+
 
 
             $this->load->helper('captcha');
@@ -3628,49 +4196,65 @@ class users extends CI_Controller{
             $vals = array(
 
 
+
                 'img_path' => './captcha/',
+
 
 
                 'img_url' => $captcha_lib,
 
 
+
                 'img_width' => '380',
+
 
 
                 'img_height' => 80,
 
 
+
                 'font_size' => 30,
+
 
 
                 'font_path' => FCPATH . 'captcha/fonts/ADLER___.TTF',
 
 
+
                 'expiration' => 7200
 
 
+
             );
+
 
 
             $cap = create_captcha($vals);
 
 
+
             $data['captcha'] = array(
+
 
 
                 'captcha_time' => $cap['time'],
 
 
+
                 'ip_address' => $this->input->ip_address(),
+
 
 
                 'word' => $cap['word']
 
 
+
             );
 
 
+
             $query = $this->db->insert_string('captcha', $data['captcha']);
+
 
 
             $this->db->query($query);
@@ -3680,6 +4264,7 @@ class users extends CI_Controller{
 
 
             $data['captcha_err'] = $this->lang->line('reg_agency_you_submit_wrong_captcha');
+
 
 
             ////for captcha end///
@@ -3706,6 +4291,7 @@ class users extends CI_Controller{
                 $data['provinces'] = $this->usersm->get_state_list();
 
 
+
             }
 
 
@@ -3718,13 +4304,17 @@ class users extends CI_Controller{
             if ($this->input->post('email') != '') {
 
 
+
                 $data['new_arr'] = $this->input->post();
+
 
 
                 //$data['new_arr'] = $this->session->all_userdata();
 
 
+
                 $data['edit_mode'] = 1;
+
 
 
             }
@@ -3740,6 +4330,7 @@ class users extends CI_Controller{
 
 
         } /////for captcha end////
+
 
 
         else {
@@ -3763,46 +4354,61 @@ class users extends CI_Controller{
             $new_user['business_name'] = $this->input->post('business_name');
 
 
+
             $new_user['vat_number'] = $this->input->post('vat_number');
+
 
 
             $new_user['first_name'] = $this->input->post('first_name');
 
 
+
             $new_user['last_name'] = $this->input->post('last_name');
+
 
 
             $new_user['contact_ph_no'] = $this->input->post('contact_ph_no');
 
 
+
             $new_user['province'] = mysql_real_escape_string($this->input->post('province'));
+
 
 
             $new_user['city'] = mysql_real_escape_string($this->input->post('city'));
 
 
+
             $new_user['street_address'] = $this->input->post('street_address');
+
 
 
             $new_user['street_no'] = $this->input->post('street_no');
 
 
+
             $new_user['zip'] = $this->input->post('zip');
+
 
 
             $new_user['phone_1'] = $this->input->post('phone_1');
 
 
+
             $new_user['phone_2'] = $this->input->post('phone_2');
+
 
 
             $new_user['fax_no'] = $this->input->post('fax_no');
 
 
+
             $new_user['website'] = $this->input->post('website');
 
 
+
             $new_user['email_id'] = $this->input->post('email');
+
 
 
             $new_user['password'] = $new_arr['password'];
@@ -3814,7 +4420,9 @@ class users extends CI_Controller{
             $new_user['agree_terms'] = $new_arr['agree_terms'];
 
 
+
             $new_user['receive_mail'] = $new_arr['receive_mail'];
+
 
 
             //$new_user['about_me'] = $this->input->post('about_me');
@@ -3823,7 +4431,9 @@ class users extends CI_Controller{
             //echo '<pre>';print_r($new_user);die;
 
 
+
             //$file=$_FILES;
+
 
 
             //echo '<pre>';print_r($file);die;
@@ -3836,6 +4446,7 @@ class users extends CI_Controller{
 
 
             $rs = $this->usersm->insertUser($new_user);
+
 
 
             /*$this->upload_image_1('user_file_1',$rs);
@@ -3860,6 +4471,7 @@ class users extends CI_Controller{
                     $new_data['language'] = $this->input->post('language_nm');
 
 
+
                 }
 
 
@@ -3872,43 +4484,57 @@ class users extends CI_Controller{
                 $new_user['user_name'] = '';
 
 
+
                 $new_user['company_name'] = '';
+
 
 
                 $new_user['business_name'] = '';
 
 
+
                 $new_user['vat_number'] = '';
+
 
 
                 $new_user['first_name'] = '';
 
 
+
                 $new_user['last_name'] = '';
+
 
 
                 $new_user['contact_ph_no'] = '';
 
 
+
                 $new_user['province'] = '';
+
 
 
                 $new_user['city'] = '';
 
 
+
                 $new_user['street_address'] = '';
+
 
 
                 $new_user['street_no'] = '';
 
 
+
                 $new_user['zip'] = '';
+
 
 
                 $new_user['phone_1'] = '';
 
 
+
                 $new_user['phone_2'] = '';
+
 
 
                 $new_user['fax_no'] = '';
@@ -3920,6 +4546,7 @@ class users extends CI_Controller{
                 $new_user['email_id'] = '';
 
 
+
                 $new_user['password'] = '';
 
 
@@ -3929,7 +4556,9 @@ class users extends CI_Controller{
                 $new_user['agree_terms'] = '';
 
 
+
                 $new_user['receive_mail'] = '';
+
 
 
                 $new_user['about_me'] = '';
@@ -3939,6 +4568,7 @@ class users extends CI_Controller{
 
 
                 $open_page_flag['open_page_flag'] = 'yes';
+
 
 
                 $this->session->set_userdata($open_page_flag);
@@ -3956,6 +4586,7 @@ class users extends CI_Controller{
                 $link = base_url() . 'users/acctivation/' . $rs . '/' . $passwrd;
 
 
+
                 //$details=array();
 
 
@@ -3971,7 +4602,9 @@ class users extends CI_Controller{
                 $subject = $this->lang->line('thanks_text_subject');
 
 
+
                 //$details['message']="<strong>Hi  ".$user_name.",</strong> <br/> <br/>You are receiving this email because you have requested to register on Zapcasa.it <br/> <br/><strong>Note: </strong>If you did not to apply for registration then do nothing, your email will be automatically deleted within 72 hours. <br/><br/>  To activate your ZapCasa account, please click on the following link or copy and paste it into your browser: <br/> <strong> ".$link."</strong> <br/><br/>Regards,<br/><strong> www.zapcasa.it</strong>";
+
 
 
                 //$details['message']="Welcome  ".$user_name.",<br/> To activate your account please click on the following Link <br/>  <strong> ".$link."</strong>";
@@ -3981,59 +4614,59 @@ class users extends CI_Controller{
 
 
 
-                                <div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
+								<div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
 
 
 
-                                        <div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
+										<div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
 
 
 
-                                    <div style="border-bottom:1px solid #d1d1d1;">
+									<div style="border-bottom:1px solid #d1d1d1;">
 
 
 
-                                        <img src="' . base_url() . 'assets/images/logo.png" alt="ZapCasa"/>
+										<img src="' . base_url() . 'assets/images/logo.png" alt="ZapCasa"/>
 
 
 
-                                    </div>
+									</div>
 
 
 
-                                    <div style="padding:15px;">
+									<div style="padding:15px;">
 
 
 
-                                        <strong>' . $this->lang->line('thanks_agency_hi') . ' ' . $user_name . '</strong>
+										<strong>' . $this->lang->line('thanks_agency_hi') . ' ' . $user_name . '</strong>
 
 
 
-                                        <p>' . $this->lang->line('thanks_agency_text_1') . '</p>
+										<p>' . $this->lang->line('thanks_agency_text_1') . '</p>
 
 
 
-                                        <p><strong>' . $this->lang->line('thanks_agency_text_note') . '</strong> ' . $this->lang->line('thanks_agency_text_2') . ' </p>
+										<p><strong>' . $this->lang->line('thanks_agency_text_note') . '</strong> ' . $this->lang->line('thanks_agency_text_2') . ' </p>
 
 
 
-                                        <p> ' . $this->lang->line('thanks_agency_text_3') . ': </p>
+										<p> ' . $this->lang->line('thanks_agency_text_3') . ': </p>
 
 
 
-                                        <p><a href="' . $link . '"><strong> ' . $link . '</strong></a></p><br>
+										<p><a href="' . $link . '"><strong> ' . $link . '</strong></a></p><br>
 
 
 
-                                        <p>' . $this->lang->line('thanks_agency_text_4') . ',<br><a href="http://www.zapcasa.it">www.zapcasa.it</a></p>
+										<p>' . $this->lang->line('thanks_agency_text_4') . ',<br><a href="http://www.zapcasa.it">www.zapcasa.it</a></p>
 
 
 
-                                    </div>
+									</div>
 
 
 
-                                </div>
+								</div>
 
 
 
@@ -4041,7 +4674,7 @@ class users extends CI_Controller{
 
 
 
-                        </body>';
+						</body>';
 
 
                 // $details['message']= $msg;
@@ -4075,6 +4708,7 @@ class users extends CI_Controller{
     {
 
 
+
         $data['sitepage'] = "Thanks Agency";
 
 
@@ -4096,6 +4730,11 @@ class users extends CI_Controller{
             $data['login_data'] = 1;
 
 
+
+
+
+
+
             //$open_page_flag['open_page_flag'] = '';
 
 
@@ -4103,6 +4742,7 @@ class users extends CI_Controller{
 
 
             $this->load->view('users/thanksagency', $data);
+
 
 
         } else {
@@ -4119,6 +4759,7 @@ class users extends CI_Controller{
 
     public function login()
     {
+
 
 
         $data = array();
@@ -4145,6 +4786,7 @@ class users extends CI_Controller{
             $pwd = $this->generate_password_string($access_token, $raw_password);
 
 
+
             $data['user_id'] = $user_id;
 
 
@@ -4157,6 +4799,7 @@ class users extends CI_Controller{
             if ($rs == 1) {
 
 
+
                 $user_info = $this->usersm->check_login($data);
 
 
@@ -4167,6 +4810,7 @@ class users extends CI_Controller{
 
 
                         $this->session->set_userdata('blocked_note', $user_info[0]['blocked_note']);
+
 
 
                         echo 'invalid';
@@ -4219,6 +4863,7 @@ class users extends CI_Controller{
 
     public function my_account()
     {
+
 
 
         $data = array();
@@ -4275,6 +4920,7 @@ class users extends CI_Controller{
         } else {
 
 
+
             redirect('/');
 
 
@@ -4286,6 +4932,7 @@ class users extends CI_Controller{
 
     public function logout()
     {
+
 
 
         $this->do_logout();
@@ -4302,6 +4949,11 @@ class users extends CI_Controller{
 
 
         $this->session->set_userdata('session_id', 0);
+
+
+
+
+
 
 
         $this->session->sess_destroy();
@@ -4338,6 +4990,11 @@ class users extends CI_Controller{
 
 
             $data['login_data'] = 1;
+
+
+
+
+
 
 
             $open_page_flag['open_page_flag'] = '';
@@ -4397,6 +5054,7 @@ class users extends CI_Controller{
                     echo '<option value="' . $val . '">' . str_replace("'", "'", $val) . '</option>';
 
 
+
                 }
 
 
@@ -4417,6 +5075,7 @@ class users extends CI_Controller{
 
 
         if ($uid == 0 || $uid == '') {
+
 
 
             redirect('/');
@@ -4446,6 +5105,7 @@ class users extends CI_Controller{
                     $new_data['send_me_email'] = $this->input->post('send_me_email');
 
 
+
                 }
 
 
@@ -4453,6 +5113,7 @@ class users extends CI_Controller{
 
 
                     $new_data['reply_msg'] = $this->input->post('reply_msg');
+
 
 
                 }
@@ -4464,6 +5125,7 @@ class users extends CI_Controller{
                     $new_data['email_alerts'] = $this->input->post('email_alerts');
 
 
+
                 }
 
 
@@ -4471,6 +5133,7 @@ class users extends CI_Controller{
 
 
                     $new_data['newsletter'] = $this->input->post('newsletter');
+
 
 
                 }
@@ -4482,6 +5145,7 @@ class users extends CI_Controller{
                     $new_data['invisible'] = $this->input->post('invisible');
 
 
+
                 }
 
 
@@ -4489,6 +5153,7 @@ class users extends CI_Controller{
 
 
                     $new_data['my_address_display'] = $this->input->post('my_address_display');
+
 
 
                 }
@@ -4500,6 +5165,7 @@ class users extends CI_Controller{
                     $new_data['my_contact_info'] = $this->input->post('my_contact_info');
 
 
+
                 }
 
 
@@ -4507,6 +5173,7 @@ class users extends CI_Controller{
 
 
                     $new_data['language'] = $this->input->post('language_nm');
+
 
 
                 }
@@ -4519,6 +5186,7 @@ class users extends CI_Controller{
 
 
                     if ($this->input->post('language_nm') == "english") {
+
 
 
                         $this->lang->load('code', 'english');
@@ -4558,6 +5226,7 @@ class users extends CI_Controller{
 
 
                 if ($data['pref_info'][0]['language'] != '') {
+
 
 
                     //setcookie('lang',$data['pref_info'][0]['language'], time() + (86400 * 30), "/");
@@ -4618,6 +5287,7 @@ class users extends CI_Controller{
             if ($oldpass != $pwd) {
 
 
+
                 $this->session->set_flashdata('error', "Invalid current password, please try again!");
 
 
@@ -4625,6 +5295,7 @@ class users extends CI_Controller{
 
 
             } else if ($this->input->post('password') != $this->input->post('pass2')) {
+
 
 
                 $this->session->set_flashdata('error', "Passwords does not match!");
@@ -4641,6 +5312,7 @@ class users extends CI_Controller{
 
 
                 $this->usersm->change_password($uid, $password);
+
 
 
                 $msg = $this->lang->line('changed_password_success_message');
@@ -4661,6 +5333,7 @@ class users extends CI_Controller{
             $this->load->view('users/change_password', $data);
 
 
+
         }
 
 
@@ -4675,6 +5348,7 @@ class users extends CI_Controller{
 
 
         if ($uid != 0) {
+
 
 
             redirect('users/my_account');
@@ -4708,6 +5382,7 @@ class users extends CI_Controller{
             $user_status = get_perticular_field_value('zc_user', 'status', " and user_id='" . $user_id . "'");
 
 
+
             if ($user_status == '0') {
 
 
@@ -4729,6 +5404,11 @@ class users extends CI_Controller{
                 $rs = $this->usersm->change_pwd($user_id, $pwd);
 
 
+
+
+
+
+
                 //redirect('/');
 
 
@@ -4747,6 +5427,7 @@ class users extends CI_Controller{
                     $user_name = get_perticular_field_value('zc_user', 'first_name', " and user_id='" . $user_id . "'") . ' ' . get_perticular_field_value('zc_user', 'last_name', " and user_id='" . $user_id . "'");
 
 
+
                 }
 
 
@@ -4754,66 +5435,67 @@ class users extends CI_Controller{
 
 
 
-                        <div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
+						<div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
 
 
 
-                            <div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
+							<div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
 
 
 
-                            <div style="border-bottom:1px solid #d1d1d1;">
+							<div style="border-bottom:1px solid #d1d1d1;">
 
 
 
-                                <img src="' . base_url() . 'assets/images/logo.png" alt="ZapCasa"/>
+								<img src="' . base_url() . 'assets/images/logo.png" alt="ZapCasa"/>
 
 
 
-                            </div>
+							</div>
 
 
 
-                            <div style="padding:15px;">
+							<div style="padding:15px;">
 
 
 
-                                <strong>' . $this->lang->line('change-pwd-hi') . ' ' . $user_name . '</strong>
+								<strong>' . $this->lang->line('change-pwd-hi') . ' ' . $user_name . '</strong>
 
 
 
-                                <p>' . $this->lang->line('change-pwd-text-1') . '</p>
+								<p>' . $this->lang->line('change-pwd-text-1') . '</p>
 
 
 
-                                <p><strong>' . $this->lang->line('change-pwd-note') . ':</strong> ' . $this->lang->line('change-pwd-text-2') . ' </p>
+								<p><strong>' . $this->lang->line('change-pwd-note') . ':</strong> ' . $this->lang->line('change-pwd-text-2') . ' </p>
 
 
 
-                                <p><strong>' . $this->lang->line('change-pwd-text-3') . '</strong> ' . $this->lang->line('change-pwd-text-4') . '.</p>
+								<p><strong>' . $this->lang->line('change-pwd-text-3') . '</strong> ' . $this->lang->line('change-pwd-text-4') . '.</p>
 
 
 
-                                <p><strong>' . $this->lang->line('change-pwd-text-5') . '</strong> ' . $raw_password . '</p><br>
+								<p><strong>' . $this->lang->line('change-pwd-text-5') . '</strong> ' . $raw_password . '</p><br>
 
 
 
-                                <p>' . $this->lang->line('change-pwd-text-6') . ',<br><a href="http://www.zapcasa.it">www.zapcasa.it</a></p>
+								<p>' . $this->lang->line('change-pwd-text-6') . ',<br><a href="http://www.zapcasa.it">www.zapcasa.it</a></p>
 
 
 
-                            </div>
+							</div>
 
 
 
-                        </div>
+						</div>
 
 
 
-                    </body>';
+					</body>';
 
 
                 $default_email = get_perticular_field_value('zc_settings', 'meta_value', " and meta_name='default_email'");
+
 
 
                 $mail_from = isset($default_email) ? $default_email : "no-reply@zapcasa.it";
@@ -4825,10 +5507,24 @@ class users extends CI_Controller{
                 $subject = $this->lang->line('change-pwd-subject');
 
 
+
+
+
+
+
                 $body = $msg;
 
 
                 sendemail($mail_from, $mail_to, $subject, $body, $cc = '');
+
+
+
+
+
+
+
+
+
 
 
                 $this->session->set_flashdata('success', '1');
@@ -4871,6 +5567,7 @@ class users extends CI_Controller{
         if ($email_id == $email_ids) {
 
 
+
             echo 2;
 
 
@@ -4881,6 +5578,7 @@ class users extends CI_Controller{
 
 
             $user_list_cnt = get_perticular_count('zc_user', " and email_id='" . $email_id . "'");
+
 
 
             echo $user_list_cnt;
@@ -4900,6 +5598,7 @@ class users extends CI_Controller{
 
 
         $uid = $this->session->userdata('user_id');
+
 
 
         $new_user['city'] = mysql_real_escape_string($this->input->post('city'));
@@ -4948,6 +5647,7 @@ class users extends CI_Controller{
 
 
         $this->upload_image_2('user_file_2', $uid);
+
 
 
         $msg = $this->lang->line('user_info_success_message');
@@ -5188,6 +5888,7 @@ class users extends CI_Controller{
         $uid = $this->session->userdata('user_id');
 
 
+
         $new_user['first_name'] = $this->input->post('first_name');
 
 
@@ -5320,7 +6021,7 @@ class users extends CI_Controller{
         //if( $uid != 0 ) {
 
 
-        //  redirect('users/my_account');
+        //	redirect('users/my_account');
 
 
         //}
@@ -5426,6 +6127,7 @@ class users extends CI_Controller{
         if (is_file($file))
 
 
+
             @unlink($file);
 
 
@@ -5433,6 +6135,7 @@ class users extends CI_Controller{
 
 
         if (is_file($file_thmb))
+
 
 
             @unlink($file_thmb);
@@ -5463,6 +6166,7 @@ class users extends CI_Controller{
         if (is_file($file))
 
 
+
             @unlink($file);
 
 
@@ -5470,6 +6174,7 @@ class users extends CI_Controller{
 
 
         if (is_file($file_thmb))
+
 
 
             @unlink($file_thmb);
@@ -5492,6 +6197,7 @@ class users extends CI_Controller{
 
 
         if ($uid != 0) {
+
 
 
             redirect('users/my_account');
@@ -5535,6 +6241,7 @@ class users extends CI_Controller{
             $this->session->set_userdata('session_id', 0);
 
 
+
             $this->session->sess_destroy();
 
 
@@ -5574,6 +6281,7 @@ class users extends CI_Controller{
         if (isset($_REQUEST['email'])) {
 
 
+
             $email = $_REQUEST['email'];
 
 
@@ -5605,6 +6313,7 @@ class users extends CI_Controller{
 
 
             if (count($chk_email) > 0 && $chk_email != '' && !is_null($chk_email)) {
+
 
 
                 $this->session->set_userdata('user_id', $chk_email[0]['user_id']);
@@ -5674,55 +6383,39 @@ class users extends CI_Controller{
 
 
 
-                             <div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
+							 <div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
 
 
 
-                              <div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
+							  <div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
 
 
 
-                                 <div style="border-bottom:1px solid #d1d1d1;">
+								 <div style="border-bottom:1px solid #d1d1d1;">
 
 
 
-                                  <img src="' . base_url() . 'asset/images/logo.png" alt="ZapCasa"/>
+								  <img src="' . base_url() . 'asset/images/logo.png" alt="ZapCasa"/>
 
 
 
-                                 </div>
+								 </div>
 
 
 
-                                 <div style="padding:15px;">
+								 <div style="padding:15px;">
 
 
 
-                                  <strong>' . $this->lang->line('new_mail-hi') . ' ' . $first_name . " " . $last_name . '</strong>
+								  <strong>' . $this->lang->line('new_mail-hi') . ' ' . $first_name . " " . $last_name . '</strong>
 
 
 
-                                     <p>' . $this->lang->line('social_login_mail_content') . ': </p>
+									 <p>' . $this->lang->line('social_login_mail_content') . ': </p>
 
 
 
-                                     <p>' . $pass . '</p>
-
-
-
-
-
-
-
-                                     <p><br>www.zapcasa.it</p>
-
-
-
-                                 </div>
-
-
-
-                             </div>
+									 <p>' . $pass . '</p>
 
 
 
@@ -5730,7 +6423,23 @@ class users extends CI_Controller{
 
 
 
-                             </body>';
+									 <p><br>www.zapcasa.it</p>
+
+
+
+								 </div>
+
+
+
+							 </div>
+
+
+
+
+
+
+
+							 </body>';
 
 
                 //if( send_mail($details) )
@@ -5812,6 +6521,11 @@ class users extends CI_Controller{
         require_once dirname(__FILE__) . '/../../asset/src/contrib/Google_Oauth2Service.php';
 
 
+
+
+
+
+
         $gClient = new Google_Client();
 
 
@@ -5839,6 +6553,7 @@ class users extends CI_Controller{
         if (isset($_REQUEST['code'])) {
 
 
+
             $code = trim($_REQUEST['code']);
 
 
@@ -5852,6 +6567,7 @@ class users extends CI_Controller{
 
 
         if ($gClient->getAccessToken()) {
+
 
 
             $user = $google_oauthV2->userinfo->get();
@@ -5939,55 +6655,39 @@ class users extends CI_Controller{
 
 
 
-                             <div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
+							 <div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
 
 
 
-                              <div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
+							  <div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
 
 
 
-                                 <div style="border-bottom:1px solid #d1d1d1;">
+								 <div style="border-bottom:1px solid #d1d1d1;">
 
 
 
-                                  <img src="' . base_url() . 'asset/images/logo.png" alt="ZapCasa"/>
+								  <img src="' . base_url() . 'asset/images/logo.png" alt="ZapCasa"/>
 
 
 
-                                 </div>
+								 </div>
 
 
 
-                                 <div style="padding:15px;">
+								 <div style="padding:15px;">
 
 
 
-                                  <strong>' . $this->lang->line('new_mail-hi') . ' ' . $first_name . " " . $last_name . '</strong>
+								  <strong>' . $this->lang->line('new_mail-hi') . ' ' . $first_name . " " . $last_name . '</strong>
 
 
 
-                                     <p>' . $this->lang->line('social_login_mail_content') . ':</p>
+									 <p>' . $this->lang->line('social_login_mail_content') . ':</p>
 
 
 
-                                     <p>' . $pass . '</p>
-
-
-
-
-
-
-
-                                     <p><br>www.zapcasa.it</p>
-
-
-
-                                 </div>
-
-
-
-                             </div>
+									 <p>' . $pass . '</p>
 
 
 
@@ -5995,7 +6695,23 @@ class users extends CI_Controller{
 
 
 
-                             </body>';
+									 <p><br>www.zapcasa.it</p>
+
+
+
+								 </div>
+
+
+
+							 </div>
+
+
+
+
+
+
+
+							 </body>';
 
 
                 //if( send_mail($details) )
@@ -6130,6 +6846,7 @@ class users extends CI_Controller{
         $to = 'parmarvikrantr@gmail.com';
 
 
+
         $subject = 'Test Cron Job';
 
 
@@ -6151,6 +6868,7 @@ class users extends CI_Controller{
             $Status = 0;
 
 
+
         }
 
 
@@ -6164,7 +6882,7 @@ class users extends CI_Controller{
 
         $user_list = get_all_value('zc_user', " and status='1'");
 
-#       echo "<pre>"; print_r($user_list);exit;
+#		echo "<pre>"; print_r($user_list);exit;
 
         foreach ($user_list as $k => $V) {
 
@@ -6175,7 +6893,7 @@ class users extends CI_Controller{
             $lastname = $V['last_name'];
 
             $search_list = get_all_value('zc_save_search', " and saved_by_user_id='" . $uid . "' AND rec_option = 1 ");
-            $user_preferences = get_perticular_field_value('  zc_user_preference', 'email_alerts', " and user_id='" . $uid . "'");
+            $user_preferences = get_perticular_field_value('	zc_user_preference', 'email_alerts', " and user_id='" . $uid . "'");
             $user_language = get_perticular_field_value('zc_user_preference', 'language', " and user_id='" . $uid . "'");
 
             // echo "<pre><br> => ".$uid; print_r($user_language);exit;
@@ -6371,7 +7089,6 @@ class users extends CI_Controller{
                         $data = "?location=$location&category_id=$category_id&add_neighbour_zip=$add_neighbour_zip&for_luxury=$for_luxury&property_cat=$property_category&min_price=$min_price&max_price=$max_price&min_beds_no=$min_beds_no&max_beds_no=$max_beds_no&min_room=$min_room&max_room=$max_room$typology_id&bathrooms_no=$bathrooms_no&min_surface_area=$min_surface_area&max_surface_area=$max_surface_area&kind=$kind&energyclass=$energyclass&heating=$heating&parking=$parking&roommates=$roommates&occupation=$occupation&furnished=$furnished$queryStr$otherCriteria&search=Search&category_search=$property_category&save_search_id=$save_search_id&save_search_name=$saved_property_name&posting_time='" . $date . "'";
                         //$data = "?location=$location&category_id=$category_id&add_neighbour_zip=$add_neighbour_zip&property_cat=$property_category&min_price=$min_price&max_price=$max_price&min_room=$min_room&max_room=$max_room$typology_id&bathrooms_no=$bathrooms_no&min_surface_area=$min_surface_area&max_surface_area=$max_surface_area&kind=$kind&energyclass=$energyclass&heating=$heating&parking=$parking&furnished=$furnished$queryStr$otherCriteria&search=Search&category_search=$property_category&save_search_id=$save_search_id&save_search_name=$saved_property_name&posting_time='".$date."'";
                         $searchPrms = trim(preg_replace('/[\s\t\n\r\s]+/', ' ', $data));
-                        // echo "<pre>Data => "; print_r($data);exit;
 
 
                         $url = 'http://www.zapcasa.it/zap-test3/users/common_search' . $data;
@@ -6390,8 +7107,8 @@ class users extends CI_Controller{
                         // Will dump a beauty json :3
                         //var_dump(json_decode($result, true));
                         $MasterData = json_decode($result, true);
-                        // echo "<br> <pre>=== Master : ";
-                        //print_r($MasterData);exit;
+                        //echo "<br> <pre>=== Master : ";
+                        // print_r($MasterData);exit;
 
                         // echo $count;exit;
                         if (is_array($MasterData['property_details'])) {
@@ -6404,10 +7121,10 @@ class users extends CI_Controller{
                         // echo "<br> <pre>=== Master : ";
                         // print_r($PDCount);
                         $MasterData = $MasterData['property_details'];
-                        // echo "<br> <pre>=== Master : ";
-                        // print_r($data);exit;
-                        $TempOut = '';
-
+                        //echo "<br> <pre>=== Master : ";
+                        // print_r($MasterData['property_details']);exit;
+                        $TempOut = ''; 
+                        
                         $max = count($MasterData);
                         for ($m = 0; $m < $max; $m++) {
                             $tempcls = '';
@@ -6451,7 +7168,7 @@ class users extends CI_Controller{
 
                             }
                             // $street=$MasterData[$m]['street_address'];
-                            $TempOut .= '<li style="margin-left:0px;margin-top: 17px;" class="' . $tempcls . '">
+                            $TempOut .= '<li style="margin-left:0px;margin-top: 17px;list-style:none;" class="' . $tempcls . '">
                 <div class="listingImg" style="float: left;position: relative;text-align: center;width: 138px;">
                         <a href="' . base_url() . '' . $first_segment . '/' . $MasterData[$m]['name'] . '-' . $MasterData[$m]['city_name'] . '-' . $MasterData[$m]['provience_name'] . '-' . $MasterData[$m]['property_id'] . '">
                         <img
@@ -6470,7 +7187,7 @@ class users extends CI_Controller{
                     <h2 class="hackerspace" style="color: #074D86;font-size: 15px;margin-top: -14px;text-decoration:none;font-weight: bold;margin:0px;">
                         <a style ="color: #074D86;font-size: 15px;margin-top: -14px;text-decoration:none;"href="' . base_url() . '' . $first_segment . '/' . $MasterData[$m]['name'] . '-' . $MasterData[$m]['city_name'] . '-' . $MasterData[$m]['provience_name'] . '-' . $MasterData[$m]['property_id'] . '">
                                                 ' . $MasterData[$m]['name'] . '
-                            For ' . $MasterData[$m]['typology_name'] . ' in ' . $MasterData[$m]['provience_name'] . ', ' . $MasterData[$m]['province_code'] . '</a></h2>
+                            For ' . $MasterData[$m]['typology_name'] . ' in ' . $MasterData[$m]['city_name'] . ', ' . $MasterData[$m]['province_code'] . '</a></h2>
                         
                     <div class="listAddress" style="/* float: left; */margin-bottom: -11px;width: 100%;margin-top: -12px;font-size: 10px;"><h3 style="margin:0px;"> ' . $MasterData[$m]['street_address'] . ', ' . $MasterData[$m]['street_no'] . ' - ' . $MasterData[$m]['zip'] . ' </h3>
                 </div>
@@ -6490,7 +7207,7 @@ class users extends CI_Controller{
                      </div> 
                      <div style="display:table-cell;vertical-align:middle;text-align:right;padding-right:5px;"> ' . $first_segment . ' </div> </div>
             </li>';
-                            $TempOut_ITALIAN .= '<li style="margin-left:0px;margin-top: 17px;" class="' . $tempcls . '">
+                            $TempOut_ITALIAN .= '<li style="margin-left:0px;margin-top: 17px;list-style:none;" class="' . $tempcls . '">
                 <div class="listingImg" style="float: left;
     position: relative;
     text-align: center;
@@ -6532,7 +7249,7 @@ class users extends CI_Controller{
     text-decoration:none;
     "href="' . base_url() . '' . $first_segment . '/' . $MasterData[$m]['name'] . '-' . $MasterData[$m]['city_name'] . '-' . $MasterData[$m]['provience_name'] . '-' . $MasterData[$m]['property_id'] . '">
                                                 ' . $MasterData[$m]['typology_name_it'] . ' in ' . $rentname . '
-                            a ' . $MasterData[$m]['provience_name_it'] . ', ' . $MasterData[$m]['province_code'] . '</a></h2>
+                            a ' . $MasterData[$m]['city_name_it'] . ', ' . $MasterData[$m]['province_code'] . '</a></h2>
                         
                     <div class="listAddress" style="
     /* float: left; */
@@ -6560,7 +7277,7 @@ class users extends CI_Controller{
                     <strong style="font-weight:bold;">Pubblicato:</strong> ' . date('d', strtotime($MasterData[$m]['posting_time'])) . '-' . date('m', strtotime($MasterData[$m]['posting_time'])) . '-' . date('Y', strtotime($MasterData[$m]['posting_time'])) . '
                      </div> 
                      <div style="display:table-cell;vertical-align:middle;text-align:right;padding-right:5px;"> ' . $catname . ' </div> </div>
-            </li>';
+            </li>';   
                         }
 //echo "<br> ==> ".$TempOut;exit;
 
@@ -6571,9 +7288,8 @@ class users extends CI_Controller{
 <div id="search_full" class="searchresult_box" style="width:100% !important;">
     <span style="font-weight:bold; font-size: 15px;">' . $this->lang->line('new_mail-hi') . ' ' . $firstname . " " . $lastname . ',</span></n>
     <br>
-    <p style="font-weight:bold; font-size: 15px; margin-top: 5px;">Save Search Name = ' . $saved_property_name . '</p>
+    <p style="font-weight:bold; font-size: 15px; margin-top: 5px;">Here are the properties added for your saved search = ' . $saved_property_name . '</p>
     
-    <p style="font-weight:bold; font-size: 15px;">Here is a newly added property list based on your search. </p>
     <br>
     <div style="position: relative;">
         <ul style="padding: 0px;">
@@ -6618,9 +7334,8 @@ class users extends CI_Controller{
 <div id="search_full" class="searchresult_box" style="width:100% !important;">
     <span style="font-weight:bold; font-size: 15px;">Ciao ' . $firstname . " " . $lastname . ',</span></n>
     <br>
-    <p style="font-weight:bold; font-size: 15px; margin-top: 5px;">Nome della ricerca salvata = ' . $saved_property_name . '</p>
+    <p style="font-weight:bold; font-size: 15px; margin-top: 5px;">Ecco gli immobili aggiunti per la tua ricerca salvata = ' . $saved_property_name . '</p>
     
-    <p style="font-weight:bold; font-size: 15px;">Ecco un elenco di propriet� appena aggiunto base alla ricerca. </p>
     <br>
     <div style="position: relative;">
         <ul style="padding:0px;">
@@ -6726,7 +7441,7 @@ class users extends CI_Controller{
             $user_language = get_perticular_field_value('zc_user_preference', 'language', " and user_id='" . $uid . "'");
 
 
-            if ($user_preferences == 1) {
+            if ($user_preferences == 1 && $uid == 207) {
 
                 foreach ($search_list as $sk => $sV) {
                     $save_search_id = $sV['saved_id'];
@@ -6873,9 +7588,9 @@ class users extends CI_Controller{
                             $property_post_by_array = explode(",", $property_post_by_type);
                             for ($i = 0; $i < count($property_post_by_array); $i++) {
                                 if ($i == 0) {
-                                    $property_post_by_id = "&posted_by=" . $property_post_by_array[$i];
+                                    $property_post_by_id = "&posted_by[]=" . $property_post_by_array[$i];
                                 } else {
-                                    $property_post_by_id = $property_post_by_id . "&posted_by=" . $property_post_by_array[$i];
+                                    $property_post_by_id = $property_post_by_id . "&posted_by[]=" . $property_post_by_array[$i];
                                 }
                             }
                         }
@@ -6911,14 +7626,14 @@ class users extends CI_Controller{
                         $otherCriteria = $elevator_cond . $air_conditioning_cond . $garden_cond . $terrace_cond . $balcony_cond . $smokers_cond . $pets_cond;
                         $queryStr = $contract_type . $property_post_by_id . $status_id;
 
-                        $date = " between date_sub(now(),INTERVAL 1 WEEK) and now()";
-                        //$date=date('Y-m-d');
+                        //$date= " between date_sub(now(),INTERVAL 1 WEEK) and now()";
+                        $date = date('Y-m-d');
                         //echo $date;
                         // echo "<pre>"; print_r($date);
                         // $data = "?location=$location&category_id=$category_id&add_neighbour_zip=$add_neighbour_zip&property_cat=$property_category&min_price=$min_price&max_price=$max_price&min_room=$min_room&max_room=$max_room$typology_id&bathrooms_no=$bathrooms_no&min_surface_area=$min_surface_area&max_surface_area=$max_surface_area&kind=$kind&energyclass=$energyclass&heating=$heating&parking=$parking&furnished=$furnished$queryStr$otherCriteria&search=Search&category_search=$property_category&save_search_id=$save_search_id&save_search_name=$saved_property_name&posting_time=$date&TYPE=WEEKLY";
-                        $data = "?location=$location&category_id=$category_id&add_neighbour_zip=$add_neighbour_zip&for_luxury=$for_luxury&property_cat=$property_category&min_price=$min_price&max_price=$max_price&min_beds_no=$min_beds_no&max_beds_no=$max_beds_no&min_room=$min_room&max_room=$max_room$typology_id&bathrooms_no=$bathrooms_no&min_surface_area=$min_surface_area&max_surface_area=$max_surface_area&kind=$kind&energyclass=$energyclass&heating=$heating&parking=$parking&roommates=$roommates&occupation=$occupation&furnished=$furnished$queryStr$otherCriteria&search=Search&category_search=$property_category&save_search_id=$save_search_id&save_search_name=$saved_property_name&TYPE=WEEKLY&posting_time=$date";
+                        $data = "?location=$location&category_id=$category_id&add_neighbour_zip=$add_neighbour_zip&for_luxury=$for_luxury&property_cat=$property_category&min_price=$min_price&max_price=$max_price&min_beds_no=$min_beds_no&max_beds_no=$max_beds_no&min_room=$min_room&max_room=$max_room$typology_id&bathrooms_no=$bathrooms_no&min_surface_area=$min_surface_area&max_surface_area=$max_surface_area&kind=$kind&energyclass=$energyclass&heating=$heating&parking=$parking&roommates=$roommates&occupation=$occupation&furnished=$furnished$queryStr$otherCriteria&search=Search&category_search=$property_category&save_search_id=$save_search_id&save_search_name=$saved_property_name&TYPE=WEEKLY&posting_time='" . $date . "'"; 
                         $searchPrms = trim(preg_replace('/[\s\t\n\r\s]+/', ' ', $data));
-                        // echo "<pre>Data => "; print_r($date);exit;
+                        // echo "<pre>Data => "; print_r($data);exit;
                         # echo "<br> <pre> Param => "; print_r($searchPrms);exit;
                         $url = 'http://www.zapcasa.it/zap-test3/users/common_search' . $data;
                         $ch = curl_init();
@@ -6938,7 +7653,9 @@ class users extends CI_Controller{
                         //var_dump(json_decode($result, true));
                         $MasterData = json_decode($result, true);
                         //$count=$MasterData['propertyCount'];
-                        #echo "<br> <pre>=== Master : ";print_r($$MasterData['property_details']);exit;
+                        echo "<br> <pre>=== Master : ";
+                        print_r($$MasterData['property_details']);
+                        exit;
                         if (is_array($MasterData['property_details'])) {
                             $PDCount = count($MasterData['property_details']);
                         } else {
@@ -6947,8 +7664,8 @@ class users extends CI_Controller{
 
                         $MasterData = $MasterData['property_details'];
                         #print_r($MasterData);
-                        $TempOut = '';
-
+                        $TempOut = ''; 
+                        
                         $max = count($MasterData);
                         for ($m = 0; $m < $max; $m++) {
                             $tempcls = '';
@@ -6995,7 +7712,7 @@ class users extends CI_Controller{
 
 
                             // $street=$MasterData[$m]['street_address'];
-                            $TempOut .= '<li style="margin-left:0px;margin-top: 17px;" class="' . $tempcls . '">
+                            $TempOut .= '<li style="margin-left:0px;margin-top: 17px;list-style:none;" class="' . $tempcls . '">
                 <div class="listingImg" style="float: left;position: relative;text-align: center;width: 138px;">
                         <a href="' . base_url() . '' . $first_segment . '/' . $MasterData[$m]['name'] . '-' . $MasterData[$m]['city_name'] . '-' . $MasterData[$m]['provience_name'] . '-' . $MasterData[$m]['property_id'] . '">
                         <img
@@ -7034,7 +7751,7 @@ class users extends CI_Controller{
                      </div> 
                      <div style="display:table-cell;vertical-align:middle;text-align:right;padding-right:5px;"> ' . $first_segment . ' </div> </div>
             </li>';
-                            $TempOut_ITALIAN .= '<li style="margin-left:0px;margin-top: 17px;" class="' . $tempcls . '">
+                            $TempOut_ITALIAN .= '<li style="margin-left:0px;margin-top: 17px;list-style:none;" class="' . $tempcls . '">
                 <div class="listingImg" style="float: left;
     position: relative;
     text-align: center;
@@ -7104,7 +7821,7 @@ class users extends CI_Controller{
                     <strong style="font-weight:bold;">Pubblicato:</strong> ' . date('d', strtotime($MasterData[$m]['posting_time'])) . '-' . date('m', strtotime($MasterData[$m]['posting_time'])) . '-' . date('Y', strtotime($MasterData[$m]['posting_time'])) . '
                      </div> 
                      <div style="display:table-cell;vertical-align:middle;text-align:right;padding-right:5px;"> ' . $catname . ' </div> </div>
-            </li>';
+            </li>';   
                         }
 //echo "<br> ==> ".$TempOut;exit;
 
@@ -7117,7 +7834,7 @@ class users extends CI_Controller{
     <br>
     <p style="font-weight:bold; font-size: 15px; margin-top: 5px;">Save Search Name = ' . $saved_property_name . '</p>
     
-    <p style="font-weight:bold; font-size: 15px;">Here is a newly added property list based on your search. </p>
+    <p style="font-weight:bold; font-size: 15px;">Here are the properties added for your saved search </p>
     <br>
     <div style="position: relative;">
         <ul style="padding: 0px;">
@@ -7164,7 +7881,7 @@ class users extends CI_Controller{
     <br>
     <p style="font-weight:bold; font-size: 15px; margin-top: 5px;">Nome della ricerca salvata = ' . $saved_property_name . '</p>
     
-    <p style="font-weight:bold; font-size: 15px;">Ecco un elenco di propriet� appena aggiunto base alla ricerca. </p>
+    <p style="font-weight:bold; font-size: 15px;">Ecco gli immobili aggiunti per la tua ricerca salvata </p>
     <br>
     <div style="position: relative;">
         <ul style="padding:0px;">
@@ -7213,7 +7930,7 @@ class users extends CI_Controller{
                             /* $headers = 'From: Zapcasa <>' . PHP_EOL .
                             'Reply-To: Vikrant <vikas.maheshwari1991.vm@gmail.com>' . PHP_EOL .
                             'X-Mailer: PHP/' . phpversion();*/
-                            //echo $body;
+                            //echo $body;exit;
                             sendemail($mail_from, $mail_to, $subject, $body, $cc = '');
 
                         } else if ($PDCount > 0 && $user_language == 'it') {
@@ -7243,7 +7960,7 @@ class users extends CI_Controller{
                             /*$headers = 'From: Zapcasa <>' . PHP_EOL .
                             'Reply-To: Vikrant <vikas.maheshwari1991.vm@gmail.com>' . PHP_EOL .
                             'X-Mailer: PHP/' . phpversion();*/
-                            //  echo $body;
+                            //echo $body;exit;
                             sendemail($mail_from, $mail_to, $subject, $body, $cc = '');
                         }
 

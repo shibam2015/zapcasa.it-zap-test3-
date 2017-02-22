@@ -319,12 +319,12 @@ function initialize(Type = '') {
             geocodePosition(marker.getPosition())
             $('#promaplatitude').val(point.lat());
             $('#promaplongitude').val(point.lng());
-        });     
-        google.maps.event.addListener(infoWindow,'closeclick',function(){
+        });
+        /* google.maps.event.addListener(infoWindow,'closeclick',function(){
              // currentMark.setMap(null); 
               map.setZoom(centerZoom);//removes the marker
    // then, remove the infowindows name from the array
-          });
+         });*/
         // add marker label
         var latLng = new google.maps.LatLng(mLatitude, mLongitude);
         var label = new Label({

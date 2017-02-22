@@ -508,6 +508,10 @@ function fullView(tmp='')
 	else
 	{
 		$('#map_canvas').toggleClass("fullScreen");
+		setTimeout(function () {
+			google.maps.event.trigger(map, "resize");
+
+		}, 2000);
 	}
 }
 
