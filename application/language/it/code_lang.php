@@ -31,6 +31,7 @@ $lang['italian'] = "Italiano";
 $lang['english'] = "English";
 
 
+
 $lang['hi'] = "";
 
 $lang['home_page_search_for_a_property'] = "Cerca un Immobile";
@@ -134,6 +135,7 @@ $lang['home_page_per_month'] = "/mese";
 $lang['home_page_private_nagotiation'] = "Trattativa riservata";
 
 
+
 $lang['home_page_property_location_field'] = "Comune, Provincia, o CAP";
 
 $lang['home_page_advertiser_location_field'] = "Comune, Provincia, o CAP";
@@ -143,6 +145,7 @@ $lang['home_page_advertiser_name_field'] = "Nome inserzionista, se ne sei a cono
 $lang['home_page_button_search'] = "CERCA";
 
 
+
 $lang['home_page_put_location'] = "Specificare un luogo";
 
 $lang['home_page_select_type'] = "Select il tipo di inserzionista";
@@ -150,6 +153,7 @@ $lang['home_page_select_type'] = "Select il tipo di inserzionista";
 $lang['home_page_your_browser_not_suport_geolocation'] = "Spiacente, il tuo browser non supporta la geolocalizzazione.";
 
 $lang['home_page_your_position_cannot_be_detected'] = "Il tuo dispositivo non è riuscito a rilevare la tua posizione. Riprova.";
+
 
 
 $lang['home_page_meta_title'] = "ZapCasa - Immobili per Lavoro e Abitazione";
@@ -197,6 +201,8 @@ $lang['home_page_meta_description'] = "Trova case, terreni e stanze, immobili co
 
 	$lang['mainMenu-logout'] = "LOGOUT";
 
+$lang['my_account'] = "Account";
+
 	
 
 	/* ------------- End ---------------*/
@@ -206,6 +212,7 @@ $lang['home_page_meta_description'] = "Trova case, terreni e stanze, immobili co
 
 
 /* ---------------- Footer ------------------------ */
+
 
 
 $lang['footer_popular_searches'] = "RICERCHE FREQUENTI";
@@ -257,6 +264,7 @@ $lang['footer_rights_reserved'] = "2014 Zapcasa. All rights reserved.";
 $lang['footer_follow_us'] = "Seguici su";
 
 
+
 $lang['footer_search_advertiser_all'] = "Inserzionisti";
 
 $lang['footer_search_advertise_owners'] = "Proprietari";
@@ -269,6 +277,7 @@ $lang['footer_search_advertise_agency'] = "Agenzie";
 /* ---------------- CMS ------------------------ */
 
 
+
 $lang['cms_real_estate_for'] = "Immobili per ";
 
 $lang['cms_jobs'] = "Lavoro";
@@ -276,6 +285,7 @@ $lang['cms_jobs'] = "Lavoro";
 $lang['cms_and'] = "e";
 
 $lang['cms_housing'] = "Abitazione";
+
 
 
 $lang['cms_page_meta_title'] = "title_it";
@@ -379,6 +389,7 @@ $lang['cms_page_content'] = "content_it";
 /* ---------------- Under Construction ------------------------ */
 
 
+
 $lang['under_construction_real_estate_for'] = "Immobili per ";
 
 $lang['under_construction_jobs'] = "Lavoro";
@@ -388,11 +399,13 @@ $lang['under_construction_and'] = "e";
 $lang['under_construction_housing'] = "Abitazione";
 
 
+
 $lang['under_construction_home'] = "Home";
 
 $lang['under_construction_my_preference'] = "Preferenze";
 
 $lang['under_construction_my_preference_content'] = "Opps! Quest pagina è in costruzione...";
+
 
 
 /* ---------------- End Under Construction ------------------------ */
@@ -401,11 +414,13 @@ $lang['under_construction_my_preference_content'] = "Opps! Quest pagina è in co
 /* ---------------- Information ------------------------ */
 
 
+
 $lang['info_please_signin_to_your_account'] = "Accedi con il tuo account per usare questa funzione";
 
 $lang['info_or'] = "oppure";
 
 $lang['info_register_a_new_account'] = "REGISTRA UN NUOVO ACCOUNT";
+
 
 
 /* ---------------- End Information ------------------------ */
@@ -414,6 +429,7 @@ $lang['info_register_a_new_account'] = "REGISTRA UN NUOVO ACCOUNT";
 /* ---------------- Information ------------------------ */
 
 
+
 $lang['info_please_signin_to_your_account'] = "Accedi con il tuo account per usare questa funzione";
 
 $lang['info_or'] = "oppure";
@@ -421,10 +437,12 @@ $lang['info_or'] = "oppure";
 $lang['info_register_a_new_account'] = "REGISTRA UN NUOVO ACCOUNT";
 
 
+
 /* ---------------- End Information ------------------------ */
 
 
 /* ---------------- Information addprop ------------------------ */
+
 
 
 $lang['info_addprop_to_add_a_property'] = "Per aggiungere un immobile devi disporre di un account inserzionista.";
@@ -440,10 +458,12 @@ $lang['info_addprop_this_account_will_be_disconnected'] = "Questo account sarà 
 $lang['info_addprop_register_a_new_account'] = "REGISTRA UN NUOVO ACCOUNT";
 
 
+
 /* ---------------- End Information addprop -------------------- */
 
 
 /* ---------------- Information mail ------------------------ */
+
 
 
 $lang['info_mail_please_signin_to_your_account'] = "Accedi con il tuo account per usare questa funzione";
@@ -453,10 +473,12 @@ $lang['info_mail_or'] = "oppure";
 $lang['info_mail_register_a_new_account'] = "REGISTRA UN NUOVO ACCOUNT";
 
 
+
 /* ---------------- End Information mail -------------------- */
 
 
 /* ---------------- Information save ------------------------ */
+
 
 
 $lang['info_save_please_signin_to_your_account'] = "Accedi con il tuo account per usare questa funzione";
@@ -466,10 +488,12 @@ $lang['info_save_or'] = "oppure";
 $lang['info_save_register_a_new_account'] = "REGISTRA UN NUOVO ACCOUNT";
 
 
+
 /* ---------------- End Information save -------------------- */
 
 
 /* ---------------- Login user ------------------------ */
+
 
 
 $lang['login_signin_to_your_account'] = "Accedi al tuo account!";
@@ -483,10 +507,12 @@ $lang['login_forgot_password'] = "Password dimenticata?";
 $lang['login_forgot_password_title'] = "Recupera la tua password!";
 
 
+
 /* ---------------- End Login user -------------------- */
 
 
 /* ---------------- Saved Search ------------------------ */
+
 
 
 $lang['saved_search_header_name_of_the_saved_search'] = "Salva la tua ricerca.";
@@ -510,10 +536,12 @@ $lang['saved_search_text_1'] = "VEDI LE RICERCHE SALVATE";
 $lang['saved_search_success_text_2'] = "Ricerca salvata con successo!";
 
 
+
 /* ---------------- End Saved Search -------------------- */
 
 
 /* ---------------- Search Header ------------------------ */
+
 
 
 $lang['search_header_location_field'] = "Comune, Quartiere o CAP";
@@ -579,6 +607,7 @@ $lang['search_header_energy_class'] = "Classe energ.";
 $lang['search_header_energy_class_all'] = "Qualsiasi";
 
 
+
 $lang['search_header_heating'] = "Riscaldamento";
 
 $lang['search_header_parking'] = "Posto auto";
@@ -610,6 +639,7 @@ $lang['search_header_button_search'] = "Cerca";
 $lang['search_header_save_search'] = "Salva ricerca";
 
 
+
 /* ---------------- End Search Header -------------------- */
 
 
@@ -627,6 +657,7 @@ $lang['search_header_advertise_agency'] = "Agenzie";
 $lang['search_header_advertise_button_search'] = "Cerca";
 
 $lang['search_header_advertise_invalid_username'] = "Email/Username o Password errati.";
+
 
 
 /* ---------------- End Search Header Advertiser -------------------- */
@@ -684,6 +715,7 @@ $lang['advertise_details_feedback_your_feedback_field'] = "Il tuo Feedback";
 $lang['advertise_details_button_submit_feedback'] = "INVIA FEEDBACK";
 
 
+
 $lang['advertise_details_vat'] = '<span style="font-weight:bold;">P. IVA:</span> ';
 
 $lang['advertise_details_fax'] = '<span style="font-weight:bold;">Fax:</span> ';
@@ -695,7 +727,9 @@ $lang['advertise_details_rent_for'] = "in affitto";
 $lang['advertise_details_sell_for'] = "in vendita";
 
 
+
 $lang['advertise_details_no_proimg_filename'] = "no_proimg_it.jpg";
+
 
 
 /* ---------------- End Advertiser Details -------------------- */
@@ -725,9 +759,11 @@ $lang['advertise_list_advertiser_owner'] = '<span style="font-weight:bold;">Inse
 $lang['advertise_list_advertiser_agency'] = '<span style="font-weight:bold;">Inserzionista:</span> Agenzia';
 
 
+
 $lang['advertise_list_meta_title'] = 'Cerca gli inserzionisti immobiliari nella tua città - ZapCasa';
 
 $lang['advertise_list_meta_description'] = 'Vedi tutti i proprietari e le agenzie immobiliari e trovare quello più vicino a te.';
+
 
 
 $lang['advertise_list_northwest_agencies_meta_title'] = 'Cerca le agenzie immobiliari a nordovest Italia - ZapCasa';
@@ -735,9 +771,11 @@ $lang['advertise_list_northwest_agencies_meta_title'] = 'Cerca le agenzie immobi
 $lang['advertise_list_northwest_agencies_meta_description'] = 'Vedi tutte le agenzie immobiliari nel nord ovest Italia.';
 
 
+
 $lang['advertise_list_northeast_agencies_meta_title'] = 'Cerca le agenzie immobiliari a nordest Italia - ZapCasa';
 
 $lang['advertise_list_northeast_agencies_meta_description'] = 'Vedi tutte le agenzie immobiliari nel nord est Italia.';
+
 
 
 $lang['advertise_list_center_agencies_meta_title'] = 'Cerca le agenzie immobiliari al centro Italia - ZapCasa';
@@ -745,14 +783,17 @@ $lang['advertise_list_center_agencies_meta_title'] = 'Cerca le agenzie immobilia
 $lang['advertise_list_center_agencies_meta_description'] = 'Vedi tutte le agenzie immobiliari nel centro Italia.';
 
 
+
 $lang['advertise_list_south_agencies_meta_title'] = 'Cerca le agenzie immobiliari nel sud Italia - ZapCasa';
 
 $lang['advertise_list_south_agencies_meta_description'] = 'Vedi tutte le agenzie immobiliari nel sud Italia.';
 
 
+
 $lang['advertise_list_islands_agencies_meta_title'] = 'Cerca le agenzie immobiliari sulle isole di Italia - ZapCasa';
 
 $lang['advertise_list_islands_agencies_meta_description'] = 'Vedi tutte le agenzie immobiliari nelle isole Italiane.';
+
 
 
 /* ---------------- End Advertiser List -------------------- */
@@ -812,7 +853,9 @@ $lang['inbox_by'] = "da";
 $lang['inbox_on'] = "In data";
 
 
+
 $lang['feedback_message_meta_title'] = "Gestisci i feedback ricevuti su ZapCasa.";
+
 
 
 /* ---------------- End Feedback Message -------------------- */
@@ -922,7 +965,9 @@ $lang['agency_edit_user_name_atleast'] = "Inserisci solo lettere, numeri e sotto
 $lang['agency_edit_invalid_image_extension'] = "Puoi caricare solo files jpg, jpeg ,png o gif.";
 
 
+
 $lang['agency_edit_meta_title'] = "Verifica dati agenzia - ZapCasa";
+
 
 
 /* ---------------- End Agency Edit -------------------- */
@@ -1077,6 +1122,7 @@ $lang['owner_profile_sign_up_as_owner'] = "Registrazione proprietario";
 $lang['owner_profile_summary_screen_for_owner'] = "Verifica dati proprietario";
 
 
+
 $lang['owner_profile_listing_tab_my_account'] = "Account";
 
 $lang['owner_profile_listing_tab_change_password'] = "Cambia password";
@@ -1118,6 +1164,7 @@ $lang['owner_profile_landline_phone'] = "Telefonico fisso (Obbligatorio):";
 $lang['owner_profile_mobile'] = "Telefonico mobile:";
 
 
+
 $lang['owner_profile_account_information'] = "DATI ACCOUNT";
 
 $lang['owner_profile_account_information_user_name'] = "Username:";
@@ -1131,6 +1178,7 @@ $lang['owner_profile_about_yourself'] = "Descrizione:";
 $lang['owner_profile_add_a_description'] = "Aggiungi la tua descrizione!";
 
 $lang['owner_profile_your_picture'] = "La tua foto:";
+
 
 
 $lang['owner_profile_no_image_found'] = "Immagine non trovata";
@@ -1158,6 +1206,7 @@ $lang['owner_profile_email_id_already_taken'] = "Email già in uso";
 $lang['owner_profile_email_id_available'] = "Email disponibile";
 
 
+
 /* ---------------- End Owner Profile -------------------- */
 
 
@@ -1171,6 +1220,7 @@ $lang['owner_edit_please_provide_a_password'] = "Inserisci almeno 8 caratteri";
 $lang['owner_edit_please_enter_the_same_password_as_above'] = "Inserisci la stessa password come sopra";
 
 $lang['owner_edit_user_name_atleast'] = "Inserisci solo lettere, numeri e sottolineature (_)";
+
 
 
 $lang['owner_edit_real_estate_for'] = "Immobili per ";
@@ -1246,7 +1296,9 @@ $lang['owner_edit_user_name_already_taken'] = "Username già in uso";
 $lang['owner_edit_invalid_image_extension'] = "Solo files jpg, jpeg ,png e gif possono essere caricati.";
 
 
+
 $lang['owner_edit_meta_title'] = "Verifica dati proprietario - ZapCasa";
+
 
 
 /* ---------------- End Owner Edit -------------------- */
@@ -1264,6 +1316,7 @@ $lang['reg_agency_please_enter_the_same_password_as_above'] = "Inserisci la stes
 $lang['reg_agency_you_submit_wrong_captcha'] = "Il codice inserito è errato";
 
 
+
 $lang['reg_agency_real_estate_for'] = "Immobili per ";
 
 $lang['reg_agency_jobs'] = "Lavoro";
@@ -1279,6 +1332,7 @@ $lang['reg_agency_register'] = "Registrazione";
 $lang['reg_agency_sign_up_as_agency'] = "Registrazione agenzia";
 
 $lang['reg_agency_hey_greate_choice'] = "Ottima scelta! Registrati in soli tre passi e pubblica gratis i tuoi immobili. Comincia a compilare il seguente modulo.";
+
 
 
 $lang['reg_agency_required'] = "Obbligatorio";
@@ -1312,6 +1366,7 @@ $lang['reg_agency_owner_of_the_agency'] = "dell'agenzia";
 $lang['reg_agency_owner_province'] = "Provincia:";
 
 
+
 $lang['reg_agency_please_select_your_province'] = "Seleziona la tua provincia di residenza";
 
 $lang['reg_agency_city_of_residence'] = "Comune di Residenza:";
@@ -1325,6 +1380,7 @@ $lang['reg_agency_owner_street_address_field'] = "Via / Piazza ";
 $lang['reg_agency_owner_street_no_field'] = "N. civico";
 
 $lang['reg_agency_owner_zip_code_field'] = "C.A.P.";
+
 
 
 $lang['reg_agency_phone_number'] = "Recapiti telefonici:";
@@ -1388,12 +1444,15 @@ $lang['reg_agency_bus_name_already_taken'] = "Nome azienda già in uso";
 $lang['reg_agency_vat_number_already_taken'] = "P. IVA già in uso";
 
 
+
 $lang['reg_agency_meta_title'] = "Registrazione agenzia - ZapCasa";
 
 $lang['reg_agency_meta_description'] = "Compila il modulo di registrazione per pubblicare gratis i tuoi immobili.";
 
 
+
 $lang['reg_agency_you_submit_wrong_captcha'] = "Il codice inserito è errato";
+
 
 
 /* ---------------- End reg agency -------------------- */
@@ -1415,6 +1474,7 @@ $lang['reg_owner_only_numbers_are_applicable'] = "Sono ammessi solo numeri";
 $lang['reg_owner_you_submit_wrong_captcha'] = "Il codice inserito è errato";
 
 
+
 $lang['reg_owner_real_estate_for'] = "Immobili per ";
 
 $lang['reg_owner_jobs'] = "Lavoro";
@@ -1424,6 +1484,7 @@ $lang['reg_owner_and'] = "e";
 $lang['reg_owner_housing'] = "Abitazione";
 
 
+
 $lang['reg_owner_home'] = "Home";
 
 $lang['reg_owner_register'] = "Registrazione";
@@ -1431,6 +1492,7 @@ $lang['reg_owner_register'] = "Registrazione";
 $lang['reg_owner_sign_up_as_owner'] = "Registrazione proprietario";
 
 $lang['reg_owner_hey_great_choice'] = "Ottima scelta! Registrati in soli tre passi e pubblica gratis i tuoi immobili. Comincia a compilare il seguente modulo.";
+
 
 
 $lang['reg_owner_personal_informations'] = "DATI PERSONALI";
@@ -1480,6 +1542,7 @@ $lang['reg_owner_phone_number_field'] = "Recapito telefonico fisso (Obbligatorio
 $lang['reg_owner_nobile_number_field'] = "Recapito telefonico mobile (Facoltativo)";
 
 
+
 $lang['reg_owner_account_information'] = "DATI ACCOUNT";
 
 $lang['reg_owner_account_information_user_name'] = "Username:";
@@ -1489,9 +1552,11 @@ $lang['reg_owner_account_information_user_name_field'] = "Inserisci il tuo Nome 
 $lang['reg_owner_account_information_user_name_atleast'] = "Inserisci solo lettere, numeri e sottolineature (_)";
 
 
+
 $lang['reg_owner_account_information_email_address'] = "Email:";
 
 $lang['reg_owner_account_information_email_field'] = "Inserisci il tuo indirizzo Email";
+
 
 
 $lang['reg_owner_account_information_confirmation_email'] = "Conferma email:";
@@ -1511,6 +1576,7 @@ $lang['reg_owner_type_the_character'] = "Digita il codice visualizzato nella seg
 $lang['reg_owner_type_the_character_field'] = "Inserisci qui il codice mostrato";
 
 
+
 $lang['reg_owner_I_have_read_and_agree'] = "Dichiaro di aver letto e di accettare quanto riportato nelle";
 
 $lang['reg_owner_owner_general_condition'] = "Condizioni Generali";
@@ -1526,9 +1592,11 @@ $lang['reg_owner_button_register'] = "Registrati";
 $lang['reg_owner_social_security_number_already_taken'] = "Codice Fiscale già in uso";
 
 
+
 $lang['reg_owner_meta_title'] = "Registrazione proprietario - ZapCasa";
 
 $lang['reg_owner_meta_description'] = "Compila il modulo di registrazione per pubblicare gratis i tuoi immobili";
+
 
 
 /* ---------------- End Reg Owner -------------------- */
@@ -1548,6 +1616,7 @@ $lang['reg_user_please_enter_the_same_password_as_above'] = "Inserisci la stessa
 $lang['reg_user_you_submit_wrong_captcha'] = "Il codice inserito è errato";
 
 
+
 $lang['reg_user_real_estate_for'] = "Immobili per ";
 
 $lang['reg_user_jobs'] = "Lavoro";
@@ -1557,6 +1626,7 @@ $lang['reg_user_and'] = "e";
 $lang['reg_user_housing'] = "Abitazione";
 
 
+
 $lang['reg_user_home'] = "Home";
 
 $lang['reg_user_register'] = "Registrazione";
@@ -1564,11 +1634,13 @@ $lang['reg_user_register'] = "Registrazione";
 $lang['reg_user_sign_up_as_individual_user'] = "Registrazione utente";
 
 
+
 $lang['reg_user_sign_up_using_your_facebook_or_google_account'] = "Registrati con il tuo acount Facebook o Google.";
 
 $lang['reg_user_facebook'] = "Facebook";
 
 $lang['reg_user_google'] = "Google";
+
 
 
 $lang['reg_user_enter_your_personal_information'] = "Compila il modulo con i tuoi dati personali.";
@@ -1606,6 +1678,7 @@ $lang['reg_user_female'] = "Donna";
 $lang['reg_user_male'] = "Uomo";
 
 
+
 $lang['reg_user_telephone_number'] = "Telefono:";
 
 $lang['reg_user_telephone_number_option'] = "Facoltativo";
@@ -1627,6 +1700,7 @@ $lang['reg_user_account_information_password_to_access_account_field'] = "Inseri
 $lang['reg_user_repeat_password'] = "Ripeti password:";
 
 $lang['reg_user_repeat_password_field'] = "Ripeti password";
+
 
 
 $lang['reg_user_type_the_character'] = "Digita il codice visualizzato nella seguente immagine.";
@@ -1652,9 +1726,11 @@ $lang['reg_user_user_invalid_user_email'] = "Username e/o password non valide";
 $lang['reg_user_user_admin_blocked_account'] = "Per ragioni di sicurezza il tuo account è stato bloccato. Riprova più tardi.";
 
 
+
 $lang['reg_user_meta_title'] = "Registrazione utente - ZapCasa";
 
 $lang['reg_user_meta_description'] = "Registrati con il tuo account social o inserisci i tuoi dati personali.";
+
 
 
 $lang['reg_user_account_information_user_name_atleast'] = "Inserisci solo lettere, numeri e sottolineature (_)";
