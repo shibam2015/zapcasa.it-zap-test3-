@@ -4,7 +4,7 @@ function resizeList() {
     newHeight = $('html').height() - $('#topbar').height();
     $('#list').css('height', newHeight + "px");
     $('#menu').css('margin-top', $('#topbar').height());
-}
+    }
 function initAdvArea(Type = '') {
     $('#show_image').removeClass('active');
     $('#image_view').hide();
@@ -16,7 +16,7 @@ function initInTheArea(Type = '') {
     $('#nearby_category_area li').removeClass('active');
     if (Type != '' && typeof(Type) == 'string') {
         $('#nearby_category_area li#' + Type).addClass('active');
-    }
+        }
     $('#showcase').hide();
     $('#cam').removeClass();
     $('#showcase1').css({
@@ -152,7 +152,7 @@ function initialize(Type = '') {
             gmarkers[i].setMap(null);
         }
         gmarkers = [];
-    }
+        }
 
     map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
     // var mcOptions = {gridSize: 50, maxZoom: 15, imagePath: 'images/markers/m'};
@@ -171,7 +171,8 @@ function initialize(Type = '') {
     // only show marker labels if zoomed in
     google.maps.event.addListener(map, 'zoom_changed', function () {
         zoomLevel = map.getZoom();
-        if (zoomLevel <= 15) {
+        if (zoomLevel <= 18) {
+            // alert('hiiii');
             $(".marker_label").css("display", "none");
         } else {
             $(".marker_label").css("display", "inline");
@@ -184,7 +185,7 @@ function initialize(Type = '') {
             if (Type != val[1]) {
                 return true;
             }
-        }
+            }
         infowindow = new google.maps.InfoWindow({
             content: ""
         });
@@ -212,7 +213,8 @@ function initialize(Type = '') {
         // build this marker
         var markerImage = new google.maps.MarkerImage(WebRoot + "assets/images/markers/" + MarkerType + ".png", null, null, null, iconSize);
         if (val[8] == 'proDetails') {
-            markerImage = new google.maps.MarkerImage(WebRoot + "assets/images/markers/marker1.png", null, null, null, iconSize);
+            //alert(MarkerType);
+            markerImage = new google.maps.MarkerImage(WebRoot + "assets/images/markers/orenge_mark.png", null, null, null, iconSize);
         }
         var marker = new google.maps.Marker({
             position: new google.maps.LatLng(mLatitude, mLongitude),
@@ -273,13 +275,15 @@ function initialize(Type = '') {
             // add marker hover events (if not viewing on mobile)
             if (agent == "default") {
                 google.maps.event.addListener(marker, "mouseover", function () {
+                    // alert('hiiiii');
+                    //infowindow.close();
                     this.old_ZIndex = this.getZIndex();
                     this.setZIndex(9999);
                     $("#marker" + i).css("display", "inline");
                     $("#marker" + i).css("z-index", "99999");
                 });
                 google.maps.event.addListener(marker, "mouseout", function () {
-                    if (this.old_ZIndex && zoomLevel <= 15) {
+                    if (this.old_ZIndex && zoomLevel <= 18) {
                         this.setZIndex(this.old_ZIndex);
                         $("#marker" + i).css("display", "none");
                     }
@@ -298,7 +302,7 @@ function initialize(Type = '') {
              infowindow.setContent(markerLabelHTML);
              infowindow.open(map, this);
              });*/
-        }
+            }
 
 
         // Add circle overlay and bind to marker
@@ -347,7 +351,7 @@ function initialize(Type = '') {
         label.bindTo('visible', marker);
         label.bindTo('clickable', marker);
         label.bindTo('zIndex', marker);
-    });
+        });
     var mcOptions = {
         gridSize: 30,
         maxZoom: 15,
@@ -365,27 +369,27 @@ function goToMarker(marker_id) {
             google.maps.event.trigger(infowindow, 'closeclick');
 
         }
-        infowindow.close();
-        google.maps.event.trigger(infowindow, 'closeclick');
+            infowindow.close();
+            google.maps.event.trigger(infowindow, 'closeclick');
         initialize();//return false;
         map.panTo(gmarkers[marker_id].getPosition());
         //map.setZoom(centerZoom);
         map.setZoom(18);
         google.maps.event.trigger(gmarkers[marker_id], 'click');
         setTimeout(function () {
-            console.log("===> marker id => " + marker_id);
+            // console.log("===> marker id => "+marker_id);
 
 
         }, 3000);
 
         //infowindow.close();
     }
-}
+    }
 
 function closeIW(infowindow) {
-    console.log("==> CIW");
+    //console.log("==> CIW");
     google.maps.event.addListener(infowindow, "closeclick", function () {
-        console.log("==> CIW on");
+        // console.log("==> CIW on");
         infowindow.close();
     });
 }
@@ -396,31 +400,32 @@ function toggle(type) {
     } else {
         hide(type);
     }
-}
+    }
 // hide all markers of a given type
 function hide(type) {
     for (var i = 0; i < gmarkers.length; i++) {
         if (gmarkers[i].type == type) {
             gmarkers[i].setVisible(false);
         }
-    }
+        }
     $("#filter_" + type).addClass("inactive");
-}
+    }
 // show all markers of a given type
 function show(type) {
     for (var i = 0; i < gmarkers.length; i++) {
         if (gmarkers[i].type == type) {
             gmarkers[i].setVisible(true);
         }
-    }
+        }
     $("#filter_" + type).removeClass("inactive");
-}
+    }
 // toggle (hide/show) marker list of a given type
 function toggleList(type) {
     $("#list .list-" + type).toggle();
 }
 // hover on list item
 function markerListMouseOver(marker_id) {
+
 
     infowindow.close();
     $("#marker" + marker_id).css("display", "inline");
@@ -432,6 +437,7 @@ function markerListMouseOut(marker_id) {
     //map.panTo(gmarkers[marker_id].getPosition());
     // map.setZoom(centerZoom);
     //infowindow.close();
+    //$("#marker"+marker_id).css("display","none");
     $("#marker" + marker_id).css("display", "none");
     if (typeof infowindow != 'undefined') {
         //infowindow.close();
@@ -448,7 +454,7 @@ function markerListMouseOut(marker_id) {
      });*/
     //}
 
-}
+    }
 // detect browser agent
 $(document).ready(function () {
     if (navigator.userAgent.toLowerCase().indexOf("iphone") > -1 || navigator.userAgent.toLowerCase().indexOf("ipod") > -1) {
@@ -532,7 +538,7 @@ function ZoomControl(controlDiv, map) {
     // map.setZoom(map.getZoom() - 3);
     });
 
-}
+    }
 
 function fullView(tmp='') {
     if (tmp == 'proDetails') {
@@ -552,7 +558,7 @@ function fullView(tmp='') {
 
         }, 2000);
     }
-}
+    }
 
 google.maps.event.addDomListener(window, 'load', initialize);
 google.maps.event.addDomListener(window, 'onclick', initialize);

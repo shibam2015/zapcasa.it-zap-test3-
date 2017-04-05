@@ -1777,10 +1777,12 @@ $lang['thanks_owner_act_meta_title'] = "Account activation - ZapCasa";
 $lang['thanks_owner_thanks'] = "Thanks!";
 
 
+
 /* ---------------- End thanks owner act -------------------- */
 
 
 /* ---------------- thanks owner  -------------------- */
+
 
 
 $lang['thanks_owner_real_estate_for'] = "Real Estate for ";
@@ -1812,10 +1814,12 @@ $lang['thanks_owner_ok'] = "Ok";
 $lang['thanks_owner_meta_title'] = "Your Account successfully created - ZapCasa";
 
 
+
 /* ---------------- End thanks owner  -------------------- */
 
 
 /* ---------------- thanks agency act -------------------- */
+
 
 
 $lang['thanks_agency_act_real_estate_for'] = "Real Estate for ";
@@ -1841,10 +1845,12 @@ $lang['thanks_agency_act_your_account_successfully_activated'] = "Your Account s
 $lang['thanks_agency_act_signin'] = "SIGNIN";
 
 
+
 /* ---------------- End thanks agency act -------------------- */
 
 
 /* ---------------- thanks agency  -------------------- */
+
 
 
 $lang['thanks_agency_real_estate_for'] = "Real Estate for ";
@@ -1874,6 +1880,7 @@ $lang['thanks_agency_you_have_72_hours_to_activate_your_account'] = "You have 72
 $lang['thanks_agency_ok'] = "Ok";
 
 
+
 $lang['thanks_agency_meta_title'] = "Your Account successfully created - ZapCasa";
 
 $lang['thanks_agency_thanks'] = "Thanks!";
@@ -1882,6 +1889,7 @@ $lang['thanks_agency_thanks'] = "Thanks!";
 
 
 /* ---------------- thanks user  -------------------- */
+
 
 
 $lang['thanks_user_real_estate_for'] = "Real Estate for ";
@@ -1911,9 +1919,11 @@ $lang['thanks_user_you_have_72_hours_to_activate_your_account'] = "You have 72 h
 $lang['thanks_user_ok'] = "Ok";
 
 
+
 $lang['thanks_user_meta_title'] = "Your Account successfully created - ZapCasa";
 
 $lang['thanks_user_thanks'] = "Thanks!";
+
 
 
 /* ---------------- End thanks user  -------------------- */
@@ -1927,6 +1937,7 @@ $lang['user_edit_your_password_must_be_atleast'] = "Your password must be at lea
 $lang['user_edit_please_provide_a_password'] = "Your password must be at least 8 characters long";
 
 $lang['user_edit_please_enter_the_same_password_as_above'] = "Please enter the same password as above";
+
 
 
 $lang['user_edit_real_estate_for'] = "Real Estate for ";
@@ -1946,6 +1957,7 @@ $lang['user_edit_sign_up_as_individual_user'] = "Sign up as individual users";
 $lang['user_edit_check_user_information'] = "Check user information";
 
 $lang['user_edit_almost_done_check_the_information'] = "Almost Done! Check the information before sending the form or to modify them if wrong.";
+
 
 
 $lang['user_edit_personal_informations_first_name'] = "First Name:";
@@ -1990,6 +2002,7 @@ $lang['user_edit_user_name_available'] = "User Name available";
 $lang['user_edit_user_name_already_taken'] = "User Name already taken";
 
 
+
 $lang['user_edit_meta_title'] = "Check user information - ZapCasa.";
 
 
@@ -2004,6 +2017,7 @@ $lang['user_profile_your_password_must_be_atleast'] = "Your password must be at 
 $lang['user_profile_please_provide_a_password'] = "Your password must be at least 8 characters long";
 
 $lang['user_profile_please_enter_the_same_password_as_above'] = "Please enter the same password as above";
+
 
 
 $lang['user_profile_real_estate_for'] = "Real Estate for ";
@@ -2032,6 +2046,7 @@ $lang['user_profile_listing_tab_change_password'] = "Change Password";
 $lang['user_profile_listing_tab_my_preferences'] = "My preferences";
 
 $lang['user_profile_listing_tab_delete_account'] = "Delete account";
+
 
 
 $lang['user_profile_personal_informations_first_name'] = "First Name:";
@@ -2076,6 +2091,7 @@ $lang['my_account_your_password_must_be_atleast'] = "Your password must be at le
 $lang['my_account_please_provide_a_password'] = "Your password must be at least 8 characters long";
 
 $lang['my_account_please_enter_the_same_password_as_above'] = "Please enter the same password as above";
+
 
 
 $lang['my_account_real_estate_for'] = "Real Estate for ";
@@ -2142,6 +2158,7 @@ $lang['preference_listing_tab_delete_account'] = "Delete account";
 $lang['preference_set_up_your_preference'] = "Set up your account preferences.";
 
 
+
 $lang['preference_email_notification_setting'] = "Email Notification Setting";
 
 $lang['preference_send_me_an_email_when_I_receive_new_messages'] = "Send me an email when I receive new messages.";
@@ -2151,6 +2168,7 @@ $lang['preference_send_me_an_email_when_I_receive_messages_replies'] = "Send me 
 $lang['preference_I_wish_to_receive_email_alerts'] = "I wish to receive Email alerts.";
 
 $lang['preference_I_wish_to_receive_information'] = "I wish to receive information and promortional material.";
+
 
 
 $lang['preference_privacy_settings'] = "Privacy Settings";
@@ -2170,13 +2188,16 @@ $lang['lenguage_setting'] = "Language setting";
 $lang['select_language'] = "Select language";
 
 
+
 $lang['preference_meta_title'] = "Set up your account preferences on ZapCasa.";
+
 
 
 /* ---------------- End Preference -------------------- */
 
 
 /* ---------------- login -------------------- */
+
 
 
 $lang['login_real_estate_for'] = "Real Estate for ";
@@ -2202,10 +2223,12 @@ $lang['login_button_login'] = "LOGIN";
 $lang['login_invalid_username'] = "Wrong email/user name or password.";
 
 
+
 /* ---------------- End login -------------------- */
 
 
 /* ---------------- thanks del -------------------- */
+
 
 
 $lang['thanks_del_real_estate_for'] = "Real Estate for ";
@@ -2231,10 +2254,12 @@ $lang['thanks_del_we_hope_you_have_achieved_your_goals'] = "We hope you have ach
 $lang['thanks_del_back_to_home_page'] = "Back to home page";
 
 
+
 /* ---------------- End thanks del -------------------- */
 
 
 /* ---------------- thanks user act -------------------- */
+
 
 
 $lang['thanks_user_act_real_estate_for'] = "Real Estate for ";
@@ -2260,10 +2285,12 @@ $lang['thanks_user_act_your_account_successfully_activated'] = "Your Account suc
 $lang['thanks_user_act_signin'] = "SIGNIN";
 
 
+
 /* ---------------- End thanks user act -------------------- */
 
 
 /* ---------------- thanks user act alredy -------------------- */
+
 
 
 $lang['thanks_user_act_alredy_real_estate_for'] = "Real Estate for ";
@@ -2289,10 +2316,12 @@ $lang['thanks_user_act_alredy_your_account_is_already_activated'] = "Your accoun
 $lang['thanks_user_act_alredy_signin'] = "SIGNIN";
 
 
+
 /* ---------------- End thanks user act alredy -------------------- */
 
 
 /* ---------------- thanks user act fail -------------------- */
+
 
 
 $lang['thanks_user_act_fail_real_estate_for'] = "Real Estate for ";
@@ -2318,10 +2347,12 @@ $lang['thanks_user_act_fail_your_activation_link_is_no_longer_valid'] = "Your ac
 $lang['thanks_user_act_fail_register_btn'] = "REGISTER";
 
 
+
 /* ---------------- End thanks user act fail -------------------- */
 
 
 /* ---------------- thanks agency act alredy -------------------- */
+
 
 
 $lang['thanks_agency_act_alredy_real_estate_for'] = "Real Estate for ";
@@ -2347,10 +2378,12 @@ $lang['thanks_agency_act_alredy_your_account_is_already_activated'] = "Your acco
 $lang['thanks_agency_act_alredy_signin'] = "SIGNIN";
 
 
+
 /* ---------------- End thanks agency act alredy -------------------- */
 
 
 /* ---------------- thanks agency act fail -------------------- */
+
 
 
 $lang['thanks_agency_act_fail_real_estate_for'] = "Real Estate for ";
@@ -2376,10 +2409,12 @@ $lang['thanks_agency_act_fail_your_activation_link_is_no_longer_valid'] = "Your 
 $lang['thanks_agency_act_fail_register_btn'] = "REGISTER";
 
 
+
 /* ---------------- End thanks agency act fail -------------------- */
 
 
 /* ---------------- thanks owner act alredy -------------------- */
+
 
 
 $lang['thanks_owner_act_alredy_real_estate_for'] = "Real Estate for ";
@@ -2403,10 +2438,12 @@ $lang['thanks_owner_act_alredy_your_account_is_already_activated'] = "Your accou
 $lang['thanks_owner_act_alredy_signin'] = "SIGNIN";
 
 
+
 /* ---------------- End thanks owner act alredy -------------------- */
 
 
 /* ---------------- thanks owner act fail -------------------- */
+
 
 
 $lang['thanks_owner_act_fail_real_estate_for'] = "Real Estate for ";
@@ -2432,10 +2469,12 @@ $lang['thanks_owner_act_fail_your_activation_link_is_no_longer_valid'] = "Your a
 $lang['thanks_owner_act_fail_register_btn'] = "REGISTER";
 
 
+
 /* ---------------- End thanks owner act fail -------------------- */
 
 
 /* ---------------- forgot password -------------------- */
+
 
 
 $lang['forgot_password_real_estate_for'] = "Real Estate for ";
@@ -2473,13 +2512,16 @@ $lang['forgot_password_a_new_password_has_been_successfully_sent'] = "A new pass
 $lang['forgot_password_signin'] = "SIGNIN";
 
 
+
 $lang['forgot_password_meta_title'] = "Forgot password - ZapCasa";
+
 
 
 /* ---------------- End forgot password -------------------- */
 
 
 /* ---------------- forgot password fail -------------------- */
+
 
 
 $lang['forgot_password_fail_real_estate_for'] = "Real Estate for ";
@@ -2503,10 +2545,12 @@ $lang['forgot_password_fail_this_is_not_a_valid_email'] = "This is not a valid e
 $lang['forgot_password_fail_register_btn'] = "REGISTER";
 
 
+
 /* ---------------- End forgot password fail -------------------- */
 
 
 /* ---------------- email alert -------------------- */
+
 
 
 $lang['email_alert_real_estate_for'] = "Real Estate for ";
@@ -2522,6 +2566,7 @@ $lang['email_alert_home'] = "Home";
 $lang['email_alert_heading_my_email_alerts'] = "My Email Alerts";
 
 
+
 $lang['email_alert_save_property'] = "Save property";
 
 $lang['email_alert_save_searches'] = "Save searches";
@@ -2533,6 +2578,7 @@ $lang['email_alert_recommended_properties'] = "Recommended Properties";
 $lang['email_alert_sorry_no_recommendation_found'] = "Sorry No Recommendation Found";
 
 
+
 $lang['email_alert_forgot_password'] = "Forgot Password!";
 
 $lang['email_alert_sorry'] = "Sorry!";
@@ -2540,6 +2586,7 @@ $lang['email_alert_sorry'] = "Sorry!";
 $lang['email_alert_this_is_not_a_valid_email'] = "This is not a valid email";
 
 $lang['email_alert_register'] = "REGISTER";
+
 
 
 /* ---------------- End email alert -------------------- */
@@ -4130,6 +4177,7 @@ $lang['cron_msg_you_cant_feedback_yourself'] = "You can't feedback yourself";
 $lang['property_the_property_is_saved_successfully'] = "The property is Saved successfully";
 
 $lang['property_the_property_is_posted_successfully'] = "The property is Posted successfully";
+$lang['property_the_property_is_updated_successfully'] = "The property is Updated successfully";
 
 $lang['property_please_login_to_add_your_property'] = "Please login as Owner or Agency to Add your Property";
 

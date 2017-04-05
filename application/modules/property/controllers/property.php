@@ -847,6 +847,7 @@ class property extends CI_Controller {
                 $ratio = $original_size[0] / $original_size[1];
 
 
+
                 /*
 
 				$this->setWatermark('userfile',"assets/uploads/Property/".$new_file."/".$file_names);				
@@ -862,6 +863,7 @@ class property extends CI_Controller {
 				$this->setWatermark('userfile',"assets/uploads/Property/".$new_file."/".$file_names);
 
 				*/
+
 
 
                 /*
@@ -988,11 +990,13 @@ class property extends CI_Controller {
                 CreateImageUsingImageMagicWithOutGravity($imgData3);
 
 
+
                 /*
 
 				 *	800x800
 
 				*/
+
 
 
                 $new_height4 = 800;
@@ -1746,7 +1750,7 @@ class property extends CI_Controller {
             if ($all_msgs[0]['properMy_Feedbackty_id'] != '0') {
                 //$subjectLine = ($lang=='it'?'Richiesta per':'Request for').": ".subject_inbox($all_msgs[0]['property_id']);	/*$this->lang->line('property_request_for').':'.*/ /* K */
                 /*$subjectLine = (strlen(subject_inbox($all_msgs[0]['property_id'])) > 11)?(($lang=='it'?'Richiesta per':'Request for').": ".subject_inbox($all_msgs[0]['property_id'])):$this->lang->line('prop_not_avilable');*/
-                $subjectLine = (ucfirst($all_msgs[0]['subject']) != '') ? (($lang == 'it' ? 'Richiesta per' : 'Request for') . ": " . ucfirst($all_msgs[0]['subject'])) : $this->lang->line('prop_not_avilable');
+                $subjectLine = (ucfirst($all_msgs[0]['subject']) != '') ? (($lang == 'it' ? '' : '') . " " . ucfirst($all_msgs[0]['subject'])) : $this->lang->line('prop_not_avilable');
             } else {
                 $subjectLine = (ucfirst($all_msgs[0]['subject']) != '') ? (($lang == 'it' ? 'Richiesta per' : 'Request for') . ": " . ucfirst($all_msgs[0]['subject'])) : $this->lang->line('prop_not_avilable');
                 //$subjectLine = ucfirst($all_msgs[0]['subject']);	/*$this->lang->line('property_subject').':'.*/
@@ -2875,6 +2879,7 @@ class property extends CI_Controller {
             if ($_FILES['userfile']['name'] != '') {
 
 
+
                 $this->upload->do_upload();
 
                 $upload_data = $this->upload->data();
@@ -2882,9 +2887,11 @@ class property extends CI_Controller {
                 $file_names = $upload_data['file_name'];
 
 
+
                 $original_size = getimagesize($_FILES['userfile']['tmp_name']);
 
                 $ratio = $original_size[0] / $original_size[1];
+
 
 
                 /*
@@ -2906,11 +2913,13 @@ class property extends CI_Controller {
 				*/
 
 
+
                 /*
 
 				 *	161x241
 
 				*/
+
 
 
                 $new_height1 = 161;
@@ -2952,6 +2961,7 @@ class property extends CI_Controller {
 				*/
 
 
+
                 $new_height2 = 113;
 
                 $new_width2 = 170;    //(int)($new_height1/$ratio)
@@ -2990,6 +3000,7 @@ class property extends CI_Controller {
 				*/
 
 
+
                 $new_height3 = 50;
 
                 $new_width3 = 75;    //(int)($new_height2/$ratio)
@@ -3016,11 +3027,13 @@ class property extends CI_Controller {
                 CreateImageUsingImageMagicWithOutGravity($imgData3);
 
 
+
                 /*
 
 				 *	800x800
 
 				*/
+
 
 
                 $new_height4 = 800;
@@ -3202,6 +3215,7 @@ class property extends CI_Controller {
 
 
             //$this->setWatermark($form_field_name,$new_file.$file_names);
+
 
 
             $original_size = getimagesize($_FILES['user_file_1']['tmp_name']);

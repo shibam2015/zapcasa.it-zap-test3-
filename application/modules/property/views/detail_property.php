@@ -158,6 +158,7 @@ if(count ( $property_details ) == 0 ){
         });
 
 
+
     });
 
     var page = "proDetails";
@@ -363,6 +364,7 @@ if(count ( $property_details ) == 0 ){
                 </h2>
 
 
+
                 <h3>
 
                     <?php
@@ -494,6 +496,7 @@ if(count ( $property_details ) == 0 ){
                                     foreach ($nearby_category as $key) {
 
 
+
                                         ?>
 
                                         <li id="<?php echo $nearByCatCounter; ?>"
@@ -532,6 +535,7 @@ if(count ( $property_details ) == 0 ){
                                                     $nearby_image_path = base_url() . "assets/images/no_proimg.jpg";
 
                                                 }
+
 
 
                                                 $geoDistance = round(geoDistance($GoogleMapMarkersCenterLatitude, $GoogleMapMarkersCenterLongitude, $nearby_lat, $nearby_lng, $areaLimit = true));
@@ -899,7 +903,7 @@ if(count ( $property_details ) == 0 ){
 
                                 ?>
 
-                                <li id="video">
+                                <li>
 
                                     <a href="javascript:void(0);" onClick="return show_video();" id="video">
 
@@ -946,6 +950,7 @@ if(count ( $property_details ) == 0 ){
             <!-- <div onclick="removeMarkers();">Hiiiiiiiiiiiiii</div> -->
 
             <div class="varity_btns">
+
 
 
                 <?php
@@ -997,6 +1002,7 @@ if(count ( $property_details ) == 0 ){
                 ?>
 
                 <div id="prop_saved_msg" style="float:right;"></div>
+
 
 
                 <!--<img src="<?php //echo base_url();?>asset/images/varity_btns.jpg" >-->
@@ -1337,6 +1343,7 @@ if(count ( $property_details ) == 0 ){
                             </li>
 
 
+
                             <li>
 
                                 <span><?php echo $this->lang->line('details_property_property_info_contract'); ?></span>
@@ -1360,6 +1367,7 @@ if(count ( $property_details ) == 0 ){
                                 ?>
 
                             </li>
+
 
 
                             <li>
@@ -1537,6 +1545,7 @@ if(count ( $property_details ) == 0 ){
                                 </li>
 
                             <?php } ?>
+
 
 
                         </ul>
@@ -2185,12 +2194,14 @@ if(count ( $property_details ) == 0 ){
                     ?>
 
 
+
                 </div>
 
             </div>
 
 
         </div>
+
 
 
         <div class="right_panel">
@@ -2630,12 +2641,173 @@ if(count ( $property_details ) == 0 ){
                         <?php
 
                         foreach ($similar_properties as $similar_property) {
+                            $provinceName = get_perticular_field_value('zc_provience', 'provience_name', " and `provience_id` = '" . $similar_property['provience'] . "'");
+
+                            if (!strpos($provinceName, "'") === false) {
+
+                                $provinceName = str_replace("'", "\\\\\'", stripslashes($provinceName));
+
+                            }
+
+                            $st_name1 = get_perticular_field_value('zc_region_master', 'province_code', " and `province_name` = '" . $provinceName . "' group by Province_Code");
+
+                            $cityName = get_perticular_field_value('zc_city', ($_COOKIE['lang'] == "it" ? 'city_name_it' : 'city_name'), " and `city_id` = '" . $similar_property['city'] . "'");
+
+                            $prop_det_url = '';
+
+                            if ($similar_property['contract_id'] == 1) {
+
+                                $contract = "Rent";
+
+                            }
+
+                            if ($property_lists['contract_id'] == 2) {
+
+                                $contract = "Sell";
+
+                            }
+
+                            $prop_det_url .= $contract;
+
+                            $typology_name = get_perticular_field_value('zc_typologies', 'name', " and status='active' and typology_id='" . $similar_property['typology'] . "'");
+
+                            //$prop_det_url.='-'.trim($typology_name);
+
+                            $prop_det_url .= '-' . trim($cityName);
+
+                            $prop_det_url .= '-' . trim($provinceName);
+
+                            $prop_det_url .= '-' . trim($similar_property['property_id']);
+
+                            $first_segment = "";
+                            //echo $prop_det_url;exit;
+
+                            $category_id = $similar_property['category_id'];
+
+
+                            if ($category_id == '6' || $category_id == '7') {
+
+                                $first_segment = 'Business';
+
+                                ///////////////////////////////////////////////////
+
+                            }
+
+                            if ($category_id == '1') {
+
+                                $first_segment = 'Residential';
+
+                                ///////////////////////////////////////////////////
+
+                            }
+
+                            if ($category_id == '3') {
+
+                                $first_segment = 'Rooms';
+
+                                ///////////////////////////////////////////////////
+
+                            }
+
+                            if ($category_id == '4') {
+
+                                $first_segment = 'Land';
+
+                                ///////////////////////////////////////////////////
+
+                            }
+
+                            if ($category_id == '5') {
+
+                                $first_segment = 'Vacations';
+
+                                ///////////////////////////////////////////////////
+
+                            }
+
 
                             ?>
 
                             <li>
 
                                 <div class="last_property" style="border-bottom: 0 none;">
+                                    <?php
+
+                                    $property_name = "";
+
+                                    if ($similar_property['contract_id'] == 1) {
+
+                                        $contract = $this->lang->line('advertise_details_rent_for');
+
+                                    }
+
+                                    if ($similar_property['contract_id'] == 2) {
+
+                                        $contract = $this->lang->line('advertise_details_sell_for');
+
+                                    }
+
+                                    $property_name .= $contract;
+
+                                    $typology_name = get_perticular_field_value('zc_typologies', 'name', " and status='active' and typology_id='" . $similar_property['typology'] . "'");
+
+                                    if (isset($_COOKIE['lang']) && ($_COOKIE['lang'] == "english")) {
+
+                                        $property_name .= ' ' . stripslashes($typology_name);
+
+                                    } elseif (isset($_COOKIE['lang']) && ($_COOKIE['lang'] == "it")) {
+
+                                        $property_name = stripslashes($typology_name) . ' ' . $property_name;
+
+                                    }
+
+                                    //$sqForProCode = "SELECT `zc_region_master`.`province_code` FROM `zc_region_master` INNER JOIN `zc_provience` ON `zc_region_master`.`province_name`=`zc_provience`.`provience_name` WHERE `zc_provience`.`provience_id`='".$property_lists['provience']."' GROUP BY `province_code`";
+
+                                    //$query=$CI->db->query($str);
+
+
+                                    $provinceName = get_perticular_field_value('zc_provience', 'provience_name', " and `provience_id` = '" . $similar_property['provience'] . "'");
+
+                                    if (!strpos($provinceName, "'") === false) {
+
+                                        $provinceName = str_replace("'", "\\\\\'", stripslashes($provinceName));
+
+                                    }
+
+                                    $st_name1 = get_perticular_field_value('zc_region_master', 'province_code', " and `province_name` = '" . $provinceName . "' group by Province_Code");
+
+                                    $cityName = get_perticular_field_value('zc_city', ($_COOKIE['lang'] == "it" ? 'city_name_it' : 'city_name'), " and `city_id` = '" . $similar_property['city'] . "'");
+
+
+                                    if (isset($_COOKIE['lang']) && ($_COOKIE['lang'] == "english")) {
+
+                                        $name = get_perticular_field_value('zc_contract_types', 'name', " and contract_id='" . $similar_property['contract_id'] . "'");
+
+                                        $typology_name = get_perticular_field_value('zc_typologies', 'name', " and status='active' and typology_id='" . $similar_property['typology'] . "'");
+
+                                        $city_name = get_perticular_field_value('zc_city', 'city_name', " and city_id='" . $similar_property['city'] . "'");
+
+                                        $province_code = get_perticular_field_value('zc_region_master', 'province_code', " and city='" . mysql_real_escape_string($city_name) . "'");
+
+
+                                        $proptitle = $name . " For " . stripslashes($typology_name) . " in " . $city_name . ", " . $province_code;
+
+                                    } else {
+
+                                        $name_it = get_perticular_field_value('zc_contract_types', 'name_it', " and contract_id='" . $similar_property['contract_id'] . "'");
+
+                                        $typology_name = get_perticular_field_value('zc_typologies', 'name_it', " and status='active' and typology_id='" . $similar_property['typology'] . "'");
+
+                                        $city_name = get_perticular_field_value('zc_city', 'city_name_it', " and city_id='" . $similar_property['city'] . "'");
+
+                                        $province_code = get_perticular_field_value('zc_region_master', 'province_code', " and city_it='" . mysql_real_escape_string($city_name) . "'");
+
+
+                                        $proptitle = stripslashes($typology_name) . " in " . $name_it . " a " . $city_name . ", " . $province_code;
+
+                                    }
+
+                                    ?>
 
                                     <?php
 
@@ -2644,7 +2816,7 @@ if(count ( $property_details ) == 0 ){
                                     ?>
 
                                     <a style="font-size:12px;"
-                                       href="<?php echo prop_url($similar_property['property_id']);?>">
+                                       href="<?php echo $first_segment;?>/<?php echo $prop_det_url;?>">
 
                                         <img
                                             src="<?php echo base_url();?>assets/uploads/Property/Property<?php echo $similar_property['property_id']; ?>/thumb_92_82/<?php echo $main_image_sim; ?>"
@@ -2655,7 +2827,7 @@ if(count ( $property_details ) == 0 ){
                                     <h2>
 
                                         <a style="font-size:12px;"
-                                           href="<?php echo prop_url($similar_property['property_id']);?>">
+                                           href="<?php echo base_url();?><?php echo $first_segment;?>/<?php echo $prop_det_url;?>">
 
                                             <?php echo property_name($similar_property['property_id']);?>
 
@@ -2688,6 +2860,7 @@ if(count ( $property_details ) == 0 ){
                                         } ?>
 
                                     </h3>
+
 
 
                                     <p>
@@ -2742,6 +2915,7 @@ if(count ( $property_details ) == 0 ){
                         }
 
                         ?>
+
 
 
                     </ul>
@@ -2992,6 +3166,7 @@ if(count ( $property_details ) == 0 ){
         var charCode = (evt.which) ? evt.which : event.keyCode
 
 
+
         if (
 
             (charCode != 45 || $(element).val().indexOf(',') != -1) &&      // “-” CHECK MINUS, AND ONLY ONE.
@@ -3003,6 +3178,7 @@ if(count ( $property_details ) == 0 ){
             return false;
 
 
+
         return true;
 
     }
@@ -3012,11 +3188,13 @@ if(count ( $property_details ) == 0 ){
         var charCode = (evt.which) ? evt.which : event.keyCode
 
 
+
         if (
 
             (charCode < 48 || charCode > 57))
 
             return false;
+
 
 
         return true;
@@ -3134,6 +3312,7 @@ if(count ( $property_details ) == 0 ){
         $('#showcase2').hide();
 
 
+
         $('#video').removeClass();
 
         $('#showcase3').css({
@@ -3154,7 +3333,9 @@ if(count ( $property_details ) == 0 ){
 
         $('#showcase').hide();
 
+        $('#video').addClass('active');
         $('#cam').removeClass();
+        // $('#video').addClass('active');
 
         $('#showcase1').css({
 

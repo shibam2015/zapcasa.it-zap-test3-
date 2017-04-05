@@ -5,6 +5,7 @@ function resizeList() {
     $('#menu').css('margin-top', $('#topbar').height());
 }
 function initAdvArea(Type = ''){
+    // alert("t "+Type); 
     $('#show_image').removeClass('active');
     $('#image_view').hide();
     $('#map_canvas').show();
@@ -37,7 +38,7 @@ function initInTheArea(Type = '') {
     $('#nearby_category_area').show();
     if (Type != '')
         initialize(Type);
-    else
+    else 
         initialize('0');
 
 }
@@ -79,6 +80,8 @@ function geocodePosition(pos){
 }
 // initialize map
 function initialize(Type = '') {
+    //map.setZoom(15);
+   
     geocoder = new google.maps.Geocoder();
 
     if (Type == '0') {
@@ -91,7 +94,7 @@ function initialize(Type = '') {
                         infowindow = new google.maps.InfoWindow({
                             content: ""
                         });
-
+                        //alert('hiiii');
                         var MarkerText = val[0];
                         var MarkerType = val[1];
                         var mLatitude = val[2];
@@ -130,7 +133,7 @@ function initialize(Type = '') {
                         marker.type = MarkerType;
                         gmarkers.push(marker);
                         return false;
-                    }
+            }
 
                 }
             }
@@ -349,13 +352,13 @@ function initialize(Type = '') {
                 else {
                     var markerLabelHTML = '<div class="property-window">\
     <div class="property-image">\
-        <a href="' + markerURI + '">\
+        <a>\
             <img src="' + markerPropertyImage + '">\
         </a>\
     </div>\
     <div class="property-info">\
         <div class="marker_title">\
-            <a href="' + markerURI + '">' + MarkerText + '</a>\
+            <a>' + MarkerText + '</a>\
         </div>\
         <div class="marker_address">' + markerAddress + '</div>\
         <div class="marker_price">' + markerPrice + '</div>\
@@ -551,10 +554,10 @@ function initialize1(Type='') {
         if (Type != '' && typeof(Type) == 'string') {
             //if(val[1]!='markers'){
             if (val[1] != 'markers') {
-
+               
                 return true;
             } else {
-
+                
             }
 
         }

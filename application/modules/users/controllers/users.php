@@ -222,7 +222,6 @@ class users extends CI_Controller{
         if ($uid != 0) {
 
 
-
             redirect('users/my_account');
 
 
@@ -827,7 +826,6 @@ class users extends CI_Controller{
             $captcha_lib = base_url() . '/captcha/';
 
 
-
             $this->load->helper('captcha');
 
 
@@ -933,7 +931,6 @@ class users extends CI_Controller{
 
 
             $this->load->view("users/reg_user", $data);
-
 
 
         }
@@ -1098,7 +1095,6 @@ class users extends CI_Controller{
             $user_list_cnt = get_perticular_count('zc_user', " and company_name='" . $company_name . "'");
 
 
-
             echo $user_list_cnt;
 
 
@@ -1138,7 +1134,6 @@ class users extends CI_Controller{
             $user_list_cnt = get_perticular_count('zc_user', " and business_name='" . $business_name . "'");
 
 
-
             echo $user_list_cnt;
 
 
@@ -1176,7 +1171,6 @@ class users extends CI_Controller{
 
 
             $user_list_cnt = get_perticular_count('zc_user', " and vat_number='" . $vat_no . "'");
-
 
 
             echo $user_list_cnt;
@@ -1450,7 +1444,6 @@ class users extends CI_Controller{
         $new_user['user_name'] = $this->input->post('user_name');
 
 
-
         $new_user['first_name'] = $this->input->post('first_name');
 
 
@@ -1574,7 +1567,6 @@ class users extends CI_Controller{
             $new_user['agree_terms'] = '';
 
 
-
             $new_user['receive_mail'] = '';
 
 
@@ -1626,63 +1618,63 @@ class users extends CI_Controller{
 
 
 
-				<div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
+                <div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
 
 
 
-					<div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
+                    <div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
 
 
 
-				    <div style="border-bottom:1px solid #d1d1d1;">
+                    <div style="border-bottom:1px solid #d1d1d1;">
 
 
 
-				    	<img src="' . base_url() . 'assets/images/logo.png" alt="ZapCasa"/>
+                        <img src="' . base_url() . 'assets/images/logo.png" alt="ZapCasa"/>
 
 
 
-				    </div>
+                    </div>
 
 
 
-				    <div style="padding:15px;">
+                    <div style="padding:15px;">
 
 
 
-				    	<strong>' . $this->lang->line('thanks_hi') . ' ' . $user_name . '</strong><br>
+                        <strong>' . $this->lang->line('thanks_hi') . ' ' . $user_name . '</strong><br>
 
 
 
-				        <p>' . $this->lang->line('thanks_text_1') . '</p><br>
+                        <p>' . $this->lang->line('thanks_text_1') . '</p><br>
 
 
 
-				        <p><strong>' . $this->lang->line('thanks_text_note') . '</strong> ' . $this->lang->line('thanks_text_2') . '. </p><br>
+                        <p><strong>' . $this->lang->line('thanks_text_note') . '</strong> ' . $this->lang->line('thanks_text_2') . '. </p><br>
 
 
 
-				        <p> ' . $this->lang->line('thanks_text_3') . ': </p>
+                        <p> ' . $this->lang->line('thanks_text_3') . ': </p>
 
 
 
-				        <p><a href="' . $link . '"><strong> ' . $link . '</strong></a></p><br>
+                        <p><a href="' . $link . '"><strong> ' . $link . '</strong></a></p><br>
 
 
 
-				        <p>' . $this->lang->line('thanks_text_4') . ',<br><a href="http://www.zapcasa.it">www.zapcasa.it</a></p>
+                        <p>' . $this->lang->line('thanks_text_4') . ',<br><a href="http://www.zapcasa.it">www.zapcasa.it</a></p>
 
 
 
-				    </div>
+                    </div>
 
 
 
-				</div>
+                </div>
 
 
 
-				</body>';
+                </body>';
 
 
 
@@ -1693,11 +1685,6 @@ class users extends CI_Controller{
 
 
             sendemail($mail_from, $mail_to, $subject, $body, $cc = '');
-
-
-
-
-
 
 
             //send_mail($details);
@@ -1983,11 +1970,6 @@ class users extends CI_Controller{
             $UserNameSetRuleTxt = ($_COOKIE['lang'] == 'english' ? 'User Name' : 'Username');
 
 
-
-
-
-
-
             //$this->form_validation->set_rules('captcha','Security Code','required');
 
 
@@ -2257,15 +2239,13 @@ class users extends CI_Controller{
                 $new_user['user_type'] = '2';
 
 
-                $new_user['user_name'] = $this->input->post('user_name');
+                $new_user['user_name'] = stripslashes($this->input->post('user_name'));
 
 
-
-                $new_user['first_name'] = $this->input->post('first_name');
-
+                $new_user['first_name'] = stripslashes($this->input->post('first_name'));
 
 
-                $new_user['last_name'] = $this->input->post('last_name');
+                $new_user['last_name'] = stripslashes($this->input->post('last_name'));
 
 
 
@@ -2282,8 +2262,7 @@ class users extends CI_Controller{
                 $new_user['province'] = stripslashes($this->input->post('province'));
 
 
-
-                $new_user['street_address'] = $this->input->post('street_address');
+                $new_user['street_address'] = stripslashes($this->input->post('street_address'));
 
 
 
@@ -2548,7 +2527,6 @@ class users extends CI_Controller{
         $new_arr = $this->session->all_userdata();
 
 
-
         //echo '<pre>';print_r($new_arr);die;
 
 
@@ -2684,7 +2662,6 @@ class users extends CI_Controller{
             $data['city'] = $this->usersm->get_city(addslashes($new_arr['province']), $_COOKIE['lang']);
 
 
-
         }
 
 
@@ -2729,11 +2706,6 @@ class users extends CI_Controller{
 
 
         $this->db->query("DELETE FROM captcha WHERE captcha_time < " . $expiration);
-
-
-
-
-
 
 
         // Then see if a captcha exists:
@@ -2845,7 +2817,6 @@ class users extends CI_Controller{
             $data['captcha_err'] = $this->lang->line('reg_owner_you_submit_wrong_captcha');
 
 
-
             // $this->session->set_userdata($data['captcha']);
 
 
@@ -2908,7 +2879,7 @@ class users extends CI_Controller{
             $this->load->view('users/owner_edit', $data);
 
 
-        } else {     /////for captcha end////
+        } else {  /////for captcha end////
 
 
             $new_user = array();
@@ -3365,7 +3336,6 @@ class users extends CI_Controller{
         if ($uid != 0) {
 
 
-
             redirect('users/my_account');
 
 
@@ -3789,27 +3759,23 @@ class users extends CI_Controller{
                 $new_user['user_type'] = '3';
 
 
-                $new_user['user_name'] = $this->input->post('user_name');
+                $new_user['user_name'] = stripslashes($this->input->post('user_name'));
 
 
-
-                $new_user['company_name'] = $this->input->post('company_name');
-
+                $new_user['company_name'] = stripslashes($this->input->post('company_name'));
 
 
-                $new_user['business_name'] = $this->input->post('business_name');
+                $new_user['business_name'] = stripslashes($this->input->post('business_name'));
 
 
 
                 $new_user['vat_number'] = $this->input->post('vat_number');
 
 
-
-                $new_user['first_name'] = $this->input->post('first_name');
-
+                $new_user['first_name'] = stripslashes($this->input->post('first_name'));
 
 
-                $new_user['last_name'] = $this->input->post('last_name');
+                $new_user['last_name'] = stripslashes($this->input->post('last_name'));
 
 
 
@@ -3824,8 +3790,7 @@ class users extends CI_Controller{
                 $new_user['city'] = stripslashes($this->input->post('city'));
 
 
-
-                $new_user['street_address'] = $this->input->post('street_address');
+                $new_user['street_address'] = stripslashes($this->input->post('street_address'));
 
 
 
@@ -3972,7 +3937,6 @@ class users extends CI_Controller{
         $new_arr = $this->session->all_userdata();
 
 
-
         //echo '<pre>';print_r($new_arr);die;
 
 
@@ -4105,7 +4069,6 @@ class users extends CI_Controller{
         $this->load->view('users/agency_edit', $data);
 
 
-
     }
 
 
@@ -4130,7 +4093,6 @@ class users extends CI_Controller{
         if ($new_arr['user_type'] == '') {
 
 
-
             redirect('/');
 
 
@@ -4149,15 +4111,10 @@ class users extends CI_Controller{
         ///for captcha///
 
 
-        $expiration = time() - 7200;    //Two hour limit
+        $expiration = time() - 7200;  //Two hour limit
 
 
         $this->db->query("DELETE FROM captcha WHERE captcha_time < " . $expiration);
-
-
-
-
-
 
 
         // Then see if a captcha exists:
@@ -4264,7 +4221,6 @@ class users extends CI_Controller{
 
 
             $data['captcha_err'] = $this->lang->line('reg_agency_you_submit_wrong_captcha');
-
 
 
             ////for captcha end///
@@ -4546,7 +4502,6 @@ class users extends CI_Controller{
                 $new_user['email_id'] = '';
 
 
-
                 $new_user['password'] = '';
 
 
@@ -4602,7 +4557,6 @@ class users extends CI_Controller{
                 $subject = $this->lang->line('thanks_text_subject');
 
 
-
                 //$details['message']="<strong>Hi  ".$user_name.",</strong> <br/> <br/>You are receiving this email because you have requested to register on Zapcasa.it <br/> <br/><strong>Note: </strong>If you did not to apply for registration then do nothing, your email will be automatically deleted within 72 hours. <br/><br/>  To activate your ZapCasa account, please click on the following link or copy and paste it into your browser: <br/> <strong> ".$link."</strong> <br/><br/>Regards,<br/><strong> www.zapcasa.it</strong>";
 
 
@@ -4614,59 +4568,59 @@ class users extends CI_Controller{
 
 
 
-								<div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
+                                <div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
 
 
 
-										<div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
+                                        <div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
 
 
 
-									<div style="border-bottom:1px solid #d1d1d1;">
+                                    <div style="border-bottom:1px solid #d1d1d1;">
 
 
 
-										<img src="' . base_url() . 'assets/images/logo.png" alt="ZapCasa"/>
+                                        <img src="' . base_url() . 'assets/images/logo.png" alt="ZapCasa"/>
 
 
 
-									</div>
+                                    </div>
 
 
 
-									<div style="padding:15px;">
+                                    <div style="padding:15px;">
 
 
 
-										<strong>' . $this->lang->line('thanks_agency_hi') . ' ' . $user_name . '</strong>
+                                        <strong>' . $this->lang->line('thanks_agency_hi') . ' ' . $user_name . '</strong>
 
 
 
-										<p>' . $this->lang->line('thanks_agency_text_1') . '</p>
+                                        <p>' . $this->lang->line('thanks_agency_text_1') . '</p>
 
 
 
-										<p><strong>' . $this->lang->line('thanks_agency_text_note') . '</strong> ' . $this->lang->line('thanks_agency_text_2') . ' </p>
+                                        <p><strong>' . $this->lang->line('thanks_agency_text_note') . '</strong> ' . $this->lang->line('thanks_agency_text_2') . ' </p>
 
 
 
-										<p> ' . $this->lang->line('thanks_agency_text_3') . ': </p>
+                                        <p> ' . $this->lang->line('thanks_agency_text_3') . ': </p>
 
 
 
-										<p><a href="' . $link . '"><strong> ' . $link . '</strong></a></p><br>
+                                        <p><a href="' . $link . '"><strong> ' . $link . '</strong></a></p><br>
 
 
 
-										<p>' . $this->lang->line('thanks_agency_text_4') . ',<br><a href="http://www.zapcasa.it">www.zapcasa.it</a></p>
+                                        <p>' . $this->lang->line('thanks_agency_text_4') . ',<br><a href="http://www.zapcasa.it">www.zapcasa.it</a></p>
 
 
 
-									</div>
+                                    </div>
 
 
 
-								</div>
+                                </div>
 
 
 
@@ -4674,10 +4628,11 @@ class users extends CI_Controller{
 
 
 
-						</body>';
+                        </body>';
 
 
                 // $details['message']= $msg;
+
 
 
                 $body = $msg;
@@ -4695,10 +4650,12 @@ class users extends CI_Controller{
                 redirect($url);
 
 
+
             }
 
 
         }
+
 
 
     }
@@ -4710,6 +4667,7 @@ class users extends CI_Controller{
 
 
         $data['sitepage'] = "Thanks Agency";
+
 
 
         $open_page_flag = $this->session->userdata('open_page_flag');
@@ -4730,12 +4688,8 @@ class users extends CI_Controller{
             $data['login_data'] = 1;
 
 
-
-
-
-
-
             //$open_page_flag['open_page_flag'] = '';
+
 
 
             //$this->session->set_userdata($open_page_flag);
@@ -4748,10 +4702,13 @@ class users extends CI_Controller{
         } else {
 
 
+
             redirect('/');
 
 
+
         }
+
 
 
     }
@@ -4765,6 +4722,7 @@ class users extends CI_Controller{
         $data = array();
 
 
+
         $data['msg'] = '';
 
 
@@ -4772,6 +4730,7 @@ class users extends CI_Controller{
 
 
             $email = $this->input->post('email');
+
 
 
             $raw_password = $this->input->post('password');
@@ -4790,6 +4749,7 @@ class users extends CI_Controller{
             $data['user_id'] = $user_id;
 
 
+
             $data['password'] = $pwd;
 
 
@@ -4797,7 +4757,6 @@ class users extends CI_Controller{
 
 
             if ($rs == 1) {
-
 
 
                 $user_info = $this->usersm->check_login($data);
@@ -4828,22 +4787,29 @@ class users extends CI_Controller{
                         echo 1;
 
 
+
                     }
+
 
 
                 } else {
 
 
+
                     echo 0;
+
 
 
                 }
 
 
+
             } else {
 
 
+
                 echo 0;
+
 
 
             }
@@ -4855,7 +4821,9 @@ class users extends CI_Controller{
             echo 0;
 
 
+
         }
+
 
 
     }
@@ -4869,25 +4837,33 @@ class users extends CI_Controller{
         $data = array();
 
 
+
         $data['sitepage'] = "My Account";
+
 
 
         $data['msg'] = '';
 
 
+
         $data['title'] = "My Account";
+
 
 
         $uid = $this->session->userdata('user_id');
 
 
+
         $data['tab_icon'] = '1';
+
 
 
         $data['user_detail'] = $this->usersm->user_profile($uid);
 
 
+
         $user_type = $data['user_detail'][0]['user_type'];
+
 
 
         $data['provinces'] = $this->usersm->get_state_list();
@@ -4924,7 +4900,9 @@ class users extends CI_Controller{
             redirect('/');
 
 
+
         }
+
 
 
     }
@@ -4936,6 +4914,7 @@ class users extends CI_Controller{
 
 
         $this->do_logout();
+
 
 
     }
@@ -4959,7 +4938,9 @@ class users extends CI_Controller{
         $this->session->sess_destroy();
 
 
+
         redirect('/');
+
 
 
     }
@@ -4968,10 +4949,13 @@ class users extends CI_Controller{
     public function thanks()
 
 
+
     {
 
 
+
         //echo"hii"; die();
+
 
 
         $open_page_flag = $this->session->userdata('open_page_flag');
@@ -4992,12 +4976,8 @@ class users extends CI_Controller{
             $data['login_data'] = 1;
 
 
-
-
-
-
-
             $open_page_flag['open_page_flag'] = '';
+
 
 
             $this->session->set_userdata($open_page_flag);
@@ -5012,16 +4992,20 @@ class users extends CI_Controller{
         } else {
 
 
+
             redirect('/');
 
 
+
         }
+
 
 
     }
 
 
     function city_search()
+
 
 
     {
@@ -5058,10 +5042,13 @@ class users extends CI_Controller{
                 }
 
 
+
             }
 
 
+
         }
+
 
 
     }
@@ -5115,7 +5102,6 @@ class users extends CI_Controller{
                     $new_data['reply_msg'] = $this->input->post('reply_msg');
 
 
-
                 }
 
 
@@ -5123,7 +5109,6 @@ class users extends CI_Controller{
 
 
                     $new_data['email_alerts'] = $this->input->post('email_alerts');
-
 
 
                 }
@@ -5135,7 +5120,6 @@ class users extends CI_Controller{
                     $new_data['newsletter'] = $this->input->post('newsletter');
 
 
-
                 }
 
 
@@ -5143,7 +5127,6 @@ class users extends CI_Controller{
 
 
                     $new_data['invisible'] = $this->input->post('invisible');
-
 
 
                 }
@@ -5155,7 +5138,6 @@ class users extends CI_Controller{
                     $new_data['my_address_display'] = $this->input->post('my_address_display');
 
 
-
                 }
 
 
@@ -5165,7 +5147,6 @@ class users extends CI_Controller{
                     $new_data['my_contact_info'] = $this->input->post('my_contact_info');
 
 
-
                 }
 
 
@@ -5173,7 +5154,6 @@ class users extends CI_Controller{
 
 
                     $new_data['language'] = $this->input->post('language_nm');
-
 
 
                 }
@@ -5192,28 +5172,37 @@ class users extends CI_Controller{
                         $this->lang->load('code', 'english');
 
 
+
                         $_COOKIE['lang'] = "english";
+
 
 
                     } else {
 
 
+
                         $this->lang->load('code', 'it');
+
 
 
                         $_COOKIE['lang'] == "it";
 
 
+
                     }
+
 
 
                     $msg = $this->lang->line('contact_us_text_user_email');
 
 
+
                     $this->session->set_flashdata('success', $msg);
 
 
+
                     redirect('users/my_preference');
+
 
 
                 }
@@ -5238,10 +5227,13 @@ class users extends CI_Controller{
                         //$this->lang->load('code', 'english');
 
 
+
                     } else {
 
 
+
                         //$this->lang->load('code', 'it');
+
 
 
                     }
@@ -5256,7 +5248,9 @@ class users extends CI_Controller{
             }
 
 
+
         }
+
 
 
     }
@@ -5291,6 +5285,7 @@ class users extends CI_Controller{
                 $this->session->set_flashdata('error', "Invalid current password, please try again!");
 
 
+
                 redirect('users/change_password');
 
 
@@ -5318,10 +5313,13 @@ class users extends CI_Controller{
                 $msg = $this->lang->line('changed_password_success_message');
 
 
+
                 $this->session->set_flashdata('success', $msg);
 
 
+
                 redirect('users/change_password');
+
 
 
             }
@@ -5333,8 +5331,8 @@ class users extends CI_Controller{
             $this->load->view('users/change_password', $data);
 
 
-
         }
+
 
 
     }
@@ -5354,13 +5352,17 @@ class users extends CI_Controller{
             redirect('users/my_account');
 
 
+
         }
+
 
 
         //echo $pwd=get_random_password();
 
 
+
         $this->load->view('users/forgot_password');
+
 
 
     }
@@ -5386,6 +5388,7 @@ class users extends CI_Controller{
             if ($user_status == '0') {
 
 
+
                 redirect('users/blockedpage');
 
 
@@ -5402,11 +5405,6 @@ class users extends CI_Controller{
 
 
                 $rs = $this->usersm->change_pwd($user_id, $pwd);
-
-
-
-
-
 
 
                 //redirect('/');
@@ -5435,63 +5433,63 @@ class users extends CI_Controller{
 
 
 
-						<div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
+                        <div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
 
 
 
-							<div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
+                            <div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
 
 
 
-							<div style="border-bottom:1px solid #d1d1d1;">
+                            <div style="border-bottom:1px solid #d1d1d1;">
 
 
 
-								<img src="' . base_url() . 'assets/images/logo.png" alt="ZapCasa"/>
+                                <img src="' . base_url() . 'assets/images/logo.png" alt="ZapCasa"/>
 
 
 
-							</div>
+                            </div>
 
 
 
-							<div style="padding:15px;">
+                            <div style="padding:15px;">
 
 
 
-								<strong>' . $this->lang->line('change-pwd-hi') . ' ' . $user_name . '</strong>
+                                <strong>' . $this->lang->line('change-pwd-hi') . ' ' . $user_name . '</strong>
 
 
 
-								<p>' . $this->lang->line('change-pwd-text-1') . '</p>
+                                <p>' . $this->lang->line('change-pwd-text-1') . '</p>
 
 
 
-								<p><strong>' . $this->lang->line('change-pwd-note') . ':</strong> ' . $this->lang->line('change-pwd-text-2') . ' </p>
+                                <p><strong>' . $this->lang->line('change-pwd-note') . ':</strong> ' . $this->lang->line('change-pwd-text-2') . ' </p>
 
 
 
-								<p><strong>' . $this->lang->line('change-pwd-text-3') . '</strong> ' . $this->lang->line('change-pwd-text-4') . '.</p>
+                                <p><strong>' . $this->lang->line('change-pwd-text-3') . '</strong> ' . $this->lang->line('change-pwd-text-4') . '.</p>
 
 
 
-								<p><strong>' . $this->lang->line('change-pwd-text-5') . '</strong> ' . $raw_password . '</p><br>
+                                <p><strong>' . $this->lang->line('change-pwd-text-5') . '</strong> ' . $raw_password . '</p><br>
 
 
 
-								<p>' . $this->lang->line('change-pwd-text-6') . ',<br><a href="http://www.zapcasa.it">www.zapcasa.it</a></p>
+                                <p>' . $this->lang->line('change-pwd-text-6') . ',<br><a href="http://www.zapcasa.it">www.zapcasa.it</a></p>
 
 
 
-							</div>
+                            </div>
 
 
 
-						</div>
+                        </div>
 
 
 
-					</body>';
+                    </body>';
 
 
                 $default_email = get_perticular_field_value('zc_settings', 'meta_value', " and meta_name='default_email'");
@@ -5507,30 +5505,18 @@ class users extends CI_Controller{
                 $subject = $this->lang->line('change-pwd-subject');
 
 
-
-
-
-
-
                 $body = $msg;
 
 
                 sendemail($mail_from, $mail_to, $subject, $body, $cc = '');
 
 
-
-
-
-
-
-
-
-
-
                 $this->session->set_flashdata('success', '1');
 
 
+
                 redirect('users/forget_password');
+
 
 
             }
@@ -5542,10 +5528,13 @@ class users extends CI_Controller{
             $this->session->set_flashdata('error', '1');
 
 
+
             redirect('users/forget_password');
 
 
+
         }
+
 
 
     }
@@ -5571,6 +5560,7 @@ class users extends CI_Controller{
             echo 2;
 
 
+
             exit;
 
 
@@ -5580,14 +5570,16 @@ class users extends CI_Controller{
             $user_list_cnt = get_perticular_count('zc_user', " and email_id='" . $email_id . "'");
 
 
-
             echo $user_list_cnt;
+
 
 
             exit;
 
 
+
         }
+
 
 
     }
@@ -5600,41 +5592,50 @@ class users extends CI_Controller{
         $uid = $this->session->userdata('user_id');
 
 
-
         $new_user['city'] = mysql_real_escape_string($this->input->post('city'));
+
 
 
         $new_user['province'] = mysql_real_escape_string($this->input->post('province'));
 
 
-        $new_user['street_address'] = $this->input->post('street_address');
+        $new_user['street_address'] = mysql_real_escape_string($this->input->post('street_address'));
 
 
         $new_user['street_no'] = $this->input->post('street_no');
 
 
+
         $new_user['zip'] = $this->input->post('zip');
+
 
 
         $new_user['phone_1'] = $this->input->post('phone_1');
 
 
+
         $new_user['phone_2'] = $this->input->post('phone_2');
+
 
 
         $new_user['email_id'] = $this->input->post('email');
 
 
+
         $new_user['location'] = $this->input->post('location');
+
 
 
         $new_user['about_me'] = mysql_real_escape_string($this->input->post('about_me'));
 
 
+
         //echo '<pre>';print_r($new_user);die;
 
 
+
         //$file=$_FILES;
+
 
 
         //echo '<pre>';print_r($file);die;
@@ -5653,10 +5654,13 @@ class users extends CI_Controller{
         $msg = $this->lang->line('user_info_success_message');
 
 
+
         $this->session->set_flashdata('success', $msg);
 
 
+
         redirect('users/manage_location');
+
 
 
     }
@@ -5665,106 +5669,117 @@ class users extends CI_Controller{
     public function upload_image_1($form_field_name, $uid)
 
 
+
     {
+
 
 
         $config['upload_path'] = './assets/uploads/';
 
 
+
         $config['allowed_types'] = 'gif|jpg|png|JPG|JPEG|PNG|jpeg|GIF';
+
 
 
         $config['encrypt_name'] = TRUE;
 
 
+
         $config['set_file_ext'] = TRUE;
+
 
 
         $this->load->library('upload', $config);
 
 
+
         if (!$this->upload->do_upload($form_field_name)) {
+
 
 
             $errors = $this->upload->display_errors();
 
 
+
         } else {
+
 
 
             ////////////////delete image first////////////////////
 
 
+
             $uid = $this->session->userdata('user_id');
+
 
 
             $dfile_name = get_perticular_field_value('zc_user', 'file_1', " and user_id='" . $uid . "'");
 
 
+
             $dfile = 'assets/uploads/' . $dfile_name;
+
 
 
             if (is_file($dfile))
 
 
+
                 @unlink($dfile);
+
 
 
             $dfile_thmb = 'assets/uploads/thumb_92_82/' . $dfile_name;
 
 
+
             if (is_file($dfile_thmb))
+
 
 
                 @unlink($dfile_thmb);
 
 
+
             /////////////delete image end//////////////////////////
+
 
 
             if (!is_dir('assets/uploads/thumb_92_82')) {
 
 
+
                 mkdir('./assets/uploads/thumb_92_82', 0777, true);
+
 
 
             }
 
 
+
             $upload_data = $this->upload->data();
+
 
 
             $file_names = $upload_data['file_name'];
 
 
+
             $rs_update = $this->usersm->update_profile_1($file_names, $uid);
 
 
-            $config = array(
+            $new_height3 = 128;
+            $new_width3 = 128;
 
 
-                'source_image' => $upload_data['full_path'], //path to the uploaded image
-
-
-                'new_image' => "assets/uploads/thumb_92_82/" . $file_names, //path to
-
-
-                'maintain_ratio' => true,
-
-
-                'width' => 128,
-
-
-                'height' => 128
-
-
+            $imgData = array(
+                'sourcePath' => $upload_data['full_path'],
+                'destinationPath' => "assets/uploads/thumb_92_82/" . $file_names,
+                'original_size' => getimagesize($_FILES['user_file_1']['tmp_name']),
+                'imageSize' => $new_width3 . 'x' . $new_height3
             );
-
-
-            $this->image_lib->initialize($config);
-
-
-            $this->image_lib->resize();
+            CreateImageUsingImageMagicWithOutGravityuser($imgData);
 
 
         }
@@ -5773,106 +5788,127 @@ class users extends CI_Controller{
     }
 
 
+
+
+
+
+
     public function upload_image_2($form_field_name, $uid)
 
 
+
     {
+        //echo '<pre>';print_r($_FILES);die;
+
 
 
         $config['upload_path'] = './assets/uploads/';
 
 
+
         $config['allowed_types'] = 'gif|jpg|png|JPG|JPEG|PNG|jpeg|GIF';
+
 
 
         $config['encrypt_name'] = TRUE;
 
 
+
         $this->load->library('upload', $config);
+
 
 
         if (!$this->upload->do_upload($form_field_name)) {
 
 
+            // echo "hii";exit;
             $errors = $this->upload->display_errors();
+
 
 
         } else {
 
 
+            //echo "1111";exit;
             ////////////////delete image first////////////////////
+
 
 
             $uid = $this->session->userdata('user_id');
 
 
+
             $dfile_name = get_perticular_field_value('zc_user', 'file_2', " and user_id='" . $uid . "'");
+
 
 
             $dfile = 'assets/uploads/' . $dfile_name;
 
 
+
             if (is_file($dfile))
+
 
 
                 @unlink($dfile);
 
 
+
             $dfile_thmb = 'assets/uploads/thumb_92_82/' . $dfile_name;
+
 
 
             if (is_file($dfile_thmb))
 
 
+
                 @unlink($dfile_thmb);
+
 
 
             /////////////delete image end//////////////////////////
 
 
+
             if (!is_dir('assets/uploads/thumb_92_82')) {
+
 
 
                 mkdir('./assets/uploads/thumb_92_82', 0777, true);
 
 
+
             }
+
 
 
             $upload_data = $this->upload->data();
 
 
+            //echo '<pre>';print_r($upload_data);exit;
+
             $file_names = $upload_data['file_name'];
+
 
 
             $rs_update = $this->usersm->update_profile_2($file_names, $uid);
 
+            // $file_names = $upload_data['file_name'];
 
-            $config = array(
+            $new_height3 = 300;
+            $new_width3 = 430;
 
-
-                'source_image' => $upload_data['full_path'], //path to the uploaded image
-
-
-                'new_image' => "assets/uploads/thumb_92_82/" . $file_names, //path to
+            //$rs_update = $this->users->update_profile_2($file_names, $uid);
 
 
-                'maintain_ratio' => true,
-
-
-                'width' => 430,
-
-
-                'height' => 300
-
-
+            $imgData = array(
+                'sourcePath' => $upload_data['full_path'],
+                'destinationPath' => "assets/uploads/thumb_92_82/" . $file_names,
+                'original_size' => getimagesize($_FILES['user_file_2']['tmp_name']),
+                'imageSize' => $new_width3 . 'x' . $new_height3
             );
-
-
-            $this->image_lib->initialize($config);
-
-
-            $this->image_lib->resize();
+            //echo $imgData;exit;
+            CreateImageUsingImageMagicWithOutGravityuser1($imgData);
 
 
         }
@@ -5892,34 +5928,45 @@ class users extends CI_Controller{
         $new_user['first_name'] = $this->input->post('first_name');
 
 
+
         $new_user['last_name'] = $this->input->post('last_name');
+
 
 
         $new_user['contact_ph_no'] = $this->input->post('ph_no');
 
 
+
         $new_user['date_of_birth'] = $this->input->post('reg_day') . '-' . $this->input->post('reg_month') . '-' . $this->input->post('reg_year');
+
 
 
         $new_user['city'] = $this->input->post('city');
 
 
+
         $new_user['country'] = $this->input->post('country');
+
 
 
         $new_user['email_id'] = $this->input->post('email');
 
 
+
         $rs = $this->usersm->upadte_user($new_user, $uid);
+
 
 
         $msg = $this->lang->line('user_info_success_message');
 
 
+
         $this->session->set_flashdata('success', $msg);
 
 
+
         redirect('users/manage_location');
+
 
 
     }
@@ -5928,82 +5975,101 @@ class users extends CI_Controller{
     public function update_agency_reg()
 
 
+
     {
 
+        //echo "hii";exit;
 
         $uid = $this->session->userdata('user_id');
 
 
-        $new_user['first_name'] = $this->input->post('first_name');
+        $new_user['first_name'] = mysql_real_escape_string($this->input->post('first_name'));
 
 
-        $new_user['last_name'] = $this->input->post('last_name');
+        $new_user['last_name'] = mysql_real_escape_string($this->input->post('last_name'));
+
 
 
         $new_user['contact_ph_no'] = $this->input->post('contact_ph_no');
 
 
+
         $new_user['city'] = mysql_real_escape_string($this->input->post('city'));
+
 
 
         $new_user['province'] = mysql_real_escape_string($this->input->post('province'));
 
 
-        $new_user['street_address'] = $this->input->post('street_address');
+        $new_user['street_address'] = mysql_real_escape_string($this->input->post('street_address'));
 
 
         $new_user['street_no'] = $this->input->post('street_no');
 
 
+
         $new_user['zip'] = $this->input->post('zip');
+
 
 
         $new_user['phone_1'] = $this->input->post('phone_1');
 
 
+
         $new_user['phone_2'] = $this->input->post('phone_2');
+
 
 
         $new_user['fax_no'] = $this->input->post('fax_no');
 
 
+
         $new_user['website'] = $this->input->post('website');
+
 
 
         $new_user['email_id'] = $this->input->post('email');
 
 
+
         $new_user['location'] = $this->input->post('location');
+
 
 
         $new_user['about_me'] = mysql_real_escape_string($this->input->post('about_me'));
 
 
-        //echo '<pre>';print_r($new_user);die;
+        //echo '<pre>';print_r($new_user);
 
 
         //$file=$_FILES;
 
 
-        //echo '<pre>';print_r($file);die;
+        // echo '<pre>';print_r($file);die;
 
 
         $rs = $this->usersm->upadte_agency($new_user, $uid);
 
 
+
         $this->upload_image_1('user_file_1', $uid);
+
 
 
         $this->upload_image_2('user_file_2', $uid);
 
 
+
         $msg = $this->lang->line('user_info_success_message');
+
 
 
         $this->session->set_flashdata('success', $msg);
 
 
+
         redirect('users/manage_location');
+
 
 
     }
@@ -6012,28 +6078,35 @@ class users extends CI_Controller{
     public function manage_location()
 
 
+
     {
+
 
 
         $uid = $this->session->userdata('user_id');
 
 
+
         //if( $uid != 0 ) {
 
 
-        //	redirect('users/my_account');
+        //  redirect('users/my_account');
 
 
         //}
 
 
+
         $data = array();
+
 
 
         $data['user_details'] = $this->usersm->user_profile($uid);
 
 
+
         $this->load->view('users/manage-location', $data);
+
 
 
     }
@@ -6042,16 +6115,20 @@ class users extends CI_Controller{
     public function update_location()
 
 
+
     {
 
 
         //$uid = $this->input->post('locupdatefor');
 
 
+
         $uid = $this->session->userdata('user_id');
 
 
+
         //$this->session->set_flashdata('msg', $msgdata);
+
 
 
         //redirect('users/my_account');
@@ -6060,22 +6137,29 @@ class users extends CI_Controller{
         if ($uid == 0 || $uid == '') {
 
 
+
             redirect('users/common_reg');
+
 
 
         } else {
 
 
+
             $user_type = get_perticular_field_value('zc_user', 'user_type', " and user_id='" . $uid . "'");
+
 
 
             if ($user_type = '1') {
 
 
+
                 $new_user['latitude'] = (float)$this->input->post('promaplatitude');
 
 
+
                 $new_user['longitude'] = (float)$this->input->post('promaplongitude');
+
 
 
                 $property_ids = $this->usersm->edit_user_land($new_user, $uid);
@@ -6087,25 +6171,32 @@ class users extends CI_Controller{
                 $this->session->set_flashdata('msg', $msgdata);
 
 
+
                 redirect('users/my_account');
 
 
             } else {
 
 
+
                 $msgdata = $this->lang->line('property_please_login_to_add_your_property');
+
 
 
                 $this->session->set_flashdata('error_user', $msgdata);
 
 
+
                 redirect('users/common_reg');
+
 
 
             }
 
 
+
         }
+
 
 
     }
@@ -6137,14 +6228,16 @@ class users extends CI_Controller{
         if (is_file($file_thmb))
 
 
-
             @unlink($file_thmb);
+
 
 
         $this->usersm->delete_img($uid, $file = '1');
 
 
+
         redirect('users/my_account');
+
 
 
     }
@@ -6176,14 +6269,16 @@ class users extends CI_Controller{
         if (is_file($file_thmb))
 
 
-
             @unlink($file_thmb);
+
 
 
         $this->usersm->delete_img($uid, $file = '2');
 
 
+
         redirect('users/my_account');
+
 
 
     }
@@ -6203,7 +6298,9 @@ class users extends CI_Controller{
             redirect('users/my_account');
 
 
+
         }
+
 
 
         $data = array();
@@ -6220,6 +6317,7 @@ class users extends CI_Controller{
 
 
         $this->load->view('users/delete_acc');
+
 
 
     }
@@ -6245,16 +6343,21 @@ class users extends CI_Controller{
             $this->session->sess_destroy();
 
 
+
             $open_page_flag['open_page_flag'] = 'yes';
+
 
 
             $this->session->set_userdata($open_page_flag);
 
 
+
             $this->load->view('users/thanks_del');
 
 
+
         }
+
 
 
     }
@@ -6263,16 +6366,21 @@ class users extends CI_Controller{
     //===========================================================================
 
 
+
     public function facebookLogin()
+
 
 
     {
 
 
+
         //print "<pre>";
 
 
+
         //print_r($_REQUEST);
+
 
 
         //die;
@@ -6285,25 +6393,33 @@ class users extends CI_Controller{
             $email = $_REQUEST['email'];
 
 
+
             $fb_id = $_REQUEST['fb_id'];
+
 
 
             $birthday = $_REQUEST['birthday'];
 
 
+
             $gender = ucfirst(strtolower($_REQUEST['gender']));
+
 
 
             $first_name = $_REQUEST['first_name'];
 
 
+
             $last_name = $_REQUEST['last_name'];
+
 
 
             $pass = $_REQUEST['fb_id'];
 
 
+
             $access_token = access_token();
+
 
 
             $password = $this->generate_password_string($access_token, $pass);
@@ -6319,16 +6435,21 @@ class users extends CI_Controller{
                 $this->session->set_userdata('user_id', $chk_email[0]['user_id']);
 
 
+
                 //redirect(base_url().'user/my_account');
+
 
 
                 echo 1;
 
 
+
             } else {
 
 
+
                 $qry = "insert into zc_user set email_id = '" . $email . "', first_name = '" . $first_name . "', last_name = '" . $last_name . "', password = '" . $password . "'";
+
 
 
                 $rs = $this->usersm->insert_update($qry);
@@ -6337,10 +6458,13 @@ class users extends CI_Controller{
                 if ($rs > 0) {
 
 
+
                     $qry = "insert into zc_user_preference set user_id = '" . $rs . "'";
 
 
+
                     $rs1 = $this->usersm->insert_update($qry);
+
 
 
                 }
@@ -6352,10 +6476,13 @@ class users extends CI_Controller{
                 $user_id = $rs;
 
 
+
                 $email_user = get_perticular_field_value('zc_user', 'email_id', " and user_id='" . $user_id . "'");
 
 
+
                 $first_name = get_perticular_field_value('zc_user', 'first_name', " and user_id='" . $user_id . "'");
+
 
 
                 $last_name = get_perticular_field_value('zc_user', 'last_name', " and user_id='" . $user_id . "'");
@@ -6364,74 +6491,64 @@ class users extends CI_Controller{
                 $details = array();
 
 
+
                 $details['from'] = "no-reply@zapcasa.it";
+
 
 
                 $details['to'] = /*$*/
 
 
+
                     $email;
+
 
 
                 $details['subject'] = $this->lang->line('social_login_mail_subject');
 
 
+
                 $link = '';
+
 
 
                 $details['message'] = '<body style="font-family:Century Gothic; color: #4c4d51; font-size:13px;">
 
 
 
-							 <div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
+                             <div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
 
 
 
-							  <div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
+                              <div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
 
 
 
-								 <div style="border-bottom:1px solid #d1d1d1;">
+                                 <div style="border-bottom:1px solid #d1d1d1;">
 
 
 
-								  <img src="' . base_url() . 'asset/images/logo.png" alt="ZapCasa"/>
+                                  <img src="' . base_url() . 'asset/images/logo.png" alt="ZapCasa"/>
 
 
 
-								 </div>
+                                 </div>
 
 
 
-								 <div style="padding:15px;">
+                                 <div style="padding:15px;">
 
 
 
-								  <strong>' . $this->lang->line('new_mail-hi') . ' ' . $first_name . " " . $last_name . '</strong>
+                                  <strong>' . $this->lang->line('new_mail-hi') . ' ' . $first_name . " " . $last_name . '</strong>
 
 
 
-									 <p>' . $this->lang->line('social_login_mail_content') . ': </p>
+                                     <p>' . $this->lang->line('social_login_mail_content') . ': </p>
 
 
 
-									 <p>' . $pass . '</p>
-
-
-
-
-
-
-
-									 <p><br>www.zapcasa.it</p>
-
-
-
-								 </div>
-
-
-
-							 </div>
+                                     <p>' . $pass . '</p>
 
 
 
@@ -6439,19 +6556,39 @@ class users extends CI_Controller{
 
 
 
-							 </body>';
+                                     <p><br>www.zapcasa.it</p>
+
+
+
+                                 </div>
+
+
+
+                             </div>
+
+
+
+
+
+
+
+                             </body>';
 
 
                 //if( send_mail($details) )
 
 
+
                 //{
+
 
 
                 echo 1;
 
 
+
                 //}
+
 
 
             }
@@ -6460,28 +6597,37 @@ class users extends CI_Controller{
         } else {
 
 
+
             $email = '';
+
 
 
             $fb_id = '';
 
 
+
             $birthday = '';
+
 
 
             $gender = '';
 
 
+
             $first_name = '';
+
 
 
             $last_name = '';
 
 
+
             //redirect('/');
 
 
+
             echo 2;
+
 
 
         }
@@ -6494,10 +6640,13 @@ class users extends CI_Controller{
     //===========================================================================
 
 
+
     //===========================================================================
 
 
+
     public function google()
+
 
 
     {
@@ -6529,22 +6678,28 @@ class users extends CI_Controller{
         $gClient = new Google_Client();
 
 
+
         $gClient->setApplicationName('fds-login');
+
 
 
         $gClient->setClientId($google_client_id);
 
 
+
         $gClient->setClientSecret($google_client_secret);
 
 
+
         $gClient->setRedirectUri($google_redirect_url);
+
 
 
         $gClient->setDeveloperKey($google_developer_key);
 
 
         $google_oauthV2 = new Google_Oauth2Service($gClient);
+
 
 
         $code = '';
@@ -6557,10 +6712,13 @@ class users extends CI_Controller{
             $code = trim($_REQUEST['code']);
 
 
+
         }
 
 
+
         $gClient->authenticate($code);
+
 
 
         $token = $gClient->getAccessToken();
@@ -6576,25 +6734,32 @@ class users extends CI_Controller{
             $id_google = $user['id'];
 
 
+
             $email = $user['email'];
+
 
 
             $first_name = $user['given_name'];
 
 
+
             $last_name = $user['family_name'];
+
 
 
             $username_array = explode('@', $email);
 
 
+
             $username = $username_array[0];
+
 
 
             $pass = $user['id'];
 
 
             $access_token = access_token();
+
 
 
             $password = $this->generate_password_string($access_token, $pass);
@@ -6606,7 +6771,9 @@ class users extends CI_Controller{
             if (count($chk_email) > 0) {
 
 
+
                 $user_id = $chk_email[0]['user_id'];
+
 
 
                 $this->session->set_userdata('user_id', $user_id);
@@ -6615,10 +6782,13 @@ class users extends CI_Controller{
             } else {
 
 
+
                 $qry = "insert into zc_user set email_id = '" . $email . "', first_name = '" . $first_name . "', last_name = '" . $last_name . "', password = '" . $password . "'";
 
 
+
                 $rs = $this->user_model->insert_update($qry);
+
 
 
                 $this->session->set_userdata('user_id', $rs);
@@ -6627,10 +6797,13 @@ class users extends CI_Controller{
                 $user_id = $rs;
 
 
+
                 $email_user = get_perticular_field_value('zc_user', 'email_id', " and user_id='" . $user_id . "'");
 
 
+
                 $first_name = get_perticular_field_value('zc_user', 'first_name', " and user_id='" . $user_id . "'");
+
 
 
                 $last_name = get_perticular_field_value('zc_user', 'last_name', " and user_id='" . $user_id . "'");
@@ -6639,71 +6812,60 @@ class users extends CI_Controller{
                 $details = array();
 
 
+
                 $details['from'] = "no-reply@zapcasa.it";
+
 
 
                 $details['to'] = $email;//"soumalya.arb@gmail.com";
 
 
+
                 $details['subject'] = $this->lang->line('social_login_mail_subject');
 
 
+
                 $link = '';
+
 
 
                 $details['message'] = '<body style="font-family:Century Gothic; color: #4c4d51; font-size:13px;">
 
 
 
-							 <div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
+                             <div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
 
 
 
-							  <div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
+                              <div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
 
 
 
-								 <div style="border-bottom:1px solid #d1d1d1;">
+                                 <div style="border-bottom:1px solid #d1d1d1;">
 
 
 
-								  <img src="' . base_url() . 'asset/images/logo.png" alt="ZapCasa"/>
+                                  <img src="' . base_url() . 'asset/images/logo.png" alt="ZapCasa"/>
 
 
 
-								 </div>
+                                 </div>
 
 
 
-								 <div style="padding:15px;">
+                                 <div style="padding:15px;">
 
 
 
-								  <strong>' . $this->lang->line('new_mail-hi') . ' ' . $first_name . " " . $last_name . '</strong>
+                                  <strong>' . $this->lang->line('new_mail-hi') . ' ' . $first_name . " " . $last_name . '</strong>
 
 
 
-									 <p>' . $this->lang->line('social_login_mail_content') . ':</p>
+                                     <p>' . $this->lang->line('social_login_mail_content') . ':</p>
 
 
 
-									 <p>' . $pass . '</p>
-
-
-
-
-
-
-
-									 <p><br>www.zapcasa.it</p>
-
-
-
-								 </div>
-
-
-
-							 </div>
+                                     <p>' . $pass . '</p>
 
 
 
@@ -6711,7 +6873,23 @@ class users extends CI_Controller{
 
 
 
-							 </body>';
+                                     <p><br>www.zapcasa.it</p>
+
+
+
+                                 </div>
+
+
+
+                             </div>
+
+
+
+
+
+
+
+                             </body>';
 
 
                 //if( send_mail($details) )
@@ -6882,7 +7060,7 @@ class users extends CI_Controller{
 
         $user_list = get_all_value('zc_user', " and status='1'");
 
-#		echo "<pre>"; print_r($user_list);exit;
+#       echo "<pre>"; print_r($user_list);exit;
 
         foreach ($user_list as $k => $V) {
 
@@ -6893,10 +7071,10 @@ class users extends CI_Controller{
             $lastname = $V['last_name'];
 
             $search_list = get_all_value('zc_save_search', " and saved_by_user_id='" . $uid . "' AND rec_option = 1 ");
-            $user_preferences = get_perticular_field_value('	zc_user_preference', 'email_alerts', " and user_id='" . $uid . "'");
+            $user_preferences = get_perticular_field_value('zc_user_preference', 'email_alerts', " and user_id='" . $uid . "'");
             $user_language = get_perticular_field_value('zc_user_preference', 'language', " and user_id='" . $uid . "'");
 
-            // echo "<pre><br> => ".$uid; print_r($user_language);exit;
+            //echo "<pre><br> => ".$uid; print_r($user_language);exit;
 
             if ($user_preferences == 1) {
 
@@ -7092,7 +7270,560 @@ class users extends CI_Controller{
 
 
                         $url = 'http://www.zapcasa.it/zap-test3/users/common_search' . $data;
+                        ///echo "<br> <pre>=== Master : ";
+                        // print_r($searchPrms);exit;
+                        $ch = curl_init();
+                        // Disable SSL verification
+                        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                        // Will return the response, if false it print the response
+                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                        // Set the url
+                        curl_setopt($ch, CURLOPT_URL, $url);
+                        // Execute
+                        $result = curl_exec($ch);
+                        // Closing
+                        curl_close($ch);
+                        // Will dump a beauty json :3
+                        //var_dump(json_decode($result, true));
+                        $MasterData = json_decode($result, true);
+                        // echo "<br> <pre>=== Master : ";
+                        // print_r($MasterData);exit;
 
+                        // echo $count;exit;
+                        if (is_array($MasterData['property_details'])) {
+                            $PDCount = count($MasterData['property_details']);
+                        } else {
+                            $PDCount = $MasterData['property_details'];
+                        }
+
+                        //print_r($MasterData);exit;
+                        // echo "<br> <pre>=== Master : ";
+                        // print_r($PDCount);
+                        $MasterData = $MasterData['property_details'];
+                        //  echo "<br> <pre>=== Master : ";
+                        // print_r($MasterData);exit;
+                        $TempOut = ''; 
+                        
+                        $max = count($MasterData);
+                        for ($m = 0; $m < $max; $m++) {
+                            $tempcls = '';
+                            if ($m % 2 != 0) {
+                                $tempcls = 'alt';
+                            }
+                            $desc = $MasterData[$m]['description'];
+                            $s_description = substr($desc, 0, 20);
+                            $category_id = $MasterData[$m]['category_id'];
+                            if ($category_id == '6' || $category_id == '7') {
+                                $first_segment = 'Business';
+                            } elseif ($category_id == '1') {
+                                $first_segment = 'Residential';
+                            } elseif ($category_id == '3') {
+                                $first_segment = 'Rooms';
+                            } elseif ($category_id == '4') {
+                                $first_segment = 'Land';
+                            } elseif ($category_id == '5') {
+                                $first_segment = 'Vacations';
+                            }
+                            $Rent = $MasterData[$m]['name'];
+                            if ($user_language == 'it' && $Rent == 'Rent') {
+                                $rentname = 'Affitto';
+                            } else {
+                                $rentname = 'Vendita';
+
+                            }
+                            if ($user_language == 'it' && $first_segment == 'Land') {
+                                $catname = 'Terreni';
+                            } else if ($user_language == 'it' && $first_segment == 'Business') {
+                                $catname = 'Commerciale';
+
+                            } else if ($user_language == 'it' && $first_segment == 'Residential') {
+                                $catname = 'Residenziale';
+
+                            } else if ($user_language == 'it' && $first_segment == 'Rooms') {
+                                $catname = 'Stanze';
+
+                            } else if ($user_language == 'it' && $first_segment == 'Vacations') {
+                                $catname = 'Vacanze';
+
+                            }
+                            // $street=$MasterData[$m]['street_address'];
+                            $TempOut .= '<li style="margin-left:0px;margin-top: 17px;list-style:none;" class="' . $tempcls . '">
+                <div class="listingImg" style="float: left;position: relative;text-align: center;width: 138px;">
+                        <a href="' . base_url() . '' . $first_segment . '/' . $MasterData[$m]['name'] . '-' . $MasterData[$m]['city_name'] . '-' . $MasterData[$m]['provience_name'] . '-' . $MasterData[$m]['property_id'] . '">
+                        <img
+                            src="http://www.zapcasa.it/zap-test3/assets/uploads/Property/Property' . $MasterData[$m]['property_id'] . '/thumb_92_82/' . $MasterData[$m]['main_img'] . '"
+                            alt="" style="position: relative;text-align: center;width: 185px;background: #FFFFFF;border: 1px solid #E6E6E6; height: auto !important;width: 122px;padding: 3px;margin-right: 90px;position: relative;">
+                        
+                        <div class="listingShw"></div>
+                    </a>
+
+                    <div style="text-align:left; margin-left:6px;"> <br>
+                        <br> <span
+                            style="font-weight:bold; color:#5199D4;"> </span></div>
+                     </div>
+                <div class="listingContent" style="float: left; padding-left: 5px;width: 300px;padding-right: 8px;">
+                        <h4 style="font-weight:bold;font-size:12px; margin-top: 0px;margin: 0px;">' . $this->lang->line('ref_code') . ': ' . CreateNewRefToken($MasterData[$m]['property_id'], $MasterData[$m]['name']) . '</h4>
+                    <h2 class="hackerspace" style="color: #074D86;font-size: 15px;margin-top: -14px;text-decoration:none;font-weight: bold;margin:0px;">
+                        <a style ="color: #074D86;font-size: 15px;margin-top: -14px;text-decoration:none;"href="' . base_url() . '' . $first_segment . '/' . $MasterData[$m]['name'] . '-' . $MasterData[$m]['city_name'] . '-' . $MasterData[$m]['provience_name'] . '-' . $MasterData[$m]['property_id'] . '">
+                                                ' . $MasterData[$m]['name'] . '
+                            For ' . $MasterData[$m]['typology_name'] . ' in ' . $MasterData[$m]['city_name'] . ', ' . $MasterData[$m]['province_code'] . '</a></h2>
+                        
+                    <div class="listAddress" style="/* float: left; */margin-bottom: -11px;width: 100%;margin-top: -12px;font-size: 10px;"><h3 style="margin:0px;"> ' . $MasterData[$m]['street_address'] . ', ' . $MasterData[$m]['street_no'] . ' - ' . $MasterData[$m]['zip'] . ' </h3>
+                </div>
+                    <p style="margin:0px;margin-top:5px;text-align:left;color: #686868;line-height: 1.3em;font-size: 13px;"> ' . $s_description . '<br></p> 
+
+                    <div class="propFeatures" style="width:100%;">
+                        <div style="float:left; margin-bottom: 18px;"><font style="color:#ED6B1F"><span
+                                    style="color:#ED6B1F; font-weight:bold;float:left;">�' . $MasterData[$m]['price'] . '&nbsp;</span><span
+                                    style="color:#000; font-weight:bold;float:left;">Per Month&nbsp;</span></font></div>
+                        
+                    </div>
+
+                </div>
+                <div style="display:table;border-bottom: 1px dashed #c4c4c4;width:100%;background:#888;min-height:25px;margin-top:10px;"> 
+                    <div style="display:table-cell;vertical-align:middle;padding-left:5px;"> 
+                    <strong style="font-weight:bold;">Published:</strong> ' . date('d', strtotime($MasterData[$m]['posting_time'])) . '-' . date('m', strtotime($MasterData[$m]['posting_time'])) . '-' . date('Y', strtotime($MasterData[$m]['posting_time'])) . '
+                     </div> 
+                     <div style="display:table-cell;vertical-align:middle;text-align:right;padding-right:5px;"> ' . $first_segment . ' </div> </div>
+            </li>';
+                            $TempOut_ITALIAN .= '<li style="margin-left:0px;margin-top: 17px;list-style:none;" class="' . $tempcls . '">
+                <div class="listingImg" style="float: left;
+    position: relative;
+    text-align: center;
+    width: 138px;">
+                        <a href="' . base_url() . '' . $first_segment . '/' . $MasterData[$m]['name'] . '-' . $MasterData[$m]['city_name'] . '-' . $MasterData[$m]['provience_name'] . '-' . $MasterData[$m]['property_id'] . '">
+                        <img
+                            src="http://www.zapcasa.it/zap-test3/assets/uploads/Property/Property' . $MasterData[$m]['property_id'] . '/thumb_92_82/' . $MasterData[$m]['main_img'] . '"
+                            alt="" style="position: relative;text-align: center;width: 185px;background: #FFFFFF;
+    border: 1px solid #E6E6E6;
+    height: auto !important;
+    width: 122px;
+    padding: 3px;
+    margin-right: 90px;
+    position: relative;
+    ">
+                        
+                        <div class="listingShw"></div>
+                    </a>
+
+                    <div style="text-align:left; margin-left:6px;"> <br>
+                        <br> <span
+                            style="font-weight:bold; color:#5199D4;"> </span></div>
+                     </div>
+                <div class="listingContent" style="float: left;
+    padding-left: 5px;
+    width: 300px;
+    
+    padding-right: 8px;"><h4 style="font-weight:bold;font-size:12px; margin-top: 0px;margin: 0px;">Rif: ' . CreateNewRefToken($MasterData[$m]['property_id'], $MasterData[$m]['name']) . '</h4>
+
+                    <h2 class="hackerspace" style="color: #074D86;
+    font-size: 15px;
+    margin-top: -14px;
+    text-decoration:none;
+    font-weight: bold;
+    margin:0px;
+    "><a style ="color: #074D86;
+    font-size: 15px;
+    margin-top: -14px;
+    text-decoration:none;
+    "href="' . base_url() . '' . $first_segment . '/' . $MasterData[$m]['name'] . '-' . $MasterData[$m]['city_name'] . '-' . $MasterData[$m]['provience_name'] . '-' . $MasterData[$m]['property_id'] . '">
+                                                ' . $MasterData[$m]['typology_name_it'] . ' in ' . $rentname . '
+                            a ' . $MasterData[$m]['city_name_it'] . ', ' . $MasterData[$m]['province_code'] . '</a></h2>
+                        
+                    <div class="listAddress" style="
+    /* float: left; */
+    
+   margin-bottom: -11px;
+    width: 100%;
+    margin-top: -12px;
+    font-size: 10px;"><h3 style="margin:0px;">
+    ' . $MasterData[$m]['street_address'] . ', ' . $MasterData[$m]['street_no'] . ' - ' . $MasterData[$m]['zip'] . ' </h3></div>
+                    <p style="text-align:left;color: #686868;
+    line-height: 1.3em;
+    
+    font-size: 13px;margin:0px;margin-top:0px;"> ' . $s_description . '<br></p> 
+
+                    <div class="propFeatures" style="width:100%;">
+                        <div style="float:left; margin-bottom: 18px;"><font style="color:#ED6B1F"><span
+                                    style="color:#ED6B1F; font-weight:bold;float:left;">�' . $MasterData[$m]['price'] . '&nbsp;</span><span
+                                    style="color:#000; font-weight:bold;float:left;">Al mese&nbsp;</span></font></div>
+                        
+                    </div>
+
+                </div>
+                <div style="display:table;border-bottom: 1px dashed #c4c4c4;width:100%;background:#888;min-height:25px;margin-top:10px;"> 
+                    <div style="display:table-cell;vertical-align:middle;padding-left:5px;"> 
+                    <strong style="font-weight:bold;">Pubblicato:</strong> ' . date('d', strtotime($MasterData[$m]['posting_time'])) . '-' . date('m', strtotime($MasterData[$m]['posting_time'])) . '-' . date('Y', strtotime($MasterData[$m]['posting_time'])) . '
+                     </div> 
+                     <div style="display:table-cell;vertical-align:middle;text-align:right;padding-right:5px;"> ' . $catname . ' </div> </div>
+            </li>';   
+                        }
+//echo "<br> ==> ".$TempOut;exit;
+
+                        $OUTPUT_HTML = '
+
+
+
+<div id="search_full" class="searchresult_box" style="width:100% !important;">
+    <span style="font-weight:bold; font-size: 15px;">' . $this->lang->line('new_mail-hi') . ' ' . $firstname . " " . $lastname . ',</span></n>
+    <br>
+    <p style="font-weight:bold; font-size: 15px; margin-top: 5px;">Here are the properties added for your saved search = ' . $saved_property_name . '</p>
+    
+    <br>
+    <div style="position: relative;">
+        <ul style="padding: 0px;">
+            ' . $TempOut . '
+        </ul>
+        <div style="margin-left:40%; margin-bottom:20px;">
+                    
+
+                        <a class="mainbt" href="' . base_url() . 'property/search' . $searchPrms . '" style="border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    color: #fff;
+    float: left;
+    margin-right: 10px;
+    font-size: 16px;
+   
+    text-transform: uppercase;
+    cursor: pointer;
+    border: 1px solid #c95d00;
+    padding: 0px 13px 0px 13px;
+    height: 35px;
+    line-height: 35px;
+    text-decoration: none;
+    background-color: #c95d00;
+        margin-top:26px;">
+                            View All
+                        </a>
+
+                        <div style="clear: both"></div>
+                    
+         </div>
+    </div>
+    
+    <div class="clear"></div>
+    <div class="clear"></div>
+</div>
+                        ';
+                        $OUTPUT_HTML_ITALIAN = '
+
+
+
+<div id="search_full" class="searchresult_box" style="width:100% !important;">
+    <span style="font-weight:bold; font-size: 15px;">Ciao ' . $firstname . " " . $lastname . ',</span></n>
+    <br>
+    <p style="font-weight:bold; font-size: 15px; margin-top: 5px;">Ecco gli immobili aggiunti per la tua ricerca salvata = ' . $saved_property_name . '</p>
+    
+    <br>
+    <div style="position: relative;">
+        <ul style="padding:0px;">
+            ' . $TempOut_ITALIAN . '
+        </ul>
+        <div style="margin-left:40%; margin-bottom:20px;">
+            <a class="mainbt" href="' . base_url() . 'property/search' . $searchPrms . '" style="border-radius: 4px;-moz-border-radius: 4px;-webkit-border-radius: 4px;color: #fff;float: left;margin-right: 10px;font-size: 16px;text-transform: uppercase;cursor: pointer;border: 1px solid #c95d00;padding: 0px 13px 0px 13px;height: 35px;line-height: 35px;text-decoration: none; background-color: #c95d00; margin-top: 26px;">
+                            Vedi Tutti
+                        </a>
+                        <div style="clear: both"></div>
+         </div>
+    </div>
+    
+    <div class="clear"></div>
+    <div class="clear"></div>
+</div>
+                        ';
+
+                        #echo $OUTPUT_HTML;
+                        //echo "<br> <pre>=== Master : ";
+                        // print_r($PDCount);
+                        //echo $PDCount;exit;
+                        if ($PDCount > 0 && $user_language == 'english') {
+                            $email_user = get_perticular_field_value('zc_user', 'email_id', " and user_id='" . $uid . "'");
+                            $default_email = get_perticular_field_value('zc_settings', 'meta_value', " and meta_name='default_email'");
+                            $mail_from = isset($default_email) ? $default_email : "no-reply@zapcasa.it";
+                            $mail_to = $email_user;
+                            //$mail_to      = 'vikas.maheshwari97@yahoo.in,parmarvikrantr@gmail.com';
+                            $subject = 'New properties for your daily alert [' . $saved_property_name . ']';
+                            $body = '';
+
+                            $body = '<body style="font-family:Century Gothic; color: #4c4d51; font-size:13px;">
+                                                <div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
+                                                    <div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
+                                                        <div style="border-bottom:1px solid #d1d1d1;">
+                                                            <img src="' . base_url() . 'assets/images/logo.png" alt="logo"/>
+                                                        </div>
+                                                        <div style="">
+
+                                                                ' . $OUTPUT_HTML . '
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </body>';
+
+                            /* $headers = 'From: Zapcasa <>' . PHP_EOL .
+                            'Reply-To: Vikrant <vikas.maheshwari1991.vm@gmail.com>' . PHP_EOL .
+                            'X-Mailer: PHP/' . phpversion();*/
+                            // echo $body;
+                            sendemail($mail_from, $mail_to, $subject, $body, $cc = '');
+
+                        } else if ($PDCount > 0 && $user_language == 'it') {
+                            $email_user = get_perticular_field_value('zc_user', 'email_id', " and user_id='" . $uid . "'");
+                            $default_email = get_perticular_field_value('zc_settings', 'meta_value', " and meta_name='default_email'");
+                            $mail_from = isset($default_email) ? $default_email : "no-reply@zapcasa.it";
+                            $mail_to = $email_user;
+                            //$mail_to      = 'vikas.maheshwari97@yahoo.in,parmarvikrantr@gmail.com';
+                            $subject = 'Nuovi immobili per il tuo alert giornaliero [' . $saved_property_name . ']';
+                            //echo $subject;exit;
+                            $body = '';
+
+                            $body = '<body style="font-family:Century Gothic; color: #4c4d51; font-size:13px;">
+                                                <div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
+                                                    <div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
+                                                        <div style="border-bottom:1px solid #d1d1d1;">
+                                                            <img src="' . base_url() . 'assets/images/logo.png" alt="logo"/>
+                                                        </div>
+                                                        <div style="">
+
+                                                                ' . $OUTPUT_HTML_ITALIAN . '
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </body>';
+
+                            /*$headers = 'From: Zapcasa <>' . PHP_EOL .
+                            'Reply-To: Vikrant <vikas.maheshwari1991.vm@gmail.com>' . PHP_EOL .
+                            'X-Mailer: PHP/' . phpversion();*/
+                            // echo $body;
+                            sendemail($mail_from, $mail_to, $subject, $body, $cc = '');
+                        }
+
+                    }
+
+
+                }
+
+            }
+
+        }
+    }
+
+    public function weekly_alert()
+    {
+
+        $user_list = get_all_value('zc_user', " and status='1'");
+
+#       echo "<pre>"; print_r($user_list);exit;
+
+        foreach ($user_list as $k => $V) {
+
+            # echo "<br> ==> ".$k." => ".
+
+            $uid = $V['user_id'];
+            $firstname = $V['first_name'];
+            $lastname = $V['last_name'];
+
+            $search_list = get_all_value('zc_save_search', " and saved_by_user_id='" . $uid . "' AND rec_option = 2 ");
+            $user_preferences = get_perticular_field_value('  zc_user_preference', 'email_alerts', " and user_id='" . $uid . "'");
+            $user_language = get_perticular_field_value('zc_user_preference', 'language', " and user_id='" . $uid . "'");
+
+            // echo "<pre><br> => ".$uid; print_r($user_language);exit;
+
+            if ($user_preferences == 1) {
+
+                foreach ($search_list as $sk => $sV) {
+                    $save_search_id = $sV['saved_id'];
+                    #$rs=$this->usersm->get_details_saved_property( $save_search_id );
+                    $rs = $this->usersm->get_details_saved_property($save_search_id);
+                    if (count($rs) > 0) {
+                        $data = "";
+                        $location = isset($rs['location']) ? urlencode($rs['location']) : '';
+                        $category_id = isset($rs['category']) ? $rs['category'] : '';
+                        $add_neighbour_zip = isset($rs['add_neighbour_zip']) ? $rs['add_neighbour_zip'] : '';
+                        $contract_id = isset($rs['contract_id']) ? $rs['contract_id'] : '';
+                        $status = isset($rs['status']) ? $rs['status'] : '';
+                        $property_category = isset($rs['property_category']) ? $rs['property_category'] : '';
+                        $saved_property_name = $rs['saved_property_name'];
+                        $min_price = isset($rs['min_price']) ? urlencode($rs['min_price']) : '';
+                        $max_price = isset($rs['max_price']) ? urlencode($rs['max_price']) : '';
+                        $min_room = isset($rs['min_room']) ? $rs['min_room'] : '';
+                        $max_room = isset($rs['max_room']) ? $rs['max_room'] : '';
+                        $for_luxury = isset($rs['for_luxury']) ? $rs['for_luxury'] : '';
+
+                        if ($min_price == '0,00') {
+                            $min_price = "";
+                        }
+                        if ($max_price == '0,00') {
+                            $max_price = "";
+                        }
+                        if ($min_room == '0') {
+                            $min_room = "";
+                        }
+                        if ($max_room == '0') {
+                            $max_room = "";
+                        }
+
+                        $typology = isset($rs['typology']) ? $rs['typology'] : '';
+                        $property_post_by_type = isset($rs['property_post_by_type']) ? $rs['property_post_by_type'] : '';
+                        $bathrooms_no = isset($rs['bathrooms_no']) ? $rs['bathrooms_no'] : '';
+                        $min_surface_area = isset($rs['min_surface_area']) ? $rs['min_surface_area'] : '';
+                        $max_surface_area = isset($rs['max_surface_area']) ? $rs['max_surface_area'] : '';
+                        $min_beds_no = isset($rs['min_beds_no']) ? $rs['min_beds_no'] : '';
+                        $max_beds_no = isset($rs['max_beds_no']) ? $rs['max_beds_no'] : '';
+                        $for_luxury = isset($rs['for_luxury']) ? $rs['for_luxury'] : '';
+                        if ($min_surface_area == '0') {
+                            $min_surface_area = "";
+                        }
+                        if ($max_surface_area == '0') {
+                            $max_surface_area = "";
+                        }
+                        if ($min_beds_no == '0') {
+                            $min_beds_no = "";
+                        }
+                        if ($max_beds_no == '0') {
+                            $max_beds_no = "";
+                        }
+                        if ($bathrooms_no == '0') {
+                            $bathrooms_no = "";
+                        }
+
+                        $kind = isset($rs['kind']) ? $rs['kind'] : '';
+                        $energyclass = isset($rs['energyclass']) ? $rs['energyclass'] : '';
+                        $heating = isset($rs['heating']) ? $rs['heating'] : '';
+                        $parking = isset($rs['parking']) ? $rs['parking'] : '';
+                        $furnished = isset($rs['furnished']) ? $rs['furnished'] : '';
+                        $roommates = isset($rs['roommates']) ? $rs['roommates'] : '';
+                        $occupation = isset($rs['occupation']) ? $rs['occupation'] : '';
+                        $smokers = isset($rs['smokers']) ? $rs['smokers'] : '';
+                        $pets = isset($rs['pets']) ? $rs['pets'] : '';
+                        $elevator = isset($rs['elevator']) ? $rs['elevator'] : '';
+                        $air_conditioning = isset($rs['air_conditioning']) ? $rs['air_conditioning'] : '';
+                        $garden = isset($rs['garden']) ? $rs['garden'] : '';
+                        $terrace = isset($rs['terrace']) ? $rs['terrace'] : '';
+                        $balcony = isset($rs['balcony']) ? $rs['balcony'] : '';
+
+                        if ($kind == '0') {
+                            $kind = "";
+                        }
+                        if ($energyclass == '0') {
+                            $energyclass = "";
+                        }
+                        if ($heating == '0') {
+                            $heating = "";
+                        }
+                        if ($parking == '0') {
+                            $parking = "";
+                        }
+                        if ($furnished == '0') {
+                            $furnished = "";
+                        }
+                        if ($roommates == '0') {
+                            $roommates = "";
+                        }
+                        if ($occupation == '0') {
+                            $occupation = "";
+                        }
+                        if ($smokers == '0') {
+                            $smokers = "";
+                        }
+                        if ($pets == '0') {
+                            $pets = "";
+                        }
+                        if ($elevator == '0') {
+                            $elevator = "";
+                        }
+                        if ($air_conditioning == '0') {
+                            $air_conditioning = "";
+                        }
+                        if ($garden == '0') {
+                            $garden = "";
+                        }
+                        if ($terrace == '0') {
+                            $terrace = "";
+                        }
+                        if ($balcony == '0') {
+                            $balcony = "";
+                        }
+                        $contract_type = "";
+                        if ($contract_id != "") {
+                            $contract_type = "&contract_type=" . $contract_id;
+                        }
+
+                        $status_id = "";
+                        if ($status != "") {
+                            $status_array = explode(",", $status);
+
+                            for ($i = 0; $i < count($status_array); $i++) {
+                                if ($i == 0) {
+                                    $status_id = "&status[]=" . $status_array[$i];
+                                } else {
+                                    $status_id = $status_id . "&status[]=" . $status_array[$i];
+                                }
+                            }
+                        }
+                        $typology_id = "";
+                        if ($typology != "") {
+                            $typology_array = explode(",", $typology);
+                            for ($i = 0; $i < count($typology_array); $i++) {
+                                if ($i == 0) {
+                                    $typology_id = "&typology[]=" . $typology_array[$i];
+                                } else {
+                                    $typology_id = $typology_id . "&typology[]=" . $typology_array[$i];
+                                }
+                            }
+                        }
+                        $property_post_by_id = "";
+                        if ($property_post_by_type != "") {
+                            $property_post_by_array = explode(",", $property_post_by_type);
+                            for ($i = 0; $i < count($property_post_by_array); $i++) {
+                                if ($i == 0) {
+                                    $property_post_by_id = "&posted_by=" . $property_post_by_array[$i];
+                                } else {
+                                    $property_post_by_id = $property_post_by_id . "&posted_by=" . $property_post_by_array[$i];
+                                }
+                            }
+                        }
+                        $otherCriteria = "";
+                        $elevator_cond = "";
+                        if ($elevator != '0') {
+                            $elevator_cond = "&elevator=" . $elevator;
+                        }
+                        $air_conditioning_cond = "";
+                        if ($air_conditioning != '0') {
+                            $air_conditioning_cond = "&air_conditioning=" . $air_conditioning;
+                        }
+                        $garden_cond = "";
+                        if ($garden != '0') {
+                            $garden_cond = "&garden=" . $garden;
+                        }
+                        $terrace_cond = "";
+                        if ($terrace != '0') {
+                            $terrace_cond = "&terrace=" . $terrace;
+                        }
+                        $balcony_cond = "";
+                        if ($balcony != '0') {
+                            $balcony_cond = "&balcony=" . $balcony;
+                        }
+                        $smokers_cond = "";
+                        if ($smokers != '0') {
+                            $smokers_cond = "&smokers=" . $smokers;
+                        }
+                        $pets_cond = "";
+                        if ($pets != '0') {
+                            $pets_cond = "&pets=" . $pets;
+                        }
+                        $otherCriteria = $elevator_cond . $air_conditioning_cond . $garden_cond . $terrace_cond . $balcony_cond . $smokers_cond . $pets_cond;
+                        $queryStr = $contract_type . $property_post_by_id . $status_id;
+
+                        $date = date('Y-m-d');
+                        // $date= "between date_sub(now(),INTERVAL 1 WEEK) and now()";
+
+                        //$data = "?location=$location&category_id=$category_id&add_neighbour_zip=$add_neighbour_zip&for_luxury=$for_luxury&property_cat=$property_category&min_price=$min_price&max_price=$max_price&min_beds_no=$min_beds_no&max_beds_no=$max_beds_no&min_room=$min_room&max_room=$max_room$typology_id&bathrooms_no=$bathrooms_no&min_surface_area=$min_surface_area&max_surface_area=$max_surface_area&kind=$kind&energyclass=$energyclass&heating=$heating&parking=$parking&roommates=$roommates&occupation=$occupation&furnished=$furnished$queryStr$otherCriteria&search=Search&category_search=$property_category&save_search_id=$save_search_id&save_search_name=$saved_property_name&posting_time='".$date."'"; 
+                        $data = "?location=$location&category_id=$category_id&add_neighbour_zip=$add_neighbour_zip&property_cat=$property_category&min_price=$min_price&max_price=$max_price&min_room=$min_room&max_room=$max_room$typology_id&bathrooms_no=$bathrooms_no&min_surface_area=$min_surface_area&max_surface_area=$max_surface_area&kind=$kind&energyclass=$energyclass&heating=$heating&parking=$parking&furnished=$furnished$queryStr$otherCriteria&search=Search&category_search=$property_category&save_search_id=$save_search_id&save_search_name=$saved_property_name&posting_time='" . $date . "'";
+                        $searchPrms = trim(preg_replace('/[\s\t\n\r\s]+/', ' ', $data));
+
+
+                        $url = 'http://www.zapcasa.it/zap-test3/users/common_search' . $searchPrms;
+                        
                         $ch = curl_init();
                         // Disable SSL verification
                         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -7121,7 +7852,7 @@ class users extends CI_Controller{
                         // echo "<br> <pre>=== Master : ";
                         // print_r($PDCount);
                         $MasterData = $MasterData['property_details'];
-                        //echo "<br> <pre>=== Master : ";
+                        // echo "<br> <pre>=== Master : ";
                         // print_r($MasterData['property_details']);exit;
                         $TempOut = ''; 
                         
@@ -7364,7 +8095,7 @@ class users extends CI_Controller{
                             $mail_from = isset($default_email) ? $default_email : "no-reply@zapcasa.it";
                             $mail_to = $email_user;
                             //$mail_to      = 'vikas.maheshwari97@yahoo.in,parmarvikrantr@gmail.com';
-                            $subject = $this->lang->line('daily_mail_subject');
+                            $subject = 'New properties for your Weekly alert [' . $saved_property_name . ']';
                             $body = '';
 
                             $body = '<body style="font-family:Century Gothic; color: #4c4d51; font-size:13px;">
@@ -7393,7 +8124,7 @@ class users extends CI_Controller{
                             $mail_from = isset($default_email) ? $default_email : "no-reply@zapcasa.it";
                             $mail_to = $email_user;
                             //$mail_to      = 'vikas.maheshwari97@yahoo.in,parmarvikrantr@gmail.com';
-                            $subject = 'Alert messaggio giornalieri';
+                            $subject = 'Nuovi immobili per il tuo alert giornaliero [' . $saved_property_name . ']';
                             //echo $subject;exit;
                             $body = '';
 
@@ -7414,553 +8145,7 @@ class users extends CI_Controller{
                             /*$headers = 'From: Zapcasa <>' . PHP_EOL .
                             'Reply-To: Vikrant <vikas.maheshwari1991.vm@gmail.com>' . PHP_EOL .
                             'X-Mailer: PHP/' . phpversion();*/
-                            // echo $body;
-                            sendemail($mail_from, $mail_to, $subject, $body, $cc = '');
-                        }
-
-                    }
-
-
-                }
-
-            }
-
-        }
-    }
-
-    public function weekly_alert()
-    {
-
-        $user_list = get_all_value('zc_user', " and status='1'");
-        foreach ($user_list as $k => $V) {
-            $uid = $V['user_id'];
-            $firstname = $V['first_name'];
-            $lastname = $V['last_name'];
-            $search_list = get_all_value('zc_save_search', " and saved_by_user_id='" . $uid . "' AND rec_option = 2 ");
-            $user_preferences = get_perticular_field_value('  zc_user_preference', 'email_alerts', " and user_id='" . $uid . "'");
-            $user_language = get_perticular_field_value('zc_user_preference', 'language', " and user_id='" . $uid . "'");
-
-
-            if ($user_preferences == 1 && $uid == 207) {
-
-                foreach ($search_list as $sk => $sV) {
-                    $save_search_id = $sV['saved_id'];
-                    #$rs=$this->usersm->get_details_saved_property( $save_search_id );
-                    $rs = $this->usersm->get_details_saved_property($save_search_id);
-                    if (count($rs) > 0) {
-                        $data = "";
-                        $location = isset($rs['location']) ? urlencode($rs['location']) : '';
-                        $category_id = isset($rs['category']) ? $rs['category'] : '';
-                        $add_neighbour_zip = isset($rs['add_neighbour_zip']) ? $rs['add_neighbour_zip'] : '';
-                        $contract_id = isset($rs['contract_id']) ? $rs['contract_id'] : '';
-                        $status = isset($rs['status']) ? $rs['status'] : '';
-                        $property_category = isset($rs['property_category']) ? $rs['property_category'] : '';
-                        $saved_property_name = $rs['saved_property_name'];
-                        $min_price = isset($rs['min_price']) ? urlencode($rs['min_price']) : '';
-                        $max_price = isset($rs['max_price']) ? urlencode($rs['max_price']) : '';
-                        $min_room = isset($rs['min_room']) ? $rs['min_room'] : '';
-                        $max_room = isset($rs['max_room']) ? $rs['max_room'] : '';
-                        $for_luxury = isset($rs['for_luxury']) ? $rs['for_luxury'] : '';
-
-                        if ($min_price == '0,00') {
-                            $min_price = "";
-                        }
-                        if ($max_price == '0,00') {
-                            $max_price = "";
-                        }
-                        if ($min_room == '0') {
-                            $min_room = "";
-                        }
-                        if ($max_room == '0') {
-                            $max_room = "";
-                        }
-
-                        $typology = isset($rs['typology']) ? $rs['typology'] : '';
-                        $property_post_by_type = isset($rs['property_post_by_type']) ? $rs['property_post_by_type'] : '';
-                        $bathrooms_no = isset($rs['bathrooms_no']) ? $rs['bathrooms_no'] : '';
-                        $min_surface_area = isset($rs['min_surface_area']) ? $rs['min_surface_area'] : '';
-                        $max_surface_area = isset($rs['max_surface_area']) ? $rs['max_surface_area'] : '';
-                        $min_beds_no = isset($rs['min_beds_no']) ? $rs['min_beds_no'] : '';
-                        $max_beds_no = isset($rs['max_beds_no']) ? $rs['max_beds_no'] : '';
-                        if ($min_surface_area == '0') {
-                            $min_surface_area = "";
-                        }
-                        if ($max_surface_area == '0') {
-                            $max_surface_area = "";
-                        }
-                        if ($min_beds_no == '0') {
-                            $min_beds_no = "";
-                        }
-                        if ($max_beds_no == '0') {
-                            $max_beds_no = "";
-                        }
-                        if ($bathrooms_no == '0') {
-                            $bathrooms_no = "";
-                        }
-
-                        $kind = isset($rs['kind']) ? $rs['kind'] : '';
-                        $energyclass = isset($rs['energyclass']) ? $rs['energyclass'] : '';
-                        $heating = isset($rs['heating']) ? $rs['heating'] : '';
-                        $parking = isset($rs['parking']) ? $rs['parking'] : '';
-                        $furnished = isset($rs['furnished']) ? $rs['furnished'] : '';
-                        $roommates = isset($rs['roommates']) ? $rs['roommates'] : '';
-                        $occupation = isset($rs['occupation']) ? $rs['occupation'] : '';
-                        $smokers = isset($rs['smokers']) ? $rs['smokers'] : '';
-                        $pets = isset($rs['pets']) ? $rs['pets'] : '';
-                        $elevator = isset($rs['elevator']) ? $rs['elevator'] : '';
-                        $air_conditioning = isset($rs['air_conditioning']) ? $rs['air_conditioning'] : '';
-                        $garden = isset($rs['garden']) ? $rs['garden'] : '';
-                        $terrace = isset($rs['terrace']) ? $rs['terrace'] : '';
-                        $balcony = isset($rs['balcony']) ? $rs['balcony'] : '';
-
-                        if ($kind == '0') {
-                            $kind = "";
-                        }
-                        if ($energyclass == '0') {
-                            $energyclass = "";
-                        }
-                        if ($heating == '0') {
-                            $heating = "";
-                        }
-                        if ($parking == '0') {
-                            $parking = "";
-                        }
-                        if ($furnished == '0') {
-                            $furnished = "";
-                        }
-                        if ($roommates == '0') {
-                            $roommates = "";
-                        }
-                        if ($occupation == '0') {
-                            $occupation = "";
-                        }
-                        if ($smokers == '0') {
-                            $smokers = "";
-                        }
-                        if ($pets == '0') {
-                            $pets = "";
-                        }
-                        if ($elevator == '0') {
-                            $elevator = "";
-                        }
-                        if ($air_conditioning == '0') {
-                            $air_conditioning = "";
-                        }
-                        if ($garden == '0') {
-                            $garden = "";
-                        }
-                        if ($terrace == '0') {
-                            $terrace = "";
-                        }
-                        if ($balcony == '0') {
-                            $balcony = "";
-                        }
-                        $contract_type = "";
-                        if ($contract_id != "") {
-                            $contract_type = "&contract_type=" . $contract_id;
-                        }
-
-                        $status_id = "";
-                        if ($status != "") {
-                            $status_array = explode(",", $status);
-
-                            for ($i = 0; $i < count($status_array); $i++) {
-                                if ($i == 0) {
-                                    $status_id = "&status[]=" . $status_array[$i];
-                                } else {
-                                    $status_id = $status_id . "&status[]=" . $status_array[$i];
-                                }
-                            }
-                        }
-                        $typology_id = "";
-                        if ($typology != "") {
-                            $typology_array = explode(",", $typology);
-                            for ($i = 0; $i < count($typology_array); $i++) {
-                                if ($i == 0) {
-                                    $typology_id = "&typology[]=" . $typology_array[$i];
-                                } else {
-                                    $typology_id = $typology_id . "&typology[]=" . $typology_array[$i];
-                                }
-                            }
-                        }
-                        $property_post_by_id = "";
-                        if ($property_post_by_type != "") {
-                            $property_post_by_array = explode(",", $property_post_by_type);
-                            for ($i = 0; $i < count($property_post_by_array); $i++) {
-                                if ($i == 0) {
-                                    $property_post_by_id = "&posted_by[]=" . $property_post_by_array[$i];
-                                } else {
-                                    $property_post_by_id = $property_post_by_id . "&posted_by[]=" . $property_post_by_array[$i];
-                                }
-                            }
-                        }
-                        $otherCriteria = "";
-                        $elevator_cond = "";
-                        if ($elevator != '0') {
-                            $elevator_cond = "&elevator=" . $elevator;
-                        }
-                        $air_conditioning_cond = "";
-                        if ($air_conditioning != '0') {
-                            $air_conditioning_cond = "&air_conditioning=" . $air_conditioning;
-                        }
-                        $garden_cond = "";
-                        if ($garden != '0') {
-                            $garden_cond = "&garden=" . $garden;
-                        }
-                        $terrace_cond = "";
-                        if ($terrace != '0') {
-                            $terrace_cond = "&terrace=" . $terrace;
-                        }
-                        $balcony_cond = "";
-                        if ($balcony != '0') {
-                            $balcony_cond = "&balcony=" . $balcony;
-                        }
-                        $smokers_cond = "";
-                        if ($smokers != '0') {
-                            $smokers_cond = "&smokers=" . $smokers;
-                        }
-                        $pets_cond = "";
-                        if ($pets != '0') {
-                            $pets_cond = "&pets=" . $pets;
-                        }
-                        $otherCriteria = $elevator_cond . $air_conditioning_cond . $garden_cond . $terrace_cond . $balcony_cond . $smokers_cond . $pets_cond;
-                        $queryStr = $contract_type . $property_post_by_id . $status_id;
-
-                        //$date= " between date_sub(now(),INTERVAL 1 WEEK) and now()";
-                        $date = date('Y-m-d');
-                        //echo $date;
-                        // echo "<pre>"; print_r($date);
-                        // $data = "?location=$location&category_id=$category_id&add_neighbour_zip=$add_neighbour_zip&property_cat=$property_category&min_price=$min_price&max_price=$max_price&min_room=$min_room&max_room=$max_room$typology_id&bathrooms_no=$bathrooms_no&min_surface_area=$min_surface_area&max_surface_area=$max_surface_area&kind=$kind&energyclass=$energyclass&heating=$heating&parking=$parking&furnished=$furnished$queryStr$otherCriteria&search=Search&category_search=$property_category&save_search_id=$save_search_id&save_search_name=$saved_property_name&posting_time=$date&TYPE=WEEKLY";
-                        $data = "?location=$location&category_id=$category_id&add_neighbour_zip=$add_neighbour_zip&for_luxury=$for_luxury&property_cat=$property_category&min_price=$min_price&max_price=$max_price&min_beds_no=$min_beds_no&max_beds_no=$max_beds_no&min_room=$min_room&max_room=$max_room$typology_id&bathrooms_no=$bathrooms_no&min_surface_area=$min_surface_area&max_surface_area=$max_surface_area&kind=$kind&energyclass=$energyclass&heating=$heating&parking=$parking&roommates=$roommates&occupation=$occupation&furnished=$furnished$queryStr$otherCriteria&search=Search&category_search=$property_category&save_search_id=$save_search_id&save_search_name=$saved_property_name&TYPE=WEEKLY&posting_time='" . $date . "'"; 
-                        $searchPrms = trim(preg_replace('/[\s\t\n\r\s]+/', ' ', $data));
-                        // echo "<pre>Data => "; print_r($data);exit;
-                        # echo "<br> <pre> Param => "; print_r($searchPrms);exit;
-                        $url = 'http://www.zapcasa.it/zap-test3/users/common_search' . $data;
-                        $ch = curl_init();
-                        // Disable SSL verification
-                        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                        // Will return the response, if false it print the response
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                        // Set the url
-                        curl_setopt($ch, CURLOPT_URL, $url);
-                        // Execute
-                        $result = curl_exec($ch);
-                        #var_dump($ch);
-                        #var_dump($result);
-                        // Closing
-                        curl_close($ch);
-                        // Will dump a beauty json :3
-                        //var_dump(json_decode($result, true));
-                        $MasterData = json_decode($result, true);
-                        //$count=$MasterData['propertyCount'];
-                        echo "<br> <pre>=== Master : ";
-                        print_r($$MasterData['property_details']);
-                        exit;
-                        if (is_array($MasterData['property_details'])) {
-                            $PDCount = count($MasterData['property_details']);
-                        } else {
-                            $PDCount = $MasterData['property_details'];
-                        }
-
-                        $MasterData = $MasterData['property_details'];
-                        #print_r($MasterData);
-                        $TempOut = ''; 
-                        
-                        $max = count($MasterData);
-                        for ($m = 0; $m < $max; $m++) {
-                            $tempcls = '';
-                            if ($m % 2 != 0) {
-                                $tempcls = 'alt';
-                            }
-                            $desc = $MasterData[$m]['description'];
-                            $s_description = substr($desc, 0, 20);
-                            $category_id = $MasterData[$m]['category_id'];
-                            if ($category_id == '6' || $category_id == '7') {
-                                $first_segment = 'Business';
-                            } elseif ($category_id == '1') {
-                                $first_segment = 'Residential';
-                            } elseif ($category_id == '3') {
-                                $first_segment = 'Rooms';
-                            } elseif ($category_id == '4') {
-                                $first_segment = 'Land';
-                            } elseif ($category_id == '5') {
-                                $first_segment = 'Vacations';
-                            }
-                            $Rent = $MasterData[$m]['name'];
-                            if ($user_language == 'it' && $Rent == 'Rent') {
-                                $rentname = 'Affitto';
-                            } else {
-                                $rentname = 'Vendita';
-
-                            }
-                            if ($user_language == 'it' && $first_segment == 'Land') {
-                                $catname = 'Terreni';
-                            } else if ($user_language == 'it' && $first_segment == 'Business') {
-                                $catname = 'Commerciale';
-
-                            } else if ($user_language == 'it' && $first_segment == 'Residential') {
-                                $catname = 'Residenziale';
-
-                            } else if ($user_language == 'it' && $first_segment == 'Rooms') {
-                                $catname = 'Stanze';
-
-                            } else if ($user_language == 'it' && $first_segment == 'Vacations') {
-                                $catname = 'Vacanze';
-
-                            }
-                            // $street=$MasterData[$m]['street_address'];
-
-
-                            // $street=$MasterData[$m]['street_address'];
-                            $TempOut .= '<li style="margin-left:0px;margin-top: 17px;list-style:none;" class="' . $tempcls . '">
-                <div class="listingImg" style="float: left;position: relative;text-align: center;width: 138px;">
-                        <a href="' . base_url() . '' . $first_segment . '/' . $MasterData[$m]['name'] . '-' . $MasterData[$m]['city_name'] . '-' . $MasterData[$m]['provience_name'] . '-' . $MasterData[$m]['property_id'] . '">
-                        <img
-                            src="http://www.zapcasa.it/zap-test3/assets/uploads/Property/Property' . $MasterData[$m]['property_id'] . '/thumb_92_82/' . $MasterData[$m]['main_img'] . '"
-                            alt="" style="position: relative;text-align: center;width: 185px;background: #FFFFFF;border: 1px solid #E6E6E6; height: auto !important;width: 122px;padding: 3px;margin-right: 90px;position: relative;">
-                        
-                        <div class="listingShw"></div>
-                    </a>
-
-                    <div style="text-align:left; margin-left:6px;"> <br>
-                        <br> <span
-                            style="font-weight:bold; color:#5199D4;"> </span></div>
-                     </div>
-                <div class="listingContent" style="float: left; padding-left: 5px;width: 300px;padding-right: 8px;">
-                        <h4 style="font-weight:bold;font-size:12px; margin-top: 0px;margin: 0px;">' . $this->lang->line('ref_code') . ': ' . CreateNewRefToken($MasterData[$m]['property_id'], $MasterData[$m]['name']) . '</h4>
-                    <h2 class="hackerspace" style="color: #074D86;font-size: 15px;margin-top: -14px;text-decoration:none;font-weight: bold;margin:0px;">
-                        <a style ="color: #074D86;font-size: 15px;margin-top: -14px;text-decoration:none;"href="' . base_url() . '' . $first_segment . '/' . $MasterData[$m]['name'] . '-' . $MasterData[$m]['city_name'] . '-' . $MasterData[$m]['provience_name'] . '-' . $MasterData[$m]['property_id'] . '">
-                                                ' . $MasterData[$m]['name'] . '
-                            For ' . $MasterData[$m]['typology_name'] . ' in ' . $MasterData[$m]['provience_name'] . ', ' . $MasterData[$m]['province_code'] . '</a></h2>
-                        
-                    <div class="listAddress" style="/* float: left; */margin-bottom: -11px;width: 100%;margin-top: -12px;font-size: 10px;"><h3 style="margin:0px;"> ' . $MasterData[$m]['street_address'] . ', ' . $MasterData[$m]['street_no'] . ' - ' . $MasterData[$m]['zip'] . ' </h3>
-                </div>
-                    <p style="margin:0px;margin-top:5px;text-align:left;color: #686868;line-height: 1.3em;font-size: 13px;"> ' . $s_description . '<br></p> 
-
-                    <div class="propFeatures" style="width:100%;">
-                        <div style="float:left; margin-bottom: 18px;"><font style="color:#ED6B1F"><span
-                                    style="color:#ED6B1F; font-weight:bold;float:left;">�' . $MasterData[$m]['price'] . '&nbsp;</span><span
-                                    style="color:#000; font-weight:bold;float:left;">Per Month&nbsp;</span></font></div>
-                        
-                    </div>
-
-                </div>
-                <div style="display:table;border-bottom: 1px dashed #c4c4c4;width:100%;background:#888;min-height:25px;margin-top:10px;"> 
-                    <div style="display:table-cell;vertical-align:middle;padding-left:5px;"> 
-                    <strong style="font-weight:bold;">Published:</strong> ' . date('d', strtotime($MasterData[$m]['posting_time'])) . '-' . date('m', strtotime($MasterData[$m]['posting_time'])) . '-' . date('Y', strtotime($MasterData[$m]['posting_time'])) . '
-                     </div> 
-                     <div style="display:table-cell;vertical-align:middle;text-align:right;padding-right:5px;"> ' . $first_segment . ' </div> </div>
-            </li>';
-                            $TempOut_ITALIAN .= '<li style="margin-left:0px;margin-top: 17px;list-style:none;" class="' . $tempcls . '">
-                <div class="listingImg" style="float: left;
-    position: relative;
-    text-align: center;
-    width: 138px;">
-                        <a href="' . base_url() . '' . $first_segment . '/' . $MasterData[$m]['name'] . '-' . $MasterData[$m]['city_name'] . '-' . $MasterData[$m]['provience_name'] . '-' . $MasterData[$m]['property_id'] . '">
-                        <img
-                            src="http://www.zapcasa.it/zap-test3/assets/uploads/Property/Property' . $MasterData[$m]['property_id'] . '/thumb_92_82/' . $MasterData[$m]['main_img'] . '"
-                            alt="" style="position: relative;text-align: center;width: 185px;background: #FFFFFF;
-    border: 1px solid #E6E6E6;
-    height: auto !important;
-    width: 122px;
-    padding: 3px;
-    margin-right: 90px;
-    position: relative;
-    ">
-                        
-                        <div class="listingShw"></div>
-                    </a>
-
-                    <div style="text-align:left; margin-left:6px;"> <br>
-                        <br> <span
-                            style="font-weight:bold; color:#5199D4;"> </span></div>
-                     </div>
-                <div class="listingContent" style="float: left;
-    padding-left: 5px;
-    width: 300px;
-    
-    padding-right: 8px;"><h4 style="font-weight:bold;font-size:12px; margin-top: 0px;margin: 0px;">Rif: ' . CreateNewRefToken($MasterData[$m]['property_id'], $MasterData[$m]['name']) . '</h4>
-
-                    <h2 class="hackerspace" style="color: #074D86;
-    font-size: 15px;
-    margin-top: -14px;
-    text-decoration:none;
-    font-weight: bold;
-    margin:0px;
-    "><a style ="color: #074D86;
-    font-size: 15px;
-    margin-top: -14px;
-    text-decoration:none;
-    "href="' . base_url() . '' . $first_segment . '/' . $MasterData[$m]['name'] . '-' . $MasterData[$m]['city_name'] . '-' . $MasterData[$m]['provience_name'] . '-' . $MasterData[$m]['property_id'] . '">
-                                                ' . $MasterData[$m]['typology_name_it'] . ' in ' . $rentname . '
-                            a ' . $MasterData[$m]['provience_name_it'] . ', ' . $MasterData[$m]['province_code'] . '</a></h2>
-                        
-                    <div class="listAddress" style="
-    /* float: left; */
-    
-   margin-bottom: -11px;
-    width: 100%;
-    margin-top: -12px;
-    font-size: 10px;"><h3 style="margin:0px;">
-    ' . $MasterData[$m]['street_address'] . ', ' . $MasterData[$m]['street_no'] . ' - ' . $MasterData[$m]['zip'] . ' </h3></div>
-                    <p style="text-align:left;color: #686868;
-    line-height: 1.3em;
-    
-    font-size: 13px;margin:0px;margin-top:0px;"> ' . $s_description . '<br></p> 
-
-                    <div class="propFeatures" style="width:100%;">
-                        <div style="float:left; margin-bottom: 18px;"><font style="color:#ED6B1F"><span
-                                    style="color:#ED6B1F; font-weight:bold;float:left;">�' . $MasterData[$m]['price'] . '&nbsp;</span><span
-                                    style="color:#000; font-weight:bold;float:left;">Al mese&nbsp;</span></font></div>
-                        
-                    </div>
-
-                </div>
-                <div style="display:table;border-bottom: 1px dashed #c4c4c4;width:100%;background:#888;min-height:25px;margin-top:10px;"> 
-                    <div style="display:table-cell;vertical-align:middle;padding-left:5px;"> 
-                    <strong style="font-weight:bold;">Pubblicato:</strong> ' . date('d', strtotime($MasterData[$m]['posting_time'])) . '-' . date('m', strtotime($MasterData[$m]['posting_time'])) . '-' . date('Y', strtotime($MasterData[$m]['posting_time'])) . '
-                     </div> 
-                     <div style="display:table-cell;vertical-align:middle;text-align:right;padding-right:5px;"> ' . $catname . ' </div> </div>
-            </li>';   
-                        }
-//echo "<br> ==> ".$TempOut;exit;
-
-                        $OUTPUT_HTML = '
-
-
-
-<div id="search_full" class="searchresult_box" style="width:100% !important;">
-    <span style="font-weight:bold; font-size: 15px;">' . $this->lang->line('new_mail-hi') . ' ' . $firstname . " " . $lastname . ',</span></n>
-    <br>
-    <p style="font-weight:bold; font-size: 15px; margin-top: 5px;">Save Search Name = ' . $saved_property_name . '</p>
-    
-    <p style="font-weight:bold; font-size: 15px;">Here are the properties added for your saved search </p>
-    <br>
-    <div style="position: relative;">
-        <ul style="padding: 0px;">
-            ' . $TempOut . '
-        </ul>
-        <div style="margin-left:40%; margin-bottom:20px;">
-                    
-
-                        <a class="mainbt" href="' . base_url() . 'property/search' . $searchPrms . '" style="border-radius: 4px;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    color: #fff;
-    float: left;
-    margin-right: 10px;
-    font-size: 16px;
-   
-    text-transform: uppercase;
-    cursor: pointer;
-    border: 1px solid #c95d00;
-    padding: 0px 13px 0px 13px;
-    height: 35px;
-    line-height: 35px;
-    text-decoration: none;
-    background-color: #c95d00;
-        margin-top:26px;">
-                            View All
-                        </a>
-
-                        <div style="clear: both"></div>
-                    
-         </div>
-    </div>
-    
-    <div class="clear"></div>
-    <div class="clear"></div>
-</div>
-                        ';
-                        $OUTPUT_HTML_ITALIAN = '
-
-
-
-<div id="search_full" class="searchresult_box" style="width:100% !important;">
-    <span style="font-weight:bold; font-size: 15px;">Ciao ' . $firstname . " " . $lastname . ',</span></n>
-    <br>
-    <p style="font-weight:bold; font-size: 15px; margin-top: 5px;">Nome della ricerca salvata = ' . $saved_property_name . '</p>
-    
-    <p style="font-weight:bold; font-size: 15px;">Ecco gli immobili aggiunti per la tua ricerca salvata </p>
-    <br>
-    <div style="position: relative;">
-        <ul style="padding:0px;">
-            ' . $TempOut_ITALIAN . '
-        </ul>
-        <div style="margin-left:40%; margin-bottom:20px;">
-            <a class="mainbt" href="' . base_url() . 'property/search' . $searchPrms . '" style="border-radius: 4px;-moz-border-radius: 4px;-webkit-border-radius: 4px;color: #fff;float: left;margin-right: 10px;font-size: 16px;text-transform: uppercase;cursor: pointer;border: 1px solid #c95d00;padding: 0px 13px 0px 13px;height: 35px;line-height: 35px;text-decoration: none; background-color: #c95d00; margin-top: 26px;">
-                            Vedi Tutti
-                        </a>
-                        <div style="clear: both"></div>
-         </div>
-    </div>
-    
-    <div class="clear"></div>
-    <div class="clear"></div>
-</div>
-                        ';
-
-                        #echo $OUTPUT_HTML;
-                        //echo "<br> <pre>=== Master : ";
-                        // print_r($PDCount);
-                        //echo $PDCount;exit;
-                        if ($PDCount > 0 && $user_language == 'english') {
-                            $email_user = get_perticular_field_value('zc_user', 'email_id', " and user_id='" . $uid . "'");
-                            $default_email = get_perticular_field_value('zc_settings', 'meta_value', " and meta_name='default_email'");
-                            $mail_from = isset($default_email) ? $default_email : "no-reply@zapcasa.it";
-                            $mail_to = $email_user;
-                            //$mail_to      = 'vikas.maheshwari97@yahoo.in,parmarvikrantr@gmail.com';
-                            $subject = $this->lang->line('weekly_mail_subject');
-                            $body = '';
-
-                            $body = '<body style="font-family:Century Gothic; color: #4c4d51; font-size:13px;">
-                                                <div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
-                                                    <div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
-                                                        <div style="border-bottom:1px solid #d1d1d1;">
-                                                            <img src="' . base_url() . 'assets/images/logo.png" alt="logo"/>
-                                                        </div>
-                                                        <div style="">
-
-                                                                ' . $OUTPUT_HTML . '
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </body>';
-
-                            /* $headers = 'From: Zapcasa <>' . PHP_EOL .
-                            'Reply-To: Vikrant <vikas.maheshwari1991.vm@gmail.com>' . PHP_EOL .
-                            'X-Mailer: PHP/' . phpversion();*/
-                            //echo $body;exit;
-                            sendemail($mail_from, $mail_to, $subject, $body, $cc = '');
-
-                        } else if ($PDCount > 0 && $user_language == 'it') {
-                            $email_user = get_perticular_field_value('zc_user', 'email_id', " and user_id='" . $uid . "'");
-                            $default_email = get_perticular_field_value('zc_settings', 'meta_value', " and meta_name='default_email'");
-                            $mail_from = isset($default_email) ? $default_email : "no-reply@zapcasa.it";
-                            $mail_to = $email_user;
-                            //$mail_to      = 'vikas.maheshwari97@yahoo.in,parmarvikrantr@gmail.com';
-                            $subject = 'Alert messaggio giornalieri';
-                            //echo $subject;exit;
-                            $body = '';
-
-                            $body = '<body style="font-family:Century Gothic; color: #4c4d51; font-size:13px;">
-                                                <div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
-                                                    <div style="background: none repeat scroll 0 0 #3d8ac1; height:4px; width: 100%;"></div>
-                                                        <div style="border-bottom:1px solid #d1d1d1;">
-                                                            <img src="' . base_url() . 'assets/images/logo.png" alt="logo"/>
-                                                        </div>
-                                                        <div style="">
-
-                                                                ' . $OUTPUT_HTML_ITALIAN . '
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </body>';
-
-                            /*$headers = 'From: Zapcasa <>' . PHP_EOL .
-                            'Reply-To: Vikrant <vikas.maheshwari1991.vm@gmail.com>' . PHP_EOL .
-                            'X-Mailer: PHP/' . phpversion();*/
-                            //echo $body;exit;
+                            //echo $body;
                             sendemail($mail_from, $mail_to, $subject, $body, $cc = '');
                         }
 
@@ -7976,7 +8161,7 @@ class users extends CI_Controller{
 
     public function common_search($catname = '')
     {
-        #echo "aaaaa";exit;
+        // echo "hiiii";exit;
         $data = array();
         $filters = array();
         $category_id = '0';
@@ -8169,7 +8354,9 @@ class users extends CI_Controller{
             $data['search_title'] = $segments_it;
             $data['parentCatname'] = $parentCatname_it;
         }
-#echo "<pre>"; print_r($data);exit;
+        echo "<pre>";
+        print_r($data);
+        exit;
         echo json_encode($data);
         exit;
     }
