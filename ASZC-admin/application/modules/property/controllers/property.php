@@ -182,7 +182,7 @@ class Property extends CI_Controller {
 
 		//echo '<pre>';print_r($data['pagination']);die;
 
-		$this->load->view('property_template', $data);
+		$this->load->view('property_template', $data);	
 
 	}
 
@@ -202,7 +202,7 @@ class Property extends CI_Controller {
 
 		//echo '<pre>';print_r($data['pagination']);die;
 
-		$this->load->view('latest_property_add', $data);
+		$this->load->view('latest_property_add', $data);		
 
 	}
 
@@ -216,7 +216,7 @@ class Property extends CI_Controller {
 
 		$page=$this->uri->segment('6');
 
-		if($type == '') {
+		if ($type == '') {
 
 			$type = 'all';
 
@@ -270,6 +270,7 @@ class Property extends CI_Controller {
 		$data['blocked_note'] = $this->input->post('blockednote');
 
 
+
 		$property_approval=get_perticular_field_value('zc_property_details','property_approval'," and property_id='".$property_id."'");
 
 		if($property_approval=='0'){
@@ -308,11 +309,13 @@ class Property extends CI_Controller {
 		$this->property_model->update_property_details($data,$property_id);
 
 
+
 		$this->session->set_flashdata('success', 'Blocked note has been added & status has been updated');
 
 		//redirect('/property/'.$type.'/'.$activetype.($page==''?'':'/'.$page));
 
 	}
+
 
 
 	protected function send_blocked_note($property_id = "")
@@ -321,6 +324,7 @@ class Property extends CI_Controller {
 
 
 		$new_data['blocked_note'] = $this->input->post('blockednote');
+
 
 
 		//$this->property_model->update_property_details($new_data,$property_id);
@@ -332,6 +336,7 @@ class Property extends CI_Controller {
 		$email = get_perticular_field_value('zc_user', 'email_id', " and user_id='" . $userid . "'");
 
 		$user_full_name = get_perticular_field_value('zc_user', 'first_name', " and user_id='" . $userid . "'") . ' ' . get_perticular_field_value('zc_user', 'last_name', " and user_id='" . $userid . "'");
+
 
 
 		$mail_from = isset($default_email) ? $default_email : "no-reply@zapcasa.it";
@@ -409,11 +414,13 @@ class Property extends CI_Controller {
 		sendemail($mail_from, $mail_to, $subject, $body, $cc = '');
 
 
+
 		//$this->session->set_flashdata('success', 'Blocked note has been added & status has been updated');
 
 		//redirect($this->controller.($type=='index'?'':'/'.$type).($page==''?'':'/'.$page));
 
 	}
+
 
 
 	public function pro_view_st_change(){
@@ -423,6 +430,7 @@ class Property extends CI_Controller {
 		//$property_status=get_perticular_field_value('zc_property_details','property_status', " and property_id='".$property_id."'");
 
 		$suspention_status=get_perticular_field_value('zc_property_details','suspention_status', " and property_id='".$property_id."'");
+
 
 
 		if($suspention_status=='0'){
@@ -450,6 +458,7 @@ class Property extends CI_Controller {
 		redirect('/property/view_property_details/'.$property_id);
 
 	}
+
 
 
 	public function property_approval_st_change(){
@@ -491,6 +500,7 @@ class Property extends CI_Controller {
 	}
 
 
+
 	public function delete_property(){
 
 		$property_id=$this->uri->segment('3');
@@ -500,6 +510,7 @@ class Property extends CI_Controller {
 		$activetype=$this->uri->segment('5');
 
 		$page=$this->uri->segment('6');
+
 
 
 		$rs=$this->property_model->delete_property($property_id);
@@ -517,6 +528,7 @@ class Property extends CI_Controller {
 				deleteNonEmptyDir($dfile);
 
 
+
 			$this->session->set_flashdata('success', 'The property is deleted successfully');
 
 			redirect('/property/'.$type.'/'.$activetype.($page==''?'':'/'.$page));
@@ -524,6 +536,7 @@ class Property extends CI_Controller {
 		}
 
 	}
+
 
 
 	public function view_property_details(){
@@ -549,9 +562,11 @@ class Property extends CI_Controller {
 		$data['property_img'] = $this->property_model->get_img_prop($property_id);
 
 
+
 		$this->load->view('property_view_template', $data);
 
 	}
+
 
 
 	public function edit_property_details(){
@@ -577,14 +592,17 @@ class Property extends CI_Controller {
 		$data['provience_list']=$this->property_model->get_provience_list();
 
 
+
 		$this->load->view('property_edit_template', $data);
 
 	}
 
 
+
 	public function update_property_details(){
 
 		$property_id=$this->uri->segment('3');
+
 
 
 		//$new_data['property_status']='2';
@@ -604,6 +622,7 @@ class Property extends CI_Controller {
 			$pricee=$this->input->post('price');
 
 			$pricees=floatval(str_replace(',', '.', str_replace('.', '', $pricee)));
+
 
 
 			$private_nagotiation='0';
@@ -647,6 +666,7 @@ class Property extends CI_Controller {
 		}
 
 
+
 		$new_data['category_id']='4';
 
 		$new_data['provience']=$this->input->post('province');
@@ -682,6 +702,7 @@ class Property extends CI_Controller {
 		// $new_data['latitude'] = (float) $lat_lng_array->lat;
 
 		// $new_data['longitude'] = (float)$lat_lng_array->lng;
+
 
 
 		if($category=='LAND'){
@@ -891,11 +912,13 @@ class Property extends CI_Controller {
 		$property_ids=$this->property_model->update_property_details($new_data,$property_id);
 
 
+
 		$this->edit_do_uploads_update($property_id);
 
 		$this->upload_image_update_1('user_file_1',$property_id);
 
 		$this->session->set_flashdata('success', "The property is Updated successfully");
+
 
 
 		// redirect('property/edit_property_details/'.$property_id);
@@ -933,7 +956,7 @@ class Property extends CI_Controller {
 				/*	------------------	Default	--------------------*/
 
 				$original_size = getimagesize($_FILES['userfile']['tmp_name']);
-				$ratio = $original_size[0] / $original_size[1];
+				$ratio = $original_size[0] / $original_size[1];				
 				//$this->setWatermark('userfile',$upload_path.'/'.$file_names);
 				//$fileExtension = pathinfo($_FILES['userfile']['name'], PATHINFO_EXTENSION);
 
@@ -950,9 +973,10 @@ class Property extends CI_Controller {
 					'sourcePath' => "../assets/uploads/Property/" . $new_file . "/" . $file_names,
 					'destinationPath' => "../assets/uploads/Property/" . $new_file . "/thumb_860_482/" . $file_names,
 					'imageSize' => $new_width1 . 'x' . $new_height1,
+					'original_size' => getimagesize($_FILES['userfile']['tmp_name']),
 					'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
 				);
-				CreateImageUsingImageMagicWithGravity1($imgData1);
+				CreateImageUsingImageMagicWithGravitynew($imgData1);
 				$this->setWatermarkImage("../assets/uploads/Property/" . $new_file . "/thumb_860_482/" . $file_names, "../assets/uploads/Property/" . $new_file . "/thumb_860_482/" . $file_names);
 				/*	------------------	113*170	--------------------*/
 
@@ -967,9 +991,10 @@ class Property extends CI_Controller {
 					'sourcePath' => "../assets/uploads/Property/" . $new_file . "/" . $file_names,
 					'destinationPath' => "../assets/uploads/Property/" . $new_file . "/thumb_200_296/" . $file_names,
 					'imageSize' => $new_width2 . 'x' . $new_height2,
+					'original_size' => getimagesize($_FILES['userfile']['tmp_name']),
 					'watermarkLogoPath' => './assets/images/watermark_zap_logo.png'
 				);
-				CreateImageUsingImageMagicWithGravity1($imgData2);
+				CreateImageUsingImageMagicWithGravity($imgData2);
 				$this->setWatermarkImage("../assets/uploads/Property/" . $new_file . "/thumb_200_296/" . $file_names, "../assets/uploads/Property/" . $new_file . "/thumb_200_296/" . $file_names);
 				/*	------------------	50*75	--------------------*/
 
@@ -983,6 +1008,7 @@ class Property extends CI_Controller {
 				$imgData3 = array(
 					'sourcePath' => "../assets/uploads/Property/" . $new_file . "/" . $file_names,
 					'destinationPath' => "../assets/uploads/Property/" . $new_file . "/thumb_92_82/" . $file_names,
+					'original_size' => getimagesize($_FILES['userfile']['tmp_name']),
 					'imageSize' => $new_width3 . 'x' . $new_height3
 				);
 				CreateImageUsingImageMagicWithOutGravity($imgData3);
@@ -1079,6 +1105,7 @@ class Property extends CI_Controller {
 		return $config;
 
 	}
+
 
 
 	public function setWatermarkImage($sourcePath, $destinationPath)

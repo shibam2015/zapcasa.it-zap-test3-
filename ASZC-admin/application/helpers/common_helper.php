@@ -28,38 +28,183 @@ function CreateImageUsingImageMagicWithGravity1($data){
 			-resize ".$imageSize."^ -gravity Center -crop ".$imageSize."+0+0 +repage \
 			-background white -alpha remove -quality 80% ".$destinationPath);
 }
-function CreateImageUsingImageMagicWithGravity($data){
+
+function CreateImageUsingImageMagicWithGravity($data)
+{
 	$sourcePath = $data['sourcePath'];
 	$destinationPath = $data['destinationPath'];
 	$watermarkLogoPath = $data['watermarkLogoPath'];
 	$imageSize = $data['imageSize'];
+	$original_size = $data['original_size'];
+	$width = $data['original_size'][0];
+	$height = $data['original_size'][1];
+	if ($height == $width) {
+		exec("/usr/bin/convert -strip " . $sourcePath . " -resize 170x -gravity center -background white -flatten -crop 170x113+0+0 -quality 80% +repage " . $destinationPath);
+	} else if ($height < $width) {
+		//echo "ifffffffff";
+		exec("/usr/bin/convert -strip " . $sourcePath . " -resize x113 -gravity center -background white -flatten -crop 170x113+0+0 -quality 80% +repage " . $destinationPath);
 
-	/*$rrr = exec ("/usr/bin/convert -strip ".$sourcePath." -flatten \
-			-resize ".$imageSize."^ -gravity Center -crop ".$imageSize."+0+0 +repage \
-			-gravity SouthWest -draw 'image Over 0,0 100,43 'zap_logo.png'' \
-			-background white -alpha remove -quality 80% ".$destinationPath);*/
-	exec("/usr/bin/convert " . $sourcePath . "  -resize " . $imageSize . " -gravity center -crop " . $imageSize . "+0+0 +repage " . $destinationPath);
+	} else {
+		//echo "else";exit;
+		exec("/usr/bin/convert -strip " . $sourcePath . " -resize 170x -gravity center -background white -flatten -crop 170x113+0+0 -quality 80% +repage " . $destinationPath);
+	}
+	//echo '<pre>';print_r($data);exit;
+	//exec ("/usr/bin/convert ".$sourcePath."   -resize ".$imageSize."!  ".$destinationPath);
+	/*exec ("/usr/bin/convert -strip ".$sourcePath." -flatten
+        -resize ".$imageSize." -gravity Center  --thumbnail ".$imageSize."+0+0 +repage 
+        -background white -alpha remove -quality 80% ".$destinationPath);*/
+
+
+	// return copy($sourcePath, $destinationPath);
+//exec ("/usr/bin/convert ".$sourcePath." -flatten  -resize 170x  -gravity center -background white -crop ".$imageSize."+0+0 +repage ".$destinationPath);
+
 }
+
+function CreateImageUsingImageMagicWithGravitynew($data)
+{
+	$sourcePath = $data['sourcePath'];
+	$destinationPath = $data['destinationPath'];
+	$watermarkLogoPath = $data['watermarkLogoPath'];
+	$imageSize = $data['imageSize'];
+	$original_size = $data['original_size'];
+	$width = $data['original_size'][0];
+	$height = $data['original_size'][1];
+	if ($height == $width) {
+		exec("/usr/bin/convert -strip " . $sourcePath . " -resize 241x -gravity center -background white -flatten -crop 241x161+0+0 -quality 80% +repage " . $destinationPath);
+	} else if ($height < $width) {
+		//echo "ifffffffff";
+		exec("/usr/bin/convert -strip " . $sourcePath . " -resize x161 -gravity center -background white -flatten -crop 241x161+0+0 -quality 80% +repage " . $destinationPath);
+
+	} else {
+		//echo "else";exit;
+		exec("/usr/bin/convert -strip " . $sourcePath . " -resize 241x -gravity center -background white -flatten -crop 241x161+0+0 -quality 80% +repage " . $destinationPath);
+	}
+	//echo '<pre>';print_r($data);exit;
+	//exec ("/usr/bin/convert ".$sourcePath."   -resize ".$imageSize."!  ".$destinationPath);
+	/*exec ("/usr/bin/convert -strip ".$sourcePath." -flatten
+        -resize ".$imageSize." -gravity Center  --thumbnail ".$imageSize."+0+0 +repage 
+        -background white -alpha remove -quality 80% ".$destinationPath);*/
+
+
+	// return copy($sourcePath, $destinationPath);
+//exec ("/usr/bin/convert ".$sourcePath." -flatten  -resize 241x  -gravity center -background white -crop ".$imageSize."+0+0 +repage ".$destinationPath);
+
+}
+
 function CreateImageUsingImageMagicWithOutGravity($data){
 	$sourcePath = $data['sourcePath'];
 	$destinationPath = $data['destinationPath'];
 	$imageSize = $data['imageSize'];
-	/*exec ("/usr/bin/convert -strip ".$sourcePath." -flatten \
-			-resize ".$imageSize."^ -gravity Center -crop ".$imageSize."+0+0 +repage \
+	$original_size = $data['original_size'];
+	$width = $data['original_size'][0];
+	$height = $data['original_size'][1];
+	//echo '<pre>';print_r($data);
+	//echo '<pre>';print_r($height);exit;
+	if ($height == $width) {
+		exec("/usr/bin/convert -strip " . $sourcePath . " -resize 75x -gravity center -background white -flatten -crop 75x50+0+0 -quality 70% +repage " . $destinationPath);
+	} else if ($height < $width) {
+		//echo "ifffffffff";
+		exec("/usr/bin/convert -strip " . $sourcePath . " -resize x50 -gravity center -background white -flatten -crop 75x50+0+0 -quality 70% +repage " . $destinationPath);
+
+	} else {
+		//echo "else";exit;
+		exec("/usr/bin/convert -strip " . $sourcePath . " -resize 75x -gravity center -background white -flatten -crop 75x50+0+0 -quality 70% +repage " . $destinationPath);
+	}
+	/*exec ("/usr/bin/convert ".$sourcePath." -flatten /
+			-resize ".$imageSize."^ -gravity Center -crop ".$imageSize."+0+0+repage /
 			-background white -alpha remove -quality 80% ".$destinationPath);*/
-	exec("/usr/bin/convert " . $sourcePath . "  -resize " . $imageSize . " -gravity center -background white -crop " . $imageSize . "+0+0 +repage " . $destinationPath);
+	// return copy($sourcePath, $destinationPath);
+//exec ("/usr/bin/convert ".$sourcePath."  -resize x75 -resize '75x<' -resize 50% -gravity center -background white -crop 75x50+0+0 +repage ".$destinationPath);
+//exec ("/usr/bin/convert ".$sourcePath." -flatten  -resize 75x -gravity center -background white -crop 75x50+0+0 +repage ".$destinationPath);
+//exec("/usr/bin/mogrify ".$sourcePath." -format jpg -resize ".$imageSize." -gravity center -crop ".$imageSize."+0+0 +repage".$destinationPath);
 }
+
+function CreateImageUsingImageMagicWithOutGravityuser($data)
+{
+	$sourcePath = $data['sourcePath'];
+	$destinationPath = $data['destinationPath'];
+	$imageSize = $data['imageSize'];
+	$original_size = $data['original_size'];
+	$width = $data['original_size'][0];
+	$height = $data['original_size'][1];
+	//echo '<pre>';print_r($data);
+	//echo '<pre>';print_r($height);exit;
+	if ($height == $width) {
+		exec("/usr/bin/convert -strip " . $sourcePath . " -resize 128x -gravity center -background white -flatten -crop 128x128+0+0 -quality 70% +repage " . $destinationPath);
+	} else if ($height < $width) {
+		//echo "ifffffffff";
+		exec("/usr/bin/convert -strip " . $sourcePath . " -resize x128 -gravity center -background white -flatten -crop 128x128+0+0 -quality 70% +repage " . $destinationPath);
+
+	} else {
+		//echo "else";exit;
+		exec("/usr/bin/convert -strip " . $sourcePath . " -resize 128x -gravity center -background white -flatten -crop 128x128+0+0 -quality 70% +repage " . $destinationPath);
+	}
+	/*exec ("/usr/bin/convert ".$sourcePath." -flatten /
+			-resize ".$imageSize."^ -gravity Center -crop ".$imageSize."+0+0+repage /
+			-background white -alpha remove -quality 80% ".$destinationPath);*/
+	// return copy($sourcePath, $destinationPath);
+//exec ("/usr/bin/convert ".$sourcePath."  -resize x75 -resize '75x<' -resize 50% -gravity center -background white -crop 75x50+0+0 +repage ".$destinationPath);
+//exec ("/usr/bin/convert ".$sourcePath." -flatten  -resize 75x -gravity center -background white -crop 75x50+0+0 +repage ".$destinationPath);
+//exec("/usr/bin/mogrify ".$sourcePath." -format jpg -resize ".$imageSize." -gravity center -crop ".$imageSize."+0+0 +repage".$destinationPath);
+}
+
+function CreateImageUsingImageMagicWithOutGravityuser1($data)
+{
+	$sourcePath = $data['sourcePath'];
+	$destinationPath = $data['destinationPath'];
+	$imageSize = $data['imageSize'];
+	$original_size = $data['original_size'];
+	$width = $data['original_size'][0];
+	$height = $data['original_size'][1];
+	//echo '<pre>';print_r($data);
+	//echo '<pre>';print_r($height);exit;
+	if ($height == $width) {
+		exec("/usr/bin/convert -strip " . $sourcePath . " -resize 430x -gravity center -background white -flatten -crop 430x300+0+0 -quality 70% +repage " . $destinationPath);
+	} else if ($height < $width) {
+		//echo "ifffffffff";
+		exec("/usr/bin/convert -strip " . $sourcePath . " -resize x300 -gravity center -background white -flatten -crop 430x300+0+0 -quality 70% +repage " . $destinationPath);
+
+	} else {
+		//echo "else";exit;
+		exec("/usr/bin/convert -strip " . $sourcePath . " -resize 430x -gravity center -background white -flatten -crop 430x300+0+0 -quality 70% +repage " . $destinationPath);
+	}
+	/*exec ("/usr/bin/convert ".$sourcePath." -flatten /
+			-resize ".$imageSize."^ -gravity Center -crop ".$imageSize."+0+0+repage /
+			-background white -alpha remove -quality 80% ".$destinationPath);*/
+	// return copy($sourcePath, $destinationPath);
+//exec ("/usr/bin/convert ".$sourcePath."  -resize x75 -resize '75x<' -resize 50% -gravity center -background white -crop 75x50+0+0 +repage ".$destinationPath);
+//exec ("/usr/bin/convert ".$sourcePath." -flatten  -resize 75x -gravity center -background white -crop 75x50+0+0 +repage ".$destinationPath);
+//exec("/usr/bin/mogrify ".$sourcePath." -format jpg -resize ".$imageSize." -gravity center -crop ".$imageSize."+0+0 +repage".$destinationPath);
+}
+
 // USE THIS FOR BIG IMAGE AND FOR PLANIMETRY
 
 function CreateImageUsingImageMagicWithOutGravitybBigImage($data){
 	$sourcePath = $data['sourcePath'];
 	$destinationPath = $data['destinationPath'];
 	$imageSize = $data['imageSize'];
-	/*exec ("/usr/bin/convert -strip ".$sourcePath." -flatten \
-			-resize ".$imageSize." \
+	$height = $data['original_size'][1];
+	$width = $data['original_size'][0];
+	//$height=$data['original_size'][1];
+	if ($height == $width) {
+		exec("/usr/bin/convert -strip " . $sourcePath . " -resize 800x -gravity center -background white -flatten -quality 80% +repage " . $destinationPath);
+	} else if ($height >= 800 && $width >= 800) {
+		exec("/usr/bin/convert -strip " . $sourcePath . " -resize 800x -gravity center -background white -flatten -quality 80% +repage " . $destinationPath);
+	} else if ($height < $width) {
+		//echo "ifffffffff";
+		exec("/usr/bin/convert -strip " . $sourcePath . " -resize x800 -gravity center -background white -flatten -quality 80% +repage " . $destinationPath);
+
+	} else {
+		//echo "else";exit;
+		exec("/usr/bin/convert -strip " . $sourcePath . " -resize 800x -gravity center -background white -flatten -quality 80% +repage " . $destinationPath);
+	}
+	/*exec ("/usr/local/bin/convert -strip ".$sourcePath." -flatten 
+			-resize ".$imageSize." 
 			-background white -alpha remove -quality 80% ".$destinationPath);*/
-	exec("/usr/bin/convert " . $sourcePath . "  -resize " . $imageSize . " -gravity center -background white -crop " . $imageSize . "+0+0 +repage " . $destinationPath);
+//exec ("/usr/bin/convert ".$sourcePath." -flatten -resize 800x -gravity center -background white -crop ".$imageSize."+0+0 +repage ".$destinationPath);
+	// return copy($sourcePath, $destinationPath);
 }
+
 /*
  *
  *

@@ -12,7 +12,7 @@ function initAdvArea(Type = ''){
     initialize(Type);
 }
 function initInTheArea(Type = '') {
-    //alert('hiiiiii');
+   
     $('#nearby_category_area li').removeClass('active');
     if(Type!='' && typeof(Type)=='string'){
         $('#nearby_category_area li#'+Type).addClass('active');
@@ -35,8 +35,13 @@ function initInTheArea(Type = '') {
     });
     $('#st').removeClass();
     $('#nearby_category_area').show();
-    initialize(Type);
+    if (Type != '')
+        initialize(Type);
+    else
+        initialize('0');
+
 }
+
 function initStreetView(){
     $('#showcase').hide();
     $('#cam').removeClass();
@@ -74,8 +79,65 @@ function geocodePosition(pos){
 }
 // initialize map
 function initialize(Type = '') {
-    //  alert("t "+Type);
     geocoder = new google.maps.Geocoder();
+
+    if (Type == '0') {
+        jQuery.each(GoogleMapMarkers, function (i, val) {
+                if (Type != '' && typeof(Type) == 'string') {
+                    if (Type != val[1] && val[1] == 'markers') {
+                        //alert("in 0 ");
+
+
+                        infowindow = new google.maps.InfoWindow({
+                            content: ""
+                        });
+
+                        var MarkerText = val[0];
+                        var MarkerType = val[1];
+                        var mLatitude = val[2];
+                        var mLongitude = val[3];
+                        var markerAddress = val[4];
+                        var markerURI = val[5];
+                        var markerPrice = val[6];
+                        var markerPropertyImage = val[7];
+
+// offset latlong ever so slightly to prevent marker overlap
+                        rand_x = Math.random();
+                        rand_y = Math.random();
+                        mLatitude = parseFloat(mLatitude) + parseFloat(parseFloat(rand_x) / 6000);
+                        mLongitude = parseFloat(mLongitude) + parseFloat(parseFloat(rand_y) / 6000);
+// show smaller marker icons on mobile
+                        if (agent == "iphone") {
+                            var iconSize = new google.maps.Size(16, 19);
+                        } else {
+                            iconSize = null;
+                        }
+// build this marker
+                        var markerImage = new google.maps.MarkerImage(WebRoot + "assets/images/markers/marker1.png", null, null, null, iconSize);
+                        if (val[8] == 'proDetails' && val[1] == 'markers') {
+                            markerImage = new google.maps.MarkerImage(WebRoot + "assets/images/markers/markers.png", null, null, null, iconSize);
+                        }
+                        var marker = new google.maps.Marker({
+                            position: new google.maps.LatLng(mLatitude, mLongitude),
+                            draggable: MarkerDraggable,
+                            map: map,
+                            title: '',
+                            clickable: true,
+                            infoWindowHtml: '',
+                            zIndex: 10 + i,
+                            icon: markerImage
+                        });
+                        marker.type = MarkerType;
+                        gmarkers.push(marker);
+                        return false;
+                    }
+
+                }
+            }
+        );
+    }
+
+    
 // set map styles
     var mapStyles =[{
         featureType: "road",
@@ -129,6 +191,11 @@ function initialize(Type = '') {
         zoom: centerZoom,
         //minZoom: 10,
         center: new google.maps.LatLng(centerLatitude, centerLongitude),
+        // zoomControl: zoomControl,
+        /*zoomControlOptions:{
+         style: google.maps.ZoomControlStyle.SMALL,
+         position: google.maps.ControlPosition.RIGHT_TOP
+         }*/
         disableDefaultUI: true
         /*mapTypeId: google.maps.MapTypeId.ROADMAP,
          streetViewControl: false,
@@ -152,7 +219,8 @@ function initialize(Type = '') {
     }
 
     map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
-// var mcOptions = {gridSize: 50, maxZoom: 15, imagePath: 'images/markers/m'};
+    //  map = new google.maps.Map(document.getElementById('1'), myOptions);
+    //var myOptions = { maxZoom: 8};
 
     var zoomControlDiv = document.createElement('div');
     var zoomControl = new ZoomControl(zoomControlDiv, map);
@@ -360,6 +428,281 @@ function initialize(Type = '') {
     var mcOptions = {gridSize: 30, maxZoom: 15, imagePath: 'https://cdn.rawgit.com/googlemaps/js-marker-clusterer/gh-pages/images/m'};
     var mc = new MarkerClusterer(map, gmarkers, mcOptions);
 }
+function initialize1(Type='') {
+
+    //  alert("t "+Type);
+    geocoder = new google.maps.Geocoder();
+// set map styles
+    var mapStyles = [{
+        featureType: "road",
+        elementType: "geometry",
+        stylers: [
+            {hue: "#8800ff"},
+            {lightness: 100}
+        ]
+    }, {
+        featureType: "road",
+        stylers: [
+            {visibility: "on"},
+            {hue: "#91ff00"},
+            {saturation: -62},
+            {gamma: 1.98},
+            {lightness: 45}
+        ]
+    }, {
+        featureType: "water",
+        stylers: [
+            {hue: "#005eff"},
+            {gamma: 0.72},
+            {lightness: 42}
+        ]
+    }, {
+        featureType: "transit.line",
+        stylers: [
+            {visibility: "off"}
+        ]
+    }, {
+        featureType: "administrative.locality",
+        stylers: [
+            {visibility: "on"}
+        ]
+    }, {
+        featureType: "administrative.neighborhood",
+        elementType: "geometry",
+        stylers: [
+            {visibility: "simplified"}
+        ]
+    }, {
+        featureType: "landscape",
+        stylers: [
+            {visibility: "on"},
+            {gamma: 0.41},
+            {lightness: 46}
+        ]
+    }, {
+        featureType: "administrative.neighborhood",
+        elementType: "labels.text",
+        stylers: [
+            {visibility: "on"},
+            {saturation: 33},
+            {lightness: 20}
+        ]
+    }];
+// set map options
+    var myOptions = {
+        zoom: 8,
+        //minZoom: 10,
+        center: new google.maps.LatLng(centerLatitude, centerLongitude),
+        // zoomControl: zoomControl,
+        /*zoomControlOptions:{
+         style: google.maps.ZoomControlStyle.SMALL,
+         position: google.maps.ControlPosition.RIGHT_TOP
+         }*/
+        disableDefaultUI: true
+        /*mapTypeId: google.maps.MapTypeId.ROADMAP,
+         streetViewControl: false,
+         mapTypeControl: false,
+         panControl: false,
+         zoomControl: zoomControl,
+         styles: mapStyles,
+         zoomControlOptions:{
+         style: google.maps.ZoomControlStyle.SMALL,
+         position: google.maps.ControlPosition.RIGHT_TOP
+         }*/
+    };
+
+    if (typeof(map) == 'object');
+    {
+        for (i = 0; i < gmarkers.length; i++) {
+            gmarkers[i].setMap(null);
+        }
+        gmarkers = [];
+    }
+
+    map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
+    //  map = new google.maps.Map(document.getElementById('1'), myOptions);
+    //var myOptions = { maxZoom: 8};
+
+    var zoomControlDiv = document.createElement('div');
+    var zoomControl = new ZoomControl(zoomControlDiv, map);
+
+    zoomControlDiv.index = 1;
+    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(zoomControlDiv);
+
+    zoomLevel = map.getZoom();
+// prepare infowindow
+    infowindow = new google.maps.InfoWindow({
+        content: "holding..."
+    });
+// only show marker labels if zoomed in
+    google.maps.event.addListener(map, 'zoom_changed', function () {
+        zoomLevel = map.getZoom();
+        if (zoomLevel <= 15) {
+            $(".marker_label").css("display", "none");
+        } else {
+            $(".marker_label").css("display", "inline");
+        }
+    });
+// add markers
+
+    //var pyrmont = {lat: 0, lng: 0};
+
+    jQuery.each(GoogleMapMarkers, function (i, val) {
+        if (Type != '' && typeof(Type) == 'string') {
+            //if(val[1]!='markers'){
+            if (val[1] != 'markers') {
+
+                return true;
+            } else {
+
+            }
+
+        }
+        infowindow = new google.maps.InfoWindow({
+            content: ""
+        });
+
+        var MarkerText = val[0];
+        var MarkerType = val[1];
+        var mLatitude = val[2];
+        var mLongitude = val[3];
+        var markerAddress = val[4];
+        var markerURI = val[5];
+        var markerPrice = val[6];
+        var markerPropertyImage = val[7];
+
+// offset latlong ever so slightly to prevent marker overlap
+        rand_x = Math.random();
+        rand_y = Math.random();
+        mLatitude = parseFloat(mLatitude) + parseFloat(parseFloat(rand_x) / 6000);
+        mLongitude = parseFloat(mLongitude) + parseFloat(parseFloat(rand_y) / 6000);
+// show smaller marker icons on mobile
+        if (agent == "iphone") {
+            var iconSize = new google.maps.Size(16, 19);
+        } else {
+            iconSize = null;
+        }
+// build this marker
+        var markerImage = new google.maps.MarkerImage(WebRoot + "assets/images/markers/marker1.png", null, null, null, iconSize);
+        if (val[8] == 'proDetails' && val[1] == 'markers') {
+            markerImage = new google.maps.MarkerImage(WebRoot + "assets/images/markers/markers.png", null, null, null, iconSize);
+        }
+        var marker = new google.maps.Marker({
+            position: new google.maps.LatLng(mLatitude, mLongitude),
+            draggable: MarkerDraggable,
+            map: map,
+            title: '',
+            clickable: true,
+            infoWindowHtml: '',
+            zIndex: 10 + i,
+            icon: markerImage
+        });
+        marker.type = MarkerType;
+        gmarkers.push(marker);
+
+        if (val[8] != "noMarker") {
+// add marker hover events (if not viewing on mobile)
+            if (agent == "default") {
+                google.maps.event.addListener(marker, "mouseover", function () {
+                    this.old_ZIndex = this.getZIndex();
+                    this.setZIndex(9999);
+                    $("#marker" + i).css("display", "inline");
+                    $("#marker" + i).css("z-index", "99999");
+                });
+                google.maps.event.addListener(marker, "mouseout", function () {
+                    if (this.old_ZIndex && zoomLevel <= 15) {
+                        this.setZIndex(this.old_ZIndex);
+                        $("#marker" + i).css("display", "none");
+                    }
+                });
+            }
+// format marker URI for display and linking
+            if (markerURI.substr(0, 7) != "http://") {
+                markerURI = "http://" + markerURI;
+            }
+            var markerURI_short = markerURI.replace("http://", "");
+            var markerURI_short = markerURI_short.replace("www.", "");
+// add marker click effects (open infowindow)
+
+            google.maps.event.addListener(marker, 'click', function () {
+                if (val[8] == 'proDetails') {
+                    var markerLabelHTML = '<div class="property-window">\
+    <div class="property-image">\
+        <a>\
+            <img src="' + markerPropertyImage + '">\
+        </a>\
+    </div>\
+    <div class="property-info">\
+        <div class="marker_title">\
+            <a>' + MarkerText + '</a>\
+        </div>\
+        <div class="marker_address">' + markerAddress + '</div>\
+    </div>\
+</div>';
+                }
+                else {
+                    var markerLabelHTML = '<div class="property-window">\
+    <div class="property-image">\
+        <a href="' + markerURI + '">\
+            <img src="' + markerPropertyImage + '">\
+        </a>\
+    </div>\
+    <div class="property-info">\
+        <div class="marker_title">\
+            <a href="' + markerURI + '">' + MarkerText + '</a>\
+        </div>\
+        <div class="marker_address">' + markerAddress + '</div>\
+        <div class="marker_price">' + markerPrice + '</div>\
+    </div>\
+</div>';
+                }
+                infowindow.setContent(markerLabelHTML);
+                infowindow.open(map, this);
+                this.map.setZoom(15);
+            });
+        }
+
+//console.log("markere");
+//console.log("==> "+marker);
+
+// Register Custom "dragend" Event
+        google.maps.event.addListener(marker, 'dragend', function () {
+// Get the Current position, where the pointer was dropped
+            var point = marker.getPosition();
+// Center the map at given point
+            map.panTo(point);
+// Update the textbox
+            geocodePosition(marker.getPosition())
+            $('#promaplatitude').val(point.lat());
+            $('#promaplongitude').val(point.lng());
+        });
+        /* google.maps.event.addListener(infoWindow,'closeclick',function(){
+         // currentMark.setMap(null);
+         map.setZoom(centerZoom);//removes the marker
+         // then, remove the infowindows name from the array
+         });*/
+// add marker label
+        var latLng = new google.maps.LatLng(mLatitude, mLongitude);
+        var label = new Label({
+            map: map,
+            id: i
+        });
+        label.bindTo('position', marker);
+        label.set("text", MarkerText);
+        label.bindTo('visible', marker);
+        label.bindTo('clickable', marker);
+        label.bindTo('zIndex', marker);
+        // }
+
+    });
+    var mcOptions = {
+        gridSize: 30,
+        maxZoom: 15,
+        imagePath: 'https://cdn.rawgit.com/googlemaps/js-marker-clusterer/gh-pages/images/m'
+    };
+    var mc = new MarkerClusterer(map, gmarkers, mcOptions);
+}
+
 // zoom to specific marker
 function goToMarker(marker_id){
     if (marker_id) {
@@ -493,7 +836,7 @@ function ZoomControl(controlDiv, map) {
 
 function fullView(tmp='')
 {
-    if(tmp == 'proDetails') {
+    if (tmp == 'proDetails') {
         $('.left_panel').toggleClass("fullScreen");
         $('.right_panel').toggle("slide");
         $('#map_canvas').toggleClass("fullScreen");
@@ -511,4 +854,4 @@ function fullView(tmp='')
 }
 
 google.maps.event.addDomListener(window,'load', initialize);
-google.maps.event.addDomListener(window,'onclick', initialize);
+//google.maps.event.addDomListener(window,'click', initialize);
