@@ -464,7 +464,7 @@ if(count ( $property_details ) == 0 ){
                     <?php
 
                     $nearByGoogleMapMarkers = array();
-                    $mainProGoogleMapMarkers = array();
+                    // $mainProGoogleMapMarkers = array();
 
                     if (count($nearby_category) > 0) {
 
@@ -485,11 +485,32 @@ if(count ( $property_details ) == 0 ){
 
                                     <?php
 
+                                    $property_details[0]['longitude'];
+
+                                    if ($property_details[0]['latitude'] == 0 && $property_details[0]['longitude'] == 0) {
+
+                                        $propertygetLangLatAddress = $propertyAddress . ', ' . stripslashes($city_name) . ', ' . $province_code . ', Italy';
+                                        //$propertygetLangLatAddress.= $propertyAddress.','.stripslashes($city_name).', '.$province_code.', '.$property_details[0]['zip'].', Italy';
+
+                                        $lat_lng_array = getLangLat($propertygetLangLatAddress);
+
+                                        $GoogleMapMarkersCenterLatitude = $lat_lng_array->lat;
+
+                                        $GoogleMapMarkersCenterLongitude = $lat_lng_array->lng;
+
+                                    } else {
+
+                                        $GoogleMapMarkersCenterLatitude = $property_details[0]['latitude'];
+
+                                        $GoogleMapMarkersCenterLongitude = $property_details[0]['longitude'];
+
+                                    }
+
                                     $nearByProCatID = '';
 
                                     $nearByCounter = 0;
 
-                                    $areaLimit = '3000';
+                                    $areaLimit = '3';
 
                                     $nearByCatCounter = 1;
 
@@ -501,7 +522,7 @@ if(count ( $property_details ) == 0 ){
 
                                         <li id="<?php echo $nearByCatCounter; ?>"
                                             onClick="return initInTheArea('<?php echo $nearByCatCounter; ?>');"
-                                            style="float:none;border:0;" class="nearby">
+                                            style="float:none;border:0;" class="nearby" data-toggle="tab">
 
                                             <?php echo ucfirst($key[($_COOKIE['lang'] == "it" ? 'it_category_name' : 'category_name')]);?>
 
@@ -537,9 +558,9 @@ if(count ( $property_details ) == 0 ){
                                                 }
 
 
-
-                                                $geoDistance = round(geoDistance($GoogleMapMarkersCenterLatitude, $GoogleMapMarkersCenterLongitude, $nearby_lat, $nearby_lng, $areaLimit = true));
-
+                                                $geoDistance = round(geoDistanceNew($GoogleMapMarkersCenterLatitude, $GoogleMapMarkersCenterLongitude, $nearby_lat, $nearby_lng));
+                                                // echo '<pre>';
+                                                   
                                                 // if($key['category_id'] == 11)
 
                                                 // {
@@ -548,8 +569,10 @@ if(count ( $property_details ) == 0 ){
 
                                                 // }
 
-                                                if (floatval($areaLimit) >= floatval($geoDistance)) {
-
+                                                if (floatval($areaLimit) >= floatval($geoDistance) && $nearby_lat != "" && $nearby_lng != "" && $nearby_lat != "0" && $nearby_lng != "0") {
+                                                    /*print_r($geoDistance);
+                                                    var_dump($nearby_lat);
+                                                   echo "<br/>";*/
                                                     $nearby_adress = "";
 
                                                     if ($nearByProDataKey['street_address']) {
@@ -2681,6 +2704,7 @@ if(count ( $property_details ) == 0 ){
 
                             $first_segment = "";
                             //echo $prop_det_url;exit;
+                            $prop_det_url = str_replace("'", " ", stripslashes($prop_det_url));
 
                             $category_id = $similar_property['category_id'];
 
@@ -2815,8 +2839,7 @@ if(count ( $property_details ) == 0 ){
 
                                     ?>
 
-                                    <a style="font-size:12px;"
-                                       href="<?php echo $first_segment;?>/<?php echo $prop_det_url;?>">
+                                    <a style="font-size:12px;" href="<?php echo $prop_det_url;?>">
 
                                         <img
                                             src="<?php echo base_url();?>assets/uploads/Property/Property<?php echo $similar_property['property_id']; ?>/thumb_92_82/<?php echo $main_image_sim; ?>"
@@ -3395,8 +3418,8 @@ $property_details[0]['longitude'];
 
 if ($property_details[0]['latitude'] == 0 && $property_details[0]['longitude'] == 0) {
 
-    //$propertygetLangLatAddress = $propertyAddress.', '.$city_name.', '.$province_code.', Italy';
-    $propertygetLangLatAddress .= $propertyAddress . ',' . stripslashes($city_name) . ', ' . $province_code . ', ' . $property_details[0]['zip'] . ', Italy';
+    $propertygetLangLatAddress = $propertyAddress . ', ' . stripslashes($city_name) . ', ' . $province_code . ', Italy';
+    //$propertygetLangLatAddress.= $propertyAddress.','.stripslashes($city_name).', '.$province_code.', '.$property_details[0]['zip'].', Italy';
 
     $lat_lng_array = getLangLat($propertygetLangLatAddress);
 
@@ -3541,16 +3564,7 @@ $mainProGoogleMapMarkers[] = array(
 
     });
 </script>
-<script type="text/javascript">
-    $(function () {
 
-        $(".nearby").click(function () {
-            //var centerZoom = 15;
-            GoogleMapMarkers.push(["<?php echo $gM['proptitle']; ?>", "<?php echo $gM['hackerspace']; ?>", <?php echo $gM['latitude']; ?>, <?php echo $gM['longitude']; ?>, "<?php echo $gM['proaddress']; ?>", "<?php echo $gM['propurl']; ?>", '<?php echo $gM['proprice']; ?>', "<?php echo $gM['proimg']; ?>", "proDetails"]);
-        });
-
-    });
-</script>
 
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/represent-map1.js"></script>
 

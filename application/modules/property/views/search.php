@@ -5,29 +5,13 @@
 <?php $this->load->view("_include/information"); ?>
 <?php $this->load->view("_include/information_mail"); ?>
 <style type="text/css">
-    #wrapper {
-        position: relative;
-    }
-
-    .no_decoration_anchor {
-        color: #3D8AC1;
-        font-weight: bold;
-    }
-
-    .desc_prop {
-        font-weight: bold;
-    }
-
-    .enlarge {
-        width: 100%;
-        position: absolute;
-    }
-
-    .nicescroll-rails {
-        display: none;
-    }
-
-    .fullScreen {
+    #wrapper{position: relative;}
+    .no_decoration_anchor{color:#3D8AC1;font-weight:bold;}
+    .desc_prop{font-weight:bold;}
+    .enlarge{width:100%;position:absolute;}
+    .nicescroll-rails{display:none;}
+    .fullScreen
+    {
         width: 100% !important;
         z-index: 100 !important;
         height: 450px !important;
@@ -37,23 +21,20 @@
     #extView {
         dispaly: none;
     }
-
-    #map_canvas {
-        transition: all 2s;
-    }
+    #map_canvas{ transition: all 2s; }
 </style>
 <script type="text/javascript">
-    $(document).ready(function () {
-        $('#nav li').hover(function () {
+    $(document).ready(function() {
+        $('#nav li').hover(function() {
             $('ul', this).slideDown(200);
             $(this).children('a:first').addClass("hov");
-        }, function () {
+        }, function() {
             $('ul', this).slideUp(100);
             $(this).children('a:first').removeClass("hov");
         });
     });
-    $(function () {
-        $(window).scroll(function () {
+    $(function(){
+        $(window).scroll(function(){
             var scrollTop = $(document).scrollTop();
         });
     });
@@ -64,11 +45,11 @@
         <div id="breadcrumb" class="fk-lbreadbcrumb newvd">
 			<span>
 				<a href="<?php echo base_url();?>">
-                    <?php echo $this->lang->line('property_search_home'); ?>
+                    <?php echo $this->lang->line('property_search_home');?>
                 </a>
 			</span> &gt;
             <?php
-            if ($parentCatname != '') {
+            if($parentCatname != ''){
                 ?>
                 <span>
 				<a href="<?php echo base_url();?>property/search?category_id=<?php echo $parent_id;?>">
@@ -77,11 +58,11 @@
 			</span> &gt;
             <?php
             }
-            if ($category_id == 6 || $category_id == 7 || $category_id == 10) {
-                if ($parentCatname) {
-                    $breadCrumbLinkSub = base_url() . 'property/search?category_id=' . $parent_id . '&' . ($category_id == 10 ? 'for_luxury=' . $_GET['for_luxury'] : 'for_business=' . $_GET['for_business']);
-                } else {
-                    $breadCrumbLinkSub = base_url() . 'property/search?category_id=' . $category_id;
+            if($category_id == 6 || $category_id == 7 || $category_id == 10){
+                if($parentCatname){
+                    $breadCrumbLinkSub = base_url().'property/search?category_id='.$parent_id.'&'.($category_id == 10 ? 'for_luxury='.$_GET['for_luxury']: 'for_business='.$_GET['for_business']);
+                }else{
+                    $breadCrumbLinkSub = base_url().'property/search?category_id='.$category_id;
                 }
                 ?>
                 <span>
@@ -90,7 +71,7 @@
                 </a>
 			</span> &gt;
             <?php
-            } else {
+            }else{
                 ?>
                 <span>
 				<a href="<?php echo base_url();?>property/search?category_id=<?php echo $category_id;?>">
@@ -100,7 +81,7 @@
             <?php
             }
             ?>
-            <span><?php echo $this->lang->line('property_search_search_result'); ?></span>
+            <span><?php echo $this->lang->line('property_search_search_result');?></span>
         </div>
 
         <div class="refinesearch">
@@ -108,50 +89,50 @@
         </div>
         <?php
         $count = 0;
-        if ($property_details != 0 && count($property_details) > 0) {
+        if($property_details != 0 && count($property_details) > 0){
             //$count = number_format(count($property_details));
         }
         ?>
 
         <h2 class="searchfound">
             <?php
-            if ($parentCatname != '') {
+            if($parentCatname != ''){
                 ?>
                 <?php echo $parentCatname;?> -
             <?php
             }
             ?>
-            <?php echo ucwords(strtolower($search_title)); ?>
+            <?php echo ucwords(strtolower($search_title));?>
             <font style="font-size:12px; font-weight:normal;">
-                <?php echo $propertyCount; ?> <?php echo $this->lang->line('property_search_results'); ?>
+                <?php echo $propertyCount;?> <?php echo $this->lang->line('property_search_results');?>
             </font> 
 			<span class="post_brn">
 				<?php
-                $user_type = get_perticular_field_value('zc_user', 'user_type', " and user_id='" . $this->session->userdata('user_id') . "'");
-                if ($user_type == '2' || $user_type == '3') {
+                $user_type=get_perticular_field_value('zc_user','user_type'," and user_id='".$this->session->userdata( 'user_id' )."'");
+                if($user_type=='2' || $user_type=='3') {
                     ?>
-                    <a href="<?php echo base_url(); ?>property/add_property_form" class="freepost">
-                        <?php echo $this->lang->line('advertise_details_post_your_property'); ?>
+                    <a href="<?php echo base_url();?>property/add_property_form" class="freepost">
+                        <?php echo $this->lang->line('advertise_details_post_your_property');?>
                         <font style="color:#fff000">
-                            <?php echo $this->lang->line('advertise_details_free'); ?>
+                            <?php echo $this->lang->line('advertise_details_free');?>
                         </font>
                     </a>
                 <?php
-                } elseif ($user_type == '1') {
+                }elseif($user_type=='1') {
                     ?>
-                    <a href="<?php echo base_url(); ?>property/add_property_form" class="freepost add_property">
-                        <?php echo $this->lang->line('advertise_details_post_your_property'); ?>
+                    <a href="<?php echo base_url();?>property/add_property_form" class="freepost add_property">
+                        <?php echo $this->lang->line('advertise_details_post_your_property');?>
                         <font style="color:#fff000">
-                            <?php echo $this->lang->line('advertise_details_free'); ?>
+                            <?php echo $this->lang->line('advertise_details_free');?>
                         </font>
                     </a>
                 <?php
-                } elseif ($this->session->userdata('user_id') == '0' || $this->session->userdata('user_id') == '') {
+                }elseif($this->session->userdata( 'user_id' )=='0'  || $this->session->userdata( 'user_id' )=='' ) {
                     ?>
-                    <a href="<?php echo base_url(); ?>users/common_reg" class="freepost">
-                        <?php echo $this->lang->line('advertise_details_post_your_property'); ?>
+                    <a href="<?php echo base_url();?>users/common_reg" class="freepost">
+                        <?php echo $this->lang->line('advertise_details_post_your_property');?>
                         <font style="color:#fff000">
-                            <?php echo $this->lang->line('advertise_details_free'); ?>
+                            <?php echo $this->lang->line('advertise_details_free');?>
                         </font>
                     </a>
                 <?php
@@ -160,7 +141,7 @@
 			</span>
         </h2>
         <?php
-        if (!empty($property_details)) {
+        if(!empty($property_details)){
             ?>
             <div class="rightmap_area" id="map_canvas" style="width:445px;height:367px;border:solid 1px #DDDDDD;"></div>
         <?php
@@ -170,20 +151,16 @@
             <div style="float: right; width: 100%; border-bottom: 1px solid #EEEEEE;">
                 <fieldset id="inputs">
                     <?php
-                    $order_option = "order_latest";
-                    if (isset($_GET['order_option']) && ($_GET['order_option'] != "")) {
-                        $order_option = $this->input->get('order_option');
+                    $order_option="order_latest";
+                    if( isset( $_GET['order_option'] ) && ( $_GET['order_option'] != "" ) ) {
+                        $order_option=$this->input->get('order_option');
                     }
-                    if (count($property_details) > 0) {
+                    if(count($property_details) > 0 ) {
                         ?>
-                        <select name="order_option" id="order_option" onChange="return do_order();"
-                                style="width: 150px; float: right; margin: 5px 3px 5px 0px;">
-                            <option value="order_latest"
-                                    <?php if ($order_option == 'order_latest'){ ?>selected<?php } ?>><?php echo $this->lang->line('property_search_order_by_latest_first'); ?></option>
-                            <option
-                                value="order_high_price" <?php if ($order_option == 'order_high_price') { ?> selected<?php } ?>><?php echo $this->lang->line('property_search_highest_price_first'); ?></option>
-                            <option
-                                value="order_low_price" <?php if ($order_option == 'order_low_price') { ?> selected<?php } ?>><?php echo $this->lang->line('property_search_lowest_price_first'); ?></option>
+                        <select name="order_option" id="order_option" onChange="return do_order();" style="width: 150px; float: right; margin: 5px 3px 5px 0px;">
+                            <option value="order_latest" <?php if($order_option=='order_latest'){?>selected<?php }?>><?php echo $this->lang->line('property_search_order_by_latest_first');?></option>
+                            <option value="order_high_price" <?php if($order_option=='order_high_price'){?> selected<?php }?>><?php echo $this->lang->line('property_search_highest_price_first');?></option>
+                            <option value="order_low_price" <?php if($order_option=='order_low_price'){?> selected<?php }?>><?php echo $this->lang->line('property_search_lowest_price_first');?></option>
                         </select>
                     <?php
                     }
@@ -197,111 +174,114 @@
                 <ul>
                     <?php
                     $GoogleMapMarkers = array();
-                    $l = 1;
-                    if (!empty($property_details) && $property_details != 0) {
+                    $l=1;
+                    if(!empty($property_details) && $property_details != 0) {
                         $alt = 0;
                         $gMapCounter = 0;
-                        foreach ($property_details as $arrProp) {
+                        // echo "<pre> ====> VIX"; 
+                        //             print_r($property_details);exit;
+                        foreach($property_details as $arrProp) {
                             $advertiserGeoAddress = "";
-                            $first_segment = "";
-                            if ($_GET['category_id'] == '10' || $_GET['for_luxury'] != '') {
-                                if ($_GET['for_luxury'] != '') {
-                                    $first_segment = 'Luxury-' . ucfirst(strtolower($_GET['for_luxury']));
-                                } else {
-                                    $first_segment = 'Luxury';
+                            $first_segment="";
+                            if($_GET['category_id']=='10' || $_GET['for_luxury']!=''){
+                                if($_GET['for_luxury']!=''){
+                                    $first_segment='Luxury-'.ucfirst(strtolower($_GET['for_luxury']));
+                                }else{
+                                    $first_segment='Luxury';
                                 }
-                            } elseif ($_GET['category_id'] == '6' || $_GET['category_id'] == '7' || $_GET['for_business'] != '') {
-                                if ($_GET['for_business'] != '') {
-                                    $first_segment = 'Business-' . ucfirst(strtolower($_GET['for_business']));
-                                } else {
-                                    $first_segment = 'Business';
+                            }elseif($_GET['category_id']=='6' || $_GET['category_id']=='7' || $_GET['for_business']!=''){
+                                if($_GET['for_business']!=''){
+                                    $first_segment='Business-'.ucfirst(strtolower($_GET['for_business']));
+                                }else{
+                                    $first_segment='Business';
                                 }
-                            } else {
-                                $category_id = $arrProp->category_id;
-                                if ($category_id == '6' || $category_id == '7') {
-                                    $first_segment = 'Business';
-                                } elseif ($category_id == '1') {
-                                    $first_segment = 'Residential';
-                                } elseif ($category_id == '3') {
-                                    $first_segment = 'Rooms';
-                                } elseif ($category_id == '4') {
-                                    $first_segment = 'Land';
-                                } elseif ($category_id == '5') {
-                                    $first_segment = 'Vacations';
+                            }else{
+                                $category_id=$arrProp->category_id;
+                                if($category_id=='6' || $category_id=='7'){
+                                    $first_segment='Business';
+                                }elseif($category_id=='1'){
+                                    $first_segment='Residential';
+                                }elseif($category_id=='3'){
+                                    $first_segment='Rooms';
+                                }elseif($category_id=='4'){
+                                    $first_segment='Land';
+                                }elseif($category_id=='5'){
+                                    $first_segment='Vacations';
                                 }
                             }
-                            $prop_det_url = '';
-                            if ($arrProp->contract_id == 1) {
-                                $contract = "Rent";
-                            } elseif ($arrProp->contract_id == 2) {
-                                $contract = "Sell";
+                            $prop_det_url='';
+                            if($arrProp->contract_id==1){
+                                $contract="Rent";
+                            }elseif($arrProp->contract_id==2){
+                                $contract="Sell";
                             }
-                            $prop_det_url .= $contract;
-                            $typology_name = get_perticular_field_value('zc_typologies', 'name', " and status='active' and typology_id='" . $arrProp->typology . "'");
+                            $prop_det_url.=$contract;
+                            $typology_name=get_perticular_field_value('zc_typologies','name'," and status='active' and typology_id='".$arrProp->typology."'");
                             //$prop_det_url.='-'.trim($typology_name);
-                            if ($_COOKIE['lang'] == "english") {
+                            if($_COOKIE['lang'] == "english")
+                            {
 
-                                $prop_det_url .= '-' . trim($arrProp->city_name);
-                                $prop_det_url .= '-' . trim($arrProp->provience_name);
-                            } else {
-                                $prop_det_url .= '-' . trim($arrProp->city_name_it);
-                                $prop_det_url .= '-' . trim($arrProp->provience_name_it);
+                                $prop_det_url.='-'.trim($arrProp->city_name);
+                                $prop_det_url.='-'.trim($arrProp->provience_name);
                             }
-                            $prop_det_url .= '-' . trim($arrProp->property_id);
+                            else
+                            {
+                                $prop_det_url.='-'.trim($arrProp->city_name_it);
+                                $prop_det_url.='-'.trim($arrProp->provience_name_it);
+                            }
+                            $prop_det_url.='-'.trim($arrProp->property_id);
+                            $prop_det_url= str_replace("'", "", $prop_det_url);
                             //$prop_det_url = prop_det_url.replaceAll("'","");	
                             // echo "hiii".stripslashes($prop_det_url);				
                             ?>
-                            <?php $propcount = count($property_details);
-                            // echo $propcount;exit;
-                            $todayDate = strtotime(date('d-m-Y'));
-                            $startDate = strtotime($arrProp->featured_start_date);
-                            $expDateLength = $arrProp->number_of_days;
-                            $expireDate = strtotime(date("Y-m-d", $startDate) . " +" . $expDateLength . "days");
-                            ?>
-                            <li class="<?php echo($alt > 0 ? 'alt' : ''); ?>" <?php echo($arrProp->feature_status == 1 && $todayDate >= $startDate && $todayDate <= $expireDate ? 'style="background-color:rgb(233, 242, 255);"' : ''); ?>>
+                            <?php $propcount=count($property_details);
+                           // echo $propcount;exit;
+                           /* $todayDate = strtotime( date('d-m-Y') );
+                                $startDate = strtotime( $arrProp->featured_start_date );
+                                $expDateLength = $arrProp->number_of_days;
+                                $expireDate = strtotime(date("Y-m-d", $startDate) . " +".$expDateLength."days");*/
+                                ?>
+                            <li class="<?php echo($alt>0?'alt':''); ?>" <?php echo($arrProp->featured_property_status == 'highlight'?'style="background-color:rgb(233, 242, 255);"':''); ?>>
                                 <?php
 
-                                if ($arrProp->feature_status == 1 && $todayDate >= $startDate && $todayDate <= $expireDate) {
-                                    // echo "hii";exit;
+                                if($arrProp->featured_property_status == 'highlight'){
+                                   // echo "hii";exit;
                                     ?>
                                     <div style="text-align:left; margin-left:6px;">
-                                        <span
-                                            style="color: rgb(163, 163, 10); font-weight:bold;"><?php echo $this->lang->line('property_search_paid_add');?>
-                                            -</span>
-                                        <a href="<?php echo base_url();?>site/Highlight_your_advert"><span
-                                                style="color: rgb(163, 163, 10);"> <?php echo $this->lang->line('property_search_paid_add_read_more');?></span></a>
+                                        <span style="color: rgb(163, 163, 10); font-weight:bold;"><?php echo $this->lang->line('property_search_paid_add');?> -</span>
+                                        <a href="<?php echo base_url();?>site/Highlight_your_advert"><span style="color: rgb(163, 163, 10);"> <?php echo $this->lang->line('property_search_paid_add_read_more');?></span></a>
                                     </div>
                                 <?php
                                 }
                                 ?>
                                 <div class="listingImg">
                                     <?php
-                                    $count_img = get_perticular_count('zc_property_img', " and property_id='" . $arrProp->property_id . "' and img_type!='preliminary'");
-                                    if ($arrProp->main_img != '') {
-                                        $propertyImage = base_url() . 'assets/uploads/Property/Property' . $arrProp->property_id . '/thumb_200_296/' . $arrProp->main_img;
-                                        $propertyImageThumb = base_url() . 'assets/uploads/Property/Property' . $arrProp->property_id . '/thumb_92_82/' . $arrProp->main_img;
-                                    } else {
-                                        $propertyImageThumb = $propertyImage = base_url() . 'assets/images/no_proimg.jpg';
+                                    $count_img=get_perticular_count('zc_property_img'," and property_id='".$arrProp->property_id."' and img_type!='preliminary'");
+                                    if($arrProp->main_img != ''){
+                                        $propertyImage = base_url().'assets/uploads/Property/Property'.$arrProp->property_id.'/thumb_200_296/'.$arrProp->main_img;
+                                        $propertyImageThumb = base_url().'assets/uploads/Property/Property'.$arrProp->property_id.'/thumb_92_82/'.$arrProp->main_img;
+                                    }else{
+                                        $propertyImageThumb = $propertyImage = base_url().'assets/images/no_proimg.jpg';
                                     }
                                     ?>
-                                    <a href="<?php echo base_url(); ?><?php echo $first_segment; ?>/<?php echo $prop_det_url; ?>">
+                                    <a href="<?php echo base_url();?><?php echo $first_segment;?>/<?php echo stripslashes($prop_det_url);?>">
                                         <img src="<?php echo $propertyImage; ?>" alt="">
                                         <figcaption class="photo-count">
-                                            <?php echo $count_img; ?> <?php echo $this->lang->line('property_search_photos'); ?>
+                                            <?php echo $count_img;?> <?php echo $this->lang->line('property_search_photos');?>
                                         </figcaption>
                                         <div class="listingShw"></div>
                                     </a>
                                     <?php
-                                    if (isset($_COOKIE['lang']) && ($_COOKIE['lang'] == "english")) {
-                                        $proptitle = $arrProp->name . " For " . stripslashes($arrProp->typology_name) . " in " . stripslashes($arrProp->city_name) . ", " . $arrProp->province_code;
-                                    } else {
-                                        $proptitle = stripslashes($arrProp->typology_name_it) . " in " . $arrProp->name_it . " a " . stripslashes($arrProp->city_name_it) . ", " . $arrProp->province_code;
+                                    if( isset( $_COOKIE['lang'] ) && ( $_COOKIE['lang'] == "english" )) {
+                                        $proptitle = $arrProp->name." For ".stripslashes($arrProp->typology_name)." in ".stripslashes($arrProp->city_name).", ".$arrProp->province_code;
+                                    }else{
+                                        $proptitle = stripslashes($arrProp->typology_name_it)." in ".$arrProp->name_it." a ".stripslashes($arrProp->city_name_it).", ".$arrProp->province_code;
                                     }
                                     ?>
                                     <div style="text-align:left; margin-left:6px;">
-                                        <?php echo $this->lang->line('property_search_published'); ?>
+                                        <?php echo $this->lang->line('property_search_published');?>
                                         <?php
-                                        switch (date('m', strtotime($arrProp->posting_time))) {
+                                        switch(date('m',strtotime($arrProp->posting_time))){
                                             case '01':
                                                 $monthName = $this->lang->line('cal_jan');
                                                 break;
@@ -339,13 +319,13 @@
                                                 $monthName = $this->lang->line('cal_dec');
                                                 break;
                                         }
-                                        echo date('d', strtotime($arrProp->posting_time)) . ' ' . $monthName . ' ' . date('Y', strtotime($arrProp->posting_time));
+                                        echo date('d',strtotime($arrProp->posting_time)).' '.$monthName.' '.date('Y',strtotime($arrProp->posting_time));
                                         //echo date('d M Y',strtotime($arrProp->posting_time));
                                         ?><br>
                                         <?php
-                                        if ($arrProp->update_time != '0000-00-00') {
+                                        if($arrProp->update_time!='0000-00-00'){
 
-                                            switch (date('m', strtotime($arrProp->update_time))) {
+                                            switch(date('m',strtotime($arrProp->update_time))){
                                                 case '01':
                                                     $monthName = $this->lang->line('cal_jan');
                                                     break;
@@ -384,55 +364,51 @@
                                                     break;
                                             }
 
-                                            echo $this->lang->line('property_search_updated') . " " . date('d', strtotime($arrProp->update_time)) . ' ' . $monthName . ' ' . date('Y', strtotime($arrProp->update_time));
+                                            echo $this->lang->line('property_search_updated')." ".date('d',strtotime($arrProp->update_time)).' '.$monthName.' '.date('Y',strtotime($arrProp->update_time));
                                             //echo $this->lang->line('property_search_updated')." ".date('d M Y',strtotime($arrProp->update_time));
                                             echo '<br>';
                                         }
                                         $property_post_by_type = $arrProp->property_post_by_type;
-                                        if ($property_post_by_type == '2') {
-                                            $user_preference = get_all_value('zc_user_preference', " and user_id='" . $arrProp->property_post_by . "'");
-                                            $first_name = get_perticular_field_value('zc_user', 'first_name', " and user_id='" . $arrProp->property_post_by . "'");
-                                            $last_name = get_perticular_field_value('zc_user', 'last_name', " and user_id='" . $arrProp->property_post_by . "'");
-                                            $name = $first_name . ' ' . $last_name;
+                                        if($property_post_by_type=='2'){
+                                            $user_preference = get_all_value('zc_user_preference'," and user_id='".$arrProp->property_post_by."'");
+                                            $first_name = get_perticular_field_value('zc_user','first_name'," and user_id='".$arrProp->property_post_by."'");
+                                            $last_name=get_perticular_field_value('zc_user','last_name'," and user_id='".$arrProp->property_post_by."'");
+                                            $name = $first_name.' '.$last_name;
                                             ?>
-                                            <span
-                                                style="font-weight:bold;"><?php echo $this->lang->line('property_search_by_owner');?> </span>
-                                            <br>
+                                            <span style="font-weight:bold;"><?php echo $this->lang->line('property_search_by_owner');?> </span><br>
                                             <span style="font-weight:bold; color:#5199D4;">
 										<?php
-                                        if (isset($user_preference[0]) && (count($user_preference[0]) > 0)) {
-                                            if ($user_preference[0]['invisible'] != 0) {
+                                        if(isset( $user_preference[0] ) &&( count( $user_preference[0] ) > 0 )) {
+                                            if($user_preference[0]['invisible'] != 0 ) {
                                                 echo $name;
-                                            } else {
+                                            }else{
                                                 ?>
                                                 <a href="<?php echo base_url();?>advertiser/advertiser_details/<?php echo $arrProp->property_post_by;?>">
                                                     <?php echo $name;?>
                                                 </a>
                                             <?php
                                             }
-                                        } else {
+                                        }else {
                                             echo $name;
                                         }
                                         ?>
 									</span>
                                         <?php
                                         }
-                                        if ($property_post_by_type == '3') {
-                                            $user_preference = get_all_value('zc_user_preference', " and user_id='" . $arrProp->property_post_by . "'");
-                                            $company_name = get_perticular_field_value('zc_user', 'company_name', " and user_id='" . $arrProp->property_post_by . "'");
+                                        if($property_post_by_type=='3') {
+                                            $user_preference = get_all_value('zc_user_preference'," and user_id='".$arrProp->property_post_by."'");
+                                            $company_name=get_perticular_field_value('zc_user','company_name'," and user_id='".$arrProp->property_post_by."'");
                                             ?>
-                                            <span
-                                                style="font-weight:bold;"><?php echo $this->lang->line('property_search_by_company'); ?></span>
-                                            <br>
+                                            <span style="font-weight:bold;"><?php echo $this->lang->line('property_search_by_company');?></span><br>
                                             <span style="font-weight:bold; color:#5199D4;">
 										<?php
-                                        if (isset($user_preference[0]) && (count($user_preference[0]) > 0)) {
-                                            if ($user_preference[0]['invisible'] != 0) {
+                                        if( isset( $user_preference[0] ) &&( count( $user_preference[0] ) > 0 )) {
+                                            if( $user_preference[0]['invisible'] != 0 ) {
                                                 echo $company_name;
                                             } else {
                                                 ?>
-                                                <a href="<?php echo base_url(); ?>advertiser/advertiser_details/<?php echo $arrProp->property_post_by; ?>">
-                                                    <?php echo $company_name; ?>
+                                                <a href="<?php echo base_url();?>advertiser/advertiser_details/<?php echo $arrProp->property_post_by;?>">
+                                                    <?php echo $company_name;?>
                                                 </a>
                                             <?php
                                             }
@@ -447,54 +423,48 @@
                                     </div>
                                     <!-- <div class="listingShw"></div> -->
                                 </div>
-                                <?php $prop_det_url = str_replace("'", "", $prop_det_url); ?>
+                                <?php  $prop_det_url= str_replace("'", "", $prop_det_url);?>
                                 <div class="listingContent">
                                     <h4 style="font-weight:bold;font-size:12px;">
-                                        <?php echo $this->lang->line('ref_code') . ': ' . CreateNewRefToken($arrProp->property_id, $arrProp->name); ?>
+                                        <?php echo $this->lang->line('ref_code').': '.CreateNewRefToken($arrProp->property_id,$arrProp->name); ?>
                                     </h4>
-
                                     <h2 class="hackerspace">
-                                        <a href="<?php echo base_url() . $first_segment . '/' . stripslashes($prop_det_url); ?>"
-                                           onMouseOver="goToMarker('<?php echo $gMapCounter; ?>')"
-                                           onMouseOut="markerListMouseOut('<?php echo $gMapCounter; ?>')">
-                                            <?php echo $proptitle; ?>
+                                        <a href="<?php echo base_url().$first_segment.'/'.stripslashes($prop_det_url);?>" onMouseOver="goToMarker('<?php echo $gMapCounter; ?>')" onMouseOut="markerListMouseOut('<?php echo $gMapCounter; ?>')">
+                                            <?php echo $proptitle;?>
                                         </a>
                                     </h2>
-
                                     <div class="listAddress">
                                         <h3>
                                             <?php
-                                            $propertyAddress = ($arrProp->area != '' ? $arrProp->area . ' - ' : '');
-                                            $propertyAddress .= ($arrProp->street_address != '' ? $arrProp->street_address . ', ' : '');
-                                            $propertyAddress .= ($arrProp->street_no != '' ? $arrProp->street_no . ' - ' : '');
-                                            $propertyAddress .= ($arrProp->zip != '' ? $arrProp->zip : '');
+                                            $propertyAddress = ($arrProp->area!=''?$arrProp->area.' - ':'');
+                                            $propertyAddress.= ($arrProp->street_address!=''?$arrProp->street_address.', ':'');
+                                            $propertyAddress.= ($arrProp->street_no!=''?$arrProp->street_no.' - ':'');
+                                            $propertyAddress.= ($arrProp->zip!=''?$arrProp->zip:'');
                                             echo $propertyAddress;
                                             ?>
                                         </h3>
                                     </div>
                                     <p style="text-align:left;">
                                         <?php
-                                        echo substr($arrProp->description, 0, 90);
-                                        $str_len = strlen($arrProp->description);
-                                        if ($str_len > '150') {
-                                            echo '...';
-                                        }
+                                        echo substr($arrProp->description,0,90);
+                                        $str_len=strlen($arrProp->description);
+                                        if($str_len > '150'){echo '...';}
                                         ?>
                                         <br>
                                     </p>
                                     <!--by category wise show-->
                                     <?php
-                                    $cat_id = $arrProp->category_id;
-                                    if ($cat_id == '1' || $cat_id == '6' || $cat_id == '7') {
+                                    $cat_id=$arrProp->category_id;
+                                    if($cat_id=='1' || $cat_id=='6' || $cat_id=='7') {
                                         ?>
                                         <p style="text-align:left !important;margin:10px 0;">
                                             <?php
-                                            echo '<span class="desc_prop">m2: </span>' . $arrProp->surface_area . '<span class="desc_prop"> | ' . $this->lang->line('property_search_rooms') . ': </span>' . $arrProp->room_no;
-                                            if ($arrProp->floor != '') {
-                                                echo '<span class="desc_prop"> | ' . $this->lang->line('property_search_floor') . ': </span>' . $arrProp->floor;
+                                            echo '<span class="desc_prop">m2: </span>'.$arrProp->surface_area.'<span class="desc_prop"> | '.$this->lang->line('property_search_rooms').': </span>'.$arrProp->room_no;
+                                            if($arrProp->floor != '') {
+                                                echo '<span class="desc_prop"> | '.$this->lang->line('property_search_floor').': </span>'.$arrProp->floor;
                                             }
-                                            echo '<span class="desc_prop">| ' . $this->lang->line('property_search_parking') . ': </span>';
-                                            switch ($arrProp->parking) {
+                                            echo '<span class="desc_prop">| '.$this->lang->line('property_search_parking').': </span>';
+                                            switch($arrProp->parking){
                                                 case 'Parking':
                                                     $parkingString = $this->lang->line('add_property_form_parking_parking');
                                                     break;
@@ -513,12 +483,12 @@
                                         </p>
                                     <?php
                                     }
-                                    if ($cat_id == '3') {
+                                    if($cat_id=='3') {
                                         ?>
                                         <p style="text-align:left !important;margin:10px 0;">
                                             <?php
-                                            echo '<span class="desc_prop">' . $this->lang->line('property_search_bathrooms') . ': </span>' . $arrProp->bathrooms_no . '<span class="desc_prop"> | ' . $this->lang->line('property_search_kitchen') . ':</span> ';
-                                            switch ($arrProp->kitchen) {
+                                            echo '<span class="desc_prop">'.$this->lang->line('property_search_bathrooms').': </span>'.$arrProp->bathrooms_no.'<span class="desc_prop"> | '.$this->lang->line('property_search_kitchen').':</span> ';
+                                            switch($arrProp->kitchen){
                                                 case 'Living':
                                                     $kitchenString = $this->lang->line('add_property_form_kitchen_living');
                                                     break;
@@ -536,8 +506,8 @@
                                                     break;
                                             }
                                             echo $kitchenString;
-                                            echo ' <span class="desc_prop">| ' . $this->lang->line('property_search_rommates') . ': </span>';
-                                            switch ($arrProp->roommates) {
+                                            echo ' <span class="desc_prop">| '.$this->lang->line('property_search_rommates').': </span>';
+                                            switch($arrProp->roommates){
                                                 case 'Men and women':
                                                     $roommatesString = $this->lang->line('add_property_form_roommates_men_women');
                                                     break;
@@ -553,7 +523,7 @@
                                             }
                                             echo $roommatesString;
                                             echo ', ';
-                                            switch ($arrProp->occupation) {
+                                            switch($arrProp->occupation){
                                                 case 'Students and workers':
                                                     $occupationString = $this->lang->line('add_property_form_occupation_student_worker');
                                                     break;
@@ -572,29 +542,29 @@
                                         </p>
                                     <?php
                                     }
-                                    if ($cat_id == '4') {
+                                    if($cat_id=='4') {
                                         ?>
                                         <p style="text-align:left !important;margin:10px 0;">
                                             <?php
-                                            if ($arrProp->availability == 0) {
+                                            if($arrProp->availability == 0) {
                                                 $availabilty = $this->lang->line('property_search_availability_vacant');
                                             } else {
                                                 $availabilty = $this->lang->line('property_search_availability_occupied');
                                             }
-                                            echo '<span class="desc_prop">m2: </span>' . $arrProp->surface_area . '<span class="desc_prop"> | ' . $this->lang->line('property_search_availability') . ': </span> ' . $availabilty;
+                                            echo '<span class="desc_prop">m2: </span>'.$arrProp->surface_area.'<span class="desc_prop"> | '.$this->lang->line('property_search_availability').': </span> '.$availabilty;
                                             ?>
                                         </p>
                                     <?php
                                     }
-                                    if ($cat_id == '5') {
+                                    if($cat_id=='5') {
                                         ?>
                                         <p style="text-align:left !important;margin:10px 0;">
                                             <?php
-                                            if ($arrProp->beds_no != '') {
-                                                echo '<span class="desc_prop">' . $this->lang->line('property_search_beds') . ': </span>' . $arrProp->beds_no . '<span class="desc_prop"> | </span>';
+                                            if($arrProp->beds_no != '') {
+                                                echo '<span class="desc_prop">'.$this->lang->line('property_search_beds').': </span>'.$arrProp->beds_no.'<span class="desc_prop"> | </span>';
                                             }
-                                            echo '<span class="desc_prop">' . $this->lang->line('property_search_bathrooms') . ': </span>' . $arrProp->bathrooms_no . '<span class="desc_prop"> | ' . $this->lang->line('property_search_kitchen') . ': </span>';
-                                            switch ($arrProp->kitchen) {
+                                            echo '<span class="desc_prop">'.$this->lang->line('property_search_bathrooms').': </span>'.$arrProp->bathrooms_no.'<span class="desc_prop"> | '.$this->lang->line('property_search_kitchen').': </span>';
+                                            switch($arrProp->kitchen){
                                                 case 'Living':
                                                     $kitchenString = $this->lang->line('add_property_form_kitchen_living');
                                                     break;
@@ -612,8 +582,8 @@
                                                     break;
                                             }
                                             echo $kitchenString;
-                                            echo '<span class="desc_prop"> | ' . $this->lang->line('property_search_parking') . ': </span>';
-                                            switch ($arrProp->parking) {
+                                            echo '<span class="desc_prop"> | '.$this->lang->line('property_search_parking').': </span>';
+                                            switch($arrProp->parking){
                                                 case 'Parking':
                                                     $parkingString = $this->lang->line('add_property_form_parking_parking');
                                                     break;
@@ -637,56 +607,51 @@
                                         <div style="float:left;">
                                             <?php
                                             $propertyPrice = '';
-                                            if ($arrProp->price != '0.00') {
-                                                $propertyPrice .= '<span style="color:#000; font-weight:bold;float:left;">&euro;' . show_price($arrProp->price) . '&nbsp;</span>';
-                                                if ($arrProp->contract_id == 1) {
+                                            if($arrProp->price!='0.00'){
+                                                $propertyPrice.= '<span style="color:#ff711b; font-weight:bold;float:left;">&euro;'.show_price($arrProp->price).'&nbsp;</span>';
+                                                if($arrProp->contract_id==1){
                                                     $propertyPrice .= '<span style="color:#000; font-weight:bold;float:left;">' . $this->lang->line('property_search_per_month') . '&nbsp;</span>';
                                                 }
-                                                if ($arrProp->update_price != '0.00') {
-                                                    $per_prop = percentage($arrProp->update_price, $arrProp->price);
-                                                    if ($per_prop != 0) {
+                                                if($arrProp->update_price!='0.00'){
+                                                    $per_prop=percentage($arrProp->update_price,$arrProp->price);
+                                                    if($per_prop!=0){
                                                         $propertyPrice .= '<span style="color:#000; font-weight:bold;float:left;">|&nbsp;</span>';
-                                                        if ($per_prop < 0) {
-                                                            $propertyPrice .= '<span style="float: left;"><img src="' . base_url() . 'assets/images/green.gif" style="margin:5px 0 0 0;" width="8px" height="8px"></span>';
-                                                            $propertyPrice .= '<span style="color:#090; font-weight:bold; padding-left:2px; float: left;">' . percentage($arrProp->update_price, $arrProp->price) . ' % </span>';
-                                                        } else {
-                                                            $propertyPrice .= '<span style="float: left;"><img src="' . base_url() . 'assets/images/red.gif" style="margin:5px 0 0 0;" width="8px" height="8px"></span>';
-                                                            $propertyPrice .= '<span style="color:#F00; font-weight:bold; padding-left:2px; float: left;"> +' . percentage($arrProp->update_price, $arrProp->price) . ' % </span>';
+                                                        if ($per_prop < 0){
+                                                            $propertyPrice.= '<span style="float: left;"><img src="'.base_url().'assets/images/green.gif" style="margin:5px 0 0 0;" width="8px" height="8px"></span>';
+                                                            $propertyPrice.= '<span style="color:#090; font-weight:bold; padding-left:2px; float: left;">'.percentage($arrProp->update_price,$arrProp->price).' % </span>';
+                                                        }else{
+                                                            $propertyPrice.= '<span style="float: left;"><img src="'.base_url().'assets/images/red.gif" style="margin:5px 0 0 0;" width="8px" height="8px"></span>';
+                                                            $propertyPrice.= '<span style="color:#F00; font-weight:bold; padding-left:2px; float: left;"> +'.percentage($arrProp->update_price,$arrProp->price).' % </span>';
                                                         }
                                                     }
                                                 }
-                                            } else {
-                                                $propertyPrice .= $this->lang->line('property_search_private_nagotiation');
+                                            }else{
+                                                $propertyPrice.= $this->lang->line('property_search_private_nagotiation');
                                             }
-                                            echo '<font style="color:#ED6B1F">' . $propertyPrice . '</font>';
+                                            echo '<font style="color:#ED6B1F">'.$propertyPrice.'</font>';
                                             ?>
                                         </div>
-                                        <div style="float:right; !important;"
-                                             id="saved_<?php echo $arrProp->property_id; ?>">
+                                        <div style="float:right; !important;" id="saved_<?php echo $arrProp->property_id;?>">
                                             <?php
-                                            if ($this->session->userdata('user_id') != '' || $this->session->userdata('user_id') != '0') {
-                                                $saved_prop_cnt = get_perticular_count('zc_saved_property', "and property_id='" . $arrProp->property_id . "' and saved_by_user_id='" . $this->session->userdata('user_id') . "'");
-                                                if ($saved_prop_cnt == '0') {
+                                            if($this->session->userdata( 'user_id' )!='' || $this->session->userdata('user_id')!='0'){
+                                                $saved_prop_cnt=get_perticular_count('zc_saved_property',"and property_id='".$arrProp->property_id."' and saved_by_user_id='".$this->session->userdata( 'user_id' )."'");
+                                                if($saved_prop_cnt=='0'){
                                                     ?>
-                                                    <a href="javascript:void(0);"
-                                                       onClick="return save_property(<?php echo $arrProp->property_id;?>);">
-                                                        <img src="<?php echo base_url();?>assets/images/fav0.png"
-                                                             title="<?php echo $this->lang->line('property_search_save_the_property');?>">
+                                                    <a href="javascript:void(0);" onClick="return save_property(<?php echo $arrProp->property_id;?>);">
+                                                        <img src="<?php echo base_url();?>assets/images/fav0.png" title="<?php echo $this->lang->line('property_search_save_the_property');?>">
                                                     </a>
                                                 <?php
-                                                } else {
+                                                }else{
                                                     ?>
                                                     <a href="javascript:void(0);">
-                                                        <img src="<?php echo base_url();?>assets/images/fav1.png"
-                                                             title="<?php echo $this->lang->line('property_search_saved_by_you');?>">
+                                                        <img src="<?php echo base_url();?>assets/images/fav1.png" title="<?php echo $this->lang->line('property_search_saved_by_you');?>">
                                                     </a>
                                                 <?php
                                                 }
-                                            } else {
+                                            }else{
                                                 ?>
                                                 <a href="javascript:void(0);" class="save_prop_main">
-                                                    <img src="<?php echo base_url();?>assets/images/fav0.png"
-                                                         title="<?php echo $this->lang->line('property_search_save_the_property');?>">
+                                                    <img src="<?php echo base_url();?>assets/images/fav0.png" title="<?php echo $this->lang->line('property_search_save_the_property');?>">
                                                 </a>
                                             <?php
                                             }
@@ -696,27 +661,27 @@
                                 </div>
                             </li>
                             <?php
-                            $advertiserGeoAddress .= stripslashes($arrProp->city_name) . ', ' . $arrProp->province_code . ', ' . $arrAdv->zip . ', Italy';
+                            $advertiserGeoAddress.= stripslashes($arrProp->city_name).', '.$arrProp->province_code.', '.$arrAdv->zip.', Italy';
                             $lat_lng_array = getLangLat($advertiserGeoAddress);
                             $GoogleMapMarkersLatitude = $lat_lng_array->lat;
                             $GoogleMapMarkersLongitude = $lat_lng_array->lng;
                             $alt++;
-                            if ($alt > 1) {
+                            if($alt > 1){
                                 $alt = 0;
                             }
                             $GoogleMapMarkers[$gMapCounter] = array(
                                 'proptitle' => $proptitle,
-                                'hackerspace' => 'marker' . $arrProp->contract_id,
-                                'latitude' => ($arrProp->latitude == '0' ? $GoogleMapMarkersLatitude : $arrProp->latitude),
-                                'longitude' => ($arrProp->longitude == '0' ? $GoogleMapMarkersLongitude : $arrProp->longitude),
+                                'hackerspace' => 'newmarker'.$arrProp->contract_id,
+                                'latitude' => ($arrProp->latitude=='0'?$GoogleMapMarkersLatitude:$arrProp->latitude),
+                                'longitude' => ($arrProp->longitude=='0'?$GoogleMapMarkersLongitude:$arrProp->longitude),
                                 'proaddress' => $propertyAddress,
-                                'propurl' => base_url() . $first_segment . '/' . $prop_det_url,
-                                'proprice' => '<font style="color:#ED6B1F">' . $propertyPrice . '</font>',
+                                'propurl' => base_url().$first_segment.'/'.$prop_det_url,
+                                'proprice' => '<font style="color:#ED6B1F">'.$propertyPrice.'</font>',
                                 'proimg' => $propertyImageThumb,
                             );
                             $gMapCounter++;
                         }
-                    } else {
+                    }else{
                         ?>
                         <div class="no_record_search">
                             <?php echo $this->lang->line('property_search_sorry_no_record_found');?>
@@ -736,8 +701,8 @@
             <div class="clear"></div>
         </div>
         <?php
-        $google_adsence = get_perticular_field_value('zc_settings', 'meta_value', " and meta_name='google_adsence'");
-        if (isset($google_adsence) && (count($google_adsence) > 0)) {
+        $google_adsence = get_perticular_field_value('zc_settings','meta_value'," and meta_name='google_adsence'");
+        if( isset($google_adsence) && ( count($google_adsence) > 0 ) ) {
             ?>
             <div class="google_ad">
                 <?php
@@ -748,35 +713,35 @@
     </div>
 </form>
 <script type="text/javascript">
-    function save_property(property_id) {
+    function save_property(property_id){
         $("#prop_saved_msg").show();
-        var property_id = property_id;
-        var user_id = "<?php echo $this->session->userdata('user_id'); ?>";
+        var property_id=property_id;
+        var user_id="<?php echo $this->session->userdata('user_id'); ?>";
         //alert(user_id);
         $.ajax({
             type: "POST",
             url: "<?php echo base_url();?>property/save_property",
-            data: {property_id: property_id, user_id: user_id},
+            data:{property_id: property_id, user_id: user_id},
             async: false,
-            success: function (result) {
-                var img = "<img src='<?php echo base_url();?>assets/images/fav1.png' title='<?php echo $this->lang->line('property_search_saved_property');?>'/>";
-                $('#saved_' + property_id).html(img);
+            success:function(result){
+                var img="<img src='<?php echo base_url();?>assets/images/fav1.png' title='<?php echo $this->lang->line('property_search_saved_property');?>'/>";
+                $('#saved_'+property_id).html(img);
                 $("#prop_saved_msg").delay(3200).fadeOut(300);
             }
         });
     }
-    function do_order() {
+    function do_order(){
         var FormGetURL = $('#form_order').serialize().split('&');
         var j = 0;
         var PlaceHolder = new Array();
-        $('#form_order .placeholder').each(function () {
+        $('#form_order .placeholder').each(function(){
             PlaceHolder[j] = $(this).attr('id');
             j++;
         });
         var cleanUrl = '';
-        for (var i = 0; i < FormGetURL.length; i++) {
+        for(var i=0;i<FormGetURL.length;i++){
             var LeftEle = FormGetURL[i].split('=');
-            cleanUrl += (i == 0 ? '' : '&') + LeftEle[0] + '=' + (($.inArray(LeftEle[0], PlaceHolder) !== -1) ? '' : LeftEle[1]);
+            cleanUrl+= (i==0?'':'&')+LeftEle[0]+'='+(($.inArray(LeftEle[0],PlaceHolder) !== -1)?'':LeftEle[1]);
         }
         location.href = '<?php echo base_url(); ?>' + 'property/search?' + cleanUrl;
         //document.getElementById("form_order").submit();
@@ -802,7 +767,7 @@
     var DrawCircleAroundMarker = false;
     var CircleMapRadius = 3.10685596;
     var geocoder;
-    var markerTitles = [];
+   // var markerTitles = [];
     // markers array: name, type (icon), lat, long, description, uri, address
     GoogleMapMarkers = new Array();
     <?php
@@ -810,7 +775,7 @@
         $gMi = 0;
         foreach($GoogleMapMarkers as $gM){
     ?>
-    GoogleMapMarkers.push(["<?php echo $gM['proptitle']; ?>", "<?php echo $gM['hackerspace']; ?>", <?php echo $gM['latitude']; ?>, <?php echo $gM['longitude']; ?>, "<?php echo $gM['proaddress']; ?>", "<?php echo $gM['propurl']; ?>", '<?php echo $gM['proprice']; ?>', "<?php echo $gM['proimg']; ?>"]);
+    GoogleMapMarkers.push(["<?php echo $gM['proptitle']; ?>","<?php echo $gM['hackerspace']; ?>",<?php echo $gM['latitude']; ?>,<?php echo $gM['longitude']; ?>,"<?php echo $gM['proaddress']; ?>","<?php echo $gM['propurl']; ?>",'<?php echo $gM['proprice']; ?>',"<?php echo $gM['proimg']; ?>"]);
     markerTitles[<?php echo $gMi; ?>] = "<?php echo $gM['proptitle']; ?>";
     <?php
         $gMi++;

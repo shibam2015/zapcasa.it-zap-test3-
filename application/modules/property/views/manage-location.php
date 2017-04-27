@@ -30,43 +30,43 @@ label.error { float: left !important; color: red !important; padding-right: .5em
 
 <script type="text/javascript">
 
-	$(document).ready(function () {
+$(document).ready(function() {
 
-		$('#nav li').hover(function () {
+	$('#nav li').hover(function() {
 
-			$('ul', this).slideDown(200);
+		$('ul', this).slideDown(200);
 
-			$(this).children('a:first').addClass("hov");
+		$(this).children('a:first').addClass("hov");
 
-		}, function () {
+	}, function() {
 
-			$('ul', this).slideUp(100);
+		$('ul', this).slideUp(100);
 
-			$(this).children('a:first').removeClass("hov");
-
-		});
-
-		$.validator.addMethod("alphabetsnspace", function (value, element) {
-
-			return this.optional(element) || /(https?:\)?([w-]+.)+[w-]+[.com|.in|.org]+([?%&=]*)?/.test(value);
+		$(this).children('a:first').removeClass("hov");		
 
 	});
 
-		jQuery.extend(jQuery.validator.methods, {
+	$.validator.addMethod("alphabetsnspace", function(value, element) {
 
-			number: function (value, element) {
+		 return this.optional(element) || /(https?:\)?([w-]+.)+[w-]+[.com|.in|.org]+([?%&=]*)?/.test(value);
 
-				return this.optional(element)
+	});
 
-					|| /^(?:d+|d{1,3}(?:.d{3})+)(?:,d+)?$/.test(value)
+	jQuery.extend(jQuery.validator.methods, {
 
-					|| /^(?:d+|d{1,3}(?:,d{3})+)(?:.d+)?$/.test(value);
+		 number: function(value, element) {
+
+			return this.optional(element)
+
+			|| /^(?:d+|d{1,3}(?:.d{3})+)(?:,d+)?$/.test(value)
+
+			||  /^(?:d+|d{1,3}(?:,d{3})+)(?:.d+)?$/.test(value);
 
 		  }
 
 	});
 
-	});
+});
 
 </script>
 
@@ -74,77 +74,77 @@ label.error { float: left !important; color: red !important; padding-right: .5em
 
 <body class="noJS">
 
-<script>
+    <script>
 
-	var bodyTag = document.getElementsByTagName("body")[0];
+        var bodyTag = document.getElementsByTagName("body")[0];
 
-	bodyTag.className = bodyTag.className.replace("noJS", "hasJS");
+        bodyTag.className = bodyTag.className.replace("noJS", "hasJS");
 
-</script>
+    </script>
 
-<!------ Header part -------------->
+    <!------ Header part -------------->
 
-<!--header-->
+    <!--header-->
 
-<?php $this->load->view("_include/header"); ?>
+    <?php $this->load->view("_include/header"); ?>
 
-<!------ banner part -------------->
+    <!------ banner part -------------->
 
-<div class="insidepage_banner">
+    <div class="insidepage_banner">
 
-	<div class="main">
+        <div class="main">
 
-		<h2>
+            <h2>
 
-			<?php echo $this->lang->line('edit_property_form_real_estate_for'); ?>
+				<?php echo $this->lang->line('edit_property_form_real_estate_for');?>
 
-			<font style="font-weight:bold;">
+				<font style="font-weight:bold;">
 
-				<?php echo $this->lang->line('edit_property_form_jobs'); ?>
+					<?php echo $this->lang->line('edit_property_form_jobs');?>
 
-			</font>
+				</font>
 
-			<?php echo $this->lang->line('edit_property_form_and'); ?>
+				<?php echo $this->lang->line('edit_property_form_and');?>
 
-			<font style="font-weight:bold;">
+				<font style="font-weight:bold;">
 
-				<?php echo $this->lang->line('edit_property_form_housing'); ?>
+					<?php echo $this->lang->line('edit_property_form_housing');?>
 
-			</font>
+				</font>
 
-		</h2>
+			</h2>
 
-	</div>
+        </div>
 
-</div>
+    </div>
 
-<!----- login pop up start  ---------------------->
+    <!----- login pop up start  ---------------------->
 
-<?php $this->load->view("_include/login_user"); ?>
+    <?php $this->load->view("_include/login_user"); ?>          
 
-<!----- login pop up end ---------------------->
+    <!----- login pop up end ---------------------->
 
-<!------ body part -------------->
+    <!------ body part -------------->
 
-<!------ body part -------------->
+    <!------ body part -------------->
 
-<div class="main">
+    <div class="main">
 
-	<div id="breadcrumb" class="fk-lbreadbcrumb newvd">
+        <div id="breadcrumb" class="fk-lbreadbcrumb newvd">
 
             <span>
 
 				<a href="<?php echo base_url();?>">
 
-					<?php echo $this->lang->line('edit_property_form_home'); ?>
+					<?php echo $this->lang->line('edit_property_form_home');?>
 
 				</a>
 
 			</span> >
 
-		<?php
+			<?php
 
-		if ($locupdatetype == 'update') {
+			if($locupdatetype=='update'){
 
 			?>
 
@@ -168,9 +168,9 @@ label.error { float: left !important; color: red !important; padding-right: .5em
 
 			</span> >
 
-		<?php
+			<?php
 
-		} elseif ($locupdatetype == 'add') {
+			}elseif($locupdatetype=='add'){
 
 			?>
 
@@ -184,413 +184,405 @@ label.error { float: left !important; color: red !important; padding-right: .5em
 
 			</span> >
 
-		<?php
+			<?php
 
-		}
+			}
 
-		?>
+			?>
 
-		<span>
+            <span>
 
 				<?php echo $this->lang->line('managae_location_page_manage_location_str');?>
 
 			</span>
 
-	</div>
+        </div>
 
-	<ul class="listing-tabs">
+        <ul class="listing-tabs">
 
-		<li>
+            <li>
 
-			<a href="<?php echo base_url(); ?>property/property_details">
+				<a href="<?php echo base_url();?>property/property_details">
 
-				<?php echo $this->lang->line('edit_property_form_listing_tabs_list_of_property'); ?>
+					<?php echo $this->lang->line('edit_property_form_listing_tabs_list_of_property');?>
 
-			</a>
+				</a>
 
-		</li>
+			</li>
 
-		<li>
+            <li>
 
-			<a href="<?php echo base_url(); ?>property/add_property_form">
+				<a href="<?php echo base_url();?>property/add_property_form">
 
-				<?php echo $this->lang->line('edit_property_form_listing_tabs_add_property'); ?>
+					<?php echo $this->lang->line('edit_property_form_listing_tabs_add_property');?>
 
-			</a>
+				</a>
 
-		</li>
+			</li>
 
-	</ul>
+        </ul>
 
-	<?php
+        <?php		
 
-	//Finding Property Title Here.
+		//Finding Property Title Here.
 
-	if (isset($_COOKIE['lang']) && ($_COOKIE['lang'] == "english")) {
+		if( isset( $_COOKIE['lang'] ) && ( $_COOKIE['lang'] == "english" )) {
 
-		$name = get_perticular_field_value('zc_contract_types', 'name', " and contract_id='" . $property_details[0]['contract_id'] . "'");
+			$name=get_perticular_field_value('zc_contract_types','name'," and contract_id='".$property_details[0]['contract_id']."'");
 
-		$typology_name = get_perticular_field_value('zc_typologies', 'name', " and status='active' and typology_id='" . $property_details[0]['typology'] . "'");
+			$typology_name=get_perticular_field_value('zc_typologies','name'," and status='active' and typology_id='".$property_details[0]['typology']."'");
 
-		$city_name = get_perticular_field_value('zc_city', 'city_name', " and city_id='" . $property_details[0]['city'] . "'");
+			$city_name=get_perticular_field_value('zc_city','city_name'," and city_id='".$property_details[0]['city']."'");
 
-		$province_code = get_perticular_field_value('zc_region_master', 'province_code', " and city='" . mysql_real_escape_string($city_name) . "'");
+			$province_code=get_perticular_field_value('zc_region_master','province_code'," and city='".mysql_real_escape_string($city_name)."'");
 
+			
 
-		$proptitle = $name . " For " . stripslashes($typology_name) . " in " . $city_name . ", " . $province_code;
+			$proptitle = $name." For ".stripslashes($typology_name)." in ".$city_name.", ".$province_code;
 
-	} else {
+		} else {
 
-		$name_it = get_perticular_field_value('zc_contract_types', 'name_it', " and contract_id='" . $property_details[0]['contract_id'] . "'");
+			$name_it=get_perticular_field_value('zc_contract_types','name_it'," and contract_id='".$property_details[0]['contract_id']."'");
 
-		$typology_name = get_perticular_field_value('zc_typologies', 'name_it', " and status='active' and typology_id='" . $property_details[0]['typology'] . "'");
+			$typology_name=get_perticular_field_value('zc_typologies','name_it'," and status='active' and typology_id='".$property_details[0]['typology']."'");
 
-		$city_name = get_perticular_field_value('zc_city', 'city_name_it', " and city_id='" . $property_details[0]['city'] . "'");
+			$city_name=get_perticular_field_value('zc_city','city_name_it'," and city_id='".$property_details[0]['city']."'");
 
-		$province_code = get_perticular_field_value('zc_region_master', 'province_code', " and city_it='" . mysql_real_escape_string($city_name) . "'");
+			$province_code=get_perticular_field_value('zc_region_master','province_code'," and city_it='".mysql_real_escape_string($city_name)."'");
 
+			
 
-		$proptitle = stripslashes($typology_name) . " in " . $name_it . " a " . $city_name . ", " . $province_code;
+			$proptitle = stripslashes($typology_name)." in ".$name_it." a ".$city_name.", ".$province_code;
 
-	}
+		}	
 
+		
 
-	//Finding Property Image Here.
+		//Finding Property Image Here.
 
-	$propertyImage = base_url() . "assets/images/no_proimg.jpg";
+		$propertyImage = base_url()."assets/images/no_proimg.jpg";
 
-	$image_path = prop_image($property_details[0]['property_id']);
+		$image_path = prop_image($property_details[0]['property_id']);			
 
-	if ($image_path != "") {
+		if( $image_path != "" ) {
 
-		$propertyImage = base_url() . "assets/uploads/Property/Property" . $property_details[0]['property_id'] . "/thumb_92_82/" . $image_path;
+			$propertyImage = base_url() . "assets/uploads/Property/Property" . $property_details[0]['property_id'] . "/thumb_92_82/" . $image_path;
 
-	}
+		}
 
-	//FInding Property Address Here.
+		//FInding Property Address Here.
 
-	$propertyShowingAddress = '';
+		$propertyShowingAddress = '';
 
-	$propertyAddress = ($property_details[0]['area'] != '' ? $property_details[0]['area'] . ' - ' : '');
+		$propertyAddress = ($property_details[0]['area']!=''?$property_details[0]['area'].' - ':'');
 
-	$propertyAddress .= ($property_details[0]['street_address'] != '' ? $property_details[0]['street_address'] . ', ' : '');
+		$propertyAddress.= ($property_details[0]['street_address']!=''?$property_details[0]['street_address'].', ':'');
 
-	$propertyAddress .= ($property_details[0]['street_no'] != '' ? $property_details[0]['street_no'] : '');
+		$propertyAddress.= ($property_details[0]['street_no']!=''?$property_details[0]['street_no']:'');
 
-	$propertyShowingAddress .= $propertyAddress . ', ' . $city_name . ', ' . $province_code;
+		$propertyShowingAddress.=$propertyAddress.', '.stripslashes($city_name).', '.$province_code;
 
-	$propertyAddress .= ($property_details[0]['zip'] != '' ? ' - ' . $property_details[0]['zip'] : '');
+		$propertyAddress.= ($property_details[0]['zip']!=''?' - '.$property_details[0]['zip']:'');
 
-	$propertyShowingAddress .= ($property_details[0]['zip'] != '' ? ' - ' . $property_details[0]['zip'] : '');
+		$propertyShowingAddress.= ($property_details[0]['zip']!=''?' - '.$property_details[0]['zip']:'');
 
+		 //$propertyShowingAddress= str_replace("'", "", $propertyShowingAddress);
 
-	$GoogleMapMarkers[0] = array(
+		$GoogleMapMarkers[0] = array(
 
-		'proptitle' => $proptitle,
+			'proptitle' => $proptitle,
 
-		'hackerspace' => 'markers',
+			'hackerspace' => 'markers',
 
-		'latitude' => ($property_details[0]['latitude'] == '0' ? '0' : $property_details[0]['latitude']),
+			'latitude' => ($property_details[0]['latitude']=='0'?'0':$property_details[0]['latitude']),
 
-		'longitude' => ($property_details[0]['longitude'] == '0' ? '0' : $property_details[0]['longitude']),
+			'longitude' => ($property_details[0]['longitude']=='0'?'0':$property_details[0]['longitude']),
 
-		'proaddress' => $propertyAddress,
+			'proaddress' => $propertyAddress,
 
-		'propurl' => 'javascript:void(0);',
+			'propurl' => 'javascript:void(0);',
 
-		'proprice' => '',
+			'proprice' => '',
 
-		'proimg' => $propertyImage
+			'proimg' => $propertyImage
 
-	);
+		);
 
-
-
-	?>
-
-	<div class="registercomn_box"
-		 id="regboxId" <?php //echo($propertySuspensionStatus==1?'style="display:none;"':''); ?>>
-
-		<div class="arrow_box error_message" id="msg_box_general">
-
-			<?php echo $this->lang->line('managae_location_page_you_can_find_str'); ?>
-
-		</div>
-
-		<div id="add_newproperty_box" class="add_newproperty_box">
-
-			<div class="add_newproperty_icon">
-
-				<img src="<?php echo base_url(); ?>assets/images/add_newproperty_icon.jpg" alt="">
-
-				<div class="userGuideMAP">
-
-					<h2><?php echo $this->lang->line('managae_location_page_map_instruction'); ?></h2>
-
-					<ul>
-
-						<li><?php echo $this->lang->line('check_if_loc_is_in_the_right_place'); ?></li>
-
-						<li><?php echo $this->lang->line('feel_free_2drag_the_marker'); ?></li>
-
-					</ul>
-
-				</div>
-
-				</div>
-
-			<div class="add_newproperty_table1">
-
-				<div class="section1">
-
-					<div class="mapAddress">
-
-						<?php echo $propertyShowingAddress; ?>
-
-						<a href="<?php echo base_url() . 'property/edit_property/' . $property_details[0]['property_id']; ?>">
-
-							<?php echo $this->lang->line('managae_location_page_edit_address'); ?>
-
-						</a>
-
-					</div>
-
-				</div>
-
-				<div class="section2" style="border-top:1px solid #cccccc">
-
-					<?php
-
-					$attributes = array('class' => 'add_property_form', 'id' => 'register');
-
-					echo form_open_multipart('property/update_location', $attributes);
-
-					?>
-
-					<div class="cat_select">
-
-						<label style="display:block;">
-
-							<font
-								style="color:#f33038;">*</font><?php echo $this->lang->line('managae_location_page_latitude_str'); ?>
-
-						</label>
-
-						<label style="display:none;font-weight:normal" generated="true" for="promaplatitude"
-							   class="error"></label>
-
-						<input value="<?php echo(!empty($GoogleMapMarkers) ? $GoogleMapMarkers[0]['latitude'] : ''); ?>"
-							   name="promaplatitude" id="promaplatitude" placeholder="Enter Latitude" type="text"
-							   class="required placeholder">
-
-					</div>
-
-					<div class="cat_select">
-
-						<label style="display:block;">
-
-							<font
-								style="color:#f33038;">*</font><?php echo $this->lang->line('managae_location_page_longitude_str'); ?>
-
-						</label>
-
-						<label style="display:none;font-weight:normal" generated="true" for="promaplongitude"
-							   class="error"></label>
-
-						<input
-							value="<?php echo(!empty($GoogleMapMarkers) ? $GoogleMapMarkers[0]['longitude'] : ''); ?>"
-							name="promaplongitude" id="promaplongitude" placeholder="Enter Longitude" type="text"
-							class="required placeholder">
-
-					</div>
-
-					<div class="cat_select" style="width:245px;margin-top:22px;">
-
-						<label style="display:block;"></label>
-
-						<input type="hidden" name="locupdatetype" value="<?php echo $locupdatetype; ?>">
-
-						<input type="hidden" name="locupdatefor"
-							   value="<?php echo $property_details[0]['property_id']; ?>">
-
-						<input type="submit"
-							   value="<?php echo $this->lang->line('managae_location_page_save_position_str'); ?>"
-							   name="btnSubmit" class="mainbt" style="margin-right:0;">
-
-						<a style="height:33px; margin:0px;float:right;" class="mainbt"
-						   href="<?php echo base_url() . 'property/skip_manage_loc/' . $locupdatetype . '/' . $property_details[0]['property_id']; ?>">
-
-							<?php echo $this->lang->line('managae_location_page_skip_str'); ?>
-
-						</a>
-
-					</div>
-
-					<?php echo form_close(); ?>
-
-					</div>
-
-				<div class="add_newproperty_table2" style="margin-top:0;padding:15px 0 0 2px">
-
-					<p id="dragged-address-location">
-
-						<?php echo $this->lang->line('dragged_address_will_be_shown_here_str'); ?>
-
-					</p>
-
-					<div class="rightmap_area" id="map_canvas"></div>
-
-				</div>
-
-			</div>
-
-			</div>
-
-		</div>
-
-	<!--##################  Loading area after form submit start ###################-->
-
-	<div id="form_submit_loading_area" style="display:none;">
-
-		<div class="main">
-
-			<div class="registercomn_box">
-
-				<div class="arrow_box error_message" id="msg_box_general" style="color:#FF7602;">
-
-					<?php echo $this->lang->line('property_submit_loading_property_submission_text'); ?>
-
-				</div>
-
-				<div class="congratulations">
-
-					<img src="<?php echo base_url(); ?>assets/images/register_thanks_icon.jpg" alt=""
-						 style="margin-top:75px;margin-left:34px;">
-
-				</div>
-
-				<div class="mainsucc_box" style="width:63%">
-
-					<div class="suceesfulbox" style="width:95%">
-
-						<div>
-
-                                <span style="width:100%">
-
-                                <img src="<?php echo base_url();?>assets/images/Loader.gif" alt="" style="padding-left: 47%">
-
-                                </span>
-
-							<div class="clear"></div>
-
-						</div>
-
-						<p><br></p>
-
-					</div>
-
-					<div style="margin:20px;text-align:center;">
-
-						<?php echo $this->lang->line('property_submit_loading_please_wait_text'); ?>
-
-					</div>
-
-				</div>
-
-			</div>
-
-		</div>
-
-	</div>
-
-	<!--##################  Loading area after form submit end ###################-->
-
-	<?php
-
-	// if($propertySuspensionStatus==1){
-
-	if ($property_details[0]['blocked_note'] != "" || strlen($property_details[0]['blocked_note']) > 0) {
+		
 
 		?>
+		<?php
+			if($property_details[0]['property_approval']=="1"){
+		?>
+        <div class="registercomn_box" id="regboxId" <?php //echo($propertySuspensionStatus==1?'style="display:none;"':''); ?>>
 
-		<div id="susspend_by_admin_area">
+            <div class="arrow_box error_message" id="msg_box_general">				
 
-			<div class="main">
+                <?php echo $this->lang->line('managae_location_page_you_can_find_str');?>
 
-				<div class="registercomn_box">
+            </div>            
 
-					<div class="arrow_box error_message" id="msg_box_general" style="color:#FF7602;">
+            <div id="add_newproperty_box" class="add_newproperty_box">
 
-						<?php echo $this->lang->line('property_details_suspend_sorry_this_content_is_suspended');?>
+                <div class="add_newproperty_icon">
+
+					<img src="<?php echo base_url();?>assets/images/add_newproperty_icon.jpg" alt="">					
+
+					<div class="userGuideMAP">
+
+						<h2><?php echo $this->lang->line('managae_location_page_map_instruction');?></h2>
+
+						<ul>
+
+							<li><?php echo $this->lang->line('check_if_loc_is_in_the_right_place');?></li>
+
+							<li><?php echo $this->lang->line('feel_free_2drag_the_marker');?></li>
+
+						</ul>
 
 					</div>
 
-					<div class="congratulations"><img src="<?php echo base_url();?>assets/images/WAITING.png" alt=""
-													  style="margin-top:75px;margin-left:34px;"></div>
+				</div>
 
-					<div class="mainsucc_box" style="width:63%">
+				<div class="add_newproperty_table1">
 
-						<div class="suceesfulbox" style="width:95%">
+					<div class="section1">
 
-							<div>
+						<div class="mapAddress">
 
-                                <span style="width:100%">
+							<?php echo $propertyShowingAddress; ?>
 
-                                    <p style="font-size: 13px !important;">
+							<a href="<?php echo base_url().'property/edit_property/'.$property_details[0]['property_id']; ?>">
 
-										<?php echo $this->lang->line('property_details_suspend_we_are_checking');?>
-
-										<br/>
-
-										<?php echo $this->lang->line('property_details_suspend_after_checked');?>
-
-									</p>
-
-                                </span>
-
-								<div class="clear"></div>
-
-							</div>
-
-							<p><br></p>
-
-						</div>
-
-						<div style=" margin-left:27%; margin-bottom:20px; float:left;">
-
-							<a class="mainbt" href="<?php echo base_url();?>property/property_details">
-
-								<?php echo $this->lang->line('property_details_suspend_back_to_the_list_of_property_button');?>
+								<?php echo $this->lang->line('managae_location_page_edit_address');?>
 
 							</a>
 
 						</div>
 
+                    </div>
+
+					<div class="section2" style="border-top:1px solid #cccccc">
+
+						<?php
+
+						$attributes = array('class' => 'add_property_form', 'id' => 'register');
+
+						echo form_open_multipart('property/update_location', $attributes);
+
+						?>
+
+						<div class="cat_select">
+
+                            <label style="display:block;">
+
+								<font style="color:#f33038;">*</font><?php echo $this->lang->line('managae_location_page_latitude_str');?>
+
+							</label>
+
+							<label style="display:none;font-weight:normal" generated="true" for="promaplatitude" class="error"></label>
+
+                            <input value="<?php echo(!empty($GoogleMapMarkers)?$GoogleMapMarkers[0]['latitude']:''); ?>" name="promaplatitude" id="promaplatitude" placeholder="Enter Latitude" type="text" class="required placeholder">
+
+                        </div>
+
+						<div class="cat_select">
+
+                            <label style="display:block;">
+
+								<font style="color:#f33038;">*</font><?php echo $this->lang->line('managae_location_page_longitude_str');?>
+
+							</label>
+
+							<label style="display:none;font-weight:normal" generated="true" for="promaplongitude" class="error"></label>
+
+                            <input value="<?php echo(!empty($GoogleMapMarkers)?$GoogleMapMarkers[0]['longitude']:''); ?>" name="promaplongitude" id="promaplongitude" placeholder="Enter Longitude" type="text" class="required placeholder">
+
+                        </div>
+
+						<div class="cat_select" style="width:245px;margin-top:22px;">
+
+                            <label style="display:block;"></label>
+
+							<input type="hidden" name="locupdatetype" value="<?php echo $locupdatetype; ?>">
+
+							<input type="hidden" name="locupdatefor" value="<?php echo $property_details[0]['property_id']; ?>">
+
+							<input type="submit" value="<?php echo $this->lang->line('managae_location_page_save_position_str');?>" name="btnSubmit" class="mainbt" style="margin-right:0;">
+
+							<a style="height:33px; margin:0px;float:right;" class="mainbt" href="<?php echo base_url().'property/skip_manage_loc/'.$locupdatetype.'/'.$property_details[0]['property_id']; ?>">
+
+								<?php echo $this->lang->line('managae_location_page_skip_str');?>
+
+							</a>
+
+                        </div>
+
+						<?php echo form_close();?>
+
 					</div>
 
-				</div>
+					<div class="add_newproperty_table2" style="margin-top:0;padding:15px 0 0 2px">
+
+						<p id="dragged-address-location">
+
+							<?php echo $this->lang->line('dragged_address_will_be_shown_here_str');?>
+
+						</p>
+
+						<div class="rightmap_area" id="map_canvas"></div>
+
+					</div>
+
+                </div>
 
 			</div>
 
 		</div>
+		<?php
+			}
+		?>
+		<!--##################  Loading area after form submit start ###################-->
 
-	<?php
+        <div id="form_submit_loading_area" style="display:none;">
 
-	}
+            <div class="main">
 
-	?>
+                <div class="registercomn_box">
 
-</div>
+                    <div class="arrow_box error_message" id="msg_box_general" style="color:#FF7602;">
 
-<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/map.css?nocache=289671982568" type="text/css"/>
+                        <?php echo $this->lang->line('property_submit_loading_property_submission_text');?>
 
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?= MAP_KEY ?>"></script>
+                    </div>
 
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/markerclusterer.js"></script>
+                    <div class="congratulations">
 
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/label.js"></script>
+                        <img src="<?php echo base_url();?>assets/images/register_thanks_icon.jpg" alt="" style="margin-top:75px;margin-left:34px;">
 
-<script type="text/javascript">
+                    </div>
+
+                    <div class="mainsucc_box" style="width:63%">
+
+                        <div class="suceesfulbox"  style="width:95%">
+
+                            <div>
+
+                                <span style="width:100%">
+
+                                <img src="<?php echo base_url();?>assets/images/Loader.gif" alt="" style="padding-left: 47%">
+
+                                </span> 
+
+                                <div class="clear"></div>
+
+                            </div>
+
+                            <p><br></p>
+
+                        </div>
+
+                        <div style="margin:20px;text-align:center;">
+
+                            <?php echo $this->lang->line('property_submit_loading_please_wait_text');?>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!--##################  Loading area after form submit end ###################-->
+
+        <?php
+
+		// if($propertySuspensionStatus==1){
+
+        if($property_details[0]['property_approval']==0){
+
+		?>
+
+        <div id="susspend_by_admin_area">
+
+            <div class="main">
+
+                <div class="registercomn_box">
+
+                    <div class="arrow_box error_message" id="msg_box_general" style="color:#FF7602;">
+
+                        <?php echo $this->lang->line('property_details_suspend_sorry_this_content_is_suspended');?>
+
+                    </div>
+
+                    <div class="congratulations"><img src="<?php echo base_url();?>assets/images/WAITING.png" alt="" style="margin-top:75px;margin-left:34px;"></div>
+
+                    <div class="mainsucc_box" style="width:63%">
+
+                        <div class="suceesfulbox"  style="width:95%">
+
+                            <div>
+
+                                <span style="width:100%">
+
+                                    <p style="font-size: 13px !important;">
+
+                                        <?php echo $this->lang->line('property_details_suspend_we_are_checking');?>
+
+                                        <br/>
+
+                                        <?php echo $this->lang->line('property_details_suspend_after_checked');?> 
+
+                                    </p>
+
+                                </span>
+
+                                <div class="clear"></div>
+
+                            </div>
+
+                            <p><br></p>
+
+                        </div>
+
+                        <div style=" margin-left:27%; margin-bottom:20px; float:left;">
+
+                            <a class="mainbt" href="<?php echo base_url();?>property/property_details">
+
+                            <?php echo $this->lang->line('property_details_suspend_back_to_the_list_of_property_button');?>
+
+                            </a> 
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <?php
+
+		}
+
+		?>
+
+    </div>
+
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/map.css?nocache=289671982568" type="text/css"/>
+
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?= MAP_KEY ?>"></script>
+
+	<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/markerclusterer.js"></script>
+
+	<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/label.js"></script>
+
+	<script type="text/javascript">
 
 	var WebRoot = '<?php echo base_url(); ?>';
 
@@ -640,7 +632,7 @@ label.error { float: left !important; color: red !important; padding-right: .5em
 
 	?>
 
-	GoogleMapMarkers.push(["<?php echo $gM['proptitle']; ?>", "<?php echo $gM['hackerspace']; ?>", <?php echo($gM['latitude']=='0'?'42.500000':$gM['latitude']); ?>, <?php echo($gM['longitude']=='0'?'12.500000':$gM['longitude']); ?>, "<?php echo $gM['proaddress']; ?>", "<?php echo $gM['propurl']; ?>", '<?php echo $gM['proprice']; ?>', "<?php echo $gM['proimg']; ?>", "noMarker"]);
+	GoogleMapMarkers.push(["<?php echo $gM['proptitle']; ?>","<?php echo $gM['hackerspace']; ?>",<?php echo($gM['latitude']=='0'?'42.500000':$gM['latitude']); ?>,<?php echo($gM['longitude']=='0'?'12.500000':$gM['longitude']); ?>,"<?php echo $gM['proaddress']; ?>","<?php echo $gM['propurl']; ?>",'<?php echo $gM['proprice']; ?>',"<?php echo $gM['proimg']; ?>", "noMarker"]);		
 
 	markerTitles[<?php echo $gMi; ?>] = "<?php echo $gM['proptitle']; ?>";
 
@@ -654,21 +646,21 @@ label.error { float: left !important; color: red !important; padding-right: .5em
 
 	?>
 
-</script>
+	</script>
 
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/represent-map1.js"></script>
+	<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/represent-map1.js"></script>
 
-<!------ footer part -------------->
+    <!------ footer part -------------->
 
-<?php $this->load->view("_include/footer"); ?>
+    <?php $this->load->view("_include/footer");?>
 
 <script type="text/javascript">
 
-	$(".allownumericwithdecimal").on("keypress keyup blur", function (event) {
+$(".allownumericwithdecimal").on("keypress keyup blur",function (event){
 
-		console.log(event.which);
+	console.log(event.which);
 
-		$(this).val($(this).val().replace(/[^0-9.]/g, ''));
+	$(this).val($(this).val().replace(/[^0-9.]/g,''));
 
 	if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
 
@@ -676,35 +668,43 @@ label.error { float: left !important; color: red !important; padding-right: .5em
 
 	}
 
+});
+
+$(document).ready(function(){
+
+	$("#register").validate({
+
+		rules: {
+
+			
+
+		},
+
+		messages: {
+
+			
+
+		},submitHandler: function (form){
+
+			$("#regboxId").hide();
+
+			$("#form_submit_loading_area").show();
+
+			setTimeout(function(){
+
+				$('#register input[name="btnSubmit"]').val('Submit');
+
+				document.getElementById("register").submit();
+
+			}, 5000);
+
+			return false;
+
+		}
+
 	});
 
-	$(document).ready(function () {
-
-		$("#register").validate({
-
-			rules: {},
-
-			messages: {}, submitHandler: function (form) {
-
-				$("#regboxId").hide();
-
-				$("#form_submit_loading_area").show();
-
-				setTimeout(function () {
-
-					$('#register input[name="btnSubmit"]').val('Submit');
-
-					document.getElementById("register").submit();
-
-				}, 5000);
-
-				return false;
-
-			}
-
-	});
-
-	});
+});
 
 </script>
 

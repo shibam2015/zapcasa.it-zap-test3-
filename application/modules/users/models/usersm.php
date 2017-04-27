@@ -29,11 +29,11 @@ class usersm extends CI_Model {
 
 		return $query->result_array();
 
-	}
+    }
 
 	public function check_lang($user_id=0){
 
-		$this->db->select('user_id');
+		$this->db->select('user_id');	
 
 		$query = $this->db->get_where('zc_user_preference', array( 'user_id' => $user_id ));
 
@@ -55,7 +55,7 @@ class usersm extends CI_Model {
 
 			return 1;
 
-		}
+		}		
 
 	}
 
@@ -75,7 +75,7 @@ class usersm extends CI_Model {
 
 			return $data;
 
-		}
+		}		
 
 	}
 
@@ -95,7 +95,7 @@ class usersm extends CI_Model {
 
 			return $data;
 
-		}
+		}		
 
 	}
 
@@ -115,7 +115,7 @@ class usersm extends CI_Model {
 
 			return $data;
 
-		}
+		}		
 
 	}
 
@@ -189,7 +189,7 @@ class usersm extends CI_Model {
 
 				return $data;
 
-			}
+			}	
 
 		}
 
@@ -207,13 +207,13 @@ class usersm extends CI_Model {
 
 			return $result;
 
-		}else{
+        }else{
 
 			return 0;
 
-		}
+        }
 
-	}
+    }
 
 	public function getUser($id) {
 
@@ -227,13 +227,13 @@ class usersm extends CI_Model {
 
 			return $result;
 
-		}else{
+        }else{
 
 			return 0;
 
-		}
+        }
 
-	}
+    }
 
 	public function insertUser($arrVal) {
 
@@ -241,7 +241,7 @@ class usersm extends CI_Model {
 
 		return $this->db->insert_id();
 
-	}
+    }
 
 	public function updateUser($arrVal) {
 
@@ -251,9 +251,9 @@ class usersm extends CI_Model {
 
 		return $this->db->insert_id();
 
-	}
+    }
 
-	public function get_country() {
+	public function get_country() {		 
 
 		$query=$this->db->get("zc_country_master");
 
@@ -301,7 +301,7 @@ class usersm extends CI_Model {
 
 		$new_data['newsletter']=$new_email_not;
 
-		return $this->db->insert('zc_user_preference', $new_data);
+		return $this->db->insert('zc_user_preference', $new_data);	
 
 	}
 
@@ -510,6 +510,7 @@ class usersm extends CI_Model {
 	}
 
 
+
 	public function edit_user_land($new_user, $uid)
 
 	{
@@ -517,6 +518,9 @@ class usersm extends CI_Model {
 		$query = $this->db->query("SELECT * FROM zc_user WHERE user_id='" . $uid . "'");
 
 		$res = $query->result();
+
+
+
 
 
 		$where = "user_id = '" . $uid . "'";
@@ -657,7 +661,7 @@ class usersm extends CI_Model {
 
 		} elseif(is_file($target)) {
 
-			unlink( $target );
+			unlink( $target );  
 
 		}
 
@@ -679,7 +683,7 @@ class usersm extends CI_Model {
 
 			return $data;
 
-		}
+		}		
 
 	}
 
@@ -696,70 +700,75 @@ class usersm extends CI_Model {
 	}
 
 
-	function pop_search($qry)
-
-	{
-
-		$query = $this->db->query($qry);
-
-		if($query->num_rows()>0){
 
 
-			foreach($query->result_array() as $row){
 
-				$data[]=$row;
+	 function pop_search($qry)
 
-			}
+	 {
 
-			return $data;
+		 $query = $this->db->query($qry);	 
 
+		 if($query->num_rows()>0){
 
-		}
+	 			
 
-	}
+	 		foreach($query->result_array() as $row){
 
+	 			$data[]=$row;
 
-	function insert_update($qry)
+	 		}
 
-	{
+	 		return $data;
 
-		$query = $this->db->query($qry);
+	 			
 
-		return $this->db->insert_id();
+	 	}
 
-	}
+	 }
 
-	function weekly_update($qry)
+	 
 
-	{
+	 function insert_update($qry)
+
+	 {
+
+		 $query = $this->db->query($qry);
+
+		 return $this->db->insert_id();
+
+	 }
+
+		function weekly_update($qry)
+
+			 {
+
+				 $data = array();
+
+				 $sql="SELECT posting_time FROM zc_property_details WHERE posting_time > CURDATE() - INTERVAL 7 DAY AND CURDATE()";
+
+				$query_search=$this->db->query( $sql );
+				return $query_search;
+				
+
+			 }
+
+	
+	 function get_details_saved_property( $saved_id ) {
 
 		$data = array();
 
-		$sql = "SELECT posting_time FROM zc_property_details WHERE posting_time > CURDATE() - INTERVAL 7 DAY AND CURDATE()";
+		$sql="SELECT * FROM zc_save_search where saved_id='".$saved_id."'";
 
-		$query_search = $this->db->query($sql);
-		return $query_search;
+		$query_search=$this->db->query( $sql );
 
+		if($query_search->num_rows()>0){
 
-	}
+			foreach($query_search->result_array() as $row){
 
+			   $data = $row;
 
-	function get_details_saved_property($saved_id)
-	{
-
-		$data = array();
-
-		$sql = "SELECT * FROM zc_save_search where saved_id='" . $saved_id . "'";
-
-		$query_search = $this->db->query($sql);
-
-		if ($query_search->num_rows() > 0) {
-
-			foreach ($query_search->result_array() as $row) {
-
-				$data = $row;
-
-			}
+            }
 
 		}
 
@@ -767,6 +776,9 @@ class usersm extends CI_Model {
 
 	}
 
+	
+
+	
 
 }
 

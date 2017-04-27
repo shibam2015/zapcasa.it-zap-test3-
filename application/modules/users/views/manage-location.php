@@ -14,6 +14,8 @@
 
     }
 
+
+
     label.error {
 
         float: left !important;
@@ -25,6 +27,8 @@
         text-align: left !important;
 
     }
+
+
 
     .userGuideMAP {
 
@@ -42,6 +46,8 @@
 
     }
 
+
+
     .userGuideMAP h2 {
 
         background: #b26363 none repeat scroll 0 0;
@@ -56,6 +62,8 @@
 
     }
 
+
+
     .userGuideMAP ul {
 
         list-style: outside none disc;
@@ -66,11 +74,15 @@
 
     }
 
+
+
     .userGuideMAP li {
 
         padding: 10px 0 20px 5px;
 
     }
+
+
 
     .mapAddress {
 
@@ -80,6 +92,8 @@
 
     }
 
+
+
     .mapAddress a {
 
         color: #e96e2a;
@@ -87,6 +101,8 @@
         float: right;
 
     }
+
+
 
     #dragged-address-location {
 
@@ -98,6 +114,8 @@
 
     }
 
+
+
     #dragged-address-location.active {
 
         font-weight: bold;
@@ -105,6 +123,8 @@
         color: #000000;
 
     }
+
+
 
     #map_canvas {
 
@@ -231,11 +251,10 @@
                     <?php echo $this->lang->line('edit_property_form_home'); ?>
 
                 </a></span> >
-        <span><a
-                href="<?php echo base_url(); ?>users/my_account"><?php echo $this->lang->line('my_account'); ?></a></span>
+                <span><a href="<?php echo base_url(); ?>users/my_account"><?php echo $this->lang->line('my_account');?></a></span>
+               
 
-
-        </span> >
+			</span> >
 
         <!--<?php
 
@@ -296,7 +315,8 @@
 
 
     <?php
-
+ // echo '<pre>';
+ //             print_r($user_details);exit;
     //Finding Property Title Here.
 
     if (isset($_COOKIE['lang']) && ($_COOKIE['lang'] == "english")) {
@@ -305,13 +325,13 @@
 
         // $typology_name = get_perticular_field_value('zc_typologies', 'name', " and status='active' and typology_id='" . $property_details[0]['typology'] . "'");
 
-        // $city_name = get_perticular_field_value('zc_city', 'city_name', " and city_id='" . $user_details[0]['city'] . "'");
+       //  $city_name = get_perticular_field_value('zc_city', 'city_name', " and city_id='" . $user_details[0]['city'] . "'");
 
         $province_code = get_perticular_field_value('zc_region_master', 'province_code', " and city='" . mysql_real_escape_string($user_details[0]['city']) . "'");
 
 
 
-        $proptitle = stripslashes($user_details[0]['first_name']) . 'ï¿½' . stripslashes($user_details[0]['last_name']) . " in " . $user_details[0]['city'] . ", " . $province_code;
+        $proptitle = stripslashes($user_details[0]['first_name']) . ' ' . stripslashes($user_details[0]['last_name']) . " in " . $user_details[0]['city'] . ", " . $province_code;
 
     } else {
 
@@ -319,7 +339,7 @@
 
         //$typology_name = get_perticular_field_value('zc_typologies', 'name_it', " and status='active' and typology_id='" . $property_details[0]['typology'] . "'");
 
-        // $city_name = get_perticular_field_value('zc_city', 'city_name_it', " and city_id='" . $property_details[0]['city'] . "'");
+       //  $city_name = get_perticular_field_value('zc_city', 'city_name_it', " and city_id='" . $property_details[0]['city'] . "'");
 
         $province_code = get_perticular_field_value('zc_region_master', 'province_code', " and city_it='" . mysql_real_escape_string($user_details[0]['city']) . "'");
 
@@ -355,7 +375,7 @@
 
     $propertyAddress .= ($user_details[0]['street_no'] != '' ? $user_details[0]['street_no'] : '');
 
-    $propertyShowingAddress .= $propertyAddress . ', ' . $city_name . ', ' . $province_code;
+    $propertyShowingAddress .= $propertyAddress . ', ' . $user_details[0]['city'] . ', ' . $province_code;
 
     $propertyAddress .= ($user_details[0]['zip'] != '' ? ' - ' . $user_details[0]['zip'] : '');
 
@@ -429,7 +449,7 @@
 
 							<?php echo $propertyShowingAddress; ?>
 
-                            <a href="<?php echo base_url(); ?>users/my_account">
+							<a href="<?php echo base_url(); ?>users/my_account">
 
 								<?php echo $this->lang->line('managae_location_page_edit_address'); ?>
 
@@ -437,7 +457,7 @@
 
 						</div>
 
-                </div>
+                    </div>
 
                 <div class="section2" style="border-top:1px solid #cccccc">
 
@@ -532,6 +552,7 @@
                     </p>
 
 
+
                     <div class="rightmap_area" id="map_canvas"></div>
 
                 </div>
@@ -579,6 +600,7 @@
                                 </span>
 
 
+
                             <div class="clear"></div>
 
                         </div>
@@ -619,7 +641,7 @@
 
                     <div class="arrow_box error_message" id="msg_box_general" style="color:#FF7602;">
 
-                        <?php echo $this->lang->line('property_details_suspend_sorry_this_content_is_suspended'); ?>
+                        <?php echo $this->lang->line('property_details_suspend_sorry_this_content_is_suspended');?>
 
                     </div>
 
@@ -648,6 +670,7 @@
                                 </span>
 
 
+
                                 <div class="clear"></div>
 
                             </div>
@@ -660,7 +683,7 @@
 
                             <a class="mainbt" href="<?php echo base_url();?>property/property_details">
 
-                                <?php echo $this->lang->line('property_details_suspend_back_to_the_list_of_property_button'); ?>
+                                <?php echo $this->lang->line('property_details_suspend_back_to_the_list_of_property_button');?>
 
                             </a>
 

@@ -5,11 +5,23 @@
 
 
 
+
+
+
+
  * To change this template, choose Tools | Templates
 
 
 
+
+
+
+
  * and open the template in the editor.
+
+
+
+
 
 
 
@@ -24,10 +36,16 @@
 class advertiser extends CI_Controller {
 
 
-	public function __construct() {
+	public function __construct()
+	{
 
 
 		parent::__construct();
+
+
+
+
+
 
 
 		$this->load->library('session');
@@ -54,6 +72,11 @@ class advertiser extends CI_Controller {
 		$this->load->library("pagination");
 
 
+
+
+
+
+
 		$this->load->model("users/usersm");
 
 
@@ -67,7 +90,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 		if($this->session->userdata('user_id')){
+
+
+
+
 
 
 
@@ -75,11 +106,23 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 			if( isset($data['pref_info'][0]['language'] ) && ( $data['pref_info'][0]['language'] == "english" )) {
 
 
 
+
+
+
+
 				//$this->lang->load('code', 'english');
+
+
+
+
 
 
 
@@ -87,11 +130,23 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 			} else {
 
 
 
+
+
+
+
 				//$this->lang->load('code', 'it');
+
+
+
+
 
 
 
@@ -99,7 +154,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 			}
+
+
+
+
 
 
 
@@ -107,7 +170,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 			if( isset( $_COOKIE['lang'] ) && ( $_COOKIE['lang'] == "english" )) {
+
+
+
+
 
 
 
@@ -115,7 +186,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 			} else {
+
+
+
+
 
 
 
@@ -123,11 +202,23 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 			}
 
 
 
+
+
+
+
 		}
+
+
+
+
 
 
 
@@ -138,6 +229,11 @@ class advertiser extends CI_Controller {
 
 
 	}
+
+
+
+
+
 
 
 	public function index(){
@@ -191,6 +287,11 @@ class advertiser extends CI_Controller {
 		}
 
 
+
+
+
+
+
 		$filters['name'] = $name;
 
 
@@ -218,13 +319,39 @@ class advertiser extends CI_Controller {
 		$startpoint = ($page * $perpage) - $perpage;
 
 
+
+
+
+
+
+		
+
+
+
+
+
+
+
+		
+
+
+
+
+
+
+
 		$data['advertiser_lists'] = $this->advertiserm->getAdvertiserByFilter($filters,$startpoint,$perpage);
 
 
 		if(!strpos($_SERVER['QUERY_STRING'], "page=")===false){
 
 
-			$QUERY_STRING = str_replace("&page=".$_GET['page'],"",$_SERVER['QUERY_STRING']);
+			$QUERY_STRING = str_replace("&page=" . $_GET['page'], "", $_SERVER['QUERY_STRING']);
+
+
+
+
+
 
 
 		}else{
@@ -234,6 +361,11 @@ class advertiser extends CI_Controller {
 
 
 		}
+
+
+
+
+
 
 
 		$path = base_url().'advertiser/search?'.$QUERY_STRING.'&page=';
@@ -249,7 +381,6 @@ class advertiser extends CI_Controller {
 
 
 		#echo "<pre>"; print_r($data);exit;
-
 
 
 		$this->load->view("advertiser/search",$data);
@@ -288,16 +419,26 @@ class advertiser extends CI_Controller {
 			}
 
 
-			$feedback_to_id=$this->session->userdata('user_id');
+			$feedback_to_id = $this->session->userdata('user_id');
 
 
-			$data["pagination"] = array();
+			$data["pagination"] = array();			
+
+
+
+
+
 
 
 			$data['feedback_lists'] = array();
 
 
 			$config["base_url"] = base_url() . "My_Feedback";
+
+
+
+
+
 
 
 			$config["total_rows"] = get_perticular_count('zc_feedback'," AND feedback_to_id=$feedback_to_id AND feedback_status='1' AND feedback_to_delete = '0'");
@@ -309,6 +450,11 @@ class advertiser extends CI_Controller {
 			$config["uri_segment"] = 2;
 
 
+
+
+
+
+
 			$pagination = clone($this->pagination);
 
 
@@ -316,6 +462,7 @@ class advertiser extends CI_Controller {
 
 
 			$page = ($this->uri->segment(2)) ? $this->uri->segment(2) : 0;
+
 
 
 			$result = $this->advertiserm->get_feedback($config["per_page"], $page);
@@ -345,13 +492,16 @@ class advertiser extends CI_Controller {
 	}
 
 
-	public function advertiser_details() {
+	public function advertiser_details()
+	{
 
 
-		$advertiser_id=$this->uri->segment('3');
+		$advertiser_id = $this->uri->segment('3');
+
 
 
 		$data['search_title']=$this->lang->line('advertiser_title_details');
+
 
 
 		$data['advertiser_detail']=$this->advertiserm->get_advertiser_detial($advertiser_id);
@@ -360,17 +510,18 @@ class advertiser extends CI_Controller {
 		$data['property_list']=$this->advertiserm->get_property_list($advertiser_id);
 
 
+
 		$this->load->view('advertiser/advertiser_detail',$data);
 
 
-	}
+	}	
+
 
 
 	public function advertiser_search_adv() {
 
 
 		#echo '<pre>';print_r($_GET);die;
-
 
 
 		$location=$this->input->get('location');
@@ -409,10 +560,20 @@ class advertiser extends CI_Controller {
 		}
 
 
+
+
+
+
+
 		$config = array();
 
 
 		$config['base_url'] = base_url() . '/advertiser/advertiser_search_adv/?search=true';
+
+
+
+
+
 
 
 		foreach ($_GET as $key=>$value) {
@@ -431,7 +592,15 @@ class advertiser extends CI_Controller {
 
 
 
-						$config['base_url'] .= '&'.$key.'[]='.$v;
+
+
+
+
+							$config['base_url'] .= '&' . $key . '[]=' . $v;
+
+
+
+
 
 
 
@@ -451,6 +620,11 @@ class advertiser extends CI_Controller {
 
 
 				}
+
+
+
+
+
 
 
 			}
@@ -707,14 +881,18 @@ class advertiser extends CI_Controller {
 
 				/********	City	**************/
 
-#echo "=============>".$city;exit;
 
+#echo "=============>".$city;exit;
 
 
 				if(!strpos($city, "'")===false){
 
 
 					$city = get_perticular_field_value('zc_city', 'city_id', " and (`city_name` = '" . str_replace("'", "''", $city) . "' OR `city_name_it` = '" . str_replace("'", "''", $city) . "')");
+
+
+
+
 
 
 
@@ -740,6 +918,10 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 				}else{
 
 
@@ -752,7 +934,12 @@ class advertiser extends CI_Controller {
 				$country = '104';
 
 
-				$blank_db = $this->advertiserm->pop_search("select * from zc_popular_search where ps_type = 'advertiser_filter'");
+				$blank_db = $this->advertiserm->pop_search("select * from zc_popular_search where ps_type = 'advertiser_filter'");	
+
+
+
+
+
 
 
 				if(count($blank_db) > 0){
@@ -762,6 +949,11 @@ class advertiser extends CI_Controller {
 
 
 					$res = $this->advertiserm->pop_search($qry);
+
+
+
+
+
 
 
 					if(count($res) >0){
@@ -789,7 +981,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 						ps_type = 'advertiser_filter', 
+
+
+
+
 
 
 
@@ -797,7 +997,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 						ps_url = '".addslashes($_SERVER['REQUEST_URI'])."',
+
+
+
+
 
 
 
@@ -805,7 +1013,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 						ps_end_date = date_add(now(), INTERVAL +7 day),
+
+
+
+
 
 
 
@@ -813,7 +1029,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 						ps_created_on = now(),
+
+
+
+
 
 
 
@@ -821,7 +1045,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 						ps_zip = '".$zip."',
+
+
+
+
 
 
 
@@ -829,7 +1061,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 						ps_provience = '".$provience."',
+
+
+
+
 
 
 
@@ -837,7 +1077,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 						advertiser_type = '".$advertiser_type."', 
+
+
+
+
 
 
 
@@ -845,10 +1093,19 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 						location_it = '".$keysearch."' ";
 
 
 						$this->advertiserm->insert_update($qry);
+
+
+
+
+
 
 
 					}
@@ -861,7 +1118,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 					ps_type = 'advertiser_filter',
+
+
+
+
 
 
 
@@ -869,7 +1134,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 					ps_url = '".addslashes($_SERVER['REQUEST_URI'])."',
+
+
+
+
 
 
 
@@ -877,7 +1150,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 					ps_end_date = date_add(now(), INTERVAL +7 day),
+
+
+
+
 
 
 
@@ -885,7 +1166,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 					ps_created_on = now(),
+
+
+
+
 
 
 
@@ -893,7 +1182,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 					ps_zip = '".$zip."',
+
+
+
+
 
 
 
@@ -901,7 +1198,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 					ps_provience = '".$provience."',
+
+
+
+
 
 
 
@@ -909,11 +1214,23 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 					advertiser_type = '".$advertiser_type."', 
 
 
 
+
+
+
+
 					location_en = '".$keysearch."',
+
+
+
+
 
 
 
@@ -939,6 +1256,11 @@ class advertiser extends CI_Controller {
 
 
 	}
+
+
+
+
+
 
 
 	public function feedback_details(){
@@ -1109,6 +1431,11 @@ class advertiser extends CI_Controller {
 					break;
 
 
+
+
+
+
+
 			}
 
 
@@ -1119,7 +1446,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 					<td colspan='5'>
+
+
+
+
 
 
 
@@ -1127,7 +1462,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 						<br><hr><br>
+
+
+
+
 
 
 
@@ -1135,11 +1478,23 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 						<br>
 
 
 
+
+
+
+
 						<div style='float:right;'>
+
+
+
+
 
 
 
@@ -1147,11 +1502,23 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 							".$msgs['user_name']."
 
 
 
+
+
+
+
 						</div>
+
+
+
+
 
 
 
@@ -1159,7 +1526,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 						<div style='float:right;'>
+
+
+
+
 
 
 
@@ -1167,7 +1542,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 							".$messageTime."
+
+
+
+
 
 
 
@@ -1175,7 +1558,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 					</td>
+
+
+
+
 
 
 
@@ -1183,6 +1574,11 @@ class advertiser extends CI_Controller {
 
 
 			$i++;
+
+
+
+
+
 
 
 		}
@@ -1306,7 +1702,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 													<div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
+
+
+
+
 
 
 
@@ -1314,7 +1718,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 														<div style="border-bottom:1px solid #d1d1d1;">
+
+
+
+
 
 
 
@@ -1322,7 +1734,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 														</div>
+
+
+
+
 
 
 
@@ -1330,7 +1750,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 															<strong>'.$this->lang->line('new_mail-hi').' '.$new_message['user_name_to'].'</strong>
+
+
+
+
 
 
 
@@ -1338,7 +1766,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 															<p>'.$this->lang->line('to_read_and_reply').'. <a style="text-decoration:none;color:blue;" href="'.base_url().'property/get_message">'.$this->lang->line('click_here_mail').'</a></p>
+
+
+
+
 
 
 
@@ -1346,7 +1782,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 														</div>
+
+
+
+
 
 
 
@@ -1354,7 +1798,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 															<p>'.$this->lang->line('Messages_you_are_receiving_this_email_because').'</p>
+
+
+
+
 
 
 
@@ -1362,7 +1814,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 													</div>
+
+
+
+
 
 
 
@@ -1406,7 +1866,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 													<div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
+
+
+
+
 
 
 
@@ -1414,7 +1882,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 														<div style="border-bottom:1px solid #d1d1d1;">
+
+
+
+
 
 
 
@@ -1422,7 +1898,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 														</div>
+
+
+
+
 
 
 
@@ -1430,15 +1914,31 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 															<strong>Ciao, ' . $new_message['user_name_to'] . '</strong>
 
 
 
-															<p>È stato ricevuto un nuovo messaggio da ' . $user_name . '</p>
 
 
 
-															<p>Per leggere e rispondere a questo messaggio, vai al tuo arrivo in ZapCasa. <a style="text-decoration:none;color:blue;" href="' . base_url() . 'property/get_message">' . $this->lang->line('click_here_mail') . '</a></p>
+
+															<p>Hai ricevuto un nuovo messaggio da ' . $user_name . '</p>
+
+
+
+
+
+
+
+															<p>Per leggere e rispondere a questo messaggio, vai al tuo Inbox su ZapCasa. <a style="text-decoration:none;color:blue;" href="' . base_url() . 'property/get_message">CLICCA QUI!</a></p>
+
+
+
+
 
 
 
@@ -1446,7 +1946,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 														</div>
+
+
+
+
 
 
 
@@ -1454,7 +1962,15 @@ class advertiser extends CI_Controller {
 
 
 
-															<p>Stai ricevuto questa email perché sei registrato su ZapCasa. Per interrompere la ricezione di queste email, accedere al proprio conto ZapCasa e disattivare le notifiche. www.zapcasa.it</p>
+
+
+
+
+															<p>Ricevi questa email perché sei registrato su ZapCasa. Per interrompere la ricezione di queste email, accedi al tuo account ZapCasa e disattiva le notifiche. <a href="http://www.zapcasa.it">www.zapcasa.it</a></p>
+
+
+
+
 
 
 
@@ -1462,7 +1978,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 													</div>
+
+
+
+
 
 
 
@@ -1514,121 +2038,127 @@ class advertiser extends CI_Controller {
 	}
 
 
-	public function agency_search_by_area($area) {
+	public function agency_search_by_area($area, $limit, $start)
+	{
 
 
-		$qry = "SELECT `province_name` FROM `zc_region_master` WHERE LOWER(`geo_breakdown`) = '".strtolower($area)."' group by `province_code`";
+		$qry = "SELECT `province_name`,`province_name_it` FROM `zc_region_master` WHERE LOWER(`geo_breakdown`) = '" . strtolower($area) . "' group by `province_code`";
+
 
 
 		$res = $this->advertiserm->pop_search($qry);
 
 
+
 		$prov = array();
+
 
 
 		$data = array();
 
 
+
 		$data['advertiser_lists'] = array();
+
 
 
 		$data['search_title'] = 'Agency List';
 
 
+
 		$data['area'] = $area;
 
 
+
 		if( count( $res ) > 0 ) {
+
 
 
 			foreach($res as $resVal) {
 
 
 				$prov[] = "'" . str_replace("'", "''", strtolower($resVal['province_name'])) . "'";
-
+				$prov1[] = "'" . str_replace("'", "''", strtolower($resVal['province_name_it'])) . "'";
 
 
 			}
 
 
 			$provinces = stripslashes(implode(",", $prov));
+			$provinces1 = stripslashes(implode(",", $prov1));
 
 
-			$qry2 = "select * from zc_user left join zc_user_preference on zc_user.user_id = zc_user_preference.user_id where LOWER(`province`) IN (" . $provinces . ") AND user_type='3' and zc_user.status != '0' and zc_user_preference.invisible = '0' and zc_user_preference.my_address_display = '0' order by zc_user.user_id DESC";
+			// $qry2 = "select * from zc_user left join zc_user_preference on zc_user.user_id = zc_user_preference.user_id where LOWER(`province`) IN (".$provinces.") OR LOWER(`province`) IN (".$provinces1.") AND zc_user.user_type='3' and zc_user.status != '0' and zc_user_preference.invisible = '0' and zc_user_preference.my_address_display = '0' order by zc_user.user_id DESC";
+			$qry2 = "select * from zc_user  where user_type='3' and LOWER(`province`) IN (" . $provinces . ") OR LOWER(`province`) IN (" . $provinces1 . ") AND user_type='3' and status != '0'  order by user_id DESC ";
 
 			$res2 = $this->advertiserm->pop_search($qry2);
 
 
+			$config = array();
+
+			$config['base_url'] = base_url() . '/advertiser/agency_search_by_area/' . $area . '/?search=true';
+
+			$total_row = count($res2);
+
+			$config['query_string_segment'] = 'offset';
+			$config['page_query_string'] = true;
+			//$config["uri_segment"] = 2;
+			$config['total_rows'] = $total_row;
+			$config['per_page'] = 10;
+
+			if (!empty($_GET['offset'])) {
+
+				$offset = $_GET['offset'];
+
+			} else {
+
+				$offset = 0;
+
+			}
+			$limit = $offset + $config['per_page'];
+			$page = (int)(!isset($_GET['page']) ? 1 : $_GET['page']);
+
+			$page = ($page == 0 ? 1 : $page);
+
+			$this->pagination->initialize($config);
+			$data['total_row'] = isset($total_row) ? $total_row : 0;
+
+			$qry2 .= " limit $offset,$limit";
+
+			$res2 = $this->advertiserm->pop_search($qry2);
 			$uid = array();
-
-
-			if( count( $res2 ) > 0 ) {
-
-
-				foreach($res2 as $resVal2) {
-
-
-					$uid[] = "'".$resVal2['user_id']."'";
-
-
+			if (count($res2) > 0) {
+				foreach ($res2 as $resVal2) {
+					$uid[] = "'" . $resVal2['user_id'] . "'";
+				}
+				if ($this->input->get('name')) {
+					$name = $this->input->get('name');
 				}
 
-
-				$userid = implode(",",$uid);
-
-
-				$config = array();
-
-
-				$config['base_url'] = base_url() . '/advertiser/agency_search_by_area/'.$area.'?search=true';
-
-
-				$total_row = count($res2);
-
-
-				$config['query_string_segment'] = 'offset';
-
-
-				$config['page_query_string'] = true;
-
-
-				$config['total_rows'] =  $total_row;
-
-
-				$config['per_page'] = 10;
-
-
-				if (!empty($_GET['offset'])) {
-
-
-					$offset = $_GET['offset'];
-
-
-				} else {
-
-
-					$offset = 0;
-
-
+				if ($this->input->get('advertiser_type')) {
+					$advertiser_type = $this->input->get('advertiser_type');
 				}
+				if ($this->input->get('location')) {
+					$location = $this->input->get('location');
+				}
+				//Pagination
 
+				$userid = implode(",", $uid);
 
-				$this->pagination->initialize($config);
+				//$startpoint = ($page * $perpage) - $perpage;
 
+				$qry3 = "SELECT * FROM `zc_user` WHERE `user_id` IN (" . $userid . ") AND `status` = '1'";
+
+				$data['advertiser_lists'] = $this->advertiserm->pop_search($qry3);
+				// echo "<pre>";
+
+				//       var_dump($data['advertiser_lists']);exit;
 
 				$data["links"] = $this->pagination->create_links();
 
+				// $data['pagination'] = $this->advertiserm->getAdvertiserByFilter($filters,$startpoint,$perpage);
 
-				$data['total_row'] = isset($total_row) ?$total_row : 0;
-
-
-				$qry3 = "SELECT * FROM `zc_user` WHERE `user_id` IN (".$userid.") AND `status` = '1'";
-
-
-				$data['advertiser_lists']=$this->advertiserm->pop_search($qry3);
-
-
-				$this->load->view('advertiser/estate_agency',$data);
+				$this->load->view('advertiser/estate_agency', $data);
 
 
 			} else {
@@ -1637,7 +2167,7 @@ class advertiser extends CI_Controller {
 				$data['total_row'] = 0;
 
 
-				$this->load->view('advertiser/estate_agency',$data);
+				$this->load->view('advertiser/estate_agency', $data);
 
 
 			}
@@ -1649,7 +2179,7 @@ class advertiser extends CI_Controller {
 			$data['total_row'] = 0;
 
 
-			$this->load->view('advertiser/estate_agency',$data);
+			$this->load->view('advertiser/estate_agency', $data);
 
 
 		}
@@ -1668,6 +2198,11 @@ class advertiser extends CI_Controller {
 
 
 			//redirect('/');
+
+
+
+
+
 
 
 		}
@@ -1800,7 +2335,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 									<div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
+
+
+
+
 
 
 
@@ -1808,7 +2351,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 										<div style="border-bottom:1px solid #d1d1d1;">
+
+
+
+
 
 
 
@@ -1816,7 +2367,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 										</div>
+
+
+
+
 
 
 
@@ -1824,7 +2383,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 											<strong>' . $this->lang->line('new_mail-hi') . ' ' . $user_name . ',</strong>
+
+
+
+
 
 
 
@@ -1832,7 +2399,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 											<p>' . $this->lang->line('new_feedback_mail_to_red_id') . ' <a style="text-decoration:none;color:blue;" href="' . base_url() . 'My_Feedback">' . $this->lang->line('new_feedback_mail_click_here') . '</a></p>
+
+
+
+
 
 
 
@@ -1840,7 +2415,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 										</div>
+
+
+
+
 
 
 
@@ -1848,7 +2431,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 											<p>' . $this->lang->line('Messages_you_are_receiving_this_email_because') . '</p>
+
+
+
+
 
 
 
@@ -1856,7 +2447,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 									</div>
+
+
+
+
 
 
 
@@ -1872,13 +2471,31 @@ class advertiser extends CI_Controller {
 					} else {
 
 
+
+
+
+
+
 						$mail_from = isset($default_email) ? $default_email : "no-reply@zapcasa.it";
 
 
 						$mail_to = $email_user_to;
 
 
-						$subject = 'Hai ricevuto un nuovo retroazione';
+						$subject = 'Hai ricevuto un nuovo feedback.';
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 						//$link = base_url().'My_Feedback/'.$rs.'/details';
@@ -1888,7 +2505,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 									<div style="width:550px; margin:0 auto; border:1px solid #d1d1d1;">
+
+
+
+
 
 
 
@@ -1896,7 +2521,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 										<div style="border-bottom:1px solid #d1d1d1;">
+
+
+
+
 
 
 
@@ -1904,7 +2537,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 										</div>
+
+
+
+
 
 
 
@@ -1912,15 +2553,31 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 											<strong>Ciao ' . $user_name . '</strong>
 
 
 
-											<p>Hai ricevuto un nuovo retroazione</p>
 
 
 
-											<p>Per leggerlo, vai alla pagina My feedback su ZapCasa <a style="text-decoration:none;color:blue;" href="' . base_url() . 'My_Feedback">CLICCA QUI!</a></p>
+
+											<p>Hai ricevuto un nuovo feedback.</p>
+
+
+
+
+
+
+
+											<p>Per leggerlo, vai alla pagina My feedback su ZapCasa<a style="text-decoration:none;color:blue;" href="' . base_url() . 'My_Feedback"> CLICCA QUI!</a></p>
+
+
+
+
 
 
 
@@ -1928,7 +2585,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 										</div>
+
+
+
+
 
 
 
@@ -1936,7 +2601,15 @@ class advertiser extends CI_Controller {
 
 
 
-											<p>Stai ricevuto questa email perché sei registrato su ZapCasa. Per interrompere la ricezione di queste email, accedere al proprio conto ZapCasa e disattivare le notifiche.www.zapcasa.it</p>
+
+
+
+
+											<p>Ricevi questa email perché sei registrato su ZapCasa. Per interrompere la ricezione di queste email, accedi al tuo account ZapCasa e disattiva le notifiche.<a href="http://www.zapcasa.it">www.zapcasa.it</a></p>
+
+
+
+
 
 
 
@@ -1944,7 +2617,15 @@ class advertiser extends CI_Controller {
 
 
 
+
+
+
+
 									</div>
+
+
+
+
 
 
 
@@ -1969,10 +2650,20 @@ class advertiser extends CI_Controller {
 					$this->session->set_flashdata('success_feedback', $msgdata);
 
 
+
+
+
+
+
 					redirect('advertiser/advertiser_details/' . $owner_id);
 
 
 				}
+
+
+
+
+
 
 
 				$msgdata = $this->lang->line('advertiser_msg_your_feedback_is_posting_successfully');
@@ -2020,10 +2711,15 @@ class advertiser extends CI_Controller {
 		$user_id=$this->session->userdata('user_id');
 
 
-		foreach($msg_ids as $mid){
+		foreach ($msg_ids as $mid) {
 
 
-			$delete_msg_ids=$mid;
+			$delete_msg_ids = $mid;
+
+
+
+
+
 
 
 			$msgDetails = get_all_value('zc_feedback'," and feedback_id='".$delete_msg_ids."'");
@@ -2033,6 +2729,11 @@ class advertiser extends CI_Controller {
 
 
 				//echo $rs=$this->advertiserm->delete_bulk_feedback($delete_msg_ids);
+
+
+
+
+
 
 
 			}else {
@@ -2066,6 +2767,11 @@ class advertiser extends CI_Controller {
 
 
 		$newdata = array("delete_feedback_message" => $msg);
+
+
+
+
+
 
 
 		$this->session->set_userdata($newdata);

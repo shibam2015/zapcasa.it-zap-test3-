@@ -16,7 +16,7 @@ function CreateImageUsingImageMagic($data){
 	$sourcePath = $data['sourcePath'];
 	$destinationPath = $data['destinationPath'];
 	$imageSize = $data['imageSize'];
-	exec("/usr/bin/convert " . $sourcePath . "   -resize " . $imageSize . "!  " . $destinationPath);
+	exec ("/usr/bin/convert ".$sourcePath."   -resize ".$imageSize."!  ".$destinationPath);
 }
 
 function CreateImageUsingImageMagicWithGravity($data)
@@ -25,27 +25,29 @@ function CreateImageUsingImageMagicWithGravity($data)
 	$destinationPath = $data['destinationPath'];
 	$watermarkLogoPath = $data['watermarkLogoPath'];
 	$imageSize = $data['imageSize'];
-	$original_size = $data['original_size'];
-	$width = $data['original_size'][0];
-	$height = $data['original_size'][1];
-
-	if ($height == $width) {
-		exec("/usr/bin/convert -strip " . $sourcePath . " -resize 170x -gravity center -background white -flatten -crop 170x113+0+0 -quality 80% +repage " . $destinationPath);
-	} else if ($height < $width) {
+	$original_size=$data['original_size'];
+	$width=$data['original_size'][0];
+	$height=$data['original_size'][1];
+	
+	if($height == $width) {
+		exec ("/usr/bin/convert -strip ".$sourcePath." -resize 170x -gravity center -background white -flatten -crop 170x113+0+0 -quality 80% +repage ".$destinationPath);
+	}
+	else if($height < $width){
 		//echo "ifffffffff";
-		exec("/usr/bin/convert -strip " . $sourcePath . " -resize x113 -gravity center -background white -flatten -crop 170x113+0+0 -quality 80% +repage " . $destinationPath);
+		exec ("/usr/bin/convert -strip ".$sourcePath." -resize x113 -gravity center -background white -flatten -crop 170x113+0+0 -quality 80% +repage ".$destinationPath);
 
-	} else {
+	}else
+	{
 		//echo "else";exit;
-		exec("/usr/bin/convert -strip " . $sourcePath . " -resize 170x -gravity center -background white -flatten -crop 170x113+0+0 -quality 80% +repage " . $destinationPath);
+		exec ("/usr/bin/convert -strip ".$sourcePath." -resize 170x -gravity center -background white -flatten -crop 170x113+0+0 -quality 80% +repage ".$destinationPath);
 	}
 
 	//echo '<pre>';print_r($data);exit;
 	//exec ("/usr/bin/convert ".$sourcePath."   -resize ".$imageSize."!  ".$destinationPath);
-	/*exec ("/usr/bin/convert -strip ".$sourcePath." -flatten
+	 /*exec ("/usr/bin/convert -strip ".$sourcePath." -flatten 
         -resize ".$imageSize." -gravity Center  --thumbnail ".$imageSize."+0+0 +repage 
         -background white -alpha remove -quality 80% ".$destinationPath);*/
-
+	 
 
 	// return copy($sourcePath, $destinationPath);
 //exec ("/usr/bin/convert ".$sourcePath." -flatten  -resize 170x  -gravity center -background white -crop ".$imageSize."+0+0 +repage ".$destinationPath);
@@ -57,25 +59,27 @@ function CreateImageUsingImageMagicWithGravitynew($data)
 	$destinationPath = $data['destinationPath'];
 	$watermarkLogoPath = $data['watermarkLogoPath'];
 	$imageSize = $data['imageSize'];
-	$original_size = $data['original_size'];
-	$width = $data['original_size'][0];
-	$height = $data['original_size'][1];
-	if ($height == $width) {
-		exec("/usr/bin/convert -strip " . $sourcePath . " -resize 241x -gravity center -background white -flatten -crop 241x161+0+0 -quality 80% +repage " . $destinationPath);
-	} else if ($height < $width) {
+	$original_size=$data['original_size'];
+	$width=$data['original_size'][0];
+	$height=$data['original_size'][1];
+	if($height == $width) {
+		exec ("/usr/bin/convert -strip ".$sourcePath." -resize 241x -gravity center -background white -flatten -crop 241x161+0+0 -quality 80% +repage ".$destinationPath);
+	}
+	else if($height < $width){
 		//echo "ifffffffff";
-		exec("/usr/bin/convert -strip " . $sourcePath . " -resize x161 -gravity center -background white -flatten -crop 241x161+0+0 -quality 80% +repage " . $destinationPath);
+		exec ("/usr/bin/convert -strip ".$sourcePath." -resize x161 -gravity center -background white -flatten -crop 241x161+0+0 -quality 80% +repage ".$destinationPath);
 
-	} else {
+	}else
+	{
 		//echo "else";exit;
-		exec("/usr/bin/convert -strip " . $sourcePath . " -resize 241x -gravity center -background white -flatten -crop 241x161+0+0 -quality 80% +repage " . $destinationPath);
+		exec ("/usr/bin/convert -strip ".$sourcePath." -resize 241x -gravity center -background white -flatten -crop 241x161+0+0 -quality 80% +repage ".$destinationPath);
 	}
 	//echo '<pre>';print_r($data);exit;
 	//exec ("/usr/bin/convert ".$sourcePath."   -resize ".$imageSize."!  ".$destinationPath);
-	/*exec ("/usr/bin/convert -strip ".$sourcePath." -flatten
+	 /*exec ("/usr/bin/convert -strip ".$sourcePath." -flatten 
         -resize ".$imageSize." -gravity Center  --thumbnail ".$imageSize."+0+0 +repage 
         -background white -alpha remove -quality 80% ".$destinationPath);*/
-
+	 
 
 	// return copy($sourcePath, $destinationPath);
 //exec ("/usr/bin/convert ".$sourcePath." -flatten  -resize 241x  -gravity center -background white -crop ".$imageSize."+0+0 +repage ".$destinationPath);
@@ -86,22 +90,24 @@ function CreateImageUsingImageMagicWithOutGravity($data){
 	$sourcePath = $data['sourcePath'];
 	$destinationPath = $data['destinationPath'];
 	$imageSize = $data['imageSize'];
-	$original_size = $data['original_size'];
-	$width = $data['original_size'][0];
-	$height = $data['original_size'][1];
+	$original_size=$data['original_size'];
+	$width=$data['original_size'][0];
+	$height=$data['original_size'][1];
 	//echo '<pre>';print_r($data);
 	//echo '<pre>';print_r($height);exit;
-	if ($height == $width) {
-		exec("/usr/bin/convert -strip " . $sourcePath . " -resize 75x -gravity center -background white -flatten -crop 75x50+0+0 -quality 70% +repage " . $destinationPath);
-	} else if ($height < $width) {
-		//echo "ifffffffff";
-		exec("/usr/bin/convert -strip " . $sourcePath . " -resize x50 -gravity center -background white -flatten -crop 75x50+0+0 -quality 70% +repage " . $destinationPath);
-
-	} else {
-		//echo "else";exit;
-		exec("/usr/bin/convert -strip " . $sourcePath . " -resize 75x -gravity center -background white -flatten -crop 75x50+0+0 -quality 70% +repage " . $destinationPath);
+	if($height == $width) {
+		exec ("/usr/bin/convert -strip ".$sourcePath." -resize 75x -gravity center -background white -flatten -crop 75x50+0+0 -quality 70% +repage ".$destinationPath);
 	}
+	else if($height < $width){
+		//echo "ifffffffff";
+		exec ("/usr/bin/convert -strip ".$sourcePath." -resize x50 -gravity center -background white -flatten -crop 75x50+0+0 -quality 70% +repage ".$destinationPath);
 
+	}else
+	{
+		//echo "else";exit;
+		exec ("/usr/bin/convert -strip ".$sourcePath." -resize 75x -gravity center -background white -flatten -crop 75x50+0+0 -quality 70% +repage ".$destinationPath);
+	}
+	
 	/*exec ("/usr/bin/convert ".$sourcePath." -flatten /
 			-resize ".$imageSize."^ -gravity Center -crop ".$imageSize."+0+0+repage /
 			-background white -alpha remove -quality 80% ".$destinationPath);*/
@@ -110,26 +116,26 @@ function CreateImageUsingImageMagicWithOutGravity($data){
 //exec ("/usr/bin/convert ".$sourcePath." -flatten  -resize 75x -gravity center -background white -crop 75x50+0+0 +repage ".$destinationPath);
 //exec("/usr/bin/mogrify ".$sourcePath." -format jpg -resize ".$imageSize." -gravity center -crop ".$imageSize."+0+0 +repage".$destinationPath);
 }
-
-function CreateImageUsingImageMagicWithOutGravityuser($data)
-{
+function CreateImageUsingImageMagicWithOutGravityuser($data){
 	$sourcePath = $data['sourcePath'];
 	$destinationPath = $data['destinationPath'];
 	$imageSize = $data['imageSize'];
-	$original_size = $data['original_size'];
-	$width = $data['original_size'][0];
-	$height = $data['original_size'][1];
+	$original_size=$data['original_size'];
+	$width=$data['original_size'][0];
+	$height=$data['original_size'][1];
 	//echo '<pre>';print_r($data);
 	//echo '<pre>';print_r($height);exit;
-	if ($height == $width) {
-		exec("/usr/bin/convert -strip " . $sourcePath . " -resize 128x -gravity center -background white -flatten -crop 128x128+0+0 -quality 70% +repage " . $destinationPath);
-	} else if ($height < $width) {
+	if($height == $width) {
+		exec ("/usr/bin/convert -strip ".$sourcePath." -resize 128x -gravity center -background white -flatten -quality 70% +repage ".$destinationPath);
+	}
+	else if($height < $width){
 		//echo "ifffffffff";
-		exec("/usr/bin/convert -strip " . $sourcePath . " -resize x128 -gravity center -background white -flatten -crop 128x128+0+0 -quality 70% +repage " . $destinationPath);
+		exec ("/usr/bin/convert -strip ".$sourcePath." -resize 128x128 -gravity center -background white -flatten -quality 70% +repage ".$destinationPath);
 
-	} else {
+	}else
+	{
 		//echo "else";exit;
-		exec("/usr/bin/convert -strip " . $sourcePath . " -resize 128x -gravity center -background white -flatten -crop 128x128+0+0 -quality 70% +repage " . $destinationPath);
+		exec ("/usr/bin/convert -strip ".$sourcePath." -resize 128x128 -gravity center -background white -flatten -quality 70% +repage ".$destinationPath);
 	}
 	/*exec ("/usr/bin/convert ".$sourcePath." -flatten /
 			-resize ".$imageSize."^ -gravity Center -crop ".$imageSize."+0+0+repage /
@@ -139,26 +145,26 @@ function CreateImageUsingImageMagicWithOutGravityuser($data)
 //exec ("/usr/bin/convert ".$sourcePath." -flatten  -resize 75x -gravity center -background white -crop 75x50+0+0 +repage ".$destinationPath);
 //exec("/usr/bin/mogrify ".$sourcePath." -format jpg -resize ".$imageSize." -gravity center -crop ".$imageSize."+0+0 +repage".$destinationPath);
 }
-
-function CreateImageUsingImageMagicWithOutGravityuser1($data)
-{
+function CreateImageUsingImageMagicWithOutGravityuser1($data){
 	$sourcePath = $data['sourcePath'];
 	$destinationPath = $data['destinationPath'];
 	$imageSize = $data['imageSize'];
-	$original_size = $data['original_size'];
-	$width = $data['original_size'][0];
-	$height = $data['original_size'][1];
+	$original_size=$data['original_size'];
+	$width=$data['original_size'][0];
+	$height=$data['original_size'][1];
 	//echo '<pre>';print_r($data);
 	//echo '<pre>';print_r($height);exit;
-	if ($height == $width) {
-		exec("/usr/bin/convert -strip " . $sourcePath . " -resize 430x -gravity center -background white -flatten -crop 430x300+0+0 -quality 70% +repage " . $destinationPath);
-	} else if ($height < $width) {
+	if($height == $width) {
+		exec ("/usr/bin/convert -strip ".$sourcePath." -resize 430x -gravity center -background white -flatten -crop 430x300+0+0 -quality 70% +repage ".$destinationPath);
+	}
+	else if($height < $width){
 		//echo "ifffffffff";
-		exec("/usr/bin/convert -strip " . $sourcePath . " -resize x300 -gravity center -background white -flatten -crop 430x300+0+0 -quality 70% +repage " . $destinationPath);
+		exec ("/usr/bin/convert -strip ".$sourcePath." -resize x300 -gravity center -background white -flatten -crop 430x300+0+0 -quality 70% +repage ".$destinationPath);
 
-	} else {
+	}else
+	{
 		//echo "else";exit;
-		exec("/usr/bin/convert -strip " . $sourcePath . " -resize 430x -gravity center -background white -flatten -crop 430x300+0+0 -quality 70% +repage " . $destinationPath);
+		exec ("/usr/bin/convert -strip ".$sourcePath." -resize 430x -gravity center -background white -flatten -crop 430x300+0+0 -quality 70% +repage ".$destinationPath);
 	}
 	/*exec ("/usr/bin/convert ".$sourcePath." -flatten /
 			-resize ".$imageSize."^ -gravity Center -crop ".$imageSize."+0+0+repage /
@@ -176,20 +182,23 @@ function CreateImageUsingImageMagicWithOutGravitybBigImage($data){
 	$sourcePath = $data['sourcePath'];
 	$destinationPath = $data['destinationPath'];
 	$imageSize = $data['imageSize'];
-	$height = $data['original_size'][1];
-	$width = $data['original_size'][0];
+	$height=$data['original_size'][1];
+	$width=$data['original_size'][0];
 	//$height=$data['original_size'][1];
-	if ($height == $width) {
-		exec("/usr/bin/convert -strip " . $sourcePath . " -resize 800x -gravity center -background white -flatten -quality 80% +repage " . $destinationPath);
-	} else if ($height >= 800 && $width >= 800) {
-		exec("/usr/bin/convert -strip " . $sourcePath . " -resize 800x -gravity center -background white -flatten -quality 80% +repage " . $destinationPath);
-	} else if ($height < $width) {
+	if($height == $width) {
+		exec ("/usr/bin/convert -strip ".$sourcePath." -resize 800x -gravity center -background white -flatten -quality 80% +repage ".$destinationPath);
+	}
+	else if($height >= 800 && $width >= 800 ){
+		exec ("/usr/bin/convert -strip ".$sourcePath." -resize 800x800 -gravity center -background white -flatten -quality 80% +repage ".$destinationPath);
+	}
+	else if($height < $width){
 		//echo "ifffffffff";
-		exec("/usr/bin/convert -strip " . $sourcePath . " -resize x800 -gravity center -background white -flatten -quality 80% +repage " . $destinationPath);
+		exec ("/usr/bin/convert -strip ".$sourcePath." -resize 800x -gravity center -background white -flatten -quality 80% +repage ".$destinationPath);
 
-	} else {
+	}else
+	{
 		//echo "else";exit;
-		exec("/usr/bin/convert -strip " . $sourcePath . " -resize 800x -gravity center -background white -flatten -quality 80% +repage " . $destinationPath);
+		exec ("/usr/bin/convert -strip ".$sourcePath." -resize x800 -gravity center -background white -flatten -quality 80% +repage ".$destinationPath);
 	}
 	/*exec ("/usr/local/bin/convert -strip ".$sourcePath." -flatten 
 			-resize ".$imageSize." 
@@ -310,7 +319,7 @@ function get_all_value($tablename,$where=""){
 
 	$CI =& get_instance();
 #echo "<br> ==> ".
-	$str = "select * from " . $tablename . " where 1=1 " . $where;
+$str="select * from ".$tablename." where 1=1 ".$where;
 	$query=$CI->db->query($str);
 	$record="";
 	if($query->num_rows()>0){
@@ -411,10 +420,10 @@ function get_featured_property($where=''){
 			left join zc_provience on zc_property_details.provience = zc_provience.provience_id 
 			left join zc_city on zc_property_details.city = zc_city.city_id 
 			left join zc_region_master on zc_city.city_name = zc_region_master.city ";
-
+	
 	$sql .= "JOIN zc_user as u ON (zc_property_details.property_post_by = u.user_id) where u.status='1' and u.verified = '1' and zc_property_details.suspention_status!='1' and pf.status='1' and zc_property_details.feature_status='1' AND zc_property_details.property_approval ='1' $where";    //pd.suspention_status is for admin suspension.
 	//$sql.= " ORDER BY pf.property_featured_id DESC LIMIT 12";
-	$sql.= " ORDER BY RAND() LIMIT 12";
+	$sql.= " group by zc_property_details.property_id ORDER BY RAND() LIMIT 12";
 	#echo $sql;exit;
 	$query=$CI->db->query($sql);
 	$data = array();
@@ -427,7 +436,7 @@ function get_featured_property($where=''){
 			if( $todayDate > $expireDate ) {
 				$sql="UPDATE zc_property_featured SET status='0' where property_featured_id='".$row['property_featured_id']."'";
 				$query=$CI->db->query($sql);
-			} else if ($todayDate >= $startDate && $todayDate <= $expireDate) {
+			}else if($todayDate >= $startDate && $todayDate <= $expireDate){
 				$data[] = $row;
 			}
 		}
@@ -436,8 +445,7 @@ function get_featured_property($where=''){
 	return $data;
 }
 
-function get_all_featured_property($where = '')
-{
+function get_all_featured_property($where=''){
 	$CI =& get_instance();
 	$sql = "select pf.*,
 			zc_property_details.update_price, zc_property_details.price,zc_property_details.city,zc_property_details.provience,zc_property_details.category_id,zc_property_details.contract_id,zc_property_details.suspention_by_user,zc_property_details.suspention_status,zc_property_details.description,zc_property_details.typology,zc_property_details.street_address,zc_property_details.street_address,zc_property_details.street_no,zc_property_details.zip,zc_property_details.update_time,zc_property_details.posting_time,
@@ -451,23 +459,23 @@ function get_all_featured_property($where = '')
 			left join zc_provience on zc_property_details.provience = zc_provience.provience_id 
 			left join zc_city on zc_property_details.city = zc_city.city_id 
 			left join zc_region_master on zc_city.city_name = zc_region_master.city ";
-
+	
 	$sql .= "JOIN zc_user as u ON (zc_property_details.property_post_by = u.user_id) where u.status='1' and u.verified = '1' and zc_property_details.suspention_status!='1' and pf.status='1' and zc_property_details.feature_status='1' AND zc_property_details.property_approval ='1' $where";      //pd.suspention_status is for admin suspension.
 	//$sql.= " ORDER BY pf.property_featured_id DESC LIMIT 12";
 	//$sql.= " ORDER BY RAND() LIMIT 12";
 	#echo $sql;exit;
-	$query = $CI->db->query($sql);
+	$query=$CI->db->query($sql);
 	$data = array();
-	$todayDate = strtotime(date('d-m-Y'));
-	if ($query->num_rows() > 0) {
-		foreach ($query->result_array() as $row) {
-			$startDate = strtotime($row['start_date']);
+	$todayDate = strtotime( date('d-m-Y') );
+	if($query->num_rows()>0){
+		foreach($query->result_array() as $row){
+			$startDate = strtotime( $row['start_date'] );
 			$expDateLength = $row['number_of_days'];
-			$expireDate = strtotime(date("Y-m-d", $startDate) . " +" . $expDateLength . "days");
-			if ($todayDate > $expireDate) {
-				$sql = "UPDATE zc_property_featured SET status='0' where property_featured_id='" . $row['property_featured_id'] . "'";
-				$query = $CI->db->query($sql);
-			} else if ($todayDate >= $startDate && $todayDate <= $expireDate) {
+			$expireDate = strtotime(date("Y-m-d", $startDate) . " +".$expDateLength."days");
+			if( $todayDate > $expireDate ) {
+				$sql="UPDATE zc_property_featured SET status='0' where property_featured_id='".$row['property_featured_id']."'";
+				$query=$CI->db->query($sql);
+			}else if($todayDate >= $startDate && $todayDate <= $expireDate){
 				$data[] = $row;
 			}
 		}
@@ -970,7 +978,7 @@ function get_nearby_area($category){
 	}
 	return $data;
 }
-function geoDistance($lat1, $lng1, $lat2, $lng2, $miles = true){
+function geoDistance($lat1, $lng1, $lat2, $lng2, $areaLimit = true){
 	$pi80 = M_PI / 180;
 	$lat1 *= $pi80;
 	$lng1 *= $pi80;
@@ -983,6 +991,15 @@ function geoDistance($lat1, $lng1, $lat2, $lng2, $miles = true){
 	$a = sin($dlat / 2) * sin($dlat / 2) + cos($lat1) * cos($lat2) * sin($dlng / 2) * sin($dlng / 2);
 	$c = 2 * atan2(sqrt($a), sqrt(1 - $a));
 	$km = $r * $c;
-	return ($miles ? ($km * 0.621371192) : $km);
+	return ($areaLimit ? ($km * 0.621371192) : $km);
+}
+
+function geoDistanceNew($lat1, $lng1, $lat2, $lng2){
+	$theta = $lng1 - $lng2;
+	$dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
+	$dist = acos($dist);
+	$dist = rad2deg($dist);
+	$miles = $dist * 60 * 1.1515;
+	return $miles;
 }
 ?>

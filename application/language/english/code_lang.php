@@ -169,7 +169,16 @@ $lang['home_page_meta_title'] = "ZapCasa - Real Estate for Jobs &amp; Housing";
 $lang['home_page_meta_description'] = "Find homes, land and rooms, commercial real estate and luxury for rent and for sale published by agencies or directly by the owners.";
 
 
-/* ------------ main menu ----------------- */
+
+
+
+
+
+
+
+ 
+
+	/* ------------ main menu ----------------- */ 
 
 	
 
@@ -214,7 +223,15 @@ $lang['home_page_meta_description'] = "Find homes, land and rooms, commercial re
 	/* ------------- End ---------------*/
 
 
-/* ------------------------ End Home --------------------*/
+
+/* ------------------------ End Home --------------------*/ 
+
+
+
+
+
+
+
 
 
 /* ---------------- Footer ------------------------ */
@@ -278,6 +295,11 @@ $lang['footer_search_advertise_owners'] = "Owners";
 $lang['footer_search_advertise_agency'] = "Agency";
 
 /* ---------------- End Footer ------------------------ */
+
+
+
+
+
 
 
 /* ---------------- CMS ------------------------ */
@@ -389,7 +411,15 @@ $lang['cms_page_content'] = "content_en";
 	/* ---------------- End Contact us ------------------------ */
 
 
+
+
+
+
+
 /* ---------------- End CMS ------------------------ */
+
+
+
 
 
 /* ---------------- Under Construction ------------------------ */
@@ -417,19 +447,11 @@ $lang['under_construction_my_preference_content'] = "Opps this page is under con
 /* ---------------- End Under Construction ------------------------ */
 
 
-/* ---------------- Information ------------------------ */
 
 
 
-$lang['info_please_signin_to_your_account'] = "Please sign in to your account to use this function";
-
-$lang['info_or'] = "or";
-
-$lang['info_register_a_new_account'] = "REGISTER A NEW ACCOUNT";
 
 
-
-/* ---------------- End Information ------------------------ */
 
 
 /* ---------------- Information ------------------------ */
@@ -445,6 +467,27 @@ $lang['info_register_a_new_account'] = "REGISTER A NEW ACCOUNT";
 
 
 /* ---------------- End Information ------------------------ */
+
+
+
+
+
+/* ---------------- Information ------------------------ */
+
+
+
+$lang['info_please_signin_to_your_account'] = "Please sign in to your account to use this function";
+
+$lang['info_or'] = "or";
+
+$lang['info_register_a_new_account'] = "REGISTER A NEW ACCOUNT";
+
+
+
+/* ---------------- End Information ------------------------ */
+
+
+
 
 
 /* ---------------- Information addprop ------------------------ */
@@ -468,6 +511,9 @@ $lang['info_addprop_register_a_new_account'] = "REGISTER A NEW ACCOUNT";
 /* ---------------- End Information addprop -------------------- */
 
 
+
+
+
 /* ---------------- Information mail ------------------------ */
 
 
@@ -483,6 +529,11 @@ $lang['info_mail_register_a_new_account'] = "REGISTER A NEW ACCOUNT";
 /* ---------------- End Information mail -------------------- */
 
 
+
+
+
+
+
 /* ---------------- Information save ------------------------ */
 
 
@@ -496,6 +547,11 @@ $lang['info_save_register_a_new_account'] = "REGISTER A NEW ACCOUNT";
 
 
 /* ---------------- End Information save -------------------- */
+
+
+
+
+
 
 
 /* ---------------- Login user ------------------------ */
@@ -515,6 +571,9 @@ $lang['login_forgot_password_title'] = "Recover your password!";
 
 
 /* ---------------- End Login user -------------------- */
+
+
+
 
 
 /* ---------------- Saved Search ------------------------ */
@@ -544,6 +603,11 @@ $lang['saved_search_success_text_2'] = "Your search is saved successfully!";
 
 
 /* ---------------- End Saved Search -------------------- */
+
+
+
+
+
 
 
 /* ---------------- Search Header ------------------------ */
@@ -649,7 +713,17 @@ $lang['search_header_save_search'] = "Save Search";
 /* ---------------- End Search Header -------------------- */
 
 
+
+
+
+
+
+
+
 /* ---------------- Search Header Advertiser -------------------- */
+
+
+
 
 
 $lang['search_header_advertise_location_field'] = "City, Neighborhood or ZIP";
@@ -669,7 +743,15 @@ $lang['search_header_advertise_invalid_username'] = "wrong email/user name or pa
 /* ---------------- End Search Header Advertiser -------------------- */
 
 
+
+
+
+
+
 /* ---------------- Advertiser Details -------------------- */
+
+
+
 
 
 $lang['advertise_details_home'] = "Home";
@@ -741,7 +823,13 @@ $lang['advertise_details_no_proimg_filename'] = "no_proimg.jpg";
 /* ---------------- End Advertiser Details -------------------- */
 
 
+
+
+
 /* ---------------- Advertiser List -------------------- */
+
+
+
 
 
 $lang['advertise_list_home'] = "Home";
@@ -805,7 +893,17 @@ $lang['advertise_list_islands_agencies_meta_description'] = 'See all real estate
 /* ---------------- End Advertiser List -------------------- */
 
 
+
+
+
+
+
+
+
 /* ---------------- Feedback message -------------------- */
+
+
+
 
 
 $lang['feedback_message_real_estate_for'] = "Real Estate for ";
@@ -867,7 +965,15 @@ $lang['feedback_message_meta_title'] = "Manage received feedback on ZapCasa.";
 /* ---------------- End Feedback Message -------------------- */
 
 
+
+
+
+
+
 /* ---------------- Agency Edit -------------------- */
+
+
+
 
 
 $lang['agency_edit_your_password_must_be_atleast'] = "Your password must be at least 8 characters long and one capital letter, one number and one symbol like";
@@ -979,7 +1085,15 @@ $lang['agency_edit_meta_title'] = "Check agency information - ZapCasa";
 /* ---------------- End Agency Edit -------------------- */
 
 
+
+
+
+
+
 /* ---------------- Agency Profile -------------------- */
+
+
+
 
 
 $lang['agency_profile_your_password_must_be_atleast'] = "Your password must be at least 8 characters long and one capital letter, one number and one symbol like";
@@ -1095,10 +1209,19 @@ $lang['agency_profile_is_no_longer_be_modified'] = "are required.";
 $lang['agency_profile_email_id_already_taken'] = "Email ID already taken";
 
 
+
+
+
 /* ---------------- End Agency Profile -------------------- */
 
 
+
+
+
 /* ---------------- Owner Profile -------------------- */
+
+
+
 
 
 $lang['owner_profile_your_password_must_be_atleast'] = "Your password must be at least 8 characters long and one capital letter, one number and one symbol like";
@@ -1216,7 +1339,17 @@ $lang['owner_profile_email_id_available'] = "Email ID available";
 /* ---------------- End Owner Profile -------------------- */
 
 
+
+
+
+
+
+
+
 /* ---------------- Owner Edit -------------------- */
+
+
+
 
 
 $lang['owner_edit_your_password_must_be_atleast'] = "Your password must be at least 8 characters long and one capital letter, one number and one symbol like";
@@ -1310,7 +1443,15 @@ $lang['owner_edit_meta_title'] = "Check owner information - ZapCasa";
 /* ---------------- End Owner Edit -------------------- */
 
 
+
+
+
+
+
 /* ---------------- reg agency -------------------- */
+
+
+
 
 
 $lang['reg_agency_your_password_must_be_atleast'] = "Your password must be at least 8 characters long and one capital letter, one number and one symbol like";
@@ -1464,7 +1605,19 @@ $lang['reg_agency_you_submit_wrong_captcha'] = "You submit a wrong captcha";
 /* ---------------- End reg agency -------------------- */
 
 
+
+
+
+
+
+
+
+
+
 /* ---------------- Reg Owner -------------------- */
+
+
+
 
 
 $lang['reg_owner_required'] = "Required";
@@ -1608,7 +1761,13 @@ $lang['reg_owner_meta_description'] = "Fill out the form to post your properties
 /* ---------------- End Reg Owner -------------------- */
 
 
+
+
+
 /* ---------------- reg user -------------------- */
+
+
+
 
 
 $lang['reg_user_please_provide_a_password'] = "Please provide a password";
@@ -1746,6 +1905,11 @@ $lang['reg_user_account_information_user_name_atleast'] = "Letters, numbers, and
 /* ---------------- End reg user -------------------- */
 
 
+
+
+
+
+
 /* ---------------- thanks owner act -------------------- */
 
 
@@ -1779,6 +1943,13 @@ $lang['thanks_owner_thanks'] = "Thanks!";
 
 
 /* ---------------- End thanks owner act -------------------- */
+
+
+
+
+
+
+
 
 
 /* ---------------- thanks owner  -------------------- */
@@ -1818,6 +1989,15 @@ $lang['thanks_owner_meta_title'] = "Your Account successfully created - ZapCasa"
 /* ---------------- End thanks owner  -------------------- */
 
 
+
+
+
+
+
+
+
+
+
 /* ---------------- thanks agency act -------------------- */
 
 
@@ -1847,6 +2027,17 @@ $lang['thanks_agency_act_signin'] = "SIGNIN";
 
 
 /* ---------------- End thanks agency act -------------------- */
+
+
+
+
+
+
+
+
+
+
+
 
 
 /* ---------------- thanks agency  -------------------- */
@@ -1886,6 +2077,13 @@ $lang['thanks_agency_meta_title'] = "Your Account successfully created - ZapCasa
 $lang['thanks_agency_thanks'] = "Thanks!";
 
 /* ---------------- End thanks agency  -------------------- */
+
+
+
+
+
+
+
 
 
 /* ---------------- thanks user  -------------------- */
@@ -1929,7 +2127,17 @@ $lang['thanks_user_thanks'] = "Thanks!";
 /* ---------------- End thanks user  -------------------- */
 
 
+
+
+
+
+
+
+
 /* ---------------- User Edit -------------------- */
+
+
+
 
 
 $lang['user_edit_your_password_must_be_atleast'] = "Your password must be at least 8 characters long and one capital letter, one number and one symbol like";
@@ -1991,6 +2199,9 @@ $lang['user_edit_the_information_marked_with'] = "The information marked with";
 $lang['user_edit_may_no_longer_be_modified'] = "may no longer be modified.";
 
 
+
+
+
 $lang['user_edit_proper_email_address_required'] = "Proper Email Address Required";
 
 $lang['user_edit_email_id_available'] = "Email ID available";
@@ -2006,10 +2217,25 @@ $lang['user_edit_user_name_already_taken'] = "User Name already taken";
 $lang['user_edit_meta_title'] = "Check user information - ZapCasa.";
 
 
+
+
+
 /* ---------------- End User Edit -------------------- */
 
 
+
+
+
+
+
+
+
+
+
 /* ---------------- User Profile -------------------- */
+
+
+
 
 
 $lang['user_profile_your_password_must_be_atleast'] = "Your password must be at least 8 characters long and one capital letter, one number and one symbol like";
@@ -2037,6 +2263,9 @@ $lang['user_profile_register'] = "Register";
 $lang['user_profile_sign_up_as_individual_user'] = "Sign up as individual users";
 
 $lang['user_profile_summary_screen_for_individual_user'] = "Ceck user information";
+
+
+
 
 
 $lang['user_profile_listing_tab_my_account'] = "My Account";
@@ -2080,10 +2309,27 @@ $lang['user_profile_email_id_available'] = "Email ID available";
 $lang['user_profile_email_id_already_taken'] = "Email ID already taken";
 
 
+
+
+
+
+
 /* ---------------- End User Profile -------------------- */
 
 
+
+
+
+
+
+
+
+
+
 /* ----------------  my account -------------------- */
+
+
+
 
 
 $lang['my_account_your_password_must_be_atleast'] = "Your password must be at least 8 characters long and one capital letter, one number and one symbol like";
@@ -2129,10 +2375,29 @@ $lang['my_account_email_id_available'] = "Email ID available";
 $lang['my_account_email_id_already_taken'] = "Email ID already taken";
 
 
+
+
+
+
+
 /* ---------------- End  my account -------------------- */
 
 
+
+
+
+
+
+
+
+
+
+
+
 /* ---------------- Preference -------------------- */
+
+
+
 
 
 $lang['preference_real_estate_for'] = "Real Estate for ";
@@ -2196,6 +2461,15 @@ $lang['preference_meta_title'] = "Set up your account preferences on ZapCasa.";
 /* ---------------- End Preference -------------------- */
 
 
+
+
+
+
+
+
+
+
+
 /* ---------------- login -------------------- */
 
 
@@ -2225,6 +2499,9 @@ $lang['login_invalid_username'] = "Wrong email/user name or password.";
 
 
 /* ---------------- End login -------------------- */
+
+
+
 
 
 /* ---------------- thanks del -------------------- */
@@ -2258,6 +2535,11 @@ $lang['thanks_del_back_to_home_page'] = "Back to home page";
 /* ---------------- End thanks del -------------------- */
 
 
+
+
+
+
+
 /* ---------------- thanks user act -------------------- */
 
 
@@ -2287,6 +2569,11 @@ $lang['thanks_user_act_signin'] = "SIGNIN";
 
 
 /* ---------------- End thanks user act -------------------- */
+
+
+
+
+
 
 
 /* ---------------- thanks user act alredy -------------------- */
@@ -2320,6 +2607,13 @@ $lang['thanks_user_act_alredy_signin'] = "SIGNIN";
 /* ---------------- End thanks user act alredy -------------------- */
 
 
+
+
+
+
+
+
+
 /* ---------------- thanks user act fail -------------------- */
 
 
@@ -2349,6 +2643,11 @@ $lang['thanks_user_act_fail_register_btn'] = "REGISTER";
 
 
 /* ---------------- End thanks user act fail -------------------- */
+
+
+
+
+
 
 
 /* ---------------- thanks agency act alredy -------------------- */
@@ -2382,6 +2681,11 @@ $lang['thanks_agency_act_alredy_signin'] = "SIGNIN";
 /* ---------------- End thanks agency act alredy -------------------- */
 
 
+
+
+
+
+
 /* ---------------- thanks agency act fail -------------------- */
 
 
@@ -2413,6 +2717,17 @@ $lang['thanks_agency_act_fail_register_btn'] = "REGISTER";
 /* ---------------- End thanks agency act fail -------------------- */
 
 
+
+
+
+
+
+
+
+
+
+
+
 /* ---------------- thanks owner act alredy -------------------- */
 
 
@@ -2440,6 +2755,11 @@ $lang['thanks_owner_act_alredy_signin'] = "SIGNIN";
 
 
 /* ---------------- End thanks owner act alredy -------------------- */
+
+
+
+
+
 
 
 /* ---------------- thanks owner act fail -------------------- */
@@ -2471,6 +2791,13 @@ $lang['thanks_owner_act_fail_register_btn'] = "REGISTER";
 
 
 /* ---------------- End thanks owner act fail -------------------- */
+
+
+
+
+
+
+
 
 
 /* ---------------- forgot password -------------------- */
@@ -2520,6 +2847,9 @@ $lang['forgot_password_meta_title'] = "Forgot password - ZapCasa";
 /* ---------------- End forgot password -------------------- */
 
 
+
+
+
 /* ---------------- forgot password fail -------------------- */
 
 
@@ -2547,6 +2877,13 @@ $lang['forgot_password_fail_register_btn'] = "REGISTER";
 
 
 /* ---------------- End forgot password fail -------------------- */
+
+
+
+
+
+
+
 
 
 /* ---------------- email alert -------------------- */
@@ -2592,7 +2929,17 @@ $lang['email_alert_register'] = "REGISTER";
 /* ---------------- End email alert -------------------- */
 
 
+
+
+
+
+
+
+
+
+
 /* ---------------- change password -------------------- */
+
 
 
 $lang['change_password_your_password_must_be_atleast'] = "Your password must be at least 8 characters long, one capital letter and one lowercase letter, one number and one symbol like";
@@ -2602,6 +2949,11 @@ $lang['change_password_please_provide_a_password'] = "Your password must be at l
 $lang['change_password_please_enter_the_same_password_as_above'] = "Please enter the same password as above";
 
 $lang['change_password_please_enter_your_actual_password'] = "Please enter your current password";
+
+
+
+
+
 
 
 $lang['change_password_real_estate_for'] = "Real Estate for ";
@@ -2619,6 +2971,7 @@ $lang['change_password_heading_change_password'] = "Change Passwords";
 $lang['change_password_required'] = "Required";
 
 
+
 $lang['change_password_listing_tab_my_account'] = "My Account";
 
 $lang['change_password_listing_tab_change_password'] = "Change Password";
@@ -2628,7 +2981,9 @@ $lang['change_password_listing_tab_my_preferences'] = "My preferences";
 $lang['change_password_listing_tab_delete_account'] = "Delete account";
 
 
+
 $lang['change_password_change_your_password'] = "Change Your Password";
+
 
 
 $lang['change_password_enter_old_password'] = "Your password";
@@ -2646,13 +3001,25 @@ $lang['change_password_repeat_password_field'] = "Repeat password";
 $lang['change_password_button_save'] = "Save";
 
 
+
 $lang['change_password_meta_title'] = "Change your password on ZapCasa.";
+
 
 
 /* ---------------- End change passwords -------------------- */
 
 
+
+
+
+
+
+
+
+
+
 /* ---------------- common reg -------------------- */
+
 
 
 $lang['common_reg_real_estate_for'] = "Real Estate for ";
@@ -2670,14 +3037,17 @@ $lang['common_reg_heading_register'] = "Register";
 $lang['common_reg_are_you_looking_for_a_property'] = "Are you looking for a property?";
 
 
+
 $lang['common_reg_customizable_and_free'] = "Customizable and free. My ZapCasa makes your life easy.";
 
 $lang['common_reg_customizable_and_free_content'] = 'Register and easily find the property that suits your housing needs, study or work with My ZapCasa, your private area where you can customize the <strong style="font-weight:bold;">free services</strong> offered by ZapCasa.';
 
 
+
 $lang['common_reg_services'] = "Services";
 
 $lang['common_reg_private_message_box'] = "Private message box";
+
 
 
 $lang['common_reg_to_communicate_with_advertisers'] = "to communicate with advertisers and protect your own email from spam.";
@@ -2707,6 +3077,7 @@ $lang['common_reg_are_you_an_agency'] = "Are you an agency, advisor or a builder
 $lang['common_reg_sell_and_rent_properties'] = 'Sell and rent properties with ZapCasa <strong style="font-weight:bold;">is free!</strong>';
 
 
+
 $lang['common_reg_sedicated_public_page'] = "Dedicated public page";
 
 $lang['common_reg_to_create_and_manage'] = "to create and manage the page of your public profile and make yourself reachable.";
@@ -2734,15 +3105,27 @@ $lang['common_reg_or_imagename'] = "or_img.png";
 $lang['common_reg_log_into_your_account'] = "log in to your account";
 
 
+
 $lang['common_reg_meta_title'] = "Sign up for free on My ZapCasa";
 
 $lang['common_reg_meta_description'] = "Free services for buying, selling and renting property on ZapCasa";
 
 
+
 /* ---------------- End common reg -------------------- */
 
 
+
+
+
+
+
+
+
 /* ---------------- delete acc -------------------- */
+
+
+
 
 
 $lang['delete_acc_real_estate_for'] = "Real Estate for ";
@@ -2760,6 +3143,7 @@ $lang['delete_acc_heading_delete_account'] = "Delete account";
 $lang['delete_acc_required'] = "Required";
 
 
+
 $lang['delete_acc_listing_tab_my_account'] = "My Account";
 
 $lang['delete_acc_listing_tab_change_password'] = "Change Password";
@@ -2769,7 +3153,9 @@ $lang['delete_acc_listing_tab_my_preferences'] = "My preferences";
 $lang['delete_acc_listing_tab_delete_account'] = "Delete account";
 
 
+
 $lang['delete_acc_delete_your_zapcasa_account'] = "DELETE YOUR ZAPCASA ACCOUNT";
+
 
 
 $lang['delete_acc_Youve_decided_to_delete_the_zapcasa_account_for'] = "You've decided to delete the ZapCasa account for:";
@@ -2783,13 +3169,23 @@ $lang['delete_acc_delete_your_account'] = "DELETE YOUR ACCOUNT";
 $lang['delete_acc_are_you_sure_you_wish_to_delete_this'] = "Are you sure you want to delete your ZapCasa account?";
 
 
+
 $lang['delete_acc_meta_title'] = "Delete your ZapCasa account.";
+
 
 
 /* ---------------- End delete acc -------------------- */
 
 
+
+
+
+
+
+
+
 /* ---------------- thanks property -------------------- */
+
 
 
 $lang['thanks_property_real_estate_for'] = "Real Estate for ";
@@ -2809,10 +3205,17 @@ $lang['thanks_property_congratulations'] = "Congratulations!";
 $lang['thanks_property_ok'] = "Ok";
 
 
+
 /* ---------------- End thanks property -------------------- */
 
 
+
+
+
+
+
 /* ---------------- image upload -------------------- */
+
 
 
 $lang['image_upload_upload_picture_of_the_property'] = "Upload picture of the property.";
@@ -2822,10 +3225,17 @@ $lang['image_upload_atleast_one_picture_is_required'] = "(at least one picture i
 $lang['image_upload_this_is_not_an_allowed_file_type'] = "This is not an allowed file type.";
 
 
+
 /* ---------------- End image upload -------------------- */
 
 
+
+
+
+
+
 /* ---------------- add property csv -------------------- */
+
 
 
 $lang['add_property_csv_please_provide_a_digits_only'] = "Please provide digits only";
@@ -2843,6 +3253,7 @@ $lang['add_property_csv_housing'] = "Housing";
 $lang['add_property_csv_home'] = "Home";
 
 $lang['add_property_csv_add_property'] = "Add Property";
+
 
 
 $lang['add_property_csv_list_of_properties'] = "List Of Properties";
@@ -2868,10 +3279,23 @@ $lang['add_property_csv_button_submit'] = "Submit";
 $lang['add_property_csv_meta_title'] = "Add more properties simultaneously - ZapCasa";
 
 
+
+
+
 /* ---------------- End add property csv -------------------- */
 
 
+
+
+
+
+
+
+
+
+
 /* ---------------- property details -------------------- */
+
 
 
 $lang['property_details_real_estate_for'] = "Real Estate for ";
@@ -2886,6 +3310,7 @@ $lang['property_details_home'] = "Home";
 
 $lang['property_details_list_of_properties'] = "List Of Properties";
 $lang['my_account'] = "My Account";
+
 
 
 $lang['property_details_listing_tab_list_of_properties'] = "List Of Properties";
@@ -2953,10 +3378,17 @@ $lang['property_details_meta_title'] = "Manage your property - ZapCasa";
 $lang['property_prive_validate_msg'] = "Please enter a price greater than or equal to 1";
 
 
+
 /* ---------------- End property details -------------------- */
 
 
+
+
+
+
+
 /* ---------------- inbox -------------------- */
+
 
 
 $lang['inbox_real_estate_for'] = "Real Estate for ";
@@ -2992,6 +3424,7 @@ $lang['inbox_inbox_message_to'] = "To";
 $lang['inbox_inbox_message_date'] = "Date";
 
 
+
 $lang['inbox_request_for'] = "Request for";
 
 $lang['inbox_subject'] = "Subject";
@@ -3019,6 +3452,7 @@ $lang['inbox_there_is_something_wrong'] = "There is something wrong";
 $lang['inbox_are_you_sure_to_delete_the_conversation'] = "Are you sure to delete the conversation?";
 
 
+
 $lang['inbox_this_field_is_required'] = "This field is required.";
 
 $lang['inbox_back_to_the_list'] = "Back to the messages list.";
@@ -3028,15 +3462,25 @@ $lang['inbox_this_user_has_been_blocked'] = "This user has been blocked and can 
 $lang['inbox_this_user_is_no_longer_registered'] = "Sorry, this user is no longer registered on ZapCasa.";
 
 
+
 $lang['inbox_meta_title'] = "Manage received messages on ZapCasa.";
 
 $lang['inbox_archive_meta_title'] = "Manage sent messages on ZapCasa.";
 
 
+
 /* ---------------- End inbox -------------------- */
 
 
+
+
+
+
+
+
+
 /* ---------------- saved search -------------------- */
+
 
 
 $lang['saved_search_real_estate_for'] = "Real Estate for ";
@@ -3052,9 +3496,11 @@ $lang['saved_search_home'] = "Home";
 $lang['saved_search_header_saved_searches'] = "Saved Searches";
 
 
+
 $lang['saved_search_listing_tab_saved_properties'] = "Saved properties";
 
 $lang['saved_search_listing_tab_saved_searches'] = "Saved searches";
+
 
 
 $lang['saved_search_active_the_email_alert_service'] = '<strong style="font-weight:bold;">Activate the Email Alert service for each saved search.</strong><br>You will receive an email as soon as new properties are available, only if they exactly match to the search filters you have set.';
@@ -3064,6 +3510,7 @@ $lang['saved_search_active_the_email_alert_service_note'] = "Note:";
 $lang['saved_search_active_the_email_alert_service_note_content'] = "If you set the search filters, which are too general, you might end up with receiving a numerous amount of property alerts.";
 
 
+
 $lang['saved_search_saved_search_no'] = "No.";
 
 $lang['saved_search_saved_search_date'] = "Date";
@@ -3071,9 +3518,13 @@ $lang['saved_search_saved_search_date'] = "Date";
 $lang['saved_search_saved_search_name'] = "Name";
 
 
+
 $lang['saved_search_button_modify'] = "Modify";
 
 $lang['saved_search_button_delete'] = "Delete";
+
+
+
 
 
 $lang['saved_search_recommendation_select'] = "No Email Alert";
@@ -3081,6 +3532,7 @@ $lang['saved_search_recommendation_select'] = "No Email Alert";
 $lang['saved_search_recommendation_daily'] = "Daily Alert";
 
 $lang['saved_search_recommendation_weekly'] = "Weekly Alert";
+
 
 
 $lang['saved_search_sorry_no_records_found'] = "You have not saved any research.";
@@ -3094,13 +3546,21 @@ $lang['saved_search_image_reply'] = "Reply";
 $lang['saved_search_view_property'] = "View Property";
 
 
+
 $lang['saved_search_meta_title'] = "Manage the saved searches on ZapCasa.";
+
 
 
 /* ---------------- End saved search -------------------- */
 
 
+
+
+
+
+
 /* ---------------- saved property -------------------- */
+
 
 
 $lang['saved_property_real_estate_for'] = "Real Estate for ";
@@ -3116,9 +3576,11 @@ $lang['saved_property_home'] = "Home";
 $lang['saved_property_header_saved_properties'] = "Saved Properties";
 
 
+
 $lang['saved_property_listing_tab_saved_properties'] = "Saved properties";
 
 $lang['saved_property_listing_tab_saved_searches'] = "Saved searches";
+
 
 
 $lang['saved_property_saved_property_no'] = "No.";
@@ -3128,11 +3590,13 @@ $lang['saved_property_saved_property_date'] = "Date";
 $lang['saved_property_saved_property_name'] = "Name";
 
 
+
 $lang['saved_property_button_view'] = "View";
 
 $lang['saved_property_button_delete'] = "Delete";
 
 $lang['saved_property_sorry_no_records_found'] = "You have not saved any property yet....";
+
 
 
 $lang['saved_property_please_select_message_which_you_want_to_delete'] = "Please select items which you want to delete.";
@@ -3150,13 +3614,23 @@ $lang['saved_property_per_month'] = "/month";
 $lang['saved_property_private_nagotiation'] = "Private negotiation";
 
 
+
 $lang['saved_property_meta_title'] = "Manage the saved properties on ZapCasa.";
+
 
 
 /* ---------------- End saved property -------------------- */
 
 
+
+
+
+
+
 /* ---------------- edit property form -------------------- */
+
+
+
 
 
 $lang['edit_property_form_real_estate_for'] = "Real Estate for ";
@@ -3378,6 +3852,7 @@ $lang['edit_property_form_do_you_have_the_planimetry_of_property'] = "Do you hav
 $lang['edit_property_form_upload_an_image_of_the_planimetry'] = "Upload an image of the planimetry";
 
 
+
 $lang['edit_property_form_delete_the_image'] = "Are you sure? This change will take effect immediately. Click OK to delete the image.";
 
 $lang['edit_property_form_luxury'] = "Hey! Did you know that ZapCasa has a section dedicated to luxury?";
@@ -3413,10 +3888,23 @@ $lang['edit_property_no_proimg_filename'] = "no_proimg.jpg";
 $lang['edit_property_form_meta_title'] = "Manage this property - ZapCasa";
 
 
+
+
+
 /* ---------------- End edit property form -------------------- */
 
 
+
+
+
+
+
+
+
 /* ---------------- details property -------------------- */
+
+
+
 
 
 $lang['details_property_home'] = "Home";
@@ -3574,6 +4062,7 @@ $lang['details_property_garden_yes'] = "Yes";
 $lang['details_property_garden_no'] = "No";
 
 
+
 $lang['details_property_terrace'] = "Terrace";
 
 $lang['details_property_terrace_yes'] = "Yes";
@@ -3585,9 +4074,11 @@ $lang['details_property_short_description'] = "Short description of the property
 $lang['details_property_planimetry'] = "Planimetry";
 
 
+
 $lang['details_property_post_your_property'] = "Post your Property";
 
 $lang['details_property_free'] = "FREE";
+
 
 
 $lang['details_property_get_more_information'] = "Get More Information";
@@ -3597,6 +4088,7 @@ $lang['details_property_send_me_a_message'] = "Send me a message!";
 $lang['details_property_ill_be_glad_to_reply'] = "I'll be glad to reply your question about the property.";
 
 $lang['details_property_well_be_glad_to_reply'] = "We'll be glad to reply your question about the property.";
+
 
 
 $lang['details_property_name_placeholder'] = "Your Name";
@@ -3616,13 +4108,25 @@ $lang['details_property_similar_property'] = "Similar property";
 $lang['details_property_comma_sep_valid_email'] = "You must enter a valid email, or comma separate multiple";
 
 
+
 $lang['details_property_nearby_click_the_following_categories'] = "Click the following categories to find points of interest within 3 Miles.";
+
 
 
 /* ---------------- end details property -------------------- */
 
 
+
+
+
+
+
+
+
 /* ---------------- add property form -------------------- */
+
+
+
 
 
 $lang['add_property_form_real_estate_for'] = "Real Estate for ";
@@ -3846,6 +4350,7 @@ $lang['add_property_form_do_you_have_the_planimetry_of_property'] = "Do you have
 $lang['add_property_form_upload_an_image_of_the_planimetry'] = "Upload an image of the planimetry";
 
 
+
 $lang['add_property_form_delete_the_image'] = "Are you sure? This change will take effect immediately. Click OK to delete the image.";
 
 $lang['add_property_form_luxury'] = "Hey! did you know that ZapCasa has a section dedicated to luxury?";
@@ -3881,10 +4386,23 @@ $lang['add_property_no_proimg_filename'] = "no_proimg.jpg";
 $lang['add_property_form_meta_title'] = "Add a new property - ZapCasa";
 
 
+
+
+
 /* ---------------- End add property form -------------------- */
 
 
+
+
+
+
+
+
+
 /* ----------------  property search -------------------- */
+
+
+
 
 
 $lang['property_search_home'] = "Home";
@@ -3944,6 +4462,7 @@ $lang['property_search_month'] = "month";
 $lang['property_search_floor'] = "Floor";
 
 
+
 $lang['property_search_rooms'] = "Rooms";
 
 $lang['property_search_availability'] = "Availability";
@@ -3951,6 +4470,7 @@ $lang['property_search_availability'] = "Availability";
 $lang['property_search_availability_vacant'] = "Vacant";
 
 $lang['property_search_availability_occupied'] = "Occupied";
+
 
 
 $lang['property_search_parking'] = "Parking";
@@ -3968,10 +4488,17 @@ $lang['property_search_save_the_property'] = "Save the Property";
 $lang['property_search_saved_by_you'] = "Saved by You";
 
 
+
 /* ---------------- end property search -------------------- */
 
 
+
+
+
+
+
 /* ---------------- controller - user -------------------- */
+
 
 
 $lang['change-pwd-hi'] = "Hi";
@@ -3993,6 +4520,9 @@ $lang['change-pwd-text-6'] = "Regards";
 $lang['change-pwd-subject'] = "New Password for your ZapCasa account";
 
 
+
+
+
 $lang['thanks_hi'] = "Hi";
 
 $lang['thanks_text_1'] = "You are receiving this email because you have requested to register on ZapCasa.";
@@ -4006,6 +4536,11 @@ $lang['thanks_text_3'] = "To activate your ZapCasa account, please click on the 
 $lang['thanks_text_4'] = "Regards";
 
 $lang['thanks_text_subject'] = "Activate your ZapCasa account";
+
+
+
+
+
 
 
 $lang['thanks_owner_hi'] = "Hi";
@@ -4023,6 +4558,13 @@ $lang['thanks_owner_text_4'] = "Regards";
 $lang['thanks_owner_text_subject'] = "Activate your ZapCasa account";
 
 
+
+
+
+
+
+
+
 $lang['thanks_agency_hi'] = "Hi";
 
 $lang['thanks_agency_text_1'] = "You are receiving this email because you have requested to register on ZapCasa.";
@@ -4036,6 +4578,13 @@ $lang['thanks_agency_text_3'] = "To activate your ZapCasa account, please click 
 $lang['thanks_agency_text_4'] = "Regards";
 
 $lang['thanks_agency_text_subject'] = "Activate your ZapCasa account";
+
+
+
+
+
+
+
 
 
 $lang['check_mail_hi'] = "Hi";
@@ -4053,6 +4602,9 @@ $lang['check_mail_text_4'] = "Regards";
 $lang['check_mail_text_subject'] = "Congratulation";
 
 
+
+
+
 $lang['user_registration_successfull_title'] = "Registration Successfull";
 
 $lang['user_your_account_successfully_created_msg'] = "Your Account successfully created!";
@@ -4062,11 +4614,15 @@ $lang['user_activation_successfull_msg'] = "Activation Successfull";
 $lang['user_please_select_your_province'] = "Please select your Province";
 
 
+
 $lang['user_registration_birth_day'] = "Day";
 
 $lang['user_registration_birth_month'] = "Month";
 
 $lang['user_registration_birth_year'] = "Year";
+
+
+
 
 
 $lang['user_registration_birth_month01'] = "January";
@@ -4094,10 +4650,21 @@ $lang['user_registration_birth_month11'] = "November";
 $lang['user_registration_birth_month12'] = "December";
 
 
+
 /* ---------------- end controller - user -------------------- */
 
 
+
+
+
+
+
+
+
+
+
 /* ---------------- controller - contact us -------------------- */
+
 
 
 $lang['contact_us_text_category'] = "Category";
@@ -4117,10 +4684,15 @@ $lang['contact_us_mail_success'] = "Thanks! your message successfully sent. If n
 $lang['contact_us_subject'] = "New message from zapcasa.it";
 
 
+
+
+
 /* ---------------- end controller - contact us -------------------- */
 
 
+
 /* ---------------- controller - ajax -------------------- */
+
 
 
 $lang['ajax_select'] = "Select";
@@ -4130,10 +4702,17 @@ $lang['ajax_no_record_found'] = "No Record Found";
 $lang['ajax_sender_name'] = "Sender Name";
 
 
+
+
+
 /* ---------------- end controller - ajax -------------------- */
 
 
+
+
+
 /* ---------------- controller - advertiser -------------------- */
+
 
 
 $lang['advertiser_title_list'] = "Advertiser List";
@@ -4149,10 +4728,17 @@ $lang['advertiser_msg_your_feedback_is_posting_successfully'] = 'Your feedback i
 $lang['advertiser_msg_you_cant_feedback_yourself'] = "You can't feedback yourself";
 
 
+
+
+
 /* ---------------- end controller - advertiser -------------------- */
 
 
+
+
+
 /* ---------------- controller - cron -------------------- */
+
 
 
 $lang['cron_title_save_search_name'] = "Save Search Name";
@@ -4168,10 +4754,23 @@ $lang['cron_msg_your_feedback_is_posting_successfully'] = 'Your feedback is post
 $lang['cron_msg_you_cant_feedback_yourself'] = "You can't feedback yourself";
 
 
+
+
+
 /* ---------------- end controller - cron -------------------- */
 
 
+
+
+
+
+
+
+
+
+
 /* ---------------- controller - property -------------------- */
+
 
 
 $lang['property_the_property_is_saved_successfully'] = "The property is Saved successfully";
@@ -4192,6 +4791,7 @@ $lang['property_the_property_is_deleted_successfully'] = 'The property is delete
 $lang['property_the_property_is_suspended_successfully'] = 'The property is suspended successfully';
 
 $lang['property_the_property_is_active_successfully'] = 'The property is activate successfully';
+
 
 
 $lang['property_msg_text_1'] = 'Your Properties are Saved successfully. You have to edit them from Draft in your property list.';
@@ -4221,7 +4821,17 @@ $lang['property_your_mail_is_sending_successfully'] = 'Your mail is seding succe
 $lang['property_successfully_saved_meta_title'] = 'ZapCasa - Property successfully saved.';
 
 
+
+
+
+
+
 /* ---------------- end controller - property -------------------- */
+
+
+
+
+
 
 
 $lang['user_info_success_message'] = 'Your information successfully updated';
@@ -4241,12 +4851,21 @@ $lang['saved_search_delete_message'] = 'Saved Search is deleted successfully!';
 $lang['saved_property_update_message'] = 'Your preference for email alert is updated successfully!';
 
 
+
 $lang['reg_user_I_have_read_and_agree_adviser'] = "I have read and agree to what is stated in the ";
 
 $lang['reg_user_wish_to_receive_informations_adviser'] = 'Wish to receive information and promotional material.';
 
 
+
+
+
+
+
+
+
 /* ------------------ New Extra Added ---------------------*/
+
 
 
 $lang['new_mail-hi'] = 'Hi';
@@ -4289,7 +4908,11 @@ $lang['new_feedback_mail_click_here'] = 'CLICK HERE!';
 $lang['Messages_you_are_receiving_this_email_because'] = 'You are received this email because you are registered on ZapCasa. To stop receiving these emails, log in to your ZapCasa account and disable the notifications. www.zapcasa.it';
 
 
+
+
+
 $lang['suspended_property_msg_by_admin_secound'] = 'We are checking if it complies with the <a href="../site/cmsPages/terms-of-use">Terms</a> of ZapCasa.<br>After checked, it could be totally resumed, partially modified or completely deleted.';
+
 
 
 $lang['add_property_parking'] = 'Parking';
@@ -4307,14 +4930,17 @@ $lang['please_select_atleast_one_item_text'] = "Please select at least one item"
 $lang['are_you_sure_text'] = "Are you sure?";
 
 
+
 $lang['property_details_Unavailable'] = "Unavailable";
 
 $lang['content_successfull_saved_search'] = "You have successfully saved your search. Please click on below link to find the saved list";
 
 
+
 $lang['social_login_mail_subject'] = "Account Successfully Created - ZapCasa";
 
 $lang['social_login_mail_content'] = "Please save this below mentioned password for future reference";
+
 
 
 $lang['my_account_meta_title'] = "manage your ZapCasa account.";
@@ -4332,6 +4958,7 @@ $lang['category_vacations_meta_title'] = "Listings of vacation properties for sa
 $lang['category_luxury_meta_title'] = "Listings of luxury properties for sale and for rent - ZapCasa";
 
 
+
 $lang['category_residential_meta_description'] = "Search for listings of houses and apartments, villas and lofts, garages, buildings and farmhouses published by agencies and owners.";
 
 $lang['category_business_meta_description'] = "Search for listings of hotels, supermarkets and offices, hangars, coffee, pubs, restaurants and betting shops published by agencies and owners.";
@@ -4345,17 +4972,25 @@ $lang['category_vacations_meta_description'] = "Search for listings of holiday h
 $lang['category_luxury_meta_description'] = "Search luxury properties for residential, for business and vacation in the classifieds posted by agencies and owners.";
 
 
+
 $lang['highlight_your_advert_meta_title'] = "Learn how to give more prominence to your real estate ads on ZapCasa";
 
 $lang['highlight_your_advert_meta_desctiprion'] = "Highlight and reposition them at the top of search results on ZapCasa.";
 
 
+
 $lang['property_title_in'] = "in";
+
 
 
 /* ------------------ Folder for js and includes ---------------------*/
 
 $lang['js_folder_lenguage'] = "/";
+
+
+
+
+
 
 
 /* ------------------ 404 PAGE ---------------------*/
@@ -4369,11 +5004,17 @@ $lang['404_return_home'] = "RERURN HOME";
 $lang['404_meta_title'] = "Oops 404 page not found";
 
 
+
+
+
 /* ------------------ DISABLED JAVASCRIPT ALERT MESSAGE ---------------------*/
 
 $lang['disabled_javascript_alert_str1'] = "JavaScript must be enabled in order for you to use Zapcasa in standard view. However, it seems JavaScript is either disabled or not supported by your browser.<br>To use standard view, enable JavaScript by changing your browser options, then";
 
 $lang['disabled_javascript_alert_str2'] = "try again";
+
+
+
 
 
 /* ------------------ MANAGE LOCATION ---------------------*/
@@ -4401,7 +5042,9 @@ $lang['managae_location_page_skip_str'] = "SKIP";
 $lang['dragged_address_will_be_shown_here_str'] = "Dragged address will be shown here.";
 
 
+
 $lang['managae_location_meta_title'] = "Manage the property location on the map.";
+
 
 
 /* ------------------ CALNDAR LANGUAGE --------------------- */
@@ -4497,7 +5140,9 @@ $lang['cal_november']	= "November"; 	// Italian = "Novembre";
 $lang['cal_december']	= "December"; 	// Italian = "Dicembre";
 
 
+
 /* Custom added lines */
+
 
 
 $lang['prop_not_deleted'] = "Property has been deleted on the Zapcasa. No longer available !";
@@ -4511,6 +5156,7 @@ $lang['inbox_this_property_inactive_by_admin'] = 'Property has been inactivated.
 $lang['inbox_user_blocked'] = 'You have been blocked or inactivated. No longer available !';
 
 $lang['inbox_this_property_deleted'] = 'Property has been deleted. No longer available !';
+
 
 
 $lang['change_password_you_enter_a_wrong_password'] = "Invalid current password, please try again!";

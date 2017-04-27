@@ -1043,6 +1043,8 @@ if (isset($advertiser_detail[0]['status']) && ($advertiser_detail[0]['status'] =
 
 						$first_segment = "";
 						//echo $prop_det_url;exit;
+						//$prop_det_url=stripslashes($prop_det_url);
+						$prop_det_url = str_replace("'", " ", stripslashes($prop_det_url));
 
 						$category_id = $property_lists['category_id'];
 
@@ -1666,6 +1668,9 @@ if (isset($advertiser_detail[0]['status']) && ($advertiser_detail[0]['status'] =
 	</div>
 
 </div>
+
+
+
 
 
 <!------ footer part -------------->

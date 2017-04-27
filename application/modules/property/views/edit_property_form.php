@@ -14,13 +14,13 @@ label.error { float: left !important; color: red !important; padding-right: .5em
 
 $(document).ready(function() {
 
-    var contract = $("#contract").val();
+    var contract=$("#contract").val();
 
     get_category(contract);
 
-    var p_n = $("#pvt_negotiation").prop("checked");
+    var p_n=$("#pvt_negotiation").prop("checked");
 
-    if (p_n == true) {
+    if(p_n==true){
 
         $("#input_price").removeClass('error required number');
 
@@ -44,13 +44,13 @@ $(document).ready(function() {
 
     //get_sub_category(str);
 
-    $('#nav li').hover(function () {
+    $('#nav li').hover(function() {
 
         $('ul', this).slideDown(200);
 
         $(this).children('a:first').addClass("hov");
 
-    }, function () {
+    }, function() {
 
         $('ul', this).slideUp(100);
 
@@ -58,21 +58,21 @@ $(document).ready(function() {
 
     });
 
-    $.validator.addMethod("alphabetsnspace", function (value, element) {
+    $.validator.addMethod("alphabetsnspace", function(value, element) {
 
-        return this.optional(element) || /(https?:\\)?([\w-]+\.)+[\w-]+[.com|.in|.org]+(\[\?%&=]*)?/.test(value);
+         return this.optional(element) || /(https?:\\)?([\w-]+\.)+[\w-]+[.com|.in|.org]+(\[\?%&=]*)?/.test(value);
 
     });
 
-    $.validator.addMethod("youtube", function (value, element) {
+    $.validator.addMethod("youtube", function(value, element) {
 
-        if (value != "") {
+        if(value != "" ) {
 
-            var p = /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?(?=.*v=((\w|-){11}))(?:\S+)?$/;
+             var p = /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?(?=.*v=((\w|-){11}))(?:\S+)?$/;
 
-            return (value.match(p)) ? RegExp.$1 : false;
+             return (value.match(p)) ? RegExp.$1 : false;
 
-        } else {
+        } else{
 
             return true;
 
@@ -82,15 +82,15 @@ $(document).ready(function() {
 
     jQuery.extend(jQuery.validator.methods, {
 
-        number: function (value, element) {
+         number: function(value, element) {
 
             return this.optional(element)
 
-                || /^(?:\d+|\d{1,3}(?:\.\d{3})+)(?:,\d+)?$/.test(value)
+            || /^(?:\d+|\d{1,3}(?:\.\d{3})+)(?:,\d+)?$/.test(value)
 
-                || /^(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d+)?$/.test(value);
+            ||  /^(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d+)?$/.test(value);
 
-        }
+          }
 
     });
 
@@ -140,9 +140,9 @@ $(document).ready(function() {
 
     <?php
 
-    // if($propertySuspensionStatus==1){
+        // if($propertySuspensionStatus==1){
 
-    if ($property_details[0]['property_approval'] == 1) {
+        if($property_details[0]['property_approval'] == 1){
 
         ?>
 
@@ -190,40 +190,54 @@ $(document).ready(function() {
 
             <?php
 
-            if ($this->session->flashdata('draft_msg') != '') {
+            if($this->session->flashdata('draft_msg')!=''){
 
-                ?>
+            ?>
 
-                <div class="success">
+            <div class="success">
 
-                    <?php echo $this->lang->line('property_the_property_is_saved_successfully'); ?>
+                <?php echo $this->lang->line('property_the_property_is_saved_successfully'); ?>
 
-                </div>
+            </div>
 
             <?php
 
             }
 
-            if ($this->session->flashdata('saved_msg') != '') {
+            if($this->session->flashdata('saved_msg')!=''){
+               // echo "hiii";exit;
+                if($_COOKIE['lang']=='english'){
+            ?>
+
+            <div class="success">
+
+                 <?php echo $this->lang->line('property_the_property_is_updated_successfully');
+
 
                 ?>
 
-                <div class="success">
 
-                    <?php echo $this->lang->line('property_the_property_is_updated_successfully'); ?>
-
-                </div>
+            </div>
 
             <?php
+        }else{?>
+            <div class="success">
 
+                 <?php echo $this->lang->line('property_the_property_is_updated_successfully');
+
+
+                ?>
+
+
+            </div>
+       <?php  }
             }
 
             ?>
 
-            <div class="arrow_box error_message" id="msg_box_general">
+            <div class="arrow_box error_message" id="msg_box_general">              
 
-                <?php echo $this->lang->line('edit_property_form_edit_your_property_on_property');?> (<font
-                    style="color:#f33038;">*</font>) <?php echo $this->lang->line('edit_property_form_are_required');?>
+                <?php echo $this->lang->line('edit_property_form_edit_your_property_on_property');?> (<font style="color:#f33038;">*</font>) <?php echo $this->lang->line('edit_property_form_are_required');?>
 
                 <?php /*?> <?php if($user_type==3){?>
 
@@ -287,11 +301,11 @@ $(document).ready(function() {
 
                         <?php
 
-                        echo $this->lang->line('ref_code') . ': ';
+                        echo $this->lang->line('ref_code').': ';
 
-                        $Typo = get_perticular_field_value('zc_contract_types', ($_COOKIE['lang'] == 'it' ? 'name_it' : 'name'), " and contract_id='" . $property_details[0]['contract_id'] . "'");
+                        $Typo=get_perticular_field_value('zc_contract_types',($_COOKIE['lang']=='it'?'name_it':'name')," and contract_id='".$property_details[0]['contract_id']."'");
 
-                        echo CreateNewRefToken($property_details[0]['property_id'], $Typo);
+                        echo CreateNewRefToken($property_details[0]['property_id'],$Typo);
 
                         ?>
 
@@ -303,13 +317,11 @@ $(document).ready(function() {
 
                             <label style="display:block;">
 
-                                <font
-                                    style="color:#f33038;">*</font><?php echo $this->lang->line('edit_property_form_contract');?>
+                                <font style="color:#f33038;">*</font><?php echo $this->lang->line('edit_property_form_contract');?>
 
                             </label>
 
-                            <label class="error" for="contract" generated="true"
-                                   style="display:none;font-weight:normal"></label>
+                            <label class="error" for="contract" generated="true" style="display:none;font-weight:normal"></label>
 
                             <select name="contract" id="contract" onChange="get_category(this.value);" class="required" disabled  >
 
@@ -337,13 +349,11 @@ $(document).ready(function() {
 
                             <label style="display:block;">
 
-                                <font
-                                    style="color:#f33038;">*</font><?php echo $this->lang->line('edit_property_form_category');?>
+                                <font style="color:#f33038;">*</font><?php echo $this->lang->line('edit_property_form_category');?>
 
                             </label>
 
-                            <label class="error" for="category" generated="true"
-                                   style="display:none;font-weight:normal"></label>
+                            <label class="error" for="category" generated="true" style="display:none;font-weight:normal"></label>
 
                             <select name="category" id="category" onChange="get_sub_category(this.value);typology_adjustment(this.value);display_things(this.value);" class="required" disabled  >
 
@@ -351,9 +361,9 @@ $(document).ready(function() {
 
                                 <?php
 
-                                foreach ($category as $categories) {
+                                foreach($category as $categories){
 
-                                    ?>
+                                ?>
 
                                 <option value="<?php echo $categories['short_code'];?>">
 
@@ -375,13 +385,11 @@ $(document).ready(function() {
 
                             <label style="display:block;">
 
-                                <font
-                                    style="color:#f33038;">*</font><?php echo $this->lang->line('edit_property_form_subCategory');?>
+                                <font style="color:#f33038;">*</font><?php echo $this->lang->line('edit_property_form_subCategory');?>
 
                             </label>
 
-                            <label class="error" for="sub_category" generated="true"
-                                   style="display:none;font-weight:normal"></label>
+                            <label class="error" for="sub_category" generated="true" style="display:none;font-weight:normal"></label>
 
                             <select name="sub_category" id="sub_category" onChange="typology_adjustment(this.value);" class="required">
 
@@ -405,13 +413,11 @@ $(document).ready(function() {
 
                             <label style="display:block;">
 
-                                <font
-                                    style="color:#f33038;">*</font><?php echo $this->lang->line('edit_property_form_provience');?>
+                                <font style="color:#f33038;">*</font><?php echo $this->lang->line('edit_property_form_provience');?>
 
                             </label>
 
-                            <label class="error" for="province" generated="true"
-                                   style="display:none;font-weight:normal"></label>
+                            <label class="error" for="province" generated="true" style="display:none;font-weight:normal"></label>
 
                             <select name="province" id="province"  class="required" onChange="return get_city(this.value);">
 
@@ -419,15 +425,15 @@ $(document).ready(function() {
 
                                 <?php
 
-                                foreach ($provience_list as $key => $val) {
+                                foreach($provience_list as $key=>$val){
 
-                                    $provinceID = get_perticular_field_value('zc_provience', 'provience_id', " AND " . ($_COOKIE['lang'] == 'english' ? "`provience_name`" : "`provience_name_it`") . " = '" . mysql_real_escape_string($val) . "'");
+                                $provinceID=get_perticular_field_value('zc_provience','provience_id'," AND ".($_COOKIE['lang']=='english'?"`provience_name`":"`provience_name_it`")." = '".mysql_real_escape_string($val)."'");
 
-                                    $st_name1 = get_perticular_field_value('zc_region_master', 'province_code', " AND " . ($_COOKIE['lang'] == 'english' ? "`province_name`" : "`province_name_it`") . " = '" . mysql_real_escape_string($val) . "' group by province_code");?>
+                                $st_name1=get_perticular_field_value('zc_region_master','province_code'," AND ".($_COOKIE['lang']=='english'?"`province_name`":"`province_name_it`")." = '".mysql_real_escape_string($val)."' group by province_code");?>
 
                                 <option value="<?php echo $provinceID;?>" <?php echo($provinceID==$property_details[0]['provience']?'selected':''); ?>>
 
-                                    <?php echo str_replace("\'", "'", $val); ?> - <?php echo $st_name1;?>
+                                    <?php echo str_replace("\'","'",$val); ?> - <?php echo $st_name1;?>
 
                                 </option>
 
@@ -445,21 +451,19 @@ $(document).ready(function() {
 
                             <label style="display:block;">
 
-                                <font
-                                    style="color:#f33038;">*</font><?php echo $this->lang->line('edit_property_form_city');?>
+                                <font style="color:#f33038;">*</font><?php echo $this->lang->line('edit_property_form_city');?>
 
                             </label>
 
-                            <label class="error" for="city" generated="true"
-                                   style="display:none;font-weight:normal;"></label>
+                            <label class="error" for="city" generated="true" style="display:none;font-weight:normal;"></label>
 
                             <select name="city" id="city"  class="required">
 
-                                <?php
+                            <?php 
 
-                                if ($property_details[0]['city'] == '') {
+                                if($property_details[0]['city']==''){
 
-                                    ?>
+                                ?>
 
                                 <option value="">
 
@@ -469,18 +473,17 @@ $(document).ready(function() {
 
                                 <?php
 
-                                } else {
+                                }else{
 
-                                    foreach ($city as $key => $val) {
+                                    foreach($city as $key=>$val){
 
-                                        $cityID = get_perticular_field_value('zc_city', 'city_id', " AND " . ($_COOKIE['lang'] == 'english' ? "`city_name`" : "`city_name_it`") . " = '" . mysql_real_escape_string($val) . "'");
+                                    $cityID=get_perticular_field_value('zc_city','city_id'," AND ".($_COOKIE['lang']=='english'?"`city_name`":"`city_name_it`")." = '".mysql_real_escape_string($val)."'");
 
-                                        ?>
+                                    ?>
 
-                                        <option
-                                            value="<?php echo $cityID;?>" <?php echo($cityID == $property_details[0]['city'] ? 'selected' : ''); ?>>
+                                        <option value="<?php echo $cityID;?>" <?php echo($cityID==$property_details[0]['city']?'selected':''); ?>>
 
-                                            <?php echo str_replace("\'", "'", $val); ?>
+                                            <?php echo str_replace("\'","'",$val); ?>
 
                                         </option>
 
@@ -490,7 +493,7 @@ $(document).ready(function() {
 
                                 }
 
-                                ?>
+                            ?>
 
                             </select>                            
 
@@ -500,13 +503,11 @@ $(document).ready(function() {
 
                             <label style="display:block;">
 
-                                <font
-                                    style="color:#f33038;">*</font><?php echo $this->lang->line('edit_property_form_zip_code');?>
+                                <font style="color:#f33038;">*</font><?php echo $this->lang->line('edit_property_form_zip_code');?>
 
                             </label>
 
-                            <label class="error" for="zip" generated="true"
-                                   style="display:none;font-weight:normal"></label>
+                            <label class="error" for="zip" generated="true" style="display:none;font-weight:normal"></label>
 
                             <input class="required" placeholder="<?php echo $this->lang->line('edit_property_form_zip_code_field');?>" type="text" name="zip" id="zip"  value="<?php echo $property_details[0]['zip'];?>" >
 
@@ -520,13 +521,11 @@ $(document).ready(function() {
 
                             <label style="display:block;">
 
-                                <font
-                                    style="color:#f33038;">*</font><?php echo $this->lang->line('edit_property_form_address');?>
+                                <font style="color:#f33038;">*</font><?php echo $this->lang->line('edit_property_form_address');?>
 
                             </label>
 
-                            <label class="error" for="address" generated="true"
-                                   style="display:none;font-weight:normal"></label>
+                            <label class="error" for="address" generated="true" style="display:none;font-weight:normal"></label>
 
                             <input type="text" placeholder="<?php echo $this->lang->line('edit_property_form_street_address_field');?>" id="address" name="address" value="<?php echo $property_details[0]['street_address'];?>" class="required">
 
@@ -624,8 +623,7 @@ $(document).ready(function() {
 
                             </label>
 
-                            <label for="url" generated="true" class="error"
-                                   style="display:none;font-weight:normal"></label>
+                            <label for="url" generated="true" class="error" style="display:none;font-weight:normal"></label>
 
                             <input type="text" placeholder="<?php echo $this->lang->line('edit_property_form_add_youtube_url_field');?>" name="url" id="url" value="<?php echo $property_details[0]['youtube_url'];?>">
 
@@ -643,13 +641,11 @@ $(document).ready(function() {
 
                             <label style="display:block;"><font style="color:#f33038;">*</font><?php echo $this->lang->line('edit_property_form_typology');?> </label>
 
-                            <label class="error" for="typology" generated="true"
-                                   style="display:none;font-weight:normal"></label>
+                            <label class="error" for="typology" generated="true" style="display:none;font-weight:normal"></label>
 
                             <select name="typology" id="typology" class="required" >
 
-                                <option
-                                    value=""><?php echo $this->lang->line('edit_property_form_typology_field');?></option>
+                                <option value=""><?php echo $this->lang->line('edit_property_form_typology_field');?></option>
 
                             </select>
 
@@ -659,23 +655,21 @@ $(document).ready(function() {
 
                             <label style="display:block;"><font style="color:#f33038;">*</font><?php echo $this->lang->line('edit_property_form_status');?> </label>
 
-                            <label class="error" for="status_of_property" generated="true"
-                                   style="display:none;font-weight:normal"></label>
+                            <label class="error" for="status_of_property" generated="true" style="display:none;font-weight:normal"></label>
 
                             <select name="status_of_property" id="status_of_property"  class="required" >
 
-                                <option
-                                    value=""><?php echo $this->lang->line('edit_property_form_status_field');?></option>
+                                <option value=""><?php echo $this->lang->line('edit_property_form_status_field');?></option>                               
 
                                 <?php
 
-                                foreach ($status_of_property as $stspro) {
+                                foreach($status_of_property as $stspro){
 
-                                    ?>
+                                ?>
 
                                 <option value="<?php echo $stspro['id']; ?>" <?php echo($stspro['id']==$property_details[0]['status']?'selected':''); ?>>
 
-                                    <?php echo($_COOKIE['lang'] == 'it' ? $stspro['name_it'] : $stspro['name']); ?>
+                                    <?php echo($_COOKIE['lang']=='it'?$stspro['name_it']:$stspro['name']); ?>
 
                                 </option>
 
@@ -699,13 +693,13 @@ $(document).ready(function() {
 
                                 <?php
 
-                                foreach ($kind_of_property as $kindpro) {
+                                foreach($kind_of_property as $kindpro){
 
-                                    ?>
+                                ?>
 
                                 <option value="<?php echo $kindpro['id']; ?>" <?php echo($kindpro['id']==$property_details[0]['kind']?'selected':''); ?>>
 
-                                    <?php echo($_COOKIE['lang'] == 'it' ? $kindpro['name_it'] : $kindpro['name']); ?>
+                                    <?php echo($_COOKIE['lang']=='it'?$kindpro['name_it']:$kindpro['name']); ?>
 
                                 </option>
 
@@ -723,8 +717,7 @@ $(document).ready(function() {
 
                             <label style="display:block;"><font style="color:#f33038;">*</font><?php echo $this->lang->line('edit_property_form_energyclass');?></label>
 
-                            <label class="error" for="energy_efficiency" generated="true"
-                                   style="display:none;font-weight:normal"></label>
+                            <label class="error" for="energy_efficiency" generated="true" style="display:none;font-weight:normal"></label>
 
                             <select name="energy_efficiency" id="energy_efficiency"  class="required" >
 
@@ -732,13 +725,13 @@ $(document).ready(function() {
 
                                 <?php
 
-                                foreach ($energy_efficiency_class as $energyeffpro) {
+                                foreach($energy_efficiency_class as $energyeffpro){
 
-                                    ?>
+                                ?>
 
                                 <option value="<?php echo $energyeffpro['id']; ?>" <?php echo($energyeffpro['id']==$property_details[0]['energyclass']?'selected':''); ?>>
 
-                                    <?php echo($_COOKIE['lang'] == 'it' ? $energyeffpro['name_it'] : $energyeffpro['name']); ?>
+                                    <?php echo($_COOKIE['lang']=='it'?$energyeffpro['name_it']:$energyeffpro['name']); ?>
 
                                 </option>
 
@@ -786,13 +779,13 @@ $(document).ready(function() {
 
                         <div class="property_picture">
 
-                            <?php
+                            <?php 
 
-                            $main_image = get_perticular_field_value('zc_property_img', 'file_name', " and property_id='" . $property_details[0]['property_id'] . "' and img_type='main_image'");
+                            $main_image=get_perticular_field_value('zc_property_img','file_name'," and property_id='".$property_details[0]['property_id']."' and img_type='main_image'");
 
-                            if ($main_image != '') {
+                            if($main_image!=''){
 
-                                ?>
+                            ?>
 
                                 <img id="img_1"
 
@@ -800,31 +793,29 @@ $(document).ready(function() {
 
                                      alt="" width="142" height="140"/>
 
-                                <div class="my_style_browse_btn">
+                            <div class="my_style_browse_btn">
 
-                                    <input type='file' id="imgInp1" name="userfile[]">
+                                <input type='file' id="imgInp1" name="userfile[]">
 
-                                </div>
+                            </div>
 
-                                <div class="cross_btn" style="display:none;"></div>
+                            <div class="cross_btn" style="display:none;"></div>
 
                             <?php
 
-                            } else {
+                            }else{
 
-                                ?>
+                            ?>
 
-                                <img id="img_1"
-                                     src="<?php echo base_url();?>assets/images/<?php echo $this->lang->line('edit_property_no_proimg_filename');?>"
-                                     alt="" width="142" height="140"/>
+                            <img id="img_1" src="<?php echo base_url();?>assets/images/<?php echo $this->lang->line('edit_property_no_proimg_filename');?>" alt="" width="142" height="140" />                  
 
-                                <div class="my_style_browse_btn">
+                            <div class="my_style_browse_btn">
 
-                                    <input type='file' id="imgInp1" name="userfile[]" class="required">
+                                <input type='file' id="imgInp1" name="userfile[]" class="required">
 
-                                </div>
+                            </div>
 
-                                <div class="cross_btn" style="display:none;"></div>
+                            <div class="cross_btn" style="display:none;"></div>
 
                             <?php
 
@@ -840,50 +831,49 @@ $(document).ready(function() {
 
                         <div class="property_picture">
 
-                            <?php
+                            <?php 
 
-                            $prop_image_1 = get_perticular_field_value('zc_property_img', 'file_name', " and property_id='" . $property_details[0]['property_id'] . "' and img_type='prop_picture' and prop_img_no='1'");
+                            $prop_image_1=get_perticular_field_value('zc_property_img','file_name'," and property_id='".$property_details[0]['property_id']."' and img_type='prop_picture' and prop_img_no='1'");
 
-                            if ($prop_image_1 != '') {
+                            if($prop_image_1!=''){
 
-                                ?>
+                            ?>
 
                             <img id="img_2" src="<?php echo base_url();?>assets/uploads/Property/Property<?php echo $property_details[0]['property_id'];?>/<?php echo $prop_image_1;?>" alt="" width="142" height="140" />
 
-                                <div class="my_style_browse_btn">
+                            <div class="my_style_browse_btn">
 
-                                    <input type='file' id="imgInp2" name="userfile[]">
+                                <input type='file' id="imgInp2"  name="userfile[]">
 
-                                </div>
+                            </div>
 
-                                <?php $prop_image_1_id = get_perticular_field_value('zc_property_img', 'img_id', " and property_id='" . $property_details[0]['property_id'] . "' and img_type='prop_picture' and prop_img_no='1'");?>
+                            <?php $prop_image_1_id=get_perticular_field_value('zc_property_img','img_id'," and property_id='".$property_details[0]['property_id']."' and img_type='prop_picture' and prop_img_no='1'");?>
 
-                                <div class="cross_btn">
+                            <div class="cross_btn">
 
-                                    <a href="<?php echo base_url();?>property/del_img/<?php echo $prop_image_1_id . '_' . $property_details[0]['property_id'];?>"
-                                       onClick="return confirm('<?php echo $this->lang->line('edit_property_form_confirm_delete_image');?>')">
+                                <a href="<?php echo base_url();?>property/del_img/<?php echo $prop_image_1_id.'_'.$property_details[0]['property_id'];?>" onClick="return confirm('<?php echo $this->lang->line('edit_property_form_confirm_delete_image');?>')">
 
-                                        <img src="<?php echo base_url()?>assets/images/cross_icon.png" alt="Remove">
+                                    <img src="<?php echo base_url()?>assets/images/cross_icon.png" alt="Remove">
 
-                                    </a>
+                                </a>
 
-                                </div>
+                            </div>
 
                             <?php
 
-                            } else {
+                            }else{
 
-                                ?>
+                            ?>
 
                             <img id="img_2" src="<?php echo base_url();?>assets/images/<?php echo $this->lang->line('edit_property_no_proimg_filename');?>" alt="" width="142" height="140" />
 
-                                <div class="my_style_browse_btn">
+                            <div class="my_style_browse_btn">
 
-                                    <input type='file' id="imgInp2" name="userfile[]">
+                                <input type='file' id="imgInp2"  name="userfile[]">
 
-                                </div>
+                            </div>
 
-                                <div class="cross_btn" style="display:none;"></div>
+                            <div class="cross_btn" style="display:none;"></div>
 
                             <?php
 
@@ -897,30 +887,29 @@ $(document).ready(function() {
 
                         <div class="property_picture">
 
-                            <?php
+                            <?php 
 
-                            $prop_image_2 = get_perticular_field_value('zc_property_img', 'file_name', " and property_id='" . $property_details[0]['property_id'] . "' and img_type='prop_picture' and prop_img_no='2'");
+                            $prop_image_2=get_perticular_field_value('zc_property_img','file_name'," and property_id='".$property_details[0]['property_id']."' and img_type='prop_picture' and prop_img_no='2'");
 
-                            if ($prop_image_2 != '') {
+                            if($prop_image_2!=''){
 
-                                ?>
+                            ?>
 
                             <img id="img_3" src="<?php echo base_url();?>assets/uploads/Property/Property<?php echo $property_details[0]['property_id'];?>/<?php echo $prop_image_2;?>" alt="" width="142" height="140" />
 
-                                <div class="my_style_browse_btn">
+                            <div class="my_style_browse_btn">
 
-                                    <input type='file' id="imgInp3" name="userfile[]">
+                                <input type='file' id="imgInp3"  name="userfile[]">
 
-                                </div>
+                            </div>
 
-                                <?php
+                            <?php
 
-                                $prop_image_2_id = get_perticular_field_value('zc_property_img', 'img_id', " and property_id='" . $property_details[0]['property_id'] . "' and img_type='prop_picture' and prop_img_no='2'");?>
+                            $prop_image_2_id=get_perticular_field_value('zc_property_img','img_id'," and property_id='".$property_details[0]['property_id']."' and img_type='prop_picture' and prop_img_no='2'");?>
 
                             <div class="cross_btn">
 
-                                <a href="<?php echo base_url();?>property/del_img/<?php echo $prop_image_2_id . '_' . $property_details[0]['property_id'];?>"
-                                   onClick="return confirm('<?php echo $this->lang->line('edit_property_form_confirm_delete_image');?>')">
+                                <a href="<?php echo base_url();?>property/del_img/<?php echo $prop_image_2_id.'_'.$property_details[0]['property_id'];?>" onClick="return confirm('<?php echo $this->lang->line('edit_property_form_confirm_delete_image');?>')">
 
                                     <img src="<?php echo base_url()?>assets/images/cross_icon.png" alt="Remove">
 
@@ -930,16 +919,15 @@ $(document).ready(function() {
 
                             <?php
 
-                            } else {
+                            }else{
 
-                                ?>
+                            ?>
 
                             <img id="img_3" src="<?php echo base_url();?>assets/images/<?php echo $this->lang->line('edit_property_no_proimg_filename');?>" alt="" width="142" height="140" />
 
-                                <div class="my_style_browse_btn"><input type='file' id="imgInp3" name="userfile[]"/>
-                                </div>
+                            <div class="my_style_browse_btn"><input type='file' id="imgInp3"  name="userfile[]" /></div>
 
-                                <div class="cross_btn" style="display:none;"></div>
+                            <div class="cross_btn" style="display:none;"></div>
 
                             <?php
 
@@ -953,30 +941,29 @@ $(document).ready(function() {
 
                         <div class="property_picture">
 
-                            <?php
+                            <?php 
 
-                            $prop_image_3 = get_perticular_field_value('zc_property_img', 'file_name', " and property_id='" . $property_details[0]['property_id'] . "' and img_type='prop_picture' and prop_img_no='3'");
+                            $prop_image_3=get_perticular_field_value('zc_property_img','file_name'," and property_id='".$property_details[0]['property_id']."' and img_type='prop_picture' and prop_img_no='3'");
 
-                            if ($prop_image_3 != '') {
+                            if($prop_image_3!=''){
 
-                                ?>
+                            ?>
 
                             <img id="img_4" src="<?php echo base_url();?>assets/uploads/Property/Property<?php echo $property_details[0]['property_id'];?>/<?php echo $prop_image_3;?>" alt="" width="142" height="140" />
 
-                                <div class="my_style_browse_btn">
+                            <div class="my_style_browse_btn">
 
-                                    <input type='file' id="imgInp4" name="userfile[]">
+                                <input type='file' id="imgInp4"  name="userfile[]">
 
-                                </div>
+                            </div>
 
-                                <?php
+                            <?php
 
-                                $prop_image_3_id = get_perticular_field_value('zc_property_img', 'img_id', " and property_id='" . $property_details[0]['property_id'] . "' and img_type='prop_picture' and prop_img_no='3'");?>
+                            $prop_image_3_id=get_perticular_field_value('zc_property_img','img_id'," and property_id='".$property_details[0]['property_id']."' and img_type='prop_picture' and prop_img_no='3'");?>
 
                             <div class="cross_btn">
 
-                                <a href="<?php echo base_url();?>property/del_img/<?php echo $prop_image_3_id . '_' . $property_details[0]['property_id'];?>"
-                                   onClick="return confirm('<?php echo $this->lang->line('edit_property_form_confirm_delete_image');?>')">
+                                <a href="<?php echo base_url();?>property/del_img/<?php echo $prop_image_3_id.'_'.$property_details[0]['property_id'];?>" onClick="return confirm('<?php echo $this->lang->line('edit_property_form_confirm_delete_image');?>')">
 
                                     <img src="<?php echo base_url()?>assets/images/cross_icon.png" alt="Remove">
 
@@ -986,19 +973,19 @@ $(document).ready(function() {
 
                             <?php
 
-                            } else {
+                            }else{
 
-                                ?>
+                            ?>
 
                             <img id="img_4" src="<?php echo base_url();?>assets/images/<?php echo $this->lang->line('edit_property_no_proimg_filename');?>" alt="" width="142" height="140" />
 
-                                <div class="my_style_browse_btn">
+                            <div class="my_style_browse_btn">
 
-                                    <input type='file' id="imgInp4" name="userfile[]">
+                                <input type='file' id="imgInp4"  name="userfile[]">
 
-                                </div>
+                            </div>
 
-                                <div class="cross_btn" style="display:none;"></div>
+                            <div class="cross_btn" style="display:none;"></div>
 
                             <?php
 
@@ -1012,32 +999,31 @@ $(document).ready(function() {
 
                         <div class="property_picture">
 
-                            <?php
+                            <?php 
 
-                            $prop_image_4 = get_perticular_field_value('zc_property_img', 'file_name', " and property_id='" . $property_details[0]['property_id'] . "' and img_type='prop_picture' and prop_img_no='4'");
+                            $prop_image_4=get_perticular_field_value('zc_property_img','file_name'," and property_id='".$property_details[0]['property_id']."' and img_type='prop_picture' and prop_img_no='4'");
 
-                            if ($prop_image_4 != '') {
+                            if($prop_image_4!=''){
 
-                                ?>
+                            ?>
 
                             <img id="img_5" src="<?php echo base_url();?>assets/uploads/Property/Property<?php echo $property_details[0]['property_id'];?>/<?php echo $prop_image_4;?>" alt="" width="142" height="140" />
 
-                                <div class="my_style_browse_btn">
+                            <div class="my_style_browse_btn">
 
-                                    <input type='file' id="imgInp5" name="userfile[]">
+                                <input type='file' id="imgInp5"  name="userfile[]">
 
-                                </div>
+                            </div>
 
-                                <?php
+                            <?php
 
-                                $prop_image_4_id = get_perticular_field_value('zc_property_img', 'img_id', " and property_id='" . $property_details[0]['property_id'] . "' and img_type='prop_picture' and prop_img_no='4'");
+                            $prop_image_4_id=get_perticular_field_value('zc_property_img','img_id'," and property_id='".$property_details[0]['property_id']."' and img_type='prop_picture' and prop_img_no='4'");
 
-                                ?>
+                            ?>
 
                             <div class="cross_btn">
 
-                                <a href="<?php echo base_url();?>property/del_img/<?php echo $prop_image_4_id . '_' . $property_details[0]['property_id'];?>"
-                                   onClick="return confirm('<?php echo $this->lang->line('edit_property_form_confirm_delete_image');?>')">
+                                <a href="<?php echo base_url();?>property/del_img/<?php echo $prop_image_4_id.'_'.$property_details[0]['property_id'];?>" onClick="return confirm('<?php echo $this->lang->line('edit_property_form_confirm_delete_image');?>')">
 
                                     <img src="<?php echo base_url()?>assets/images/cross_icon.png" alt="Remove">
 
@@ -1047,22 +1033,21 @@ $(document).ready(function() {
 
                             <?php
 
-                            } else {
+                            }else{
 
-                                ?>
+                            ?>
 
                             <img id="img_5" src="<?php echo base_url();?>assets/images/<?php echo $this->lang->line('edit_property_no_proimg_filename');?>" alt="" width="142" height="140" />
 
-                                <div class="my_style_browse_btn"><input type='file' id="imgInp5" name="userfile[]"/>
-                                </div>
+                            <div class="my_style_browse_btn"><input type='file' id="imgInp5"  name="userfile[]" /></div>
 
-                                <div class="cross_btn" style="display:none;"></div>
+                            <div class="cross_btn" style="display:none;"></div>
 
                             <?php
 
                             }
 
-                            ?>
+                             ?>
 
                         </div>
 
@@ -1070,32 +1055,31 @@ $(document).ready(function() {
 
                         <div class="property_picture">
 
-                            <?php
+                            <?php 
 
-                            $prop_image_5 = get_perticular_field_value('zc_property_img', 'file_name', " and property_id='" . $property_details[0]['property_id'] . "' and img_type='prop_picture' and prop_img_no='5'");
+                            $prop_image_5=get_perticular_field_value('zc_property_img','file_name'," and property_id='".$property_details[0]['property_id']."' and img_type='prop_picture' and prop_img_no='5'");
 
-                            if ($prop_image_5 != '') {
+                            if($prop_image_5!=''){
 
-                                ?>
+                            ?>
 
                             <img id="img_6" src="<?php echo base_url();?>assets/uploads/Property/Property<?php echo $property_details[0]['property_id'];?>/<?php echo $prop_image_5;?>" alt="" width="142" height="140" />
 
-                                <div class="my_style_browse_btn">
+                            <div class="my_style_browse_btn">
 
-                                    <input type='file' id="imgInp6" name="userfile[]">
+                                <input type='file' id="imgInp6"  name="userfile[]">
 
-                                </div>
+                            </div>
 
-                                <?php
+                            <?php
 
-                                $prop_image_5_id = get_perticular_field_value('zc_property_img', 'img_id', " and property_id='" . $property_details[0]['property_id'] . "' and img_type='prop_picture' and prop_img_no='5'");
+                            $prop_image_5_id=get_perticular_field_value('zc_property_img','img_id'," and property_id='".$property_details[0]['property_id']."' and img_type='prop_picture' and prop_img_no='5'");
 
-                                ?>
+                            ?>
 
                             <div class="cross_btn">
 
-                                <a href="<?php echo base_url();?>property/del_img/<?php echo $prop_image_5_id . '_' . $property_details[0]['property_id'];?>"
-                                   onClick="return confirm('<?php echo $this->lang->line('edit_property_form_confirm_delete_image');?>')">
+                                <a href="<?php echo base_url();?>property/del_img/<?php echo $prop_image_5_id.'_'.$property_details[0]['property_id'];?>" onClick="return confirm('<?php echo $this->lang->line('edit_property_form_confirm_delete_image');?>')">
 
                                     <img src="<?php echo base_url()?>assets/images/cross_icon.png" alt="Remove">
 
@@ -1105,22 +1089,21 @@ $(document).ready(function() {
 
                             <?php
 
-                            } else {
+                            }else{
 
-                                ?>
+                            ?>
 
                             <img id="img_6" src="<?php echo base_url();?>assets/images/<?php echo $this->lang->line('edit_property_no_proimg_filename');?>" alt="" width="142" height="140" />
 
-                                <div class="my_style_browse_btn"><input type='file' id="imgInp6" name="userfile[]"/>
-                                </div>
+                            <div class="my_style_browse_btn"><input type='file' id="imgInp6"  name="userfile[]" /></div>
 
-                                <div class="cross_btn" style="display:none;"></div>
+                            <div class="cross_btn" style="display:none;"></div>
 
                             <?php
 
                             }
 
-                            ?>
+                             ?>
 
                         </div>
 
@@ -1138,8 +1121,7 @@ $(document).ready(function() {
 
                                 <label style="display:block;"><font style="color:#f33038;">*</font><?php echo $this->lang->line('edit_property_form_surface_area');?> (m2)</label>
 
-                                <label class="error" for="surface_area" generated="true"
-                                       style="display:none;font-weight:normal"></label>
+                                <label class="error" for="surface_area" generated="true" style="display:none;font-weight:normal"></label>
 
                                 <input type="text" name="surface_area" id="add_surface_area" class="required number" value="<?php echo $property_details[0]['surface_area'];?>">
 
@@ -1149,8 +1131,7 @@ $(document).ready(function() {
 
                                 <label style="display:block;"><font style="color:#f33038;">*</font><?php echo $this->lang->line('edit_property_form_room_no');?></label>
 
-                                <label class="error" for="room_no" generated="true"
-                                       style="display:none;font-weight:normal"></label>
+                                <label class="error" for="room_no" generated="true" style="display:none;font-weight:normal"></label>
 
                                 <input type="text" name="room_no" id="add_room_no" class="required number" value="<?php echo $property_details[0]['room_no'];?>">
 
@@ -1158,8 +1139,7 @@ $(document).ready(function() {
 
                             <div class="cat_select" id="floor">
 
-                                <label
-                                    style="display:block;"><?php echo $this->lang->line('edit_property_form_floor');?></label>
+                                <label style="display:block;"><?php echo $this->lang->line('edit_property_form_floor');?></label>                               
 
                                 <input type="text" name="floor" id="room_floor" value="<?php echo $property_details[0]['floor'];?>">
 
@@ -1197,13 +1177,11 @@ $(document).ready(function() {
 
                                 <label style="display:block;">
 
-                                    <font
-                                        style="color:#f33038;">*</font><?php echo $this->lang->line('edit_property_form_bathrooms_no');?>
+                                    <font style="color:#f33038;">*</font><?php echo $this->lang->line('edit_property_form_bathrooms_no');?>
 
                                 </label>
 
-                                <label class="error" for="add_bathroom_no" generated="true"
-                                       style="display:none;font-weight:normal"></label>
+                                <label class="error" for="add_bathroom_no" generated="true" style="display:none;font-weight:normal"></label>
 
                                 <select name="bothroom_no" id="add_bathroom_no" class="required">
 
@@ -1253,7 +1231,7 @@ $(document).ready(function() {
 
                                 <label class="error" for="add_kitchen" generated="true" style="display:none;font-weight:normal"></label>
 
-                                <select name="kitchen" id="add_kitchen" class="required">
+                                <select name="kitchen" id="add_kitchen" class="required" >
 
                                     <option value="">
 
@@ -1293,8 +1271,7 @@ $(document).ready(function() {
 
                                 <label style="display:block;"><font style="color:#f33038;">*</font><?php echo $this->lang->line('edit_property_form_heating');?> </label>
 
-                                <label class="error" for="add_heating" generated="true"
-                                       style="display:none;font-weight:normal"></label>
+                                <label class="error" for="add_heating" generated="true" style="display:none;font-weight:normal"></label>
 
                                 <select name="heating" id="add_heating" class="required" >
 
@@ -1330,8 +1307,7 @@ $(document).ready(function() {
 
                                 <label style="display:block;"><font style="color:#f33038;">*</font><?php echo $this->lang->line('edit_property_form_parking');?></label>
 
-                                <label class="error" for="add_parking" generated="true"
-                                       style="display:none;font-weight:normal"></label>
+                                <label class="error" for="add_parking" generated="true" style="display:none;font-weight:normal"></label>
 
                                 <select name="parking" class="required" id="add_parking" >
 
@@ -1367,8 +1343,7 @@ $(document).ready(function() {
 
                                 <label style="display:block;"><font style="color:#f33038;">*</font><?php echo $this->lang->line('edit_property_form_roommates');?> </label>
 
-                                <label class="error" for="add_roommates" generated="true"
-                                       style="display:none;font-weight:normal"></label>
+                                <label class="error" for="add_roommates" generated="true" style="display:none;font-weight:normal"></label>
 
                                 <select name="roommates" id="add_roommates" class="required" >
 
@@ -1404,8 +1379,7 @@ $(document).ready(function() {
 
                                 <label style="display:block;"><font style="color:#f33038;">*</font><?php echo $this->lang->line('edit_property_form_occupation');?> </label>
 
-                                <label class="error" for="add_occupation" generated="true"
-                                       style="display:none;font-weight:normal"></label>
+                                <label class="error" for="add_occupation" generated="true" style="display:none;font-weight:normal"></label>
 
                                 <select name="occupation" id="add_occupation" class="required" >
 
@@ -1441,8 +1415,7 @@ $(document).ready(function() {
 
                                 <label style="display:block;"><font style="color:#f33038;">*</font><?php echo $this->lang->line('edit_property_form_furnished');?> </label>
 
-                                <label class="error" for="add_furnished" generated="true"
-                                       style="display:none;font-weight:normal"></label>
+                                <label class="error" for="add_furnished" generated="true" style="display:none;font-weight:normal"></label>
 
                                 <select name="furnished" id="add_furnished" class="required" >
 
@@ -1482,13 +1455,11 @@ $(document).ready(function() {
 
                                 <label style="display:block;"><font style="color:#f33038;">*</font><?php echo $this->lang->line('edit_property_form_availability');?> </label>
 
-                                <label class="error" for="availabilty" generated="true"
-                                       style="display:none;font-weight:normal"></label>
+                                <label class="error" for="availabilty" generated="true" style="display:none;font-weight:normal"></label>
 
                                 <p>
 
-                                    <input type="radio" name="availabilty" id="avail_sp" class="required"
-                                           value='0' <?php if ($property_details[0]['availability'] == '0') { ?> checked <?php }?>> <?php echo $this->lang->line('edit_property_form_availability_vacent');?>
+                                    <input type="radio" name="availabilty" id="avail_sp" class="required" value='0' <?php if($property_details[0]['availability']=='0'){?> checked <?php }?>> <?php echo $this->lang->line('edit_property_form_availability_vacent');?> 
 
                                     <input type="radio" name="availabilty" id="avail_sp" class="required" value='1'  <?php if($property_details[0]['availability']=='1'){?> checked <?php }?>> <?php echo $this->lang->line('edit_property_form_availability_occupated');?>
 
@@ -1500,16 +1471,13 @@ $(document).ready(function() {
 
                                 <label style="display:block;"><font style="color:#f33038;">*</font><?php echo $this->lang->line('edit_property_form_smokers');?> </label>
 
-                                <label class="error" for="smokers" generated="true"
-                                       style="display:none;font-weight:normal"></label>
+                                <label class="error" for="smokers" generated="true" style="display:none;font-weight:normal"></label>
 
                                 <p>
 
-                                    <input type="radio" name="smokers" id="smokers_space" class="required"
-                                           value="0" <?php if ($property_details[0]['smokers'] == '0') { ?> checked <?php }?>> <?php echo $this->lang->line('edit_property_form_smokers_allowed');?>
+                                    <input type="radio" name="smokers" id="smokers_space" class="required" value="0" <?php if($property_details[0]['smokers']=='0'){?> checked <?php }?>> <?php echo $this->lang->line('edit_property_form_smokers_allowed');?>
 
-                                    <input type="radio" name="smokers" id="smokers_space" class="required"
-                                           value="1" <?php if ($property_details[0]['smokers'] == '1') { ?> checked <?php }?>> <?php echo $this->lang->line('edit_property_form_smokers_not_allowed');?>
+                                    <input type="radio" name="smokers" id="smokers_space" class="required" value="1" <?php if($property_details[0]['smokers']=='1'){?> checked <?php }?>> <?php echo $this->lang->line('edit_property_form_smokers_not_allowed');?> 
 
                                 </p>
 
@@ -1519,16 +1487,13 @@ $(document).ready(function() {
 
                                 <label style="display:block;"><font style="color:#f33038;">*</font><?php echo $this->lang->line('edit_property_form_pets');?> </label>
 
-                                <label class="error" for="pets" generated="true"
-                                       style="display:none;font-weight:normal"></label>
+                                <label class="error" for="pets" generated="true" style="display:none;font-weight:normal"></label>
 
-                                <p>
+                                <p>                             
 
-                                    <input type="radio" name="pets" id="pet_val" class="required"
-                                           value="0"  <?php if ($property_details[0]['pets'] == '0') { ?> checked <?php }?>> <?php echo $this->lang->line('edit_property_form_pets_allowed');?>
+                                    <input type="radio" name="pets" id="pet_val" class="required" value="0"  <?php if($property_details[0]['pets']=='0'){?> checked <?php }?>> <?php echo $this->lang->line('edit_property_form_pets_allowed');?>
 
-                                    <input type="radio" name="pets" id="pet_val" class="required"
-                                           value="1"  <?php if ($property_details[0]['pets'] == '1') { ?> checked <?php }?>> <?php echo $this->lang->line('edit_property_form_pets_not_allowed');?>
+                                    <input type="radio" name="pets" id="pet_val" class="required" value="1"  <?php if($property_details[0]['pets']=='1'){?> checked <?php }?>> <?php echo $this->lang->line('edit_property_form_pets_not_allowed');?>  
 
                                 </p>
 
@@ -1566,21 +1531,21 @@ $(document).ready(function() {
 
                                     <?php
 
-                                    $planimetry_image_id = get_perticular_field_value('zc_property_img', 'img_id', " and property_id='" . $property_details[0]['property_id'] . "' and img_type='preliminary'");
+                                    $planimetry_image_id=get_perticular_field_value('zc_property_img','img_id'," and property_id='".$property_details[0]['property_id']."' and img_type='preliminary'");
 
-                                    $planimetry_image = get_perticular_field_value('zc_property_img', 'file_name', " and property_id='" . $property_details[0]['property_id'] . "' and img_type='preliminary'");
+                                    $planimetry_image=get_perticular_field_value('zc_property_img','file_name'," and property_id='".$property_details[0]['property_id']."' and img_type='preliminary'");
 
-                                    if ($planimetry_image != '') {
+                                    if($planimetry_image!=''){
 
-                                        ?>
+                                    ?>
 
                                     <img id="img_7" src="<?php echo base_url();?>assets/uploads/Property/Property<?php echo $property_details[0]['property_id'];?>/<?php echo $planimetry_image;?>" alt="" width="142" height="146"/>
 
                                     <?php
 
-                                    } else {
+                                    }else{
 
-                                        ?>
+                                    ?>
 
                                     <img id="img_7" src="<?php echo base_url();?>assets/images/<?php echo $this->lang->line('edit_property_no_proimg_filename');?>" alt="" width="142" height="146"/>
 
@@ -1600,14 +1565,13 @@ $(document).ready(function() {
 
                                     <?php
 
-                                    if ($planimetry_image != '') {
+                                    if($planimetry_image!=''){
 
-                                        ?>
+                                    ?>
 
                                     <div id="remove">
 
-                                        <a href="<?php echo base_url();?>property/del_img/<?php echo $planimetry_image_id . '_' . $property_details[0]['property_id'];?>"
-                                           onClick="return confirm('<?php echo $this->lang->line('edit_property_form_delete_the_image');?>')">
+                                        <a href="<?php echo base_url();?>property/del_img/<?php echo $planimetry_image_id.'_'.$property_details[0]['property_id'];?>" onClick="return confirm('<?php echo $this->lang->line('edit_property_form_delete_the_image');?>')">
 
                                             <img src="<?php echo base_url()?>assets/images/cross_icon.png" alt="Remove">
 
@@ -1647,15 +1611,13 @@ $(document).ready(function() {
 
                     <div class="heading">
 
-                        <font
-                            style="color:#f33038 !important;">*</font> <?php echo $this->lang->line('edit_property_form_write_a_short_description_of_the_property');?>
+                        <font style="color:#f33038 !important;">*</font> <?php echo $this->lang->line('edit_property_form_write_a_short_description_of_the_property');?>
 
                     </div>
 
                     <div class="row8">
 
-                        <label class="error" for="field" generated="true"
-                               style="display:none;font-weight:normal"></label>
+                        <label class="error" for="field" generated="true" style="display:none;font-weight:normal"></label>
 
                         <textarea rows="4" cols="40" id="field" name="description" onKeyUp="countChar(this)" class="required"><?php echo htmlspecialchars($property_details[0]['description']);?></textarea>
 
@@ -1669,35 +1631,35 @@ $(document).ready(function() {
 
                 <?php
 
-                $uid = $this->session->userdata('user_id');
+                $uid=$this->session->userdata( 'user_id' );
 
-                $user_type = get_perticular_field_value('zc_user', 'user_type', " and user_id='" . $uid . "'");
+                $user_type=get_perticular_field_value('zc_user','user_type'," and user_id='".$uid."'");                 
 
-                $posting_property_limit = get_perticular_field_value('zc_user', 'posting_property_limit', " and user_id='" . $uid . "'");
+                $posting_property_limit=get_perticular_field_value('zc_user','posting_property_limit'," and user_id='".$uid."'");
 
-                if ($posting_property_limit == '0') {
+                if($posting_property_limit=='0'){
 
-                    if ($user_type == '2') {
+                    if($user_type=='2'){
 
-                        $posting_limit = get_perticular_field_value('zc_settings', 'meta_value', " and settings_id='3'");
-
-                    }
-
-                    if ($user_type == '3') {
-
-                        $posting_limit = get_perticular_field_value('zc_settings', 'meta_value', " and settings_id='4'");
+                        $posting_limit=get_perticular_field_value('zc_settings','meta_value'," and settings_id='3'");
 
                     }
 
-                } else {
+                    if($user_type=='3'){
 
-                    $posting_limit = $posting_property_limit;
+                        $posting_limit=get_perticular_field_value('zc_settings','meta_value'," and settings_id='4'");
+
+                    }
+
+                }else{
+
+                    $posting_limit=$posting_property_limit;
 
                 }
 
-                $total_prop_post = get_perticular_count('zc_property_details', " and property_post_by='" . $uid . "' and property_status='2'");
+                $total_prop_post=get_perticular_count('zc_property_details'," and property_post_by='".$uid."' and property_status='2'");
 
-                $remain = $posting_limit - $total_prop_post;
+                $remain=$posting_limit-$total_prop_post;
 
                 ?>
 
@@ -1705,57 +1667,49 @@ $(document).ready(function() {
 
                 <?php
 
-                if ($property_details[0]['property_status'] == '1') {
+                if($property_details[0]['property_status']=='1'){
 
                     if($remain<=0){
 
-                        ?>
+                    ?>
 
-                        <div class="error_max">
+                <div class="error_max" >
 
-                            <?php echo $this->lang->line('edit_property_form_we_are_sorry');?><br><span
-                                style="font-weight:bold;"><?php echo $this->lang->line('edit_property_form_first_delete_one');?></span>
+                    <?php echo $this->lang->line('edit_property_form_we_are_sorry');?><br><span style="font-weight:bold;"><?php echo $this->lang->line('edit_property_form_first_delete_one');?></span>
 
-                        </div>
+                </div>
 
-                        <div style="margin-top:20px; margin-left:44%;">
+                <div style="margin-top:20px; margin-left:44%;">
 
-                            <input class="mainbt cancel" name="btnSubmit" type="submit"
-                                   value="<?php echo $this->lang->line('edit_property_form_button_save_draft');?>"
-                                   id="save_draft">
+                    <input  class="mainbt cancel" name="btnSubmit" type="submit" value="<?php echo $this->lang->line('edit_property_form_button_save_draft');?>" id="save_draft">
 
-                        </div>
+                </div>
 
                     <?php
 
                     }else{
 
-                        ?>
+                    ?>
 
-                        <div style="margin-top:20px; margin-left:33%;">
+                <div style="margin-top:20px; margin-left:33%;">
 
-                            <input class="mainbt cancel" name="btnSubmit" type="submit"
-                                   value="<?php echo $this->lang->line('edit_property_form_button_save_draft');?>"
-                                   id="save_draft">
+                    <input  class="mainbt cancel" name="btnSubmit" type="submit" value="<?php echo $this->lang->line('edit_property_form_button_save_draft');?>" id="save_draft">
 
-                            <input class="mainbt" name="btnSubmit" type="submit"
-                                   value="<?php echo $this->lang->line('edit_property_form_button_submit');?>"
-                                   id="save_button">
+                    <input  class="mainbt" name="btnSubmit" type="submit" value="<?php echo $this->lang->line('edit_property_form_button_submit');?>" id="save_button">
 
-                        </div>
+                </div>
 
                     <?php
 
                     }
 
-                } else {
+                }else{
 
-                    ?>
+                ?>
 
                 <div style="margin-top:20px; margin-left:44%;">
 
-                    <input class="mainbt" name="btnSubmit" type="submit"
-                           value="<?php echo $this->lang->line('edit_property_form_button_submit');?>" id="save_button">
+                    <input  class="mainbt" name="btnSubmit" type="submit" value="<?php echo $this->lang->line('edit_property_form_button_submit');?>" id="save_button">
 
                 </div>
 
@@ -1765,15 +1719,13 @@ $(document).ready(function() {
 
                 ?>
 
-                <input type="hidden" name="btnSubmit"
-                       value="<?php echo $this->lang->line('add_property_form_button_submit');?>" id="save_button">
+                <input type="hidden" name="btnSubmit" value="<?php echo $this->lang->line('add_property_form_button_submit');?>" id="save_button">
 
                 <div class="impt_message">
 
                     <img src="<?php echo base_url();?>assets/images/information_icon.png" alt="">
 
-                    <?php echo $this->lang->line('edit_property_form_the_information_marked_with');?> (<font
-                        style="color:#f33038">*</font>) <?php echo $this->lang->line('edit_property_form_are_required');?>
+                    <?php echo $this->lang->line('edit_property_form_the_information_marked_with');?> (<font style="color:#f33038">*</font>) <?php echo $this->lang->line('edit_property_form_are_required');?>
 
                 </div>
 
@@ -1790,16 +1742,14 @@ $(document).ready(function() {
                         <?php echo $this->lang->line('property_submit_loading_property_submission_text');?>
                     </div>
                     <div class="congratulations">
-                        <img src="<?php echo base_url();?>assets/images/register_thanks_icon.jpg" alt=""
-                             style="margin-top:75px;margin-left:34px;">
+                        <img src="<?php echo base_url();?>assets/images/register_thanks_icon.jpg" alt="" style="margin-top:75px;margin-left:34px;">
                     </div>
                     <div class="mainsucc_box" style="width:63%">
                         <div class="suceesfulbox"  style="width:95%">
                             <div>
                                 <span style="width:100%">
                                 <img src="<?php echo base_url();?>assets/images/Loader.gif" alt="" style="padding-left: 47%">
-                                </span>
-
+                                </span> 
                                 <div class="clear"></div>
                             </div>
                             <p><br></p>
@@ -1819,11 +1769,11 @@ $(document).ready(function() {
 
         // if($propertySuspensionStatus==1){
 
-        if ($property_details[0]['property_approval'] == 0) {
+        if($property_details[0]['property_approval'] == 0){
 
-            ?>
+        ?>
 
-
+        
 
         <?php
 
@@ -1833,9 +1783,9 @@ $(document).ready(function() {
 
     </div>
 
-    <?php } else { ?>
+<?php }else {?>
 
-        <div id="susspend_by_admin_area">
+<div id="susspend_by_admin_area">
 
             <div class="main">
 
@@ -1843,16 +1793,15 @@ $(document).ready(function() {
 
                     <div class="arrow_box error_message" id="msg_box_general" style="color:#FF7602;">
 
-                        <?php echo $this->lang->line('property_details_suspend_sorry_this_content_is_suspended'); ?>
+                        <?php echo $this->lang->line('property_details_suspend_sorry_this_content_is_suspended');?>
 
                     </div>
 
-                    <div class="congratulations"><img src="<?php echo base_url(); ?>assets/images/WAITING.png" alt=""
-                                                      style="margin-top:75px;margin-left:34px;"></div>
+                    <div class="congratulations"><img src="<?php echo base_url();?>assets/images/WAITING.png" alt="" style="margin-top:75px;margin-left:34px;"></div>
 
                     <div class="mainsucc_box" style="width:63%">
 
-                        <div class="suceesfulbox" style="width:95%">
+                        <div class="suceesfulbox"  style="width:95%">
 
                             <div>
 
@@ -1860,11 +1809,11 @@ $(document).ready(function() {
 
                                     <p style="font-size: 13px !important;">
 
-                                        <?php echo $this->lang->line('property_details_suspend_we_are_checking'); ?>
+                                        <?php echo $this->lang->line('property_details_suspend_we_are_checking');?>
 
                                         <br/>
 
-                                        <?php echo $this->lang->line('property_details_suspend_after_checked'); ?>
+                                        <?php echo $this->lang->line('property_details_suspend_after_checked');?> 
 
                                     </p>
 
@@ -1880,11 +1829,11 @@ $(document).ready(function() {
 
                         <div style=" margin-left:27%; margin-bottom:20px; float:left;">
 
-                            <a class="mainbt" href="<?php echo base_url(); ?>property/property_details">
+                            <a class="mainbt" href="<?php echo base_url();?>property/property_details">
 
-                                <?php echo $this->lang->line('property_details_suspend_back_to_the_list_of_property_button'); ?>
+                                <?php echo $this->lang->line('property_details_suspend_back_to_the_list_of_property_button');?>
 
-                            </a>
+                            </a> 
 
                         </div>
 
@@ -1896,7 +1845,7 @@ $(document).ready(function() {
 
         </div>
 
-    <?php } ?>
+<?php }?>
 
     <!------ footer part -------------->
 
@@ -1906,18 +1855,13 @@ $(document).ready(function() {
 
         function get_category(str){
 
-            var cat_parent = 0;
+            var cat_parent=0;
 
-            var select_cat = "<?php echo get_perticular_field_value('zc_categories','short_code'," and category_id='".$property_details[0]['category_id']."'");?>";
+            var select_cat="<?php echo get_perticular_field_value('zc_categories','short_code'," and category_id='".$property_details[0]['category_id']."'");?>";
 
-            if (str != 0) {
+            if(str!=0){
 
-                $.post("<?php echo base_url(); ?>property/getCategoryedit", {
-                    contract: str,
-                    cat_parent: cat_parent,
-                    select_cat: select_cat,
-                    lang: '<?php echo $_COOKIE['lang']; ?>'
-                }, function (result) {
+                $.post("<?php echo base_url(); ?>property/getCategoryedit", { contract: str,cat_parent : cat_parent,select_cat:select_cat, lang: '<?php echo $_COOKIE['lang']; ?>' },function(result){
 
                     //alert(result);
 
@@ -1927,7 +1871,7 @@ $(document).ready(function() {
 
                     $(".main_feature").show();
 
-                    var str = $("#category").val();
+                    var str=$("#category").val();
 
                     get_sub_category(str);
 
@@ -1937,7 +1881,7 @@ $(document).ready(function() {
 
                 });
 
-            } else {
+            }else{
 
                 $(".additional_feature").hide();
 
@@ -1951,51 +1895,51 @@ $(document).ready(function() {
 
             //alert(str);
 
-            if (str == "ROM") {
+            if(str=="ROM"){
 
-                document.getElementById("surface_area").style.display = "none";
+                document.getElementById("surface_area").style.display="none";
 
-                document.getElementById("room_no").style.display = "none";
+                document.getElementById("room_no").style.display="none";
 
-                document.getElementById("tot_floor").style.display = "none";
+                document.getElementById("tot_floor").style.display="none";
 
-                document.getElementById("year_of_building").style.display = "none";
+                document.getElementById("year_of_building").style.display="none";
 
-                document.getElementById("parking").style.display = "block";
+                document.getElementById("parking").style.display="block";
 
                 $('#row7').hide();
 
                 $('#row4').show();
 
-                document.getElementById("bed_no").style.display = "none";
+                document.getElementById("bed_no").style.display="none";
 
-                document.getElementById("bothroom_no").style.display = "block";
+                document.getElementById("bothroom_no").style.display="block";
 
-                document.getElementById("kitchen").style.display = "block";
+                document.getElementById("kitchen").style.display="block";
 
-                document.getElementById("heating").style.display = "block";
+                document.getElementById("heating").style.display="block";
 
-                document.getElementById("roommates").style.display = "block";
+                document.getElementById("roommates").style.display="block";
 
-                document.getElementById("occupation").style.display = "block";
+                document.getElementById("occupation").style.display="block";
 
-                document.getElementById("furnished").style.display = "block";
+                document.getElementById("furnished").style.display="block";
 
-                document.getElementById("smokers").style.display = "block";
+                document.getElementById("smokers").style.display="block";
 
-                document.getElementById("pets").style.display = "block";
+                document.getElementById("pets").style.display="block";
 
-                document.getElementById("floor").style.display = "block";
+                document.getElementById("floor").style.display="block";
 
-                document.getElementById("prop_status").style.display = "none";
+                document.getElementById("prop_status").style.display="none";
 
                 $('#row6').show();
 
-                document.getElementById("add_feature").style.display = "block";
+                document.getElementById("add_feature").style.display="block";
 
-                document.getElementById("Energy_class").style.display = "none";
+                document.getElementById("Energy_class").style.display="none";
 
-                document.getElementById("property_kind").style.display = "none";
+                document.getElementById("property_kind").style.display="none";
 
                 /////////add required///////////////////
 
@@ -2039,27 +1983,27 @@ $(document).ready(function() {
 
             }
 
-            if (str == "LAND") {
+            if(str=="LAND"){
 
                 /*document.getElementById("tot_floor").style.display="none";
 
-                 document.getElementById("year_of_building").style.display="none";
+                document.getElementById("year_of_building").style.display="none";
 
-                 document.getElementById("bed_no").style.display="none";
+                document.getElementById("bed_no").style.display="none";
 
-                 document.getElementById("bothroom_no").style.display="none";
+                document.getElementById("bothroom_no").style.display="none";
 
-                 document.getElementById("kitchen").style.display="none";
+                document.getElementById("kitchen").style.display="none";
 
-                 document.getElementById("parking").style.display="none";
+                document.getElementById("parking").style.display="none";
 
-                 document.getElementById("hating").style.display="none";
+                document.getElementById("hating").style.display="none";
 
-                 $('#row7').hide();
+                $('#row7').hide();
 
-                 document.getElementById("floor").style.display="none";
+                document.getElementById("floor").style.display="none";
 
-                 document.getElementById("furnished").style.display="none";*/
+                document.getElementById("furnished").style.display="none";*/
 
                 //alert('hello');
 
@@ -2069,39 +2013,39 @@ $(document).ready(function() {
 
                 $('#row6').hide();
 
-                document.getElementById("tot_floor").style.display = "none";
+                document.getElementById("tot_floor").style.display="none";
 
-                document.getElementById("year_of_building").style.display = "none";
+                document.getElementById("year_of_building").style.display="none";
 
-                document.getElementById("bed_no").style.display = "none";
+                document.getElementById("bed_no").style.display="none";
 
-                document.getElementById("bothroom_no").style.display = "none";
+                document.getElementById("bothroom_no").style.display="none";
 
-                document.getElementById("kitchen").style.display = "none";
+                document.getElementById("kitchen").style.display="none";
 
-                document.getElementById("parking").style.display = "none";
+                document.getElementById("parking").style.display="none";
 
-                document.getElementById("heating").style.display = "none";
+                document.getElementById("heating").style.display="none";
 
-                document.getElementById("floor").style.display = "none";
+                document.getElementById("floor").style.display="none";
 
-                document.getElementById("furnished").style.display = "none";
+                document.getElementById("furnished").style.display="none";
 
-                document.getElementById("smokers").style.display = "none";
+                document.getElementById("smokers").style.display="none";
 
-                document.getElementById("pets").style.display = "none";
+                document.getElementById("pets").style.display="none";
 
-                document.getElementById("room_no").style.display = "none";
+                document.getElementById("room_no").style.display="none";
 
-                document.getElementById("add_feature").style.display = "none";
+                document.getElementById("add_feature").style.display="none";
 
-                document.getElementById("surface_area").style.display = "block";
+                document.getElementById("surface_area").style.display="block";
 
-                document.getElementById("prop_status").style.display = "none";
+                document.getElementById("prop_status").style.display="none";
 
-                document.getElementById("Energy_class").style.display = "none";
+                document.getElementById("Energy_class").style.display="none";
 
-                document.getElementById("property_kind").style.display = "block";
+                document.getElementById("property_kind").style.display="block";
 
                 /////////add required///////////////////
 
@@ -2145,37 +2089,37 @@ $(document).ready(function() {
 
             }
 
-            if (str == "VAC") {
+            if(str=="VAC"){
 
-                document.getElementById("surface_area").style.display = "block";
+                document.getElementById("surface_area").style.display="block";
 
-                document.getElementById("room_no").style.display = "block";
+                document.getElementById("room_no").style.display="block";
 
-                document.getElementById("floor").style.display = "block";
+                document.getElementById("floor").style.display="block";
 
-                document.getElementById("tot_floor").style.display = "block";
+                document.getElementById("tot_floor").style.display="block";
 
-                document.getElementById("year_of_building").style.display = "block";
+                document.getElementById("year_of_building").style.display="block";
 
-                document.getElementById("row6").style.display = "block";
+                document.getElementById("row6").style.display="block";
 
-                document.getElementById("bed_no").style.display = "block";
+                document.getElementById("bed_no").style.display="block";
 
-                document.getElementById("bothroom_no").style.display = "block";
+                document.getElementById("bothroom_no").style.display="block";
 
                 document.getElementById("kitchen").style.display = "block";
 
-                document.getElementById("parking").style.display = "block";
+                document.getElementById("parking").style.display="block";
 
-                document.getElementById("roommates").style.display = "none";
+                document.getElementById("roommates").style.display="none";
 
-                document.getElementById("occupation").style.display = "none";
+                document.getElementById("occupation").style.display="none";
 
-                document.getElementById("heating").style.display = "block";
+                document.getElementById("heating").style.display="block";
 
                 //document.getElementById("furnished").style.display="none";
 
-                document.getElementById("furnished").style.display = "block";
+                document.getElementById("furnished").style.display="block";
 
                 $('#row7').show();
 
@@ -2183,13 +2127,13 @@ $(document).ready(function() {
 
                 $('#row6').show();
 
-                document.getElementById("smokers").style.display = "none";
+                document.getElementById("smokers").style.display="none";
 
-                document.getElementById("pets").style.display = "block";
+                document.getElementById("pets").style.display="block";
 
-                document.getElementById("add_feature").style.display = "block";
+                document.getElementById("add_feature").style.display="block";
 
-                document.getElementById("prop_status").style.display = "block";
+                document.getElementById("prop_status").style.display="block";
 
                 document.getElementById("property_kind").style.display = "block";
 
@@ -2197,31 +2141,31 @@ $(document).ready(function() {
 
                 /*var contract_id=$("#contract").val();
 
-                 if(contract_id==1){
+                if(contract_id==1){
 
-                 document.getElementById("property_kind").style.display="none";
+                    document.getElementById("property_kind").style.display="none";
 
-                 //$("#kind_of_property").removeClass('required');
+                    //$("#kind_of_property").removeClass('required');
 
-                 }else{
+                }else{
 
-                 document.getElementById("property_kind").style.display="block";
+                    document.getElementById("property_kind").style.display="block";
 
-                 //$("#kind_of_property").addClass('required');
+                    //$("#kind_of_property").addClass('required');
 
-                 }
+                }
 
-                 if(contract_id==1){
+                if(contract_id==1){
 
-                 document.getElementById("Energy_class").style.display="none";
+                    document.getElementById("Energy_class").style.display="none";
 
-                 $("#energy_efficiency"). removeClass ('required');
+                    $("#energy_efficiency"). removeClass ('required');
 
-                 }else{
+                }else{
 
-                 document.getElementById("Energy_class").style.display="block";
+                    document.getElementById("Energy_class").style.display="block";
 
-                 $("#energy_efficiency"). addClass ('required');
+                    $("#energy_efficiency"). addClass ('required');
 
                  }*/
 
@@ -2263,33 +2207,33 @@ $(document).ready(function() {
 
             }
 
-            if (str == "RES" || str == "BUS") {
+            if(str=="RES" || str=="BUS"){
 
-                document.getElementById("surface_area").style.display = "block";
+                document.getElementById("surface_area").style.display="block";
 
-                document.getElementById("room_no").style.display = "block";
+                document.getElementById("room_no").style.display="block";
 
-                document.getElementById("floor").style.display = "block";
+                document.getElementById("floor").style.display="block";
 
-                document.getElementById("tot_floor").style.display = "block";
+                document.getElementById("tot_floor").style.display="block";
 
-                document.getElementById("year_of_building").style.display = "block";
+                document.getElementById("year_of_building").style.display="block";
 
-                document.getElementById("row6").style.display = "block";
+                document.getElementById("row6").style.display="block";
 
-                document.getElementById("bed_no").style.display = "none";
+                document.getElementById("bed_no").style.display="none";
 
-                document.getElementById("bothroom_no").style.display = "block";
+                document.getElementById("bothroom_no").style.display="block";
 
-                document.getElementById("parking").style.display = "block";
+                document.getElementById("parking").style.display="block";
 
-                document.getElementById("roommates").style.display = "none";
+                document.getElementById("roommates").style.display="none";
 
-                document.getElementById("occupation").style.display = "none";
+                document.getElementById("occupation").style.display="none";
 
-                document.getElementById("furnished").style.display = "none";
+                document.getElementById("furnished").style.display="none";
 
-                document.getElementById("furnished").style.display = "block";
+                document.getElementById("furnished").style.display="block";
 
                 $('#row7').show();
 
@@ -2297,17 +2241,17 @@ $(document).ready(function() {
 
                 $('#row6').show();
 
-                document.getElementById("smokers").style.display = "none";
+                document.getElementById("smokers").style.display="none";
 
-                document.getElementById("pets").style.display = "none";
+                document.getElementById("pets").style.display="none";
 
-                document.getElementById("add_feature").style.display = "block";
+                document.getElementById("add_feature").style.display="block";
 
-                document.getElementById("prop_status").style.display = "block";
+                document.getElementById("prop_status").style.display="block";
 
-                document.getElementById("Energy_class").style.display = "block";
+                document.getElementById("Energy_class").style.display="block";
 
-                document.getElementById("property_kind").style.display = "block";
+                document.getElementById("property_kind").style.display="block";
 
                 //add required class////////////////////////////////////////////
 
@@ -2361,31 +2305,27 @@ $(document).ready(function() {
 
             //for room add restriction///////////////////////////
 
-            var select_subcat = "<?php echo get_perticular_field_value('zc_categories','short_code'," and category_id='".$property_details[0]['category_id']."'");?>";
+            var select_subcat="<?php echo get_perticular_field_value('zc_categories','short_code'," and category_id='".$property_details[0]['category_id']."'");?>";
 
-            if (str == "BUS") {
+            if(str=="BUS"){
 
-                $.post("<?php echo base_url(); ?>property/getSubCategoryedit", {
-                    category: str,
-                    select_subcat: select_subcat,
-                    lang: '<?php echo $_COOKIE['lang']; ?>'
-                }, function (result) {
+                $.post("<?php echo base_url(); ?>property/getSubCategoryedit", { category : str,select_subcat:select_subcat, lang: '<?php echo $_COOKIE['lang']; ?>' },function(result){
 
                     //alert(result);
 
                     $("#sub_category").html(result);
 
-                    var str = $("#sub_category").val();
+                    var str=$("#sub_category").val();
 
                     typology_adjustment(str);
 
-                    document.getElementById("sub_category_area").style.display = "block";
+                    document.getElementById("sub_category_area").style.display="block";
 
                 });
 
-            } else {
+            }else{
 
-                document.getElementById("sub_category_area").style.display = "none";
+                document.getElementById("sub_category_area").style.display="none";
 
             }   
 
@@ -2397,23 +2337,19 @@ $(document).ready(function() {
 
             document.getElementById('typology').selectedIndex = 0;
 
-            var select_typology = "<?php echo $property_details[0]['typology'];?>";
+            var select_typology="<?php echo $property_details[0]['typology'];?>";
 
-            if ((str != 0) && (str != "BUS")) {
+            if((str!=0)&&(str!="BUS")){
 
-                $.post("<?php echo base_url(); ?>property/getTypologyedit", {
-                        category: str,
-                        select_typology: select_typology,
-                        lang: '<?php echo $_COOKIE['lang']; ?>'
-                    },
+                $.post("<?php echo base_url(); ?>property/getTypologyedit", { category : str,select_typology:select_typology, lang: '<?php echo $_COOKIE['lang']; ?>'},
 
-                    function (result) {
+                function(result){
 
-                        //alert(result);
+                    //alert(result);
 
-                        $("#typology").html(result);
+                   $("#typology").html(result);
 
-                    });
+                });
 
             }
 
@@ -2423,11 +2359,11 @@ $(document).ready(function() {
 
         function readURL(input,img_id){
 
-            var loader = "<?php echo base_url();?>assets/images/Pro-Img-Loader.gif";
+            var loader="<?php echo base_url();?>assets/images/Pro-Img-Loader.gif";
 
             //alert(img_id);
 
-            if (input.files && input.files[0]) {
+            if (input.files && input.files[0]){
 
                 var reader = new FileReader();     
 
@@ -2435,13 +2371,13 @@ $(document).ready(function() {
 
                     //alert(e.target.result);
 
-                    if (img_id != 7) {
+                    if(img_id!=7){
 
-                        $('#img_' + img_id).attr('src', e.target.result).width(142).height(140);
+                        $('#img_'+img_id).attr('src', e.target.result).width(142).height(140);
 
-                    } else {
+                    }else{
 
-                        $('#img_' + img_id).attr('src', e.target.result).width(142).height(147);
+                        $('#img_'+img_id).attr('src', e.target.result).width(142).height(147);
 
                     }
 
@@ -2453,7 +2389,7 @@ $(document).ready(function() {
 
         }
 
-        $("#imgInp1").change(function () {
+        $("#imgInp1").change(function(){
 
             var name = $(this).val();
 
@@ -2477,7 +2413,7 @@ $(document).ready(function() {
 
                 case 'gif':
 
-                    readURL(this, 1);
+                    readURL(this,1);
 
                     break;
 
@@ -2519,7 +2455,7 @@ $(document).ready(function() {
 
                 case 'gif':
 
-                    readURL(this, 2);
+                    readURL(this,2);
 
                     break;
 
@@ -2559,7 +2495,7 @@ $(document).ready(function() {
 
                 case 'gif':
 
-                    readURL(this, 3);
+                    readURL(this,3);
 
                     break;
 
@@ -2599,7 +2535,7 @@ $(document).ready(function() {
 
                 case 'gif':
 
-                    readURL(this, 4);
+                    readURL(this,4);
 
                     break;
 
@@ -2639,7 +2575,7 @@ $(document).ready(function() {
 
                 case 'gif':
 
-                    readURL(this, 5);
+                    readURL(this,5);
 
                     break;
 
@@ -2679,7 +2615,7 @@ $(document).ready(function() {
 
                 case 'gif':
 
-                    readURL(this, 6);
+                    readURL(this,6);
 
                     break;
 
@@ -2717,7 +2653,7 @@ $(document).ready(function() {
 
                 case 'gif':
 
-                    readURL(this, 7);
+                    readURL(this,7);
 
                     //$("#remove").show();
 
@@ -2739,7 +2675,7 @@ $(document).ready(function() {
 
             //$(this).prop('checked', false);
 
-            $("#pvt_negotiation").prop("checked", false);
+            $("#pvt_negotiation").prop("checked",false);
 
             $("#input_price").addClass('required number');
 
@@ -2759,12 +2695,9 @@ $(document).ready(function() {
 
         function get_city(id){
 
-            var name = id;
+            var name=id;
 
-            $.post("<?php echo base_url(); ?>property/city_search_via_id", {
-                name: name,
-                lang: '<?php echo $_COOKIE['lang']; ?>'
-            }, function (result) {
+            $.post("<?php echo base_url(); ?>property/city_search_via_id", { name: name,  lang: '<?php echo $_COOKIE['lang']; ?>'},function(result){
 
                 $('#city').html(result);
 
@@ -2790,8 +2723,7 @@ $(document).ready(function() {
 
             }
 
-        }
-        ;
+        };
 
         function click_upload(){
 
@@ -2822,13 +2754,13 @@ $(document).ready(function() {
             document.getElementById("register").submit();
         }
 
-        function loaderCall(submitBtnVal) {
+        function loaderCall(submitBtnVal){
 
             $("#regboxId").hide();
 
             $("#form_submit_loading_area").show();
 
-            setTimeout(function () {
+            setTimeout(function(){
 
                 frmSubmit(submitBtnVal);
 
@@ -2836,21 +2768,21 @@ $(document).ready(function() {
 
         }
 
-        $(document).ready(function () {
+        $(document).ready(function(){
 
             jQuery.validator.addMethod("input_price", function(value, element) {
 
-                return this.optional(element) || value != '0,00';
+              return this.optional( element ) || value != '0,00';
 
             }, '<?php echo $this->lang->line('add_property_form_price_min');?>');
 
-            $('#save_draft').click(function (draftClicked) {
+            $('#save_draft').click(function(draftClicked){
 
                 var contract = $('#contract').val();
 
                 var category_id = $('#category').val();
 
-                if (contract == '') {
+                if (contract == ''){
 
                     alert('<?php echo $this->lang->line('add_property_form_select_contract_type');?>');
 
@@ -2860,7 +2792,7 @@ $(document).ready(function() {
 
                 }
 
-                if (category_id == '0') {
+                if (category_id == '0'){
 
                     alert('<?php echo $this->lang->line('add_property_form_select_a_category');?>');
 
@@ -2870,7 +2802,7 @@ $(document).ready(function() {
 
                 }
 
-                if (category_id == 'BUS') {
+                if (category_id == 'BUS'){
 
                     var sub_cat = $('#sub_category').val();
 
@@ -2907,10 +2839,10 @@ $(document).ready(function() {
                         number: "<?php echo $this->lang->line('add_property_form_please_provide_a_digits_only');?>",
                         //input_price: ""
                     }
-                }, submitHandler: function (form) {
+                },submitHandler: function (form){
                     $("#regboxId").hide();
                     $("#form_submit_loading_area").show();
-                    setTimeout(function () {
+                    setTimeout(function(){
                         $('#register input[name="btnSubmit"]').val('Submit');
                         document.getElementById("register").submit();
                     }, 5000);
@@ -2919,6 +2851,12 @@ $(document).ready(function() {
             });
         });
 
+$(function() {
+            setTimeout(function(){
+                $(".success").fadeOut(1500);
+            },3000);
+        });
+       
 
     </script>
 
